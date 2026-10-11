@@ -138362,7 +138362,7 @@ window.MC_TWEAKS = {
    "id": "track-filter",
    "label": "Filtre par piste (LP / OFF / HP)",
    "desc": "MACHINES tenu + SWEEP : un filtre par piste, passe-bas a gauche, rien au centre, passe-haut a droite. CONTOUR : resonance ; COLOR et SHAPE : enveloppe du filtre (quantite, decay). P-locks, LFO, CC 74 / 71.",
-   "status": "experimental",
+   "status": "tested",
    "credit": null,
    "variants": [
     {

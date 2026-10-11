@@ -146,7 +146,7 @@ FEATURES = [
         "label": "Filtre par piste (LP / OFF / HP)",
         "desc": "MACHINES tenu + SWEEP : un filtre par piste, passe-bas a gauche, rien au centre, passe-haut a droite. "
                 "CONTOUR : resonance ; COLOR et SHAPE : enveloppe du filtre (quantite, decay). P-locks, LFO, CC 74 / 71.",
-        "status": "experimental",
+        "status": "tested",
         "credit": None,
         # meme geste que le filtre de Model-TG (MACHINES + SWEEP / CONTOUR) : pas ensemble pour l'instant (notes/47 §7, §11)
         "excludes": ["model-tg"],

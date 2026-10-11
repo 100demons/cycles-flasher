@@ -10,6 +10,8 @@ Syntakt 1.42, Model-TG v1.1.0) dans `/mnt/project-files/filtre-piste/faisabilite
 
 ## En bref
 
+**Testé sur la machine (11/10/2026)**, après une correction de l'affichage et de la résonance (§10).
+
 - **MACHINES tenu + SWEEP = Filter Cutoff** : L64 … L1, **OFF**, H1 … H63. Passe-bas à gauche (5 Hz à 20 kHz),
   passe-haut à droite (5 Hz à 19 kHz), la loi du potard du Model:Samples. **+ CONTOUR = Filter Reso** (Q 0,5 à 50),
   **+ COLOR = Filter Env** (quantité d'une enveloppe, bipolaire), **+ SHAPE = Env Decay** (5 ms à 10 s). L'enveloppe
@@ -290,7 +292,11 @@ Maxime, build « filtre seul » (MAIN OS `bf1f9fb3…`) : « c'est pas mal », m
   à Q 0,5 à 50 (§5.1), environ 10 dB de plus par quart de tour. À réessayer : builds `-v2` envoyés le 11/10/2026
   (filtre seul : MAIN OS `f5db0133…` ; avec les autres mods : `f0d77915…`).
 
-### 10.2 Limites, et ce qui reste à vérifier `[À FAIRE]`
+### 10.2 Second essai : testé sur la machine (11/10/2026)
+
+Maxime, builds `-v2` : « ça marche nickel sur la machine ». Le mod passe de « expérimental » à « testé ».
+
+### 10.3 Limites, et points à surveiller
 
 - Le geste : MACHINES tenu + SWEEP / CONTOUR / COLOR / SHAPE, l'affichage (`L32`, `OFF`, `H20`…), le menu des
   machines qui s'ouvre toujours sur un appui seul.
