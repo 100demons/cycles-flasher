@@ -823,6 +823,24 @@
   "slot_hash": "0x401be4a0",
   "pd_mode": "0x401befc8",
   "ld_busy": "0x401beff4",
-  "pad_load_hook": "0x401b3210"
+  "pad_load_hook": "0x401b3210",
+  "key_hook": "0x401ae968",
+  "set_held": "0x401b235c",
+  "mod_used": "0x401b2360",
+  "rtg_on": "0x401b6d8c",
+  "sle_on": "0x401bcaec",
+  "mm_opened": "0x401b20b4",
+  "gran_menu_open": "0x401b08ba",
+  "gm_live": "0x401b0c82",
+  "gm_opened": "0x401b0b7e",
+  "gm_done": "0x401b0b86",
+  "gm_track": "0x401b1218",
+  "gm_cur": "0x401b121c",
+  "lm_build": "0x401b095c",
+  "gm_lab": "0x401b0d56",
+  "gm_val": "0x401b1096",
+  "gm_vname": "0x401b1505",
+  "new_slot2_invoker": "0x401bb3a8",
+  "show_popup": "0x401b2284"
  }
 }

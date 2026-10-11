@@ -146,6 +146,12 @@ ST_SYMBOLS = ("blob_start", "reserved_end", "REGION_END", "param_table", "boot_e
 # Symboles dont l'écoute des samples a besoin (tools/gen_sample_preview.py, notes/46), dans les deux tweaks : son code
 # appelle ces fonctions et lit ces variables de Model-TG, aux mêmes adresses dans les deux builds.
 PV_SYMBOLS = ("tok_of", "sound_obj", "ensure_loaded", "slot_hash", "pd_mode", "ld_busy", "pad_load_hook")
+# Symboles dont le générateur de trigs a besoin (tools/gen_generate.py, SETTINGS + TRACK), dans les deux tweaks : son
+# accroche remplace le jmp key_hook de Model-TG en 0x4007240c, et son menu passe par la liste générique de Model-TG
+# (lm_build et ses fermetures), aux mêmes adresses dans les deux builds.
+GEN_SYMBOLS = ("key_hook", "set_held", "mod_used", "rtg_on", "sle_on", "mm_opened", "gran_menu_open", "gm_live",
+               "gm_opened", "gm_done", "gm_track", "gm_cur", "lm_build", "gm_lab", "gm_val", "gm_vname",
+               "new_slot2_invoker", "show_popup")
 
 
 def export(cycles, repo, patches=()):
@@ -219,14 +225,15 @@ def adapt_st(tw, stock, syms):
             "syntakt-tg-…, qui s'ajoute après lui et chaîne ses détours.",
         ],
         "conflicts": others,
-        "symbols": {n: f"{syms[n]:#x}" for n in ST_SYMBOLS + tuple(n for n in PV_SYMBOLS if n not in ST_SYMBOLS)},
+        "symbols": {n: f"{syms[n]:#x}" for n in ST_SYMBOLS + tuple(n for n in PV_SYMBOLS + GEN_SYMBOLS
+                                                                   if n not in ST_SYMBOLS)},
     })
     return out
 
 
 def adapt(tw, stock, syms):
     """Format et métadonnées de ce dépôt ; vérifie que le tweak redonne l'image exportée."""
-    missing = [n for n in PV_SYMBOLS if n not in syms]
+    missing = [n for n in PV_SYMBOLS + GEN_SYMBOLS if n not in syms]
     if missing:
         raise SystemExit(f"!! symboles absents du build de Model-TG : {missing}")
     patched, _ = build.apply_writes(stock, [tw])
@@ -273,7 +280,7 @@ def adapt(tw, stock, syms):
         "conflicts": others,
         "writes": writes,
         "append": tw["append"],
-        "symbols": {n: f"{syms[n]:#x}" for n in PV_SYMBOLS},
+        "symbols": {n: f"{syms[n]:#x}" for n in PV_SYMBOLS + GEN_SYMBOLS},
     }
 
 

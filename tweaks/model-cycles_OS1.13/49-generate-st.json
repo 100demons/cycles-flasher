@@ -1,0 +1,118 @@
+{
+ "id": "generate-st",
+ "order": 49,
+ "name": "Générateur de trigs euclidien / aléatoire sur SETTINGS + TRACK (Model-TG), avec les moteurs du Syntakt",
+ "description": [
+  "Idée et première version : DavidCaruso (firmware Model-TG-VA-DR-v1), réécrit pour ce dépôt.",
+  "Tenir SETTINGS et appuyer sur TRACK ouvre la liste « Generate » (LEVEL/DATA : choisir une ligne, appuyer pour l'éditer ; SETTINGS ferme). Réglages : MOD RND/EUC, DNS (densité, %), HIT et ROT (coups et rotation euclidiens), NOT (notes tirées dans la gamme), KEY, SCL (13 gammes), OCT, RNG (octaves), VEL (vélocité tirée entre VMN et VMX).",
+  "GEN (appui) réécrit toute la piste sélectionnée à l'ouverture, sur sa longueur (64 pas au plus) : trig posé ou effacé à chaque pas, note et vélocité remises à « aucune » si NOT ou VEL est sur OFF ; puis « Trigs: N ». Pas d'annulation. Réglages communs aux pistes, revenus aux défauts à chaque démarrage.",
+  "Pour la version de Model-TG combinée avec les moteurs du Syntakt (model-tg-st) : remplace son jmp key_hook en 0x4007240c, appelle ses fonctions aux adresses de ses symboles. Code et données dans sept masques de sprites 48x22 libérés (tools/sprites.py) : 180 + 184 + 191 + 152 + 186 + 159 + 162 = 1214 o. Généré par tools/gen_generate.py, notes/56 §2."
+ ],
+ "device": "Model:Cycles",
+ "os": "1.13",
+ "section": 3,
+ "requires": [
+  "model-tg-st"
+ ],
+ "symbols": {
+  "gen_key": "0x4018b9c8",
+  "gen_open": "0x4018bb48",
+  "gen_lab": "0x4018cbc8",
+  "gen_val": "0x4018cbde",
+  "gen_turn": "0x4018cc2a",
+  "gen_press": "0x4018bbde",
+  "gen_go": "0x4018d038",
+  "gen_rndn": "0x401901c4",
+  "gen_set": "0x4018ba48",
+  "gen_rng": "0x4018ba58",
+  "gen_ev": "0x4018ba5c",
+  "gen_ptr": "0x4018ba60",
+  "gen_zero": "0x4018ba64",
+  "gen_num": "0x4018ba68",
+  "gen_desc": "0x4018ba6c",
+  "gen_min": "0x4018f80c",
+  "gen_max": "0x4018f819",
+  "gen_noff": "0x4018f826",
+  "gen_labels": "0x401901f2",
+  "gen_scales": "0x4018cc5a",
+  "gen_title": "0x4018cc74",
+  "gen_fmt": "0x4018cc7d"
+ },
+ "writes": [
+  {
+   "off": 466956,
+   "old": "4ef9401ae968",
+   "new": "4ef94018b9c8"
+  },
+  {
+   "off": 705504,
+   "old": "40190184",
+   "new": "4014b364"
+  },
+  {
+   "off": 705684,
+   "old": "4018f80c",
+   "new": "4014b364"
+  },
+  {
+   "off": 706874,
+   "old": "4018d798",
+   "new": "4014b364"
+  },
+  {
+   "off": 706962,
+   "old": "4018d038",
+   "new": "4014b364"
+  },
+  {
+   "off": 707022,
+   "old": "4018cbc8",
+   "new": "4014b364"
+  },
+  {
+   "off": 707624,
+   "old": "4018bb48",
+   "new": "4014b364"
+  },
+  {
+   "off": 707656,
+   "old": "4018b9c8",
+   "new": "4014b364"
+  },
+  {
+   "off": 1619400,
+   "old": "fffffc00fffffc00fffffc00fffffc00fffffc00fffffc00fffffc00fffffc00fffffc00fffffc00fffffc00fffffc00fffffc00fffffc00fffffc00fffffc00fffffc00fffffc00fffffc00fffffc00fffffc00fffffc00fffffc00fffffc00fffffc00fffffc00fffffc00fffffc00fffffc00fffffc00fffffc00fffffc00fffffc00fffffc00fffffc00fffffc00fffffc00fffffc00fffffc00fffffc00fffffc00fffffc00fffffc00fffffc00fffffc00",
+   "new": "206f00042028000c7202b081666c2239401b6d8c82b9401bcaec665e43fa00762228001008010000674008010003663242914ab9401b235c67402f0861000142205f4ab9401b20b46730720123c14018ba5c23c1401b2360720883a8001070004e757201b29167f660102211670cb28867ec53816604228860e44ef9401ae96800320400000000040100407f000000002545f491000000000000000000000000000000004018cc74401b15050000000d00000000"
+  },
+  {
+   "off": 1619784,
+   "old": "fffffc00fffffc00fffffc00fffffc00fffffc00fffffc00fffffc00fffffc00fffffc00fffffc00fffffc00fffffc00fffffc00fffffc00fffffc00fffffc00fffffc00fffffc00fffffc00fffffc00fffffc00fffffc00fffffc00fffffc00fffffc00fffffc00fffffc00fffffc00fffffc00fffffc00fffffc00fffffc00fffffc00fffffc00fffffc00fffffc00fffffc00fffffc00fffffc00fffffc00fffffc00fffffc00fffffc00fffffc00fffffc00fffffc00",
+   "new": "700d487a0092487a10da487a108a487a1070538066ec41faff0c214f000c61064fef00d04e754e56ffb04fefffe448d73c1c42b9401b20b4700040c0028000000700664c4ab940fe417867444eb9401b0c824a8066344eb9400cf8662f004eb94000eb902e804eb940012412588f7206b081641c23c0401b121841fafea823c8401b121c4ef9401b095c4ef9401b0b7e4ef9401b0b86206f0008700cb0a800086700144e4ef9401bb3a82f002f022f0a4e904fef000c4e75"
+  },
+  {
+   "off": 1624008,
+   "old": "fffffc00fffffc00fffffc00fffffc00fffffc00fffffc00fffffc00fffffc00fffffc00fffffc00fffffc00fffffc00fffffc00fffffc00fffffc00fffffc00fffffc00fffffc00fffffc00fffffc00fffffc00fffffc00fffffc00fffffc00fffffc00fffffc00fffffc00fffffc00fffffc00fffffc00fffffc00fffffc00fffffc00fffffc00fffffc00fffffc00fffffc00fffffc00fffffc00fffffc00fffffc00fffffc00fffffc00fffffc00fffffc00fffffc00fffffc00fffffc",
+   "new": "226f00082029000843fa362043f10c004ef9401b0d56206f00082228000841faee6071b0180043fa2c3673b118006708d3c143f10c00601a2f004857487a007e487aee5e4eb9400005cc4fef001043faee5041faee4420c943e8fffc4ef9401b1096206f00082028000841faee14d1c043fa2bd2d3c07390d2af000c7191b2806c02220071a9000db2806f02220010814e750ab505ad06ad05ab0ad506b5056b09ad0aad029504a904e90fff47656e65726174650054726967733a20256400"
+  },
+  {
+   "off": 1625144,
+   "old": "fffffc00fffffc00fffffc00fffffc00fffffc00fffffc00fffffc00fffffc00fffffc00fffffc00fffffc00fffffc00fffffc00fffffc00fffffc00fffffc00fffffc00fffffc00fffffc00fffffc00fffffc00fffffc00fffffc00fffffc00fffffc00fffffc00fffffc00fffffc00fffffc00fffffc00fffffc00fffffc00fffffc00fffffc00fffffc00fffffc00fffffc00fffffc00",
+   "new": "4fefffa048d73cfc49ef002847faea024eb9400cf8662f004eb94000f2082eb9401b12182f004eb94000cfcc508f24402f004eb940016402588f26006f0007c87040b68063022600202b0010d0b98000184c06809e3779b966027001274000107c004a2b00046704610030e271ab0002b083630220032a4071ab0003b0836504908360f8240394807e0061000784538266f87a00600006ca"
+  },
+  {
+   "off": 1627032,
+   "old": "fffffc00fffffc00fffffc00fffffc00fffffc00fffffc00fffffc00fffffc00fffffc00fffffc00fffffc00fffffc00fffffc00fffffc00fffffc00fffffc00fffffc00fffffc00fffffc00fffffc00fffffc00fffffc00fffffc00fffffc00fffffc00fffffc00fffffc00fffffc00fffffc00fffffc00fffffc00fffffc00fffffc00fffffc00fffffc00fffffc00fffffc00fffffc00fffffc00fffffc00fffffc00fffffc00fffffc00fffffc00fffffc00fffffc00ffff",
+   "new": "4a13660c726461002a2473ab000160082007220d6100009a7800b081640478015285200441f940017b486100e42e70ff4a8467104a2b0004670a2206610029ee71b4080041f9400166426100e40e70ff4a8467244a2b0009671e71ab000a73ab000bb2806406204020012208928052812040610029b8d08841f9400166c26100e3da5282b4836500ff782f054857487af4552f0c4eb9400005cc2e8c4eb9401b22844fef00104cd73cfc4fef00604e75de8dbe8365029e834e75"
+  },
+  {
+   "off": 1635340,
+   "old": "fffffc00fffffc00fffffc00fffffc00fffffc00fffffc00fffffc00fffffc00fffffc00fffffc00fffffc00fffffc00fffffc00fffffc00fffffc00fffffc00fffffc00fffffc00fffffc00fffffc00fffffc00fffffc00fffffc00fffffc00fffffc00fffffc00fffffc00fffffc00fffffc00fffffc00fffffc00fffffc00fffffc00fffffc00fffffc00fffffc00fffffc00fffffc00fffffc00fffffc",
+   "new": "000001000000000001000101000164403f010b0c0804017f7f000d000000151d4d000015000081524e4400455543004f4646004f4e00004300000043230000440000004423000045000000460000004623000047000000472300004100000041230000420000004d414a004d494e00444f5200504852004c5944004d4958004c4f4300484d49004d4d4900504d4100504d4900424c550043485200474f0000"
+  },
+  {
+   "off": 1637764,
+   "old": "fffffc00fffffc00fffffc00fffffc00fffffc00fffffc00fffffc00fffffc00fffffc00fffffc00fffffc00fffffc00fffffc00fffffc00fffffc00fffffc00fffffc00fffffc00fffffc00fffffc00fffffc00fffffc00fffffc00fffffc00fffffc00fffffc00fffffc00fffffc00fffffc00fffffc00fffffc00fffffc00fffffc00fffffc00fffffc00fffffc00fffffc00fffffc00fffffc00fffffc00ffff",
+   "new": "71ab00075280c0fc000c73ab0005d08173ab000641facac073f01a0079ab0008c8fc000c747fe289640e08c1000bb0826206198068005286528053846ae84e752241202b00102200e189eb89b3802200484173c1e289b3802200eb89b3802740001048402209c0c1484071c04e754d4f4400444e530048495400524f54004e4f54004b45590053434c004f435400524e470056454c00564d4e00564d580047454e00"
+  }
+ ]
+}
