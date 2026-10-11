@@ -107,8 +107,8 @@ réutilisées par la preuve, sans `--no-keyfix`, et deux contrôles de taille en
 `tools/emu/test_mods_for_samples.py` (42 contrôles, environ 1 min) reprend les outils de `test_crossflash_samples.py` :
 vraie vérification des mises à jour des deux OS (`0x4005a0e4` et son équivalent Samples) et chargeur du bootstrap Samples
 (`0x80000820`), sur `model-tg`, `6ch-usbup+model-tg`, `model-tg-st+sample-preview-st+macro-tg` et la plus grosse
-combinaison de l'échantillon (`6ch-usbup+model-tg-st+sample-preview-st+trig-hold+arp+tempo-max+boot-anim+multiline-browser+level-pan-values+trigless-dim+syntakt-tg-sd-cp-toy-bits-swarm-macro`,
-MAIN OS de 2 073 076 octets, fin `0x401fa5f4`, conteneur de 1 038 368 octets) :
+combinaison de l'échantillon (`6ch-usbup+model-tg-st+sample-preview-st+trig-hold+arp+tempo-max+boot-anim+multiline-browser+level-pan-values+trigless-dim+midi-both+syntakt-tg-sd-cp-toy-bits-swarm-macro`,
+MAIN OS de 2 073 997 octets, fin `0x401fa98d`, conteneur de 1 039 552 octets) :
 
 | Fichier | OS Samples d'origine | OS Cycles d'origine | OS Cycles avec mods installé | OS Cycles de l'onglet Samples OS |
 |---|---|---|---|---|
