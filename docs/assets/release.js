@@ -3,13 +3,21 @@
  *   { version: "1.1", date: "2026-10-15", changes: [{ en: "…", fr: "…" }] }
  */
 window.MC_RELEASES = [
-  { version: "1.41", date: "2026-10-11", changes: [
+  { version: "1.45", date: "2026-10-11", changes: [
     { en: "New mod, ACID machine: one extra machine after Chord (after the Sampler with Model-TG), an acid bass in the style of the TB-303, from Robin Schmidt's open-source Open303 model. COLOR is the cutoff, SHAPE the resonance, SWEEP the env mod, CONTOUR the accent and DECAY the decay; PUNCH switches the wave from saw to square",
       fr: "Nouveau mod, Machine ACID : une machine ajoutée après Chord (après le Sampler avec Model-TG), une basse acide à la manière de la TB-303, d'après le modèle libre Open303 de Robin Schmidt. COLOR règle le cutoff, SHAPE la résonance, SWEEP l'env mod, CONTOUR l'accent et DECAY la décroissance ; PUNCH passe l'onde de scie à carré" },
     { en: "Accent and slide come from your trigs: a trig with a velocity (VEL) above 100 is accented, fully at 127; a trig whose length (LEN) runs past the next trig slides into the next note instead of playing it again. Played live, a note played while another is held slides too",
       fr: "L'accent et le slide viennent de vos trigs : un trig de vélocité (VEL) au-dessus de 100 est accentué, complètement à 127 ; un trig dont la longueur (LEN) dépasse le trig suivant glisse vers la note suivante au lieu de la rejouer. En jeu live, une note jouée pendant qu'une autre est tenue glisse aussi" },
     { en: "Experimental: checked in the emulator on the OS's own code with the real sequencer, alone and with Model-TG, not yet tested on a Model:Cycles. It can't be ticked with MACRO or the Syntakt engines",
       fr: "Expérimental : vérifié en émulation sur le code même de l'OS avec le vrai séquenceur, seul et avec Model-TG, pas encore testé sur un Model:Cycles. Ne se coche pas avec MACRO ni avec les moteurs du Syntakt" },
+  ] },
+  { version: "1.41", date: "2026-10-11", changes: [
+    { en: "Two new MIDI mods by AveyCole, under USB & MIDI. With THR selected (SETTINGS, CONFIG › MIDI › PORTS › OUT/THRU), the Model:Cycles forwards what arrives on its MIDI IN and also sends its own clock, notes and parameter changes. MIDI OUT while in THRU does it all the time; Live MIDI OUT + THRU toggle switches it on and off with FUNC + a press on the LEVEL/DATA knob, the screen staying on THR",
+      fr: "Deux nouveaux mods MIDI d'AveyCole, dans USB et MIDI. Avec THR choisi (SETTINGS, CONFIG › MIDI › PORTS › OUT/THRU), le Model:Cycles relaie ce qui arrive sur son MIDI IN et envoie aussi son horloge, ses notes et ses changements de paramètres. MIDI OUT pendant THRU le fait tout le temps ; Basculer MIDI OUT + THRU en direct l'active et le coupe avec FUNC + un appui sur le potard LEVEL/DATA, l'écran restant sur THR" },
+    { en: "Pick one of the two; each goes with every other mod. The original OUT/THR menu doesn't change, and OUT works as before. Best when only the Cycles or only the device on its MIDI IN plays notes: the Cycles passes on what it receives as it comes in, so notes sent by both can get mixed up (see the guide)",
+      fr: "Choisissez l'un des deux ; chacun se combine avec tous les autres mods. Le menu OUT/THR d'origine ne change pas, et OUT marche comme avant. Le mieux est que seul le Cycles ou seul l'appareil branché sur son MIDI IN joue des notes : le Cycles fait suivre ce qu'il reçoit au fil de l'eau, et des notes envoyées par les deux peuvent se mélanger (voir le guide)" },
+    { en: "Tested on a Model:Cycles by AveyCole, and checked here in the emulator on the OS's own MIDI code, alone and with the other mods",
+      fr: "Testés sur un Model:Cycles par AveyCole, et vérifiés ici en émulation sur le code MIDI de l'OS, seuls et avec les autres mods" },
   ] },
   { version: "1.40", date: "2026-10-10", changes: [
     { en: "New mod by Nico Heuser, Chord Keys: on a CHORD track, the sixteen lower TRIG buttons play the chords of a scale. 1–7 play degrees I to VII, 8–14 the same one octave higher, 15–16 I and II two octaves higher. T1–T6 keep their usual controls",
