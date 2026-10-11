@@ -11,14 +11,14 @@
 <link rel="preconnect" href="https://fonts.googleapis.com">
 <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
 <link rel="stylesheet" href="https://fonts.googleapis.com/css2?family=Familjen+Grotesk:wght@400..700&display=swap">
-<link rel="stylesheet" href="../assets/site.css?v=2026-10-07-03">
-<link rel="stylesheet" href="style.css?v=2026-10-07-03">
+<link rel="stylesheet" href="../assets/site.css?v=2026-10-11-02">
+<link rel="stylesheet" href="style.css?v=2026-10-11-02">
 <script>try{var l=localStorage.getItem("mc-lang"),t=localStorage.getItem("mc-theme")}catch(e){}document.documentElement.lang=l||(/^fr\b/i.test(navigator.language||"")?"fr":"en");if(t)document.documentElement.setAttribute("data-theme",t)</script>
 </head>
 <body data-page="flasher">
 <script>
   // Version stamp: an old date means the browser serves a cached copy -> hard reload.
-  window.MC_BUILD = "2026-10-07-03";
+  window.MC_BUILD = "2026-10-11-02";
   window.addEventListener("error", function (e) {
     var b = document.getElementById("errbar");
     if (!b) return;
@@ -63,22 +63,62 @@
         <button type="button" role="tab" id="tab-samples" aria-selected="false" aria-controls="panel-samples" data-i18n="tab_samples">Samples OS</button>
       </div>
       <div id="panel-mods" role="tabpanel" aria-labelledby="tab-mods">
+        <p class="mods-lede" data-i18n-html="mods_note"></p>
+        <div class="find" id="mod-find" hidden>
+          <svg class="mag" width="18" height="18" viewBox="0 0 20 20" fill="none" stroke="currentColor" stroke-width="1.7" stroke-linecap="round" aria-hidden="true"><circle cx="8.5" cy="8.5" r="5.8"/><path d="M13 13l4.5 4.5"/></svg>
+          <label class="vh" for="mod-q" data-i18n="search_label">Search the mods</label>
+          <input id="mod-q" type="search" autocomplete="off" spellcheck="false">
+          <button type="button" class="clr" id="mod-q-clr" hidden>×</button>
+        </div>
+        <p class="found" id="mod-found" aria-live="polite" hidden></p>
+        <ul class="cats" id="cats"></ul>
         <div id="features"></div>
-        <p class="note" data-i18n="mods_note">All these mods have been tested on a real Model:Cycles, except the choices tagged “Experimental”. Tick several to combine them.</p>
+        <div class="sel" id="mod-sel" role="region" aria-labelledby="sel-title"></div>
+        <p class="vh" id="mod-live" aria-live="polite"></p>
+        <div id="mod-sel-end" aria-hidden="true"></div>
       </div>
       <div id="panel-restore" role="tabpanel" aria-labelledby="tab-restore" hidden>
         <p class="panel-text" data-i18n-html="restore_text"></p>
         <p class="note" data-i18n-html="restore_from_samples"></p>
       </div>
       <div id="panel-samples" role="tabpanel" aria-labelledby="tab-samples" hidden>
-        <p class="samples-head"><span data-i18n="samples_title">Turn your Model:Cycles into a Model:Samples</span><span class="tag ok" data-i18n="tested">Tested</span></p>
-        <p class="panel-text" data-i18n="samples_text"></p>
-        <ul class="warn-list">
-          <li data-i18n="samples_w1"></li>
-          <li data-i18n-html="samples_w2"></li>
-          <li data-i18n="samples_w3"></li>
-        </ul>
-        <label class="check"><input id="samples-ack" type="checkbox"><span data-i18n="samples_ack">I have a MIDI interface for the way back (to the Model:Cycles MIDI IN).</span></label>
+        <div class="seg sub" role="radiogroup" aria-label="Machine">
+          <button type="button" role="radio" id="smp-dir-cyc" aria-checked="true" data-i18n="smp_dir_cyc">Model:Cycles → Samples OS</button>
+          <button type="button" role="radio" id="smp-dir-smp" aria-checked="false" data-i18n="smp_dir_smp">Model:Samples → Cycles OS</button>
+          <button type="button" role="radio" id="smp-dir-back" aria-checked="false" data-i18n="smp_dir_back">Model:Samples: back to its OS</button>
+        </div>
+        <div id="smp-pane-cyc">
+          <p class="samples-head"><span data-i18n="samples_title">Turn your Model:Cycles into a Model:Samples</span><span class="tag ok" data-i18n="tested">Tested</span></p>
+          <p class="panel-text" data-i18n="samples_text"></p>
+          <ul class="warn-list">
+            <li data-i18n="samples_w1"></li>
+            <li data-i18n-html="samples_w2"></li>
+            <li data-i18n="samples_w3"></li>
+          </ul>
+          <label class="check"><input id="samples-ack" type="checkbox"><span data-i18n="samples_ack">I have a MIDI interface for the way back (to the Model:Cycles MIDI IN).</span></label>
+        </div>
+        <div id="smp-pane-smp" hidden>
+          <p class="samples-head"><span data-i18n="cos_title">Turn your Model:Samples into a Model:Cycles</span><span class="tag exp" data-i18n="experimental">Experimental</span></p>
+          <p class="panel-text" data-i18n="cos_text"></p>
+          <ul class="warn-list">
+            <li data-i18n="cos_w1"></li>
+            <li data-i18n="cos_w5"></li>
+            <li data-i18n-html="cos_w2"></li>
+            <li data-i18n="cos_w3"></li>
+            <li data-i18n="xos_reset"></li>
+            <li data-i18n-html="cos_w4"></li>
+          </ul>
+          <label class="check"><input id="cos-ack" type="checkbox"><span data-i18n="cos_ack">I have backed up my samples and projects with Elektron Transfer, and I keep the official Model:Samples OS file for the way back.</span></label>
+        </div>
+        <div id="smp-pane-back" hidden>
+          <p class="samples-head"><span data-i18n="sback_title">Give your Model:Samples its own OS back</span><span class="tag exp" data-i18n="experimental">Experimental</span></p>
+          <p class="panel-text" data-i18n="sback_text"></p>
+          <ul class="warn-list">
+            <li data-i18n="sback_w1"></li>
+            <li data-i18n-html="sback_w2"></li>
+            <li data-i18n="xos_reset"></li>
+          </ul>
+        </div>
       </div>
     </div>
   </section>
@@ -204,11 +244,11 @@
 </footer>
 
 <!-- ?v= : same version stamp as MC_BUILD, so a browser never mixes a new page with cached old scripts -->
-<script src="../assets/release.js?v=2026-10-07-03"></script>
-<script src="../assets/site.js?v=2026-10-07-03"></script>
-<script src="builder.js?v=2026-10-07-03"></script>
-<script src="tweaks.js?v=2026-10-07-03"></script>
-<script src="flasher.js?v=2026-10-07-03"></script>
-<script src="app.js?v=2026-10-07-03"></script>
+<script src="../assets/release.js?v=2026-10-11-02"></script>
+<script src="../assets/site.js?v=2026-10-11-02"></script>
+<script src="builder.js?v=2026-10-11-02"></script>
+<script src="tweaks.js?v=2026-10-11-02"></script>
+<script src="flasher.js?v=2026-10-11-02"></script>
+<script src="app.js?v=2026-10-11-02"></script>
 </body>
 </html>

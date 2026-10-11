@@ -95,6 +95,9 @@ function hex(bytes) {
   return s;
 }
 function fromHex(s) {
+  // comme bytes.fromhex de Python, mais sans espace : deux chiffres hexadécimaux par octet, sinon refus
+  if (typeof s !== "string" || s.length % 2 || /[^0-9a-fA-F]/.test(s))
+    throw new Error(`hexadecimal invalide : ${String(s).slice(0, 24)}`);
   const out = new Uint8Array(s.length / 2);
   for (let i = 0; i < out.length; i++) out[i] = parseInt(s.substr(i * 2, 2), 16);
   return out;
@@ -316,6 +319,15 @@ function aplibTail(w, data, start, lastOff) {
   return lastOff;
 }
 
+// Charge utile rangée compressée dans l'image (append.compress === "aplib", notes/50) : flux aPLib sans l'en-tête de
+// 8 o, même compresseur que la partie ajoutée (tools/aplib_grow.py pack), décompressé au démarrage (stub.S, APLIB).
+function aplibPack(data) {
+  const w = new _Writer();
+  aplibTail(w, data, 0, 1);
+  w.end();
+  return Uint8Array.from(w.o.slice(SECT_HDR));
+}
+
 // origLen < data.length : section agrandie, la fin est compressée par aplibTail.
 function aplibRepack(data, ops, dirty, origLen = data.length) {
   const w = new _Writer();
@@ -446,6 +458,8 @@ function applyWrites(mainOs, tweaks) {
   for (const t of tweaks) {
     for (const w of t.writes) {
       const off = w.off, old = fromHex(w.old), nw = fromHex(w.new);
+      if (!Number.isInteger(off) || off < 0 || off + old.length > data.length)
+        throw new Error(`${t.id} : ecriture hors de la section 3 (off ${off})`);
       // the same write, already made by another tweak (a sprite mask both free, notes/32): nothing to do
       if (nw.length === old.length && nw.every((b, k) => data[off + k] === b) && !old.every((b, k) => data[off + k] === b))
         continue;
@@ -458,6 +472,18 @@ function applyWrites(mainOs, tweaks) {
     }
   }
   return { data, dirty };
+}
+
+// Les ecritures d'un tweak a la suite, pour son empreinte (REF_MODS de app.js) : off (4 o), len(old) (4 o), old,
+// len(new) (4 o), new. Meme calcul que writes_bytes() de tools/ref_mainos.py.
+function writesBytes(t) {
+  const parts = [];
+  const u32 = (x) => Uint8Array.of(x >>> 24, (x >>> 16) & 255, (x >>> 8) & 255, x & 255);
+  for (const w of t.writes) {
+    const old = fromHex(w.old), nw = fromHex(w.new);
+    parts.push(u32(w.off), u32(old.length), old, u32(nw.length), nw);
+  }
+  return concat(...parts);
 }
 
 function checkConflicts(chosen) {
@@ -588,8 +614,9 @@ function syntaktVersion(ap, syntaktRaw) {
 
 /* Charge utile d'un tweak « append » : plages copiées du programme audio du Syntakt (section 7, chargée
  * à 0x40000400) ou du MAIN OS Cycles d'origine (mainOs), notre code, puis la table de relocalisation
- * (ancienne valeur vérifiée à chaque fois). Rend ce qui va dans l'image : la charge utile entière, ou rangée en
- * morceaux (ap.pack : [adresse, taille], tools/build.py payload_image ; hors des morceaux, tout doit être à zéro). */
+ * (ancienne valeur vérifiée à chaque fois). Rend ce qui va dans l'image : la charge utile entière, rangée en
+ * morceaux (ap.pack : [adresse, taille], tools/build.py payload_image ; hors des morceaux, tout doit être à zéro),
+ * ou compressée (ap.compress === "aplib" : aplibPack). */
 function buildPayload(ap, syntaktRaw, mainOs) {
   let img = null;                               // section 7 du Syntakt, si le tweak en copie des morceaux
   if (ap.syntakt) {
@@ -600,6 +627,10 @@ function buildPayload(ap, syntaktRaw, mainOs) {
     if (hex(sha256(img)) !== ap.syntakt.section_sha256) throw new Error("section 7 du Syntakt inattendue");
   }
   const out = payloadRuntime(ap, img, mainOs);
+  if (ap.compress) {
+    if (ap.compress !== "aplib") throw new Error(`charge utile : compression ${ap.compress} inconnue`);
+    return aplibPack(out);
+  }
   if (!ap.pack) return out;
   const dest = parseInt(ap.dest, 16), kept = Uint8Array.from(out), parts = [];
   for (const [a, n] of ap.pack) {
@@ -622,18 +653,22 @@ function payloadRuntime(ap, img, mainOs) {
     out.set(chunk, at);
   }
   for (const [va, old, nw] of ap.reloc) {
-    const at = parseInt(va, 16) - dest;
-    if (hex(out.subarray(at, at + 4)) !== old) throw new Error(`relocalisation ${va} : ${old} attendu`);
-    out.set(fromHex(nw), at);
+    const at = parseInt(va, 16) - dest, o = fromHex(old), n = fromHex(nw);
+    if (o.length !== 4 || n.length !== 4 || !(at >= 0 && at <= out.length - 4))
+      throw new Error(`relocalisation ${va} : 4 octets attendus dans la charge utile`);
+    if (hex(out.subarray(at, at + 4)) !== hex(o)) throw new Error(`relocalisation ${va} : ${old} attendu`);
+    out.set(n, at);
   }
   return out;
 }
 
 /* Construit le .syx modifie.
  * raw = Uint8Array du .syx officiel ; device = device.json ; chosen = [tweak] ;
- * opts = { expectMainOsSha, force, syntakt } ; syntakt = Uint8Array du Syntakt_OS1.42.syx, exigé par un tweak « append »
- * qui en copie des morceaux (ap.syntakt) ; Model-TG n'en a pas besoin.
- * Renvoie { raw, mainOsSha, patchedBytes, caves, product, name }. */
+ * opts = { expectMainOsSha, refMods, force, syntakt } ; syntakt = Uint8Array du Syntakt_OS1.42.syx, exigé par un tweak
+ * « append » qui en copie des morceaux (ap.syntakt) ; Model-TG n'en a pas besoin. refMods = REF_MODS de app.js
+ * (notes/49) : l'empreinte des ecritures (w) et de la charge utile (p) de chaque tweak, comparees ici ; un tweak
+ * dont l'empreinte differe est refuse. modsChecked : chaque tweak choisi avait son empreinte, et elle correspond.
+ * Renvoie { raw, mainOsSha, patchedBytes, caves, modsChecked, product, name }. */
 function build(raw, device, chosen, opts = {}) {
   const { stream, product, name, start_seq } = unwrap(raw);
   const c = parseContainer(stream);
@@ -646,6 +681,12 @@ function build(raw, device, chosen, opts = {}) {
 
   checkConflicts(chosen);
   chosen = [...chosen].sort((a, b) => a.order - b.order);   // l'un peut s'appliquer sur l'autre (notes/31)
+  const refOf = (t) => (opts.refMods && opts.refMods[t.id]) || null;
+  let modsChecked = !!opts.refMods && chosen.length > 0;
+  for (const t of chosen) {                      // chaque mod, octet pour octet celui de tools/build.py (notes/49)
+    if (!refOf(t)) { modsChecked = false; continue; }
+    if (hex(sha256(writesBytes(t))) !== refOf(t).w) throw new Error(`${t.id} : ecritures differentes de la reference`);
+  }
   const { data: patched, dirty } = applyWrites(mainOs, chosen);
   const caves = checkCaves(mainOs, chosen, opts.force, dirty, patched, device.cave_refs_ok);
   const apps = chosen.filter((t) => t.append);       // l'un après l'autre : Model-TG, puis nos moteurs
@@ -654,6 +695,7 @@ function build(raw, device, chosen, opts = {}) {
     const ap = t.append;
     if (BASE + full.length !== parseInt(ap.at, 16)) throw new Error("l'image ne finit pas où le tweak l'attend");
     const payload = buildPayload(ap, opts.syntakt, mainOs);
+    if (refOf(t) && hex(sha256(payload)) !== refOf(t).p) throw new Error(`${t.id} : charge utile differente de la reference`);
     full = concat(full, payload);
     fullDirty = concat(fullDirty, new Uint8Array(payload.length).fill(1));
   }
@@ -676,7 +718,7 @@ function build(raw, device, chosen, opts = {}) {
   const outStream = buildStream(blob, BYTES_PER_MSG);
   const outRaw = wrap(outStream, product, start_seq);
   return { raw: outRaw, mainOsSha: patchedSha, patchedBytes: fullDirty.reduce((a, b) => a + b, 0),
-           caves, product, name };
+           caves, modsChecked, product, name };
 }
 
 /* Cross-flash (tools/crossflash.py) : le MAIN OS de guestRaw dans le conteneur de hostRaw.
@@ -719,10 +761,77 @@ function crossflash(hostRaw, guestRaw) {
   return { raw, product: host.product, name: host.name, guestName: guest.name, mainOsSha: hex(sha256(main)) };
 }
 
+/* OS Cycles pour Model:Samples (tools/crossflash.py --to samples, notes/41) : le MAIN OS officiel du Cycles, dont
+ * la constante de sa cle de verification (32 octets en 0x401296b2) est recalculee pour donner la cle du Samples,
+ * dans le conteneur officiel du Samples (bootstrap, updater, signature Samples). Ainsi l'OS Cycles accepte ensuite
+ * l'OS Samples officiel par USB (samplesBack). Relu en entier. Renvoie { raw, mainOsSha }. */
+const CYC_KEY_STR = 0x40129650, CYC_KEY_CONST = 0x401296b2;
+const CYC_KEY_CODE = [[0x4005275c, "487940129650"], [0x400527c0, "43f9401296b2"]];
+
+function keyOf(c) {
+  const plain = [];
+  for (const s of c.sections) {
+    try { plain.push(aplibDepack(c.blob.subarray(s.off, s.off + s.size)).data); } catch (e) { /* brute */ }
+  }
+  const key = findKey(plain, c.blob.subarray(0, c.blob.length - DIGEST_LEN), c.blob.subarray(c.blob.length - DIGEST_LEN));
+  if (!key) throw new Error("cle HMAC introuvable");
+  return key;
+}
+
+function cyclesForSamples(cycRaw, smpRaw) {
+  const cy = unwrap(cycRaw), sm = unwrap(smpRaw);
+  if (cy.product !== 0x11 || sm.product !== 0x0f) throw new Error("il faut l'OS Model:Cycles puis l'OS Model:Samples");
+  const cc = parseContainer(cy.stream), sc = parseContainer(sm.stream);
+  const cKey = keyOf(cc), sKey = keyOf(sc);
+  const c3 = cc.sections.find((s) => s.id === 3);
+  const { data: main, ops } = aplibDepack(cc.blob.subarray(c3.off, c3.off + c3.size));
+  for (const [va, want] of CYC_KEY_CODE)
+    if (hex(main.subarray(va - BASE, va - BASE + 6)) !== want) throw new Error("code de verification inattendu");
+  const text = main.subarray(CYC_KEY_STR - BASE, CYC_KEY_STR - BASE + 12);
+  if (hex(text) !== "5245564552422053454e4400") throw new Error("chaine de derivation inattendue");
+  const s = text.subarray(0, 11), h = sha256(s), hr = sha256(Uint8Array.from(s).reverse());
+  const co = CYC_KEY_CONST - BASE, old = main.subarray(co, co + 32);
+  if (!eq(old.map((b, i) => b ^ h[i] ^ hr[i]), cKey)) throw new Error("la cle du MAIN OS Cycles differe de celle du bootstrap");
+  const patched = Uint8Array.from(main), dirty = new Uint8Array(main.length);
+  for (let i = 0; i < 32; i++) { patched[co + i] = sKey[i] ^ h[i] ^ hr[i]; dirty[co + i] = 1; }
+  const newS3 = aplibRepack(patched, ops, dirty);
+  if (!eq(aplibDepack(newS3).data, patched)) throw new Error("recompression du MAIN OS : relecture differente");
+  const blob = rebuildContainer(sc, { 3: newS3 }, sKey);
+  const raw = wrap(buildStream(blob, BYTES_PER_MSG), sm.product, sm.start_seq);
+
+  // relecture complete
+  const back = unwrap(raw), bc = parseContainer(back.stream);
+  if (back.product !== 0x0f || !eq(bc.blob.subarray(0, 0x20), sc.blob.subarray(0, 0x20))) throw new Error("relecture : en-tete");
+  for (const x of sc.sections) {
+    const b = bc.sections.find((y) => y.id === x.id);
+    if (!b) throw new Error(`relecture : section ${x.id} absente`);
+    if (x.id !== 3 && !eq(bc.blob.subarray(b.off, b.off + b.size), sc.blob.subarray(x.off, x.off + x.size)))
+      throw new Error(`relecture : section ${x.id} differente de celle du Samples`);
+  }
+  const b3 = bc.sections.find((y) => y.id === 3);
+  const m = aplibDepack(bc.blob.subarray(b3.off, b3.off + b3.size)).data;
+  if (!eq(m, patched)) throw new Error("relecture : MAIN OS different");
+  if (!eq(hmacSha256(sKey, bc.blob.subarray(0, bc.blob.length - DIGEST_LEN)), bc.blob.subarray(bc.blob.length - DIGEST_LEN)))
+    throw new Error("relecture : HMAC invalide avec la cle Samples");
+  return { raw, mainOsSha: hex(sha256(m)) };
+}
+
+/* Retour (tools/crossflash.py --back-samples) : l'OS Samples officiel, meme contenu et meme signature, dans le
+ * transport SysEx du Cycles (produit 0x11, octet appareil 0x0C), le seul que l'OS Cycles route vers sa mise a jour. */
+function samplesBack(cycRaw, smpRaw) {
+  const cy = unwrap(cycRaw), sm = unwrap(smpRaw);
+  if (cy.product !== 0x11 || sm.product !== 0x0f) throw new Error("il faut l'OS Model:Cycles puis l'OS Model:Samples");
+  const raw = wrap(sm.stream, cy.product, cy.start_seq);
+  const back = unwrap(raw);
+  if (back.product !== 0x11 || raw[8] !== 0x0c || !eq(back.stream, sm.stream)) throw new Error("relecture : transport ou contenu");
+  return { raw };
+}
+
 // ---- Export node / navigateur ---------------------------------------------
-const API = { sha256, hmacSha256, unwrap, wrap, aplibDepack, aplibRepack, parseContainer, findKey,
+const API = { sha256, hmacSha256, writesBytes, unwrap, wrap, aplibDepack, aplibRepack, aplibPack, parseContainer, findKey,
               rebuildContainer, buildStream, contentChecksum, applyWrites, checkConflicts, checkCaves,
-              build, crossflash, syntaktSection, syntaktVersion, buildPayload, hex, fromHex, PRODUCTS, BASE };
+              build, crossflash, cyclesForSamples, samplesBack, syntaktSection, syntaktVersion, buildPayload,
+              hex, fromHex, PRODUCTS, BASE };
 if (typeof module !== "undefined" && module.exports) module.exports = API;
 if (typeof window !== "undefined") window.MCBuilder = API;
 })();

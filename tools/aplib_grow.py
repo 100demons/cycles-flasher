@@ -71,3 +71,14 @@ def repack_grow(data, ops, dirty, orig_len):
     body[0:4] = stream_len.to_bytes(4, "big")
     body[4:8] = (sum(body[aplib.SECT_HDR:]) & 0xFFFFFFFF).to_bytes(4, "big")
     return bytes(body)
+
+
+def pack(data):
+    """Flux aPLib (même variante, même compresseur glouton que la partie ajoutée), SANS l'en-tête de 8 o : charge
+    utile rangée compressée dans l'image (append.compress = "aplib", notes/50), décompressée au démarrage par
+    tools/machines/syntakt_bridge/stub.S (APLIB). Même algorithme octet pour octet que aplibPack de
+    docs/flasher/builder.js."""
+    w = aplib._Writer()
+    _tail(w, data, 0, 1)
+    w.end()
+    return bytes(w.o[aplib.SECT_HDR:])

@@ -41,4 +41,13 @@ const ki = verdict(meta.known_rule.inside, meta.cave_refs_ok), ko = verdict(meta
 console.log(`reference connue : ecriture dans sa partie libre -> ${ki} ; hors de cette partie -> ${ko} ; ` +
   `sans la liste -> ${kn}`);
 ok = ok && ki === "accepte" && ko === "refuse" && kn === "refuse";
+
+// charge utile compressee (append.compress = "aplib", notes/50) : meme flux que tools/aplib_grow.py pack
+const zin = new Uint8Array(fs.readFileSync(path.join(dir, "aplib_in.bin")));
+const zref = new Uint8Array(fs.readFileSync(path.join(dir, "aplib_out.bin")));
+const zjs = B.aplibPack(zin);
+const zsame = zjs.length === zref.length && zjs.every((b, i) => b === zref[i]);
+console.log(`charge utile compressee : ${zin.length} o -> JS ${zjs.length} o, Python ${zref.length} o -> ` +
+  `${zsame ? "IDENTIQUE au Python" : "DIFFERENT !!"}`);
+ok = ok && zsame;
 process.exit(ok ? 0 : 1);

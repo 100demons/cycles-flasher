@@ -816,6 +816,13 @@
   "mq_toggle": "0x401b7978",
   "mq_pending": "0x401b7a68",
   "mq_apply": "0x401b79fe",
-  "voice_quiet": "0x401adae0"
+  "voice_quiet": "0x401adae0",
+  "tok_of": "0x401b2d96",
+  "sound_obj": "0x401b32a2",
+  "ensure_loaded": "0x401b27d0",
+  "slot_hash": "0x401be4a0",
+  "pd_mode": "0x401befc8",
+  "ld_busy": "0x401beff4",
+  "pad_load_hook": "0x401b3210"
  }
 }

@@ -173,8 +173,10 @@ Quatre étapes, de haut en bas :
    - « SD VINTAGE à la place de SNARE » (`sdvintage-exact`, [note 17](notes/17-portage-exact-syntakt.md)) n'est plus dans la page : il reste disponible avec `build.py`.
    - Pour revenir en arrière : onglet *Official firmware*, par USB.
 2. **Déposer l'OS officiel** `model-cycles_OS1.13.syx` : il est reconnu à son empreinte, et le firmware est **construit
-   automatiquement** (pas de bouton). La page **exige** le MAIN OS de référence de chaque combinaison (voir [BUILD.md](BUILD.md)),
-   sinon elle refuse. Un `.syx` qui n'est pas l'OS officiel est accepté s'il est valide, mais envoyé **tel quel**.
+   automatiquement** (pas de bouton). La page vérifie **chaque mod coché** contre l'outil Python (empreinte de ses
+   écritures et de son code ajouté) et, pour les combinaisons de son échantillon, le MAIN OS entier ; sinon elle refuse
+   (voir [BUILD.md](BUILD.md) et la [note 49](notes/49-verification-mod-par-mod.md)). Un `.syx` qui n'est pas l'OS officiel
+   est accepté s'il est valide, mais envoyé **tel quel**.
 3. **Brancher en USB** : câble USB, Model:Cycles allumé normalement. Deux méthodes :
    - **Rapide** (par défaut, [note 37](notes/37-flash-rapide-usb.md)) : le protocole de mise à jour d'Elektron Transfer,
      tel que documenté par [Elektroid](https://github.com/dagargo/elektroid). Le Model:Cycles reste sur son écran habituel
@@ -199,7 +201,8 @@ octets de chaque message) à une transcription ligne à ligne du C d'Elektroid ;
 et `tools/webbuild_check.sh` compare le **constructeur** JS (`docs/flasher/builder.js`) à `tools/build.py` (aPLib + conteneur + HMAC)
 à l'octet près, sur une image synthétique. `tools/webflash_smoke.sh` joue le parcours complet de la page dans jsdom
 face à un faux Model:Cycles qui parle le protocole de Transfer (il garde chaque octet reçu et vérifie chaque CRC)
-(avec `tools/webflash_smoke.sh model-cycles_OS1.13.syx`, il vérifie aussi toutes les combinaisons proposées sur le vrai OS).
+(avec `tools/webflash_smoke.sh model-cycles_OS1.13.syx`, il reconstruit aussi l'échantillon de combinaisons de `REF_MAINOS`
+sur le vrai OS, chaque mod vérifié).
 Les tables de patchs de la page viennent de `docs/flasher/tweaks.js`, généré depuis `tweaks/` par `tools/gen_flasher_tweaks.py` (`--check` en CI).
 
 ## 8. Méthode manuelle (sans les scripts)

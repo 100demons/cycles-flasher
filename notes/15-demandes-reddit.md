@@ -151,7 +151,7 @@ Le retour depuis l'OS Samples n'est **garanti** que par le MIDI IN : le flasher 
 - **Machine « sample » dans le moteur Cycles** : l'analyse la rend moins lointaine que ne le disait la [note 10 §4](10-faisabilite-fonctionnalites.md). Même RAM (hyp. forte), même stockage, même bibliothèque de fichiers. Mais il faudrait greffer le `SampleManager` (chargement, liste, UI) et une voix de lecture dans le moteur.
   Le test de la route 3.2 a réussi : le matériel du Cycles fait tourner le moteur de samples. La machine « sample » dans l'OS Cycles devient donc un vrai chantier possible, qu'il reste à planifier.
 
-### 3.4 Retour à l'OS Cycles **par USB**, sans interface MIDI — 🔴 impossible dans cet état (verrou à deux clés). MIDI requis
+### 3.4 Retour à l'OS Cycles **par USB**, sans interface MIDI — 🟠 probablement possible (corrigé le 06/10/2026, §3.4bis). MIDI conseillé
 
 > **Mise à jour du 30/09/2026** : l'utilisateur a retrouvé l'OS Cycles **sans interface MIDI**, par un factory reset depuis le menu de démarrage (power + trig).
 > La conclusion « impossible » ci-dessous vaut pour le chemin `CONFIG › UPGRADE` étudié ici, pas pour tout retour.
@@ -192,9 +192,28 @@ Vérifié le 29/09/2026 : les octets du conteneur ne diffèrent de l'officiel Cy
 Le script rejoue sur le fichier les contrôles ci-dessus (produit, marqueur, checksum de chaque paquet, checksum de contenu, HMAC valide avec la clé Samples et **invalide** avec la clé Cycles),
 et le vérificateur JS du flasher web l'accepte (`Model:Samples`, 6 953 paquets).
 
-Ce fichier passe **la première** vérification, mais pas la suite. Voici pourquoi.
+Ce fichier passe **la première** vérification, mais pas la suite. Voici pourquoi (raisonnement du 30/09, **faux** : voir la correction en tête de §3.4bis).
 
-### 3.4bis Le vrai blocage : une mise à jour USB est vérifiée **deux fois**, avec **deux clés différentes**
+### 3.4bis Le vrai blocage : une mise à jour USB est vérifiée **deux fois**, avec **deux clés différentes** (faux, corrigé le 06/10/2026)
+
+> **Correction du 06/10/2026** `[FAIT]` : **il n'y a pas de « porte 2 »**. Une mise à jour USB n'est vérifiée qu'une
+> fois, par l'OS qui tourne. `0x20000` n'est pas une zone de staging mais le conteneur en service : l'OS l'efface et
+> y écrit le conteneur reçu, puis redémarre, et le bootstrap démarre ce qui s'y trouve **sans checksum ni HMAC**
+> (chargeur `0x80000820`, exécuté en émulation sur trois conteneurs). Le HMAC du bootstrap ne sert qu'au menu de
+> démarrage (MIDI IN). Adresses et preuve : [41 §1](41-os-cycles-sur-samples.md).
+> Conséquences :
+> - le 29/09, le `--back` (signé Samples) **a bien été écrit** par l'OS Samples. Le FACTORY RESET du 30/09 ne fait
+>   que poser un bit dans l'argument de démarrage (`0x800071d8`) avant de démarrer ce qui est en `0x20000` : c'est
+>   donc lui qui a ramené l'OS Cycles. Pourquoi la machine semblait d'abord rester sur l'OS Samples n'est pas
+>   expliqué par le code du bootstrap ; piste la plus simple `[HYP]` : l'OS Cycles a démarré mais a buté sur les
+>   données laissées par l'OS Samples jusqu'à la réinitialisation du projet actif ;
+> - le retour par USB depuis l'OS Samples sur un Cycles est donc **probablement possible** avec `--back`, suivi au
+>   besoin d'un EMPTY RESET ou d'un FACTORY RESET. À confirmer sur la machine avant de l'offrir dans le flasher
+>   (PR séparée) ;
+> - la « variante MAIN OS seul » et les contrôles `LENGTH ERROR` / `CRC CHECK` (qui portent sur une section
+>   décompressée de 61 440 octets au plus, pas sur le MAIN OS) ne changent rien à cela ;
+> - la suite de cette section est gardée pour l'historique ; ses conclusions « porte 2 » et « pas de retour par
+>   USB » sont fausses.
 
 `[FAIT]` En désassemblant le chemin d'écriture de l'OS Samples (`0x40091488`, appelé par `0x4006bed6`) :
 - après la vérification (§3.4, contrôle 3), l'updater **n'écrit pas** section par section à leur adresse : il copie tout le conteneur reçu dans une **zone de staging** (base flash `0x20000`, `0x4008fc50` par blocs), affiche « Writing Flash », puis **réinitialise le CPU** (`move.l #0, 0x48000000` ; `move.b #0x80, 0xec090000`, `0x40091570`).
@@ -226,6 +245,10 @@ Un fichier ne porte **qu'un seul** trailer HMAC. Il ne peut pas satisfaire les d
 La piste « sortie casque » (§3 de la note 12) resterait à défaut, mais elle est expérimentale et son outil `syx2wav.py` n'est pas écrit.
 
 Le mode `tools/crossflash.py --back` **est conservé** (il documente le raisonnement et produit un fichier correct pour la porte 1), mais son aide dit clairement qu'il **ne suffit pas** au retour à cause de la porte 2.
+
+> **Suite (05/10/2026)** : dans l'autre sens (OS Cycles sur un Model:Samples), l'OS Cycles d'origine refuse l'OS
+> Samples officiel (signé Samples) ; en changeant 32 octets de l'OS Cycles, qui vérifie alors avec la clé du Samples,
+> le retour par USB devient possible. Voir [41](41-os-cycles-sur-samples.md).
 
 ## 4. Machines numériques du Syntakt — 🟠 recherche, premiers résultats encourageants
 

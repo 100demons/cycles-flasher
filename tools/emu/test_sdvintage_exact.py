@@ -106,7 +106,8 @@ def boot_hook_ok(os_img, payload):
 def bootstrap_depack_ok(cycles_syx, tweak, syntakt_path):
     """Au démarrage, c'est le décompresseur aPLib du BOOTSTRAP du Cycles (section 2, 0x800006bc, appelé par
     le chargeur 0x80000850 avec la section lue en flash à 0x40200000) qui décompresse l'OS vers 0x40000400,
-    et non mtlib. On l'exécute pour de vrai sur la section 3 agrandie, recompressée comme build.py."""
+    et non mtlib. On l'exécute pour de vrai sur la section 3 agrandie, recompressée comme build.py. tweak : un tweak,
+    ou une liste (version combinée avec Model-TG)."""
     import struct
     import aplib_grow
     from build import unwrap, container, aplib
@@ -117,8 +118,9 @@ def bootstrap_depack_ok(cycles_syx, tweak, syntakt_path):
     sec = {x["id"]: c["blob"][x["off"]:x["off"] + x["size"]] for x in c["sections"]}
     boot = aplib.depack(sec[2])[0]                       # section 2 : bootstrap, exécuté à 0x800003fc
     stock, ops = aplib.depack(sec[3])
-    patched, dirty = build.apply_writes(stock, [tweak])
-    payload, _ = build.build_payload([tweak], stock, syntakt_path)
+    tweaks = tweak if isinstance(tweak, list) else [tweak]
+    patched, dirty = build.apply_writes(stock, tweaks)
+    payload, _ = build.build_payload(tweaks, stock, syntakt_path)
     want = bytes(patched) + payload
     comp = aplib_grow.repack_grow(want, ops, dirty + bytearray(b"\x01") * len(payload), len(stock))
     STAGE, DEST, STOP, SP = 0x40200000, 0x40000400, 0x8001f000, 0x8001e000

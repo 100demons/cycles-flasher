@@ -1,0 +1,34 @@
+{
+ "id": "midi-both",
+ "order": 50,
+ "name": "THRU qui envoie aussi le MIDI du Cycles",
+ "description": [
+  "Avec THR choisi dans CONFIG › MIDI › PORTS › OUT/THRU, le Cycles relaie toujours le MIDI reçu sur son MIDI IN et envoie aussi son horloge, ses notes et ses paramètres. OUT ne change pas, le menu non plus.",
+  "Les trois portes qui jetaient le MIDI généré en THR (0x4000154a, 0x4000156a, 0x40001590) reçoivent moveq #0,d0 au lieu de l'appel au réglage. Aucune place libre. Ne va pas avec midi-live-both.",
+  "D'AveyCole (https://github.com/AveyCole/Modded-Cycles, commit ba5f8bb), testé sur son Model:Cycles le 10/10/2026.",
+  "Généré par tools/gen_midi_thru.py, notes/53."
+ ],
+ "device": "Model:Cycles",
+ "os": "1.13",
+ "section": 3,
+ "conflicts": [
+  "midi-live-both"
+ ],
+ "writes": [
+  {
+   "off": 4426,
+   "old": "4eb940044df8",
+   "new": "70004e714e71"
+  },
+  {
+   "off": 4458,
+   "old": "4eb940044df8",
+   "new": "70004e714e71"
+  },
+  {
+   "off": 4496,
+   "old": "4eb940044df8",
+   "new": "70004e714e71"
+  }
+ ]
+}

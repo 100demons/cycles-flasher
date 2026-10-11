@@ -154,6 +154,18 @@ for t, known, verdict in ((inside, KNOWN, "accepte"), (outside, KNOWN, "refuse")
 meta["known_rule"] = {"inside": inside, "outside": outside}
 meta["cave_refs_ok"] = KNOWN
 
+# --- 6. charge utile compressée (append.compress = "aplib", notes/50) : même flux que aplib_grow.pack ----------------
+import aplib_grow                                # noqa: E402
+import random                                    # noqa: E402
+rnd = random.Random(50)                          # littéraux, décalages lointains (> 3 328), longues répétitions
+blk = bytes(rnd.getrandbits(8) for _ in range(5000))
+data = (bytes(40000) + blk + bytes(rnd.choice(b"ab\0") for _ in range(20000)) + blk[:3] + blk + bytes(70000) + blk
+        + b"".join(bytes([rnd.getrandbits(8)]) * rnd.randint(1, 300) for _ in range(500)) + main[:30000])
+OUT.joinpath("aplib_in.bin").write_bytes(data)
+OUT.joinpath("aplib_out.bin").write_bytes(aplib_grow.pack(data))
+if aplib.depack(bytes(aplib.SECT_HDR) + aplib_grow.pack(data))[0] != data:
+    raise SystemExit("!! aplib_grow.pack : relecture différente")
+
 OUT.joinpath("meta.json").write_text(json.dumps(meta))
 print("synth.syx", len(raw), "o ; section3 sha", meta["section_sha256"][:16],
       "; builds", list(meta["expect"]), "; regle des caves OK (Python)")

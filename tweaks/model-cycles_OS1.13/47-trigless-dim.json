@@ -1,0 +1,63 @@
+{
+ "id": "trigless-dim",
+ "order": 47,
+ "name": "Trigless trigs atténués sur les touches de pas",
+ "description": [
+  "Mode grille : une touche de pas qui porte un trigless trig (lock trig, FUNC + pas) s'allume à 33 % au lieu de pleine lumière ; elle garde le clignotement d'origine (éteinte 0,35 s toutes les 2 s).",
+  "L'état de sa LED devient 260 au lieu de 4 (traité comme 4 par l'OS). La LED est allumée 1 ms sur 3 (333 Hz, régulier) : l'interruption du panneau recharge les verrous des rangées qui portent une touche atténuée, à chaque cycle de 1 ms, juste avant la rangée du tour. Trigs de note, trigs avec p-locks, lumière de lecture, pads : inchangés.",
+  "D'après le mod de djd_oz (envoyé à Maxime le 06/10/2026) : même état 260, même clignotement ; le découpage de la lumière est refait dans l'interruption du panneau (la version 1, 16 ticks sur 25 de l'horloge des LED à 120 Hz, scintillait irrégulièrement).",
+  "Code et état dans deux masques de sprites 47x47 libérés (tools/sprites.py) : 114 o en 0x4018dba8, 318 o en 0x40192734. Généré par tools/gen_trigless_dim.py, notes/45."
+ ],
+ "device": "Model:Cycles",
+ "os": "1.13",
+ "section": 3,
+ "symbols": {
+  "td_lock": "0x40192848",
+  "td_last": "0x40192850",
+  "td_cur": "0x40192858",
+  "td_ph": "0x40192860",
+  "td_led": "0x40192734"
+ },
+ "writes": [
+  {
+   "off": 23350,
+   "old": "b2ac00286730",
+   "new": "4ef94018dba8"
+  },
+  {
+   "off": 23686,
+   "old": "4ef94008e77e",
+   "new": "4ef94018dbc8"
+  },
+  {
+   "off": 138068,
+   "old": "0004",
+   "new": "0104"
+  },
+  {
+   "off": 367082,
+   "old": "76ff781533c38c000000",
+   "new": "4ef9401927344e714e71"
+  },
+  {
+   "off": 704178,
+   "old": "40192734",
+   "new": "40172220"
+  },
+  {
+   "off": 706814,
+   "old": "4018dba8",
+   "new": "40172220"
+  },
+  {
+   "off": 1628072,
+   "old": "fffffffffffe0000fffffffffffe0000fffffffffffe0000fffffffffffe0000fffffffffffe0000fffffffffffe0000fffffffffffe0000fffffffffffe0000fffffffffffe0000fffffffffffe0000fffffffffffe0000fffffffffffe0000fffffffffffe0000fffffffffffe0000ffff",
+   "new": "222c00280c8100000104670e0c810000000467064ef940005f3c4ef940005f6c206f00044feffff448d7001c42a742a741e8002843f94010abf87836201824190c8000000104660c4a826b082602e68b05f73800538466e423df4019284823df4019284c4cd7001c4fef000c4ef94008e77e"
+  },
+  {
+   "off": 1647412,
+   "old": "fffffffffffe0000fffffffffffe0000fffffffffffe0000fffffffffffe0000fffffffffffe0000fffffffffffe0000fffffffffffe0000fffffffffffe0000fffffffffffe0000fffffffffffe0000fffffffffffe0000fffffffffffe0000fffffffffffe0000fffffffffffe0000fffffffffffe0000fffffffffffe0000fffffffffffe0000fffffffffffe0000fffffffffffe0000fffffffffffe0000fffffffffffe0000fffffffffffe0000fffffffffffe0000fffffffffffe0000fffffffffffe0000fffffffffffe0000fffffffffffe0000fffffffffffe0000fffffffffffe0000fffffffffffe0000fffffffffffe0000fffffffffffe0000fffffffffffe0000fffffffffffe0000fffffffffffe0000fffffffffffe0000fffffffffffe0000fffffffffffe0000fffffffffffe0000fffffffffffe",
+   "new": "4fefffec48d706e043f94019284876ff281188a90004662028290008b8a9001066162829000cb8a90014660c1380280813802810600000982829001852847a03b88565027800234400182a3c00009249e8ad45e9001c7c067e0078000d05660479b1680073b16808888173b16810b881671013846810e18c2206eb89888134c4528753866ad41380280878000505660479b128008084138028104a87673043e9001c247c8c000000348376003819354400026100003678083544000a6100002c78f73544000661000022538766de4cd706e04fef0014720078154a83670633c38c0000004ef940059df44e7178407bf9fc08c0045384671a73f9fc08c0042c059c816a06068600002c010c860000011065e24e750000000000000000ffffffffffffffffffffffffffffffff000000000000000000000000000000000000"
+  }
+ ]
+}

@@ -15,6 +15,9 @@ platform and ISA pitfalls: [`notes/03-plateforme-coldfire.md`](../notes/03-plate
 - Detect the cross toolchain as the existing generators do:
   `next((c for c in ("m68k-linux-gnu-", "m68k-elf-") if shutil.which(c + "gcc")), "m68k-linux-gnu-")`.
   Compiled code is built with `-mcpu=54418`. Pin the compiler version used in the note when output bytes depend on it.
+  Without Homebrew, m68k-elf GCC 16.2.0 and binutils 2.47 build from Ubuntu's source tarballs
+  (`gcc-16_16.2.0.orig.tar.gz`, `binutils_2.47.orig.tar.xz`, configure lines in notes/42 §16); that build reproduces
+  `45-chord-keys.json` and the SD VINTAGE JSONs byte for byte.
 
 ## A generator: `gen_<mod>.py`
 
@@ -34,11 +37,15 @@ Copy the shape of `gen_tempo_max.py` (data only) or `gen_trig_hold.py` (assemble
 Free space is scarce and every byte of it is accounted for in a note. Before taking any, read the notes that use it
 and check the writes of **every** other tweak for overlaps.
 
-- **Freed sprite masks** (`sprites.py`, notes/14 §5, notes/32 §11): a sprite is redirected to an identical mask
-  (`sprites.redirect_write`), freeing its own. Already used: `0x4015c044` (6ch-usbup stubs, trig-hold in front),
-  `0x4016cae8` (Syntakt engines' boot hook at the start, arpeggiator menu after it), `0x4018a788`, `0x40189930`,
-  `0x4018a220` (arpeggiator). Eight more 47×47 masks (376 bytes each, constructors `0x400ac784`..`0x400b0580`) are
-  identical to the kept `0x40172220` and can be freed the same way (notes/32 §11).
+- **Freed sprite masks** (`sprites.py`, notes/14 §5, notes/32 §11, notes/52): a sprite is redirected to an identical
+  mask (`sprites.redirect_write`), freeing its own. `sprites.GROUPS` lists the 10 groups of identical masks (164
+  freeable masks, 104 to 1024 bytes each, about 36 KB); **`tweaks/model-cycles_OS1.13/REGISTRY.md` says which are
+  taken and which are free**, with the bytes each mod writes. Take a free one, then run `python3 tools/registry.py`
+  and commit the regenerated file; `python3 tools/registry.py --git <branch>` shows what the open PRs have taken.
+  Several mods may share a mask only if they never write the same bytes when built together (trig-hold in front of
+  6ch-usbup's stubs in `0x4015c044`), or can never be built together (sample-preview and chord-keys): that is what
+  `check_overlaps.py` checks. `registry.py` refuses a write into a mask whose sprite the tweak (or a tweak it
+  `requires`) does not redirect, and any write into a kept copy.
 - **Payload appended to the image** and copied at boot to SDRAM (`0x43000000`, notes/17; Model-TG uses
   `0x46700000`, notes/31): for large code, at the cost of a boot hook shared with the Syntakt engines.
 - **In place**: rewrite the function you change when the new code fits (tempo-max's LFO loop, trig-preview's 3 bytes).
@@ -76,8 +83,18 @@ and check the writes of **every** other tweak for overlaps.
 
 - `gen_flasher_tweaks.py`: the `FEATURES` list (cards of the web flasher). Add the new mod there, then run it; `--check`
   in validation. Card `status` is `"experimental"` until Maxime tests it.
-- `ref_mainos.py --cycles … --syntakt … [--check]`: rewrites the `REF_MAINOS` block of `docs/flasher/app.js`, the
-  expected MAIN OS hash of every combination the flasher offers. Rerun after any change to a tweak or to `FEATURES`.
+- `check_overlaps.py [--git REF …]`: no firmware needed. Two tweaks that can be installed together never write the
+  same bytes (except the same whole write, or one applied on top of the other through `requires`), every write is
+  well formed, and the payloads of every installable set chain up (`at`, `END_LIMIT`, `dest`). With `--git` it reads
+  branches and checks them together (the open PRs). This is what lets the flasher check mods one by one (notes/49).
+- `registry.py [--check] [--git REF …] [--cycles SYX]`: no firmware needed. Rewrites
+  `tweaks/model-cycles_OS1.13/REGISTRY.md`, the registry of free space and hook points built from the tweak writes
+  (notes/52): freed masks taken and free, 0xFF caves, payload chains, OS detours, rewritten pointers, what each mod
+  touches. `--check` in validation; `--git` adds branches (to the screen); `--cycles` also verifies the mask survey on
+  the official OS. Saved-structure bytes a mod claims (the arpeggiator's pattern byte +512) go in its `DECLARED` table.
+- `ref_mainos.py --cycles … --syntakt … [--check]`: rewrites `REF_MODS` (each tweak's writes and payload hashes) and
+  `REF_MAINOS` (the MAIN OS of a sample: each card alone, every pair, the largest combinations) in
+  `docs/flasher/app.js`. Rerun after any change to a tweak or to `FEATURES`; it reads the card rules like `app.js`.
 - `webflash_smoke.js`: asserts the list and order of tweaks and cards and their tags; update it with the new card.
 - Adding a Syntakt engine: `CATALOG` in `gen_syntakt_engines.py`, then `--all` and `--all --tg`,
-  `gen_flasher_tweaks.py`, `ref_mainos.py`, and a proof per new tweak (see BUILD.md).
+  `gen_flasher_tweaks.py`, `check_overlaps.py`, `ref_mainos.py`, and a proof per new tweak (see BUILD.md).

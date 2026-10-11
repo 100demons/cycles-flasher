@@ -169,6 +169,7 @@ def sram_init(image, init, a, n):
 # d'échantillons, qu'il nous laisse (notes/31). Tout le reste est à un décalage fixe de PAY.
 PAY_ALONE = 0x43000000
 PAY_TG = 0x46700000
+STUB_END = 0x4016cba8        # le crochet de démarrage (gx.CAVE) s'arrête là : l'arpégiateur a la suite (gen_arp.py)
 LAYOUT = dict(
     DST_SRAM=0x20000,        # réplique de la SRAM du Syntakt
     ST_BSS_AT=0x30000,       # fenêtre de son BSS
@@ -931,6 +932,59 @@ def compile_code(tmp, machines, payload_longs, meter=None, rnd_at=None, nm=0, ru
     return blobs, syms, stubs, ssyms
 
 
+def own_code(tmp, machines, rnd_at, lay, tg, own):
+    """Avec des machines à nous après les moteurs (own, build_tweak) : la passerelle n'est pas recompilée, ses octets
+    et ses symboles viennent du tweak versionné des mêmes moteurs (own["bridge"] : compilée par m68k-elf-gcc 16.2,
+    régulateur en assembleur, testée sur la machine) ; seuls le crochet de démarrage et les détours, pour toutes les
+    machines, sont assemblés ici. Le crochet (stub.S, APLIB) décompresse la charge utile puis appelle son 2e étage
+    (BOOT2, rangé dans la charge utile en own["boot2"] : tables d'ondes de CHORD reprises en SRAM, CHORD_AT, puis
+    code du Syntakt en SRAM) : il ne tiendrait pas en entier devant l'arpégiateur (STUB_END). Rend (blobs, syms, stubs,
+    ssyms) comme compile_code, plus blobs[".boot2"]."""
+    (s0, r0, n0), (s1, r1, n1) = lay["banks"]
+    if s0 != gx.DST_CODE or s1 != s0 + n0 or n0 % 4 or n1 % 4:
+        raise SystemExit("!! zones de SRAM : transit au début de la charge utile, à la suite, en mots")
+    lo, hi = own["boot2"]
+    blobs = {}
+    for name, at, defs in ((".stub", gx.CAVE, ["-DAPLIB", f"-DAFTER={lo:#x}",
+                                              f"-DPAYLOAD_SRC={(tg['at'] if tg else BASE + gx.IMAGE_LEN):#x}",
+                                              *([f"-DCHAIN_TO={tg['boot_extra_hook']:#x}"] if tg else [])]),
+                           (".boot2", lo, ["-DBOOT2", f"-DCHORD_AT={lay['chord_at']:#x}", f"-DSRAM_RUN_AT={r0:#x}",
+                                           f"-DSRAM_LONGS={n0 // 4}", f"-DSRAM2_RUN_AT={r1:#x}",
+                                           f"-DSRAM2_LONGS={n1 // 4}"])):
+        o, elf, b = tmp / f"{name[1:]}.o", tmp / f"{name[1:]}.elf", tmp / f"{name[1:]}.bin"
+        gx.run([gx.CROSS + "gcc", "-mcpu=54418", "-c", str(gx.SRC / "stub.S"), "-o", str(o),
+                f"-DPAYLOAD_DST={gx.DST_CODE:#x}", *defs])
+        gx.run([gx.CROSS + "ld", "-Ttext", f"{at:#x}", "-o", str(elf), str(o)])
+        gx.run([gx.CROSS + "objcopy", "-O", "binary", "-j", ".text", str(elf), str(b)])
+        blobs[name] = b.read_bytes()
+    if lo % 4 or lo + len(blobs[".boot2"]) > hi:
+        raise SystemExit(f"!! 2e étage du crochet : {len(blobs['.boot2'])} o, place {lo:#x}..{hi:#x}")
+    br = own["bridge"]
+    blobs.update({".bridge": br["bridge"], "hot": br["hot"]})
+    stubs, ssyms = assemble_detours(tmp, machines, br["syms"], rnd_at, tg)
+    return blobs, br["syms"], stubs, ssyms
+
+
+def detours_text(machines, syms, rnd_at, tg):
+    """Texte des détours (à STUBS) pour ces machines ajoutées, comme compile_code."""
+    return (detours_asm(len(machines), [m["image"] for m in machines], [76 + 5 * i for i in range(len(machines))], tg)
+            + probe_asm(syms) + (dispatch_tg_asm(syms, rnd_at, tg) if tg else dispatch_asm(syms, rnd_at)))
+
+
+def assemble_detours(tmp, machines, syms, rnd_at, tg, text=None):
+    """Détours assemblés à STUBS : (octets, symboles)."""
+    src, o, e, b = tmp / "det.S", tmp / "det.o", tmp / "det.elf", tmp / "det.bin"
+    src.write_text(text or detours_text(machines, syms, rnd_at, tg))
+    gx.run([gx.CROSS + "gcc", "-mcpu=54418", "-c", str(src), "-o", str(o)])
+    gx.run([gx.CROSS + "ld", "-Ttext", f"{STUBS:#x}", "-o", str(e), str(o)])
+    gx.run([gx.CROSS + "objcopy", "-O", "binary", "-j", ".text", str(e), str(b)])
+    ssyms = {p[-1]: int(p[0], 16) for p in (l.split() for l in gx.run([gx.CROSS + "nm", str(e)]).splitlines()) if len(p) == 3}
+    stubs = b.read_bytes()
+    if STUBS + len(stubs) > DATA:
+        raise SystemExit("!! détours trop grands")
+    return stubs, ssyms
+
+
 GX_ROOTS = tuple(gx.ROOTS)
 _ANALYSIS = {}
 
@@ -997,10 +1051,16 @@ def tweak_id(codes, generic=False, meter=False, tg=False):
     return "syntakt-meter" if meter else subset_id(codes, generic)
 
 
-def build_tweak(img, st_img, codes, generic=False, meter=False, tg=None):
-    """Tweak pour ces moteurs. tg : Model-TG (tg_context) pour la version combinée, à construire avec set_base(PAY_TG)."""
+def build_tweak(img, st_img, codes, generic=False, meter=False, tg=None, own=None):
+    """Tweak pour ces moteurs. tg : Model-TG (tg_context) pour la version combinée, à construire avec set_base(PAY_TG).
+    own : nos machines après les moteurs (machine MACRO, tools/gen_macro_syntakt.py, notes/50) : dict(machines=[comme
+    CATALOG, avec update et render : adresses], bridge=passerelle reprise (own_code), parts=[morceaux de la charge
+    utile], end=fin de la charge utile). La charge utile est alors rangée compressée (append.compress), et les tables
+    d'ondes de CHORD reprises en SRAM au démarrage au lieu d'être recopiées de TON MAIN OS."""
     first = TG_FIRST if tg else 6
     machines = [dict(CATALOG[c], code=c, index=first + i) for i, c in enumerate(codes)]
+    if own:
+        machines += [dict(m, index=first + len(machines) + i) for i, m in enumerate(own["machines"])]
     n = len(machines)
     if not 1 <= n <= MAX_EXTRA:
         raise SystemExit("!! nombre de moteurs")
@@ -1009,7 +1069,7 @@ def build_tweak(img, st_img, codes, generic=False, meter=False, tg=None):
     check_sram_map(img, st_img)
     an = analyse(st_img, generation(codes))
     lay = an["lay"]
-    size = lay["end"] - gx.DST_CODE
+    size = (own["end"] if own else lay["end"]) - gx.DST_CODE
     nm = first + n                              # machines : 6 d'origine, le Sampler avec Model-TG, puis les nôtres
     top = nm - 1                                # plus grand index de machine
     names_at, upd_at, rnd_at, vec_at, map_at = DATA, DATA + 4 * nm, DATA + 8 * nm, DATA + 12 * nm, DATA + 16 * nm
@@ -1024,6 +1084,8 @@ def build_tweak(img, st_img, codes, generic=False, meter=False, tg=None):
         at += 8 * nm
 
     def compile_(d, segs=None):
+        if own:
+            return own_code(pathlib.Path(d), machines, rnd_at, lay, tg, own)
         return compile_code(pathlib.Path(d), machines, size // 4, meter_at if meter else None, rnd_at, nm, gx.move,
                             lay, tg, segs)
     with tempfile.TemporaryDirectory() as d:
@@ -1037,8 +1099,10 @@ def build_tweak(img, st_img, codes, generic=False, meter=False, tg=None):
     if meter:
         names = [meter_at + 8 * m for m in range(nm)]
     pad = [u32(g7.UPDATE_TAB)] * (first - 6), [u32(g7.RENDER_TAB)] * (first - 6)   # entrée 6 du Sampler : jamais lue
-    upd = [u32(g7.UPDATE_TAB + 4 * i) for i in range(6)] + pad[0] + [syms[f"bridge_update_{m['engine']}"] for m in machines]
-    rnd = [u32(g7.RENDER_TAB + 4 * i) for i in range(6)] + pad[1] + [syms[f"bridge_render_{m['engine']}"] for m in machines]
+    upd = [u32(g7.UPDATE_TAB + 4 * i) for i in range(6)] + pad[0] + [m["update"] if "code" not in m else
+                                                                      syms[f"bridge_update_{m['engine']}"] for m in machines]
+    rnd = [u32(g7.RENDER_TAB + 4 * i) for i in range(6)] + pad[1] + [m["render"] if "code" not in m else
+                                                                      syms[f"bridge_render_{m['engine']}"] for m in machines]
     data = bytearray()
     for t in (names, upd, rnd, range(1, nm + 1)):
         data += b"".join(g7.be32(x) for x in t)
@@ -1155,7 +1219,7 @@ def build_tweak(img, st_img, codes, generic=False, meter=False, tg=None):
     for lo, hi, dst in gx.ST_SRAM_INIT:
         parts.append({"dest": f"{gx.move(dst):#x}", "syntakt": [f"{lo:#x}", f"{hi:#x}"]})
     parts += [{"dest": f"{a:#x}", "hex": "4e71"} for a in lay["pads"]]
-    for lo, hi in CHORD_BANKS:                  # tables d'ondes de CHORD, depuis le MAIN OS de l'utilisateur
+    for lo, hi in CHORD_BANKS if not own else ():    # tables d'ondes de CHORD, depuis le MAIN OS de l'utilisateur
         src = next(s_ + lo - d_ for s_, e_, d_ in CY_SRAM_INIT if d_ <= lo and hi <= d_ + e_ - s_)
         parts.append({"dest": f"{chord_moved(lo, lay):#x}", "cycles": [f"{src:#x}", f"{src + hi - lo:#x}"]})
     parts += [{"dest": f"{stage:#x}", "hex": code.hex()} for stage, code, _ in blobs["hot"]]   # avec Model-TG
@@ -1165,7 +1229,7 @@ def build_tweak(img, st_img, codes, generic=False, meter=False, tg=None):
         {"dest": f"{DATA:#x}", "hex": bytes(data).hex()},
         {"dest": f"{DESCN:#x}", "cycles": [f"{g7.DESC:#x}", f"{g7.DESC + g7.NDESC * g7.DSTRIDE:#x}"]},
         {"dest": f"{DESCN + g7.NDESC * g7.DSTRIDE:#x}", "hex": bytes(new).hex()},
-    ]
+    ] + (own["parts"] + [{"dest": f"{own['boot2'][0]:#x}", "hex": blobs[".boot2"].hex()}] if own else [])
     reloc = [[f"{at_:#x}", old.hex(), new_.hex()] for at_, old, new_ in an["patches"]]
     # descripteurs : copie de ceux de TON MAIN OS, puis ce qui change (mots de 4 o) : le max d'Algorithm (choix de la
     # machine) et, avec Model-TG, ses retouches (Attack, Filtre, Résonance sur toutes les machines)
@@ -1185,7 +1249,9 @@ def build_tweak(img, st_img, codes, generic=False, meter=False, tg=None):
         "parts": parts,
         "reloc": reloc,
     }
-    if tg:                                      # rangé en morceaux (stub.S, PACK) : recompilé avec leur liste
+    if own:                                     # rangé compressé (stub.S, APLIB) : taille connue au build
+        append["compress"] = "aplib"
+    elif tg:                                    # rangé en morceaux (stub.S, PACK) : recompilé avec leur liste
         segs = segments(parts, size)
         append["pack"] = [[f"{a_:#x}", n_] for a_, n_ in segs]
         if tg["at"] + sum(n_ for _, n_ in segs) > END_LIMIT:
@@ -1196,8 +1262,8 @@ def build_tweak(img, st_img, codes, generic=False, meter=False, tg=None):
             raise SystemExit("!! recompilation avec les morceaux : passerelle différente")
         stub = blobs2[".stub"]
         writes[0] = {"off": gx.CAVE - BASE, "old": (b"\xff" * len(stub)).hex(), "new": stub.hex()}
-    if len(stub) > sprites.zone(gx.CAVE)[1]:
-        raise SystemExit("!! crochet de démarrage trop grand pour sa place")
+    if len(stub) > sprites.zone(gx.CAVE)[1] or gx.CAVE + len(stub) > STUB_END:
+        raise SystemExit(f"!! crochet de démarrage trop grand pour sa place ({len(stub)} o)")
     writes.sort(key=lambda x: x["off"])
     for a_, b_ in zip(writes, writes[1:]):
         if a_["off"] + len(a_["new"]) // 2 > b_["off"]:
@@ -1246,7 +1312,10 @@ def build_tweak(img, st_img, codes, generic=False, meter=False, tg=None):
     if not tg:                    # envoi à l'USB à heure fixe (notes/35), boucle des voix (notes/36) ; la version
         out = usb_steady.add_to(out)          # combinée les a par model-tg-st
         out = voice_loop.add_to(out)
-    if not meter:                 # régulateur en assembleur (notes/36) ; le compteur de diagnostic est dans audio_end
+    if own:                       # régulateur en assembleur : déjà dans la passerelle reprise (own_code)
+        out["gov"] = own["bridge"]["gov"]
+        out["description"].append(gov_asm.NOTE)
+    elif not meter:               # régulateur en assembleur (notes/36) ; le compteur de diagnostic est dans audio_end
         out = gov_asm.add_to(out, tg and tg["symbols_hex"])
     return out, ndesc
 

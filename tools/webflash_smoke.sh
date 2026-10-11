@@ -5,7 +5,7 @@
 # missing, and that building then sending works.
 #
 #   tools/webflash_smoke.sh                               # synthetic OS only
-#   tools/webflash_smoke.sh model-cycles_OS1.13.syx       # + every real build vs its reference hash
+#   tools/webflash_smoke.sh model-cycles_OS1.13.syx       # + the REF_MAINOS sample vs its reference hashes, each mod checked
 #   tools/webflash_smoke.sh model-cycles_OS1.13.syx model-samples_OS1.13.syx   # + the "Samples OS" tab
 #   tools/webflash_smoke.sh model-cycles_OS1.13.syx Syntakt_OS1.42.syx         # + the Syntakt engines (1.41 too)
 #   SMOKE_JOBS=4 tools/webflash_smoke.sh ...                                  # real-OS combinations in 4 parallel parts
@@ -43,7 +43,7 @@ node -e '
   const parts = process.argv.slice(1).map((f) => JSON.parse(require("fs").readFileSync(f, "utf8")));
   const seen = new Set(parts.flatMap((p) => p.seen)), offered = parts[0].offered;
   const ok = seen.size === offered.length && offered.every((k) => seen.has(k));
-  console.log((ok ? "  ok  " : "  FAIL ") + `REF_MAINOS lists exactly the ${seen.size} combinations offered (all parts)`);
+  console.log((ok ? "  ok  " : "  FAIL ") + `REF_MAINOS: the ${seen.size} combinations of the sample all built (all parts)`);
   process.exit(ok ? 0 : 1);' "$tmp"/seen*.json || status=1
 echo
 [ "$status" -eq 0 ] && echo "ALL PARTS OK" || echo "SOME PART FAILED"
