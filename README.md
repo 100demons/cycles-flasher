@@ -43,6 +43,7 @@ Going back to the official firmware is one click away.
 | **Model-TG** | A full Sampler machine with seven playback modes, resampling, a beat-repeat page with master FX, slide trigs, Scale Lock and more, by [TinyGregAudio](https://github.com/TinyGregAudio/Model-TG). Works with the 6-channel mod and the Syntakt engines. | 🧪 Experimental |
 | **Sample preview** | An add-on to Model-TG: on a Sampler track, press FUNC + MACHINES (preset menu) and the track's pad plays the sample under the cursor, the way presets can be heard before you pick them. A sample not yet in memory loads on the first press; if there isn't enough free memory, or while Model-TG is resampling, the press plays nothing. The track keeps its own sample. Requires Model-TG (ticking it ticks Model-TG). | ✅ Tested |
 | **MACRO machine** | One extra machine with the 47 synthesis models of Braids, Émilie Gillet's open-source macro-oscillator, from [her own code](https://github.com/pichenettes/eurorack): analog-style waves, FM, vowels, physical models, drums, wavetables and noises. `SHAPE` picks the model, `COLOR` and `SWEEP` shape it. Works with Model-TG and the Syntakt engines (with the engines: tested with Model-TG and all five, other combinations experimental). | ✅ Tested |
+| **ACID machine** | One extra machine: an acid bass in the style of the TB-303, from Robin Schmidt's open-source [Open303](https://github.com/RobinSchmidt/Open303) model. `COLOR` is the cutoff, `SHAPE` the resonance, `SWEEP` the env mod, `CONTOUR` the accent, `PUNCH` switches saw to square. A trig with a velocity above 100 is accented; a trig whose length runs past the next trig slides into it. Works with Model-TG, not with MACRO or the Syntakt engines. | 🧪 Experimental |
 | **Arpeggiator** | Hold several notes with RETRIG and they play as an arpeggio. `FUNC` + `RETRIG` adds direction (up, down, up/down, random, or in the order played) and range (1 to 4 octaves), saved with the pattern. | ✅ Tested |
 | **Chord Keys** | Play the selected CHORD track with the lower `TRIG 1–16` buttons: I–VII on 1–7, the same degrees one octave higher on 8–14, then I–II two octaves higher on 15–16. T1–T6 keep their normal controls. Choose a triad, 7th, 9th, 11th or 13th for each degree in `FUNC` + `RETRIG`, saved per track and pattern. SHAPE arranges the notes (BASE, close or open voicings); COLOR blends their levels. Does not combine with Model-TG. By Nico Heuser. | ✅ Tested |
 | **Tempo up to 546 BPM** | The TEMPO knob, tap tempo, MIDI clock and saved projects go past 300 BPM. Tempo-synced LFOs stay in time. | ✅ Tested |
@@ -57,7 +58,7 @@ Going back to the official firmware is one click away.
 | **Samples OS** | Turns the Model:Cycles into a Model:Samples, built from both official OS files. Coming back needs a MIDI interface. | ✅ Tested |
 | **Cycles OS for Model:Samples** | The other way round: turns a Model:Samples into a Model:Cycles, over USB, from both official OS files. Going back to the Model:Samples OS works over USB too, from the same tab. | 🧪 Experimental |
 
-The mods can be combined freely (Samples OS and Cycles OS for Model:Samples are separate installs; Chord Keys and Model-TG not together). Each one is explained step by step, with the buttons to press, in the
+The mods can be combined freely (Samples OS and Cycles OS for Model:Samples are separate installs; Chord Keys and Model-TG not together; ACID with neither MACRO nor the Syntakt engines). Each one is explained step by step, with the buttons to press, in the
 **[guide](https://18nelli18.github.io/Modded-Cycles/guide/)**.
 
 <p align="center">
@@ -94,7 +95,7 @@ Everything runs in your browser: your files are never uploaded anywhere.
 <summary><b>Going back to the official firmware</b></summary>
 
 Open the flasher, choose the **Official firmware** tab, drop your official OS file and flash. Before that,
-set any track that uses an added machine (Syntakt engine, MACRO or Sampler) back to one of the six original machines.
+set any track that uses an added machine (Syntakt engine, MACRO, ACID or Sampler) back to one of the six original machines.
 
 </details>
 
@@ -138,6 +139,7 @@ This project stands on the work of others, all MIT licensed:
 - **[drumkilla/elektron-model-tweaks](https://github.com/drumkilla/elektron-model-tweaks)**: latching mute, trig preview, scrolling names, and the `mtlib` toolkit and tweak format used by the build.
 - **[TinyGregAudio/Model-TG](https://github.com/TinyGregAudio/Model-TG)**: the Sampler machine and everything that comes with it ([license](tweaks/model-cycles_OS1.13/LICENSE-Model-TG)).
 - **[pichenettes/eurorack](https://github.com/pichenettes/eurorack)**: Émilie Gillet's Braids code, compiled as is for the synthesis models of the MACRO machine ([license](tweaks/model-cycles_OS1.13/LICENSE-Braids)).
+- **[RobinSchmidt/Open303](https://github.com/RobinSchmidt/Open303)**: Robin Schmidt's TB-303 model, rewritten in fixed point for the ACID machine ([license](tweaks/model-cycles_OS1.13/LICENSE-Open303)).
 - **[dagargo/elektroid](https://github.com/dagargo/elektroid)**: the Elektron Transfer update protocol behind fast USB flashing.
 - **[mischa85/elektron-firmware-tool](https://github.com/mischa85/elektron-firmware-tool)** and **[mxldyn/octamax](https://github.com/mxldyn/octamax)**: firmware tooling and reverse-engineering methods.
 

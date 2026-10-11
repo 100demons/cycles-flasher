@@ -11,8 +11,8 @@
 <link rel="preconnect" href="https://fonts.googleapis.com">
 <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
 <link rel="stylesheet" href="https://fonts.googleapis.com/css2?family=Familjen+Grotesk:wght@400..700&family=Tiny5&display=swap">
-<link rel="stylesheet" href="../assets/site.css?v=2026-10-10-10">
-<link rel="stylesheet" href="../assets/guide.css?v=2026-10-10-10">
+<link rel="stylesheet" href="../assets/site.css?v=2026-10-11-03">
+<link rel="stylesheet" href="../assets/guide.css?v=2026-10-11-03">
 <script>try{var l=localStorage.getItem("mc-lang"),t=localStorage.getItem("mc-theme")}catch(e){}document.documentElement.lang=l||(/^fr\b/i.test(navigator.language||"")?"fr":"en");if(t)document.documentElement.setAttribute("data-theme",t)</script>
 </head>
 <body data-page="guide">
@@ -56,6 +56,7 @@
         <li><a href="#level-pan"><span data-l="en">Volume and pan as numbers</span><span data-l="fr">Volume et pan en chiffres</span></a></li>
         <li><a href="#trigless"><span data-l="en">Dimmed trigless trigs</span><span data-l="fr">Trigless trigs atténués</span></a></li>
         <li><a href="#chord-keys"><span data-l="en">Chord keys</span><span data-l="fr">Clavier d'accords</span></a></li>
+        <li><a href="#acid"><span data-l="en">ACID machine</span><span data-l="fr">Machine ACID</span></a></li>
         <li><a href="#samples"><span data-l="en">Samples OS</span><span data-l="fr">OS Samples</span></a></li>
         <li><a href="#stock"><span data-l="en">Back to stock</span><span data-l="fr">Revenir à l'origine</span></a></li>
         <li><a href="#recovery"><span data-l="en">Recovery</span><span data-l="fr">Secours</span></a></li>
@@ -640,8 +641,42 @@
         </dl>
       </section>
 
+      <section id="acid">
+        <h2><span class="n">18</span><span data-l="en">ACID machine</span><span data-l="fr">Machine ACID</span></h2>
+        <p class="by"><span data-l="en">Based on</span><span data-l="fr">D'après</span> <a href="https://github.com/RobinSchmidt/Open303" target="_blank" rel="noopener">Open303</a> <span data-l="en">by Robin Schmidt</span><span data-l="fr">de Robin Schmidt</span> · <span data-l="en">MIT license</span><span data-l="fr">licence MIT</span></p>
+        <p class="lede"><span data-l="en">One extra machine, ACID, is an acid bass in the style of the TB-303: a saw or square wave through a resonant filter with its own envelope, accent and slide. Its sound follows Robin Schmidt's open-source Open303 model, rewritten for the Model:Cycles' processor. Accent and slide come from your trigs, so a 303 line is programmed with the sequencer you already know.</span><span data-l="fr">Une machine ajoutée, ACID, est une basse acide à la manière de la TB-303 : une onde en dents de scie ou carrée dans un filtre résonant avec sa propre enveloppe, l'accent et le slide. Son son suit le modèle libre Open303 de Robin Schmidt, réécrit pour le processeur du Model:Cycles. L'accent et le slide viennent de vos trigs : une ligne de 303 se programme avec le séquenceur que vous connaissez déjà.</span></p>
+        <ol>
+          <li><span data-l="en">Press <b>MACHINES</b> and pick <b>ACID</b>, after Chord: the 7th machine, or the 8th with <a href="#model-tg">Model-TG</a> (after its Sampler). Its icon is Tone's.</span><span data-l="fr">Appuyez sur <b>MACHINES</b> et choisissez <b>ACID</b>, après Chord : la 7<sup>e</sup> machine, ou la 8<sup>e</sup> avec <a href="#model-tg">Model-TG</a> (après son Sampler). Son icône est celle de Tone.</span></li>
+          <li><span data-l="en">Shape the sound with the four knobs of the machine (table below). The defaults already give the acid squelch: a low cutoff, a lot of resonance and of env mod. <b>DECAY</b> sets how fast the filter closes after each note, and the note's own decay. <b>PUNCH</b> off plays a saw wave, on a square wave.</span><span data-l="fr">Façonnez le son avec les quatre potards de la machine (tableau ci-dessous). Les réglages par défaut donnent déjà le son acide : un cutoff bas, beaucoup de résonance et d'env mod. <b>DECAY</b> règle la vitesse à laquelle le filtre se referme après chaque note, et la décroissance de la note elle-même. <b>PUNCH</b> éteint joue une onde en dents de scie, allumé une onde carrée.</span></li>
+          <li><span data-l="en"><b>Accent:</b> give a trig a velocity (<b>VEL</b>) above 100. At 127 the note gets the whole accent: louder, brighter, with a sharper filter sweep; between 101 and 126, part of it; at 100 (the default) and below, none. <b>CONTOUR</b> (Accent) sets how strong an accent is.</span><span data-l="fr"><b>Accent :</b> donnez à un trig une vélocité (<b>VEL</b>) au-dessus de 100. À 127, la note reçoit tout l'accent : plus forte, plus brillante, avec un balayage du filtre plus marqué ; entre 101 et 126, une part ; à 100 (le défaut) et en dessous, rien. <b>CONTOUR</b> (Accent) règle la force de l'accent.</span></li>
+          <li><span data-l="en"><b>Slide:</b> give a trig a length (<b>LEN</b>) that runs past the next trig, for example 1.06 or INF on neighbouring steps. The next note then glides from this one instead of playing again: no new attack, the pitch slides. With the default length (1/16 on neighbouring steps), every note plays again. Played live, a note played while the previous one is still held slides too.</span><span data-l="fr"><b>Slide :</b> donnez à un trig une longueur (<b>LEN</b>) qui dépasse le trig suivant, par exemple 1.06 ou INF sur des pas voisins. La note suivante glisse alors depuis celle-ci au lieu d'être rejouée : pas de nouvelle attaque, la hauteur glisse. Avec la longueur par défaut (1/16 sur des pas voisins), chaque note est rejouée. En jeu live, une note jouée pendant que la précédente est encore tenue glisse aussi.</span></li>
+          <li><span data-l="en"><b>PITCH</b>, the keys and FINE set the note as on the original machines. Turn <b>GATE</b> on for notes that hold their whole length, as on a 303; off, they fade with DECAY.</span><span data-l="fr"><b>PITCH</b>, les touches et FINE règlent la note comme sur les machines d'origine. Allumez <b>GATE</b> pour que les notes tiennent toute leur longueur, comme sur une 303 ; éteint, elles s'éteignent avec DECAY.</span></li>
+        </ol>
+        <div class="tbl">
+          <table>
+            <thead><tr><th><span data-l="en">Knob</span><span data-l="fr">Potard</span></th><th><span data-l="en">Name on screen</span><span data-l="fr">Nom à l'écran</span></th><th><span data-l="en">What it does</span><span data-l="fr">Son rôle</span></th></tr></thead>
+            <tbody>
+              <tr><th>COLOR</th><td>Cutoff (CUT)</td><td><span data-l="en">the filter's cutoff: low is dark, high is open</span><span data-l="fr">le cutoff du filtre : bas, sombre ; haut, ouvert</span></td></tr>
+              <tr><th>SHAPE</th><td>Reso (RES)</td><td><span data-l="en">the resonance, up to the squelch of the high settings</span><span data-l="fr">la résonance, jusqu'au sifflement des réglages hauts</span></td></tr>
+              <tr><th>SWEEP</th><td>Env Mod (ENV)</td><td><span data-l="en">how far the filter envelope opens the cutoff on each note</span><span data-l="fr">jusqu'où l'enveloppe du filtre ouvre le cutoff à chaque note</span></td></tr>
+              <tr><th>CONTOUR</th><td>Accent (ACC)</td><td><span data-l="en">how strong accents are (notes with VEL above 100)</span><span data-l="fr">la force des accents (notes de VEL au-dessus de 100)</span></td></tr>
+              <tr><th>DECAY</th><td>—</td><td><span data-l="en">the filter envelope's decay (0.2 to 2 s) and the amp's</span><span data-l="fr">la décroissance de l'enveloppe du filtre (0,2 à 2 s) et celle de l'ampli</span></td></tr>
+              <tr><th>PUNCH</th><td>—</td><td><span data-l="en">off: saw wave; on: square wave</span><span data-l="fr">éteint : dents de scie ; allumé : onde carrée</span></td></tr>
+            </tbody>
+          </table>
+        </div>
+        <dl class="facts">
+          <div><dt><span data-l="en">Sound</span><span data-l="fr">Son</span></dt><dd><span data-l="en">one voice per track, as with every machine; the filter keeps running from one note to the next, as on the 303. A silent ACID track is not computed. The strongest accents with a high resonance saturate a little instead of clipping.</span><span data-l="fr">une voix par piste, comme toutes les machines ; le filtre continue d'une note à l'autre, comme sur la 303. Une piste ACID muette n'est pas calculée. Les accents les plus forts avec une résonance haute saturent un peu au lieu d'écrêter.</span></dd></div>
+          <div><dt><span data-l="en">Processor</span><span data-l="fr">Processeur</span></dt><dd><span data-l="en">an ACID voice needs about as much computing as a Tone voice (a little less in the emulator).</span><span data-l="fr">une voix ACID demande à peu près autant de calcul qu'une voix de Tone (un peu moins en émulation).</span></dd></div>
+          <div><dt><span data-l="en">Limits</span><span data-l="fr">Limites</span></dt><dd><span data-l="en">a trig that changes the machine (a MACHINE lock) always plays again, so the machine really changes. A trigless trig with a NOTE lock glides to its note.</span><span data-l="fr">un trig qui change de machine (verrou MACHINE) est toujours rejoué, pour que la machine change vraiment. Un trigless trig avec un verrou NOTE glisse vers sa note.</span></dd></div>
+          <div><dt><span data-l="en">Other mods</span><span data-l="fr">Autres mods</span></dt><dd><span data-l="en">goes with Model-TG and the other mods, but not with the MACRO machine or the Syntakt engines: they are added machines at the same place in the firmware. Ticking one of them unticks ACID.</span><span data-l="fr">se combine avec Model-TG et les autres mods, mais pas avec la machine MACRO ni avec les moteurs du Syntakt : ce sont des machines ajoutées au même endroit du firmware. Cocher l'un d'eux décoche ACID.</span></dd></div>
+          <div><dt><span data-l="en">Tested</span><span data-l="fr">Testé</span></dt><dd><span data-l="en">experimental: checked in the emulator on the OS's own code with the real sequencer, alone and with Model-TG (every knob, accents, slides at 120 to 546 BPM, live play, machine locks, six ACID tracks at once; the original machines are unchanged). Not yet tested on a Model:Cycles.</span><span data-l="fr">expérimental : vérifié en émulation sur le code même de l'OS avec le vrai séquenceur, seul et avec Model-TG (chaque potard, accents, slides de 120 à 546 BPM, jeu live, verrous de machine, six pistes ACID ensemble ; les machines d'origine ne changent pas). Pas encore testé sur un Model:Cycles.</span></dd></div>
+        </dl>
+        <p class="note"><span data-l="en"><b>Before flashing another choice or the official firmware,</b> set your ACID tracks back to an original machine (Kick to Chord): ACID is the last added machine, so its number depends on Model-TG, and the official OS doesn't have it.</span><span data-l="fr"><b>Avant de flasher un autre choix ou le firmware officiel,</b> remettez vos pistes ACID sur une machine d'origine (de Kick à Chord) : ACID est la dernière machine ajoutée, son numéro dépend donc de Model-TG, et l'OS officiel ne l'a pas.</span></p>
+      </section>
+
       <section id="samples">
-        <h2><span class="n">18</span><span data-l="en">Samples OS</span><span data-l="fr">OS Samples</span></h2>
+        <h2><span class="n">19</span><span data-l="en">Samples OS</span><span data-l="fr">OS Samples</span></h2>
         <p class="lede"><span data-l="en">The Model:Cycles starts as a Model:Samples: you load and play your own samples, managed with Elektron Transfer.</span><span data-l="fr">Le Model:Cycles démarre en Model:Samples : vous chargez et jouez vos propres samples, gérés avec Elektron Transfer.</span></p>
         <p><span data-l="en">The flasher puts the official Model:Samples OS inside your Model:Cycles firmware file:</span><span data-l="fr">Le flasher place l'OS officiel du Model:Samples dans le fichier firmware de votre Model:Cycles :</span></p>
         <dl class="layers fig">
@@ -675,13 +710,13 @@
       </section>
 
       <section id="stock">
-        <h2><span class="n">19</span><span data-l="en">Back to stock</span><span data-l="fr">Revenir à l'origine</span></h2>
+        <h2><span class="n">20</span><span data-l="en">Back to stock</span><span data-l="fr">Revenir à l'origine</span></h2>
         <p><span data-l="en">The <b>Official firmware</b> tab of the flasher sends your OS file unchanged, over USB, like a normal update. It is also a good rehearsal before a first mod: it checks the cable and the setup without changing anything.</span><span data-l="fr">L'onglet <b>Firmware officiel</b> du flasher renvoie votre fichier d'OS sans le modifier, par USB, comme une mise à jour normale. C'est aussi une bonne répétition avant un premier mod : elle vérifie le câble et l'installation sans rien changer.</span></p>
-        <p><span data-l="en">With Syntakt engines, the MACRO machine or Model-TG's Sampler, first set your tracks back to an original machine.</span><span data-l="fr">Avec des moteurs du Syntakt, la machine MACRO ou le Sampler de Model-TG, remettez d'abord vos pistes sur une machine d'origine.</span></p>
+        <p><span data-l="en">With Syntakt engines, the MACRO or ACID machine or Model-TG's Sampler, first set your tracks back to an original machine.</span><span data-l="fr">Avec des moteurs du Syntakt, la machine MACRO ou ACID ou le Sampler de Model-TG, remettez d'abord vos pistes sur une machine d'origine.</span></p>
       </section>
 
       <section id="recovery">
-        <h2><span class="n">20</span><span data-l="en">Recovery</span><span data-l="fr">Secours</span></h2>
+        <h2><span class="n">21</span><span data-l="en">Recovery</span><span data-l="fr">Secours</span></h2>
         <p class="lede"><span data-l="en">If the Model:Cycles no longer starts, its startup menu can always reinstall the OS: it lives in an area that updates never write.</span><span data-l="fr">Si le Model:Cycles ne démarre plus, son menu de démarrage peut toujours réinstaller l'OS : il vit dans une zone que les mises à jour n'écrivent jamais.</span></p>
         <figure class="fig">
           <div data-device data-scenes="func @logo | func,mainvol | s4 @READY TO/>RECEIVE" data-ms="1300"></div>
@@ -695,7 +730,7 @@
       </section>
 
       <section id="trouble">
-        <h2><span class="n">21</span><span data-l="en">Troubleshooting</span><span data-l="fr">Dépannage</span></h2>
+        <h2><span class="n">22</span><span data-l="en">Troubleshooting</span><span data-l="fr">Dépannage</span></h2>
         <div class="faq">
           <details>
             <summary><span data-l="en">Nothing happens on the Model:Cycles screen</span><span data-l="fr">Rien ne se passe sur l'écran du Model:Cycles</span></summary>
@@ -759,8 +794,8 @@
   </div>
 </footer>
 
-<script src="../assets/release.js?v=2026-10-10-10"></script>
-<script src="../assets/cycles.js?v=2026-10-10-10"></script>
-<script src="../assets/site.js?v=2026-10-10-10"></script>
+<script src="../assets/release.js?v=2026-10-11-03"></script>
+<script src="../assets/cycles.js?v=2026-10-11-03"></script>
+<script src="../assets/site.js?v=2026-10-11-03"></script>
 </body>
 </html>

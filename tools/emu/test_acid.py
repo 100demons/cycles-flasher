@@ -641,9 +641,12 @@ def seq_cases(quick):
         ("LEN INF : glissent, puis fin de note avec GATE", 300,
          [(0, dict(note=48, length=L.LEN_INF)), (1, dict(note=60, length=L.LEN_INF)), (2, dict(note=36))],
          dict(gate=1, decay=60), {}, "TSS"),
-        ("LEN 1/8 sur les pas 0 et 2 : glisse ; LEN 1/16 sur les pas 4 et 6 : rejouées", 300,
-         [(0, dict(note=48, length=L.LEN_1_8)), (2, dict(note=51)), (4, dict(note=53)), (6, dict(note=55))],
+        ("LEN 1/8 sur le pas 0, trig au pas 1 : glisse ; LEN 1/16 sur les pas 4 et 6 : rejouées", 300,
+         [(0, dict(note=48, length=L.LEN_1_8)), (1, dict(note=51)), (4, dict(note=53)), (6, dict(note=55))],
          dict(decay=90), {}, "TSTT"),
+        ("LEN 1/8 sur les pas 0 et 2 (la LEN égale l'écart) : rejouée", 300,
+         [(0, dict(note=48, length=L.LEN_1_8)), (2, dict(note=51, length=L.LEN_1_8)), (4, dict(note=53))],
+         dict(decay=90), {}, "TTT"),
         ("GATE, LEN 1.06 : l'ampli tient à travers le slide", 300,
          [(0, dict(note=36, length=L.LEN_106)), (1, dict(note=48, vel=127))], dict(gate=1, decay=40), {}, "TS"),
         ("accent : VEL 127, 110, 100 (défaut), 64", 300,
@@ -821,7 +824,7 @@ def main():
         print("interface")
         tms.interface(ref_tg, fw, ["acid"], tg)
         print("son")
-        exact(fw, ref, todo if not args.quick else todo[:3] + todo[-4:], "ACID avec Model-TG")
+        exact(fw, ref, todo if not args.quick else todo[:3] + todo[-5:], "ACID avec Model-TG")
         stock_unchanged(ref_tg, fw, "Model-TG seul")
         like(alone, fw, "ACID avec Model-TG = ACID seule")
         locks(fw, "ACID avec Model-TG")

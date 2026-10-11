@@ -3,6 +3,14 @@
  *   { version: "1.1", date: "2026-10-15", changes: [{ en: "…", fr: "…" }] }
  */
 window.MC_RELEASES = [
+  { version: "1.41", date: "2026-10-11", changes: [
+    { en: "New mod, ACID machine: one extra machine after Chord (after the Sampler with Model-TG), an acid bass in the style of the TB-303, from Robin Schmidt's open-source Open303 model. COLOR is the cutoff, SHAPE the resonance, SWEEP the env mod, CONTOUR the accent and DECAY the decay; PUNCH switches the wave from saw to square",
+      fr: "Nouveau mod, Machine ACID : une machine ajoutée après Chord (après le Sampler avec Model-TG), une basse acide à la manière de la TB-303, d'après le modèle libre Open303 de Robin Schmidt. COLOR règle le cutoff, SHAPE la résonance, SWEEP l'env mod, CONTOUR l'accent et DECAY la décroissance ; PUNCH passe l'onde de scie à carré" },
+    { en: "Accent and slide come from your trigs: a trig with a velocity (VEL) above 100 is accented, fully at 127; a trig whose length (LEN) runs past the next trig slides into the next note instead of playing it again. Played live, a note played while another is held slides too",
+      fr: "L'accent et le slide viennent de vos trigs : un trig de vélocité (VEL) au-dessus de 100 est accentué, complètement à 127 ; un trig dont la longueur (LEN) dépasse le trig suivant glisse vers la note suivante au lieu de la rejouer. En jeu live, une note jouée pendant qu'une autre est tenue glisse aussi" },
+    { en: "Experimental: checked in the emulator on the OS's own code with the real sequencer, alone and with Model-TG, not yet tested on a Model:Cycles. It can't be ticked with MACRO or the Syntakt engines",
+      fr: "Expérimental : vérifié en émulation sur le code même de l'OS avec le vrai séquenceur, seul et avec Model-TG, pas encore testé sur un Model:Cycles. Ne se coche pas avec MACRO ni avec les moteurs du Syntakt" },
+  ] },
   { version: "1.40", date: "2026-10-10", changes: [
     { en: "New mod by Nico Heuser, Chord Keys: on a CHORD track, the sixteen lower TRIG buttons play the chords of a scale. 1–7 play degrees I to VII, 8–14 the same one octave higher, 15–16 I and II two octaves higher. T1–T6 keep their usual controls",
       fr: "Nouveau mod de Nico Heuser, Chord Keys : sur une piste CHORD, les seize boutons TRIG du bas jouent les accords d'une gamme. 1–7 jouent les degrés I à VII, 8–14 les mêmes une octave plus haut, 15–16 I et II deux octaves plus haut. T1–T6 gardent leurs commandes habituelles" },

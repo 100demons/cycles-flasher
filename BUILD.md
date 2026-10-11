@@ -382,6 +382,31 @@ python3 tools/emu/test_macro_syntakt.py --cycles model-cycles_OS1.13.syx --synta
 | `6ch-usbup,model-tg-st,syntakt-tg-sd-cp-toy-bits-swarm-macro,trig-hold,arp,tempo-max,boot-anim` | `7789622b49c4833b46dd99dcb09f5c9803a58408b25b73097df0ca0ebf85654d` |
 | `6ch-usbup,model-tg-st,sample-preview-st,syntakt-tg-sd-cp-toy-bits-swarm-macro,trig-hold,arp,tempo-max,boot-anim` | `f44bfad622145e30ce0cbb3649864e74aebca5559d63c0393ac4eea0eef4ace9` |
 
+### Machine ACID (basse acide à la manière de la TB-303)
+
+`tweaks/model-cycles_OS1.13/26-acid.json` (7e machine) et `35-acid-tg.json` (avec Model-TG : 8e machine, par-dessus
+`model-tg-st`) sont produits par `tools/gen_acid.py` : notre code en virgule fixe d'après le modèle d'Open303 de Robin
+Schmidt (MIT, [RobinSchmidt/Open303](https://github.com/RobinSchmidt/Open303) au commit `313bf0d`), `tools/machines/acid/`,
+avec la mécanique de machine ajoutée de MACRO (`gen_macro.added_machine`) ; la charge utile est reconstituée au
+démarrage à `0x43000000` (`0x46700000` avec Model-TG) ([note 54](notes/54-machine-acid.md)). Pas de clone à faire : les
+sources sont dans le dépôt. Le générateur a besoin de `m68k-linux-gnu-gcc` (les JSON versionnés viennent du GCC 13.3
+d'Ubuntu 24.04 : un autre GCC donne d'autres octets) ; la preuve, de `gcc` pour le cœur compilé pour l'ordinateur (la
+référence) et de `m68k-elf-objdump` (un lien vers `m68k-linux-gnu-objdump` suffit) :
+```sh
+python3 tools/gen_acid.py --cycles model-cycles_OS1.13.syx [--check]
+python3 tools/emu/test_acid.py --cycles model-cycles_OS1.13.syx [--quick] \
+    [--with 6ch-usbup,model-tg-st,trig-hold,arp,tempo-max,boot-anim]
+```
+Incompatible avec MACRO, les moteurs du Syntakt et SD VINTAGE (même mécanique, même place).
+
+| `-t` | MAIN OS patché (SHA-256) |
+|---|---|
+| `acid` | `5414e9c5c9cc9f2a7f02ff5efcb40a1ef57e22fb96c52501eb6126f0a7df17c1` |
+| `6ch-usbup,acid` | `b219a182882ea56e194d591aa3d5cdd7a4475cb2f72f10530a3d4a546ec8123c` |
+| `model-tg-st,acid-tg` | `17d933fce1db46581b17f6cdd5d4fd0f0d20c5a27d2428372445e3e52acbd73b` |
+| `6ch-usbup,model-tg-st,acid-tg,trig-hold,arp,tempo-max,boot-anim` | `4d65471bedb3dea770bcb83ff736d5ad7407c04fba813c6e6d9fe4445f2ae4b8` |
+| `6ch-usbup,model-tg-st,sample-preview-st,acid-tg,trig-hold,arp,tempo-max,boot-anim,multiline-browser,level-pan-values,trigless-dim` | `640b2fd387c99474210ffe8be59315d808145d4f10c57add3684ddc9d70a9e46` |
+
 ### Navigateur sur plusieurs lignes
 
 `tweaks/model-cycles_OS1.13/44-multiline-browser.json` est produit par `tools/gen_multiline_browser.py`, qui assemble

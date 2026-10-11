@@ -194,7 +194,20 @@ partagent la mécanique ; les octets de MACRO n'ont pas changé (`gen_macro.py -
 ## 8. Charge
 
 Instructions par bloc de 32 trames d'une voix, mesurées dans la vraie boucle des voix (la boucle entière moins la
-même sans voix) : voir le tableau de §9, ligne « Coût ». Pas de régulateur de charge : ACID coûte moins que TONE.
+même sans voix, `cost()` de la preuve) `[FAIT en émulation]` :
+
+| Voix | Instructions par bloc |
+|---|---|
+| ACID, scie | 4 559 |
+| ACID, carré (PUNCH) | 4 837 |
+| ACID, bloc du trig (remise à zéro comprise) | 5 002 |
+| ACID, bloc d'un slide | 4 763 |
+| ACID muette (pas calculée) | 261 |
+| TONE, pour comparer | 5 291 |
+
+ACID coûte donc à peu près une voix de TONE (0,86 à 0,91 en instructions ; les cycles réels dépendent des `mac.l` et
+des accès mémoire, `[HYP]` du même ordre). Pile : 216 o sous la boucle des voix. Pas de régulateur de charge, comme
+pour les machines d'origine : six pistes ACID coûtent à peu près six pistes TONE.
 
 ## 9. Preuve en émulation `[FAIT en émulation]`
 
