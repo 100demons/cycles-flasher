@@ -218,6 +218,32 @@ FEATURES = [
         ],
     },
     {
+        "id": "midi-both",
+        "cat": "io",
+        "label": "MIDI OUT pendant THRU",
+        "desc": "Avec THR choisi dans CONFIG > MIDI > PORTS > OUT/THRU, le Cycles relaie le MIDI recu et envoie aussi "
+                "son horloge, ses notes et ses parametres. OUT ne change pas, le menu non plus.",
+        "status": "tested",                # par AveyCole, sur sa machine (notes/53 §9)
+        "credit": {"kind": "by", "who": "AveyCole", "repo": "AveyCole/Modded-Cycles"},
+        "excludes": ["midi-live-both"],
+        "variants": [
+            {"file": "50-midi-both", "label": None},
+        ],
+    },
+    {
+        "id": "midi-live-both",
+        "cat": "io",
+        "label": "Basculer MIDI OUT + THRU en direct",
+        "desc": "Sur la ligne OUT/THRU qui affiche THR, FUNC + appui sur le potard LEVEL/DATA ajoute au relais l'envoi "
+                "de l'horloge, des notes et des parametres du Cycles, ou le retire. L'ecran reste sur THR.",
+        "status": "tested",                # par AveyCole, sur sa machine (notes/53 §9)
+        "credit": {"kind": "by", "who": "AveyCole", "repo": "AveyCole/Modded-Cycles"},
+        "excludes": ["midi-both"],
+        "variants": [
+            {"file": "51-midi-live-both", "label": None},
+        ],
+    },
+    {
         "id": "macro",
         "cat": "sound",
         "label": "Machine MACRO",

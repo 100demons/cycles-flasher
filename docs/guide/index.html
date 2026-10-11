@@ -4,15 +4,15 @@
 <meta charset="utf-8">
 <meta name="viewport" content="width=device-width, initial-scale=1">
 <title>Guide · Modded Cycles</title>
-<meta name="description" content="What each Modded Cycles mod does and how to install it: 6-channel USB audio, latching mute, trig preview, scrolling names, easier trig removal, Syntakt engines, Model-TG, arpeggiator, Samples OS, recovery.">
+<meta name="description" content="What each Modded Cycles mod does and how to install it: 6-channel USB audio, latching mute, trig preview, scrolling names, easier trig removal, Syntakt engines, Model-TG, arpeggiator, MIDI THRU that also sends, Samples OS, recovery.">
 <meta name="theme-color" content="#e3e2de" media="(prefers-color-scheme: light)">
 <meta name="theme-color" content="#1b1b1b" media="(prefers-color-scheme: dark)">
 <link rel="icon" href="../assets/icon.svg" type="image/svg+xml">
 <link rel="preconnect" href="https://fonts.googleapis.com">
 <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
 <link rel="stylesheet" href="https://fonts.googleapis.com/css2?family=Familjen+Grotesk:wght@400..700&family=Tiny5&display=swap">
-<link rel="stylesheet" href="../assets/site.css?v=2026-10-10-10">
-<link rel="stylesheet" href="../assets/guide.css?v=2026-10-10-10">
+<link rel="stylesheet" href="../assets/site.css?v=2026-10-11-02">
+<link rel="stylesheet" href="../assets/guide.css?v=2026-10-11-02">
 <script>try{var l=localStorage.getItem("mc-lang"),t=localStorage.getItem("mc-theme")}catch(e){}document.documentElement.lang=l||(/^fr\b/i.test(navigator.language||"")?"fr":"en");if(t)document.documentElement.setAttribute("data-theme",t)</script>
 </head>
 <body data-page="guide">
@@ -56,6 +56,8 @@
         <li><a href="#level-pan"><span data-l="en">Volume and pan as numbers</span><span data-l="fr">Volume et pan en chiffres</span></a></li>
         <li><a href="#trigless"><span data-l="en">Dimmed trigless trigs</span><span data-l="fr">Trigless trigs atténués</span></a></li>
         <li><a href="#chord-keys"><span data-l="en">Chord keys</span><span data-l="fr">Clavier d'accords</span></a></li>
+        <li><a href="#midi-both"><span data-l="en">MIDI OUT while in THRU</span><span data-l="fr">MIDI OUT pendant THRU</span></a></li>
+        <li><a href="#midi-live-both"><span data-l="en">Live MIDI OUT + THRU toggle</span><span data-l="fr">Basculer MIDI OUT + THRU en direct</span></a></li>
         <li><a href="#samples"><span data-l="en">Samples OS</span><span data-l="fr">OS Samples</span></a></li>
         <li><a href="#stock"><span data-l="en">Back to stock</span><span data-l="fr">Revenir à l'origine</span></a></li>
         <li><a href="#recovery"><span data-l="en">Recovery</span><span data-l="fr">Secours</span></a></li>
@@ -640,8 +642,45 @@
         </dl>
       </section>
 
+      <section id="midi-both">
+        <h2><span class="n">18</span><span data-l="en">MIDI OUT while in THRU</span><span data-l="fr">MIDI OUT pendant THRU</span></h2>
+        <p class="by"><span data-l="en">By</span><span data-l="fr">Par</span> <a href="https://github.com/AveyCole/Modded-Cycles" target="_blank" rel="noopener">AveyCole</a></p>
+        <p class="lede"><span data-l="en">With THR selected, the Model:Cycles forwards what arrives on its MIDI IN and also sends its own MIDI. Handy in the middle of a MIDI chain: what comes in goes on, and the Cycles still plays the devices after it.</span><span data-l="fr">Avec THR choisi, le Model:Cycles relaie ce qui arrive sur son MIDI IN et envoie aussi son propre MIDI. Pratique au milieu d'une chaîne MIDI : ce qui entre continue son chemin, et le Cycles joue toujours les appareils qui le suivent.</span></p>
+        <ol>
+          <li><span data-l="en">Press <b>SETTINGS</b>, open <b>CONFIG › MIDI › PORTS</b> and set <b>OUT/THRU</b> to <b>THR</b>, as usual.</span><span data-l="fr">Appuyez sur <b>SETTINGS</b>, ouvrez <b>CONFIG › MIDI › PORTS</b> et réglez <b>OUT/THRU</b> sur <b>THR</b>, comme d'habitude.</span></li>
+          <li><span data-l="en">The MIDI OUT now carries both: what the Cycles receives, and its own clock, notes and parameter changes, as with OUT.</span><span data-l="fr">La sortie MIDI porte alors les deux : ce que le Cycles reçoit, et son horloge, ses notes et ses changements de paramètres, comme avec OUT.</span></li>
+        </ol>
+        <dl class="facts">
+          <div><dt>OUT</dt><dd><span data-l="en">unchanged: the Cycles sends its own MIDI and forwards nothing. The menu doesn't change either.</span><span data-l="fr">inchangé : le Cycles envoie son MIDI et ne relaie rien. Le menu ne change pas non plus.</span></dd></div>
+          <div><dt><span data-l="en">Clock</span><span data-l="fr">Horloge</span></dt><dd><span data-l="en">if the Cycles follows the clock of a device on its MIDI IN and sends its own clock too, the next device can get the clock twice, forwarded and sent again: turn off clock send in the Cycles' MIDI sync settings.</span><span data-l="fr">si le Cycles suit l'horloge d'un appareil branché sur son MIDI IN et envoie aussi la sienne, l'appareil suivant peut la recevoir deux fois, relayée et renvoyée : coupez l'envoi d'horloge dans les réglages de synchro MIDI du Cycles.</span></dd></div>
+          <div><dt><span data-l="en">Two senders</span><span data-l="fr">Deux sources</span></dt><dd><span data-l="en">if the device on MIDI IN and the Cycles both send notes or knob moves, some of them can reach the next device wrong (a wrong note, or a note that keeps playing), above all when both play at once: the Cycles passes on what it receives as it comes in, without waiting for whole messages the way a MIDI merger box does. Clock and start/stop are not affected. It works best when only one of the two plays notes.</span><span data-l="fr">si l'appareil branché sur le MIDI IN et le Cycles envoient tous les deux des notes ou des mouvements de potards, certains peuvent arriver faussés à l'appareil suivant (une mauvaise note, ou une note qui ne s'arrête plus), surtout s'ils jouent en même temps : le Cycles fait suivre ce qu'il reçoit au fil de l'eau, sans attendre les messages entiers comme le fait un boîtier de fusion MIDI. L'horloge et start/stop ne sont pas touchés. Le mieux est qu'un seul des deux joue des notes.</span></dd></div>
+          <div><dt><span data-l="en">Mods</span><span data-l="fr">Mods</span></dt><dd><span data-l="en">goes with every other mod, except <a href="#midi-live-both">Live MIDI OUT + THRU toggle</a>: pick one of the two.</span><span data-l="fr">se combine avec tous les autres mods, sauf <a href="#midi-live-both">Basculer MIDI OUT + THRU en direct</a> : choisissez l'un des deux.</span></dd></div>
+          <div><dt><span data-l="en">Tested</span><span data-l="fr">Testé</span></dt><dd><span data-l="en">by AveyCole on a Model:Cycles, and in the emulator on the OS's own MIDI code: the three places that hold the Cycles' MIDI back in THR, the forwarding of incoming MIDI, the screen and the OUT/THRU key, alone and with the other mods.</span><span data-l="fr">par AveyCole sur un Model:Cycles, et en émulation sur le code MIDI de l'OS : les trois endroits qui retiennent le MIDI du Cycles en THR, le relais du MIDI reçu, l'écran et la touche OUT/THRU, seul et avec les autres mods.</span></dd></div>
+        </dl>
+      </section>
+
+      <section id="midi-live-both">
+        <h2><span class="n">19</span><span data-l="en">Live MIDI OUT + THRU toggle</span><span data-l="fr">Basculer MIDI OUT + THRU en direct</span></h2>
+        <p class="by"><span data-l="en">By</span><span data-l="fr">Par</span> <a href="https://github.com/AveyCole/Modded-Cycles" target="_blank" rel="noopener">AveyCole</a></p>
+        <p class="lede"><span data-l="en">THR keeps forwarding incoming MIDI, and a shortcut on the machine decides whether the Cycles' own MIDI goes out too. The original OUT/THR menu doesn't change.</span><span data-l="fr">THR relaie toujours le MIDI reçu, et un raccourci sur la machine décide si le MIDI du Cycles sort aussi. Le menu OUT/THR d'origine ne change pas.</span></p>
+        <ol>
+          <li><span data-l="en">Press <b>SETTINGS</b>, open <b>CONFIG › MIDI › PORTS</b> and set <b>OUT/THRU</b> to <b>THR</b>, as usual.</span><span data-l="fr">Appuyez sur <b>SETTINGS</b>, ouvrez <b>CONFIG › MIDI › PORTS</b> et réglez <b>OUT/THRU</b> sur <b>THR</b>, comme d'habitude.</span></li>
+          <li><span data-l="en">With the cursor on <b>OUT/THRU</b>, hold <b>FUNC</b> and press the <b>LEVEL/DATA</b> knob: the Cycles now also sends its own clock, notes and parameter changes, while incoming MIDI keeps passing through.</span><span data-l="fr">Le curseur sur <b>OUT/THRU</b>, tenez <b>FUNC</b> et appuyez sur le potard <b>LEVEL/DATA</b> : le Cycles envoie maintenant aussi son horloge, ses notes et ses changements de paramètres, et le MIDI reçu continue de passer.</span></li>
+          <li><span data-l="en">Hold <b>FUNC</b> and press <b>LEVEL/DATA</b> again to go back to forwarding only, as with the original THR.</span><span data-l="fr">Tenez <b>FUNC</b> et appuyez de nouveau sur <b>LEVEL/DATA</b> pour revenir au relais seul, comme le THR d'origine.</span></li>
+        </ol>
+        <dl class="facts">
+          <div><dt><span data-l="en">Screen</span><span data-l="fr">Écran</span></dt><dd><span data-l="en">shows THR either way. To know which one is on, watch whether the next device gets the Cycles' clock or notes.</span><span data-l="fr">affiche THR dans les deux cas. Pour savoir lequel est actif, regardez si l'appareil suivant reçoit l'horloge ou les notes du Cycles.</span></dd></div>
+          <div><dt><span data-l="en">Without FUNC</span><span data-l="fr">Sans FUNC</span></dt><dd><span data-l="en">a press on LEVEL/DATA switches to OUT, as before. Back on THR, the Cycles forwards only, until the next FUNC + press.</span><span data-l="fr">un appui sur LEVEL/DATA passe en OUT, comme avant. De retour sur THR, le Cycles relaie seulement, jusqu'au prochain FUNC + appui.</span></dd></div>
+          <div><dt><span data-l="en">Switching off</span><span data-l="fr">À l'extinction</span></dt><dd><span data-l="en">the choice is kept with the Cycles' other settings, as far as the code shows; not checked on the machine yet. With the official OS or a firmware without this mod, THR simply forwards, as usual.</span><span data-l="fr">le choix est gardé avec les autres réglages du Cycles, d'après le code ; pas encore vérifié sur la machine. Avec l'OS officiel ou un firmware sans ce mod, THR relaie simplement, comme d'habitude.</span></dd></div>
+          <div><dt><span data-l="en">Clock</span><span data-l="fr">Horloge</span></dt><dd><span data-l="en">if the Cycles follows the clock of a device on its MIDI IN and sends its own clock too, the next device can get the clock twice, forwarded and sent again: turn off clock send in the Cycles' MIDI sync settings.</span><span data-l="fr">si le Cycles suit l'horloge d'un appareil branché sur son MIDI IN et envoie aussi la sienne, l'appareil suivant peut la recevoir deux fois, relayée et renvoyée : coupez l'envoi d'horloge dans les réglages de synchro MIDI du Cycles.</span></dd></div>
+          <div><dt><span data-l="en">Two senders</span><span data-l="fr">Deux sources</span></dt><dd><span data-l="en">if the device on MIDI IN and the Cycles both send notes or knob moves, some of them can reach the next device wrong (a wrong note, or a note that keeps playing), above all when both play at once: the Cycles passes on what it receives as it comes in, without waiting for whole messages the way a MIDI merger box does. Clock and start/stop are not affected. It works best when only one of the two plays notes.</span><span data-l="fr">si l'appareil branché sur le MIDI IN et le Cycles envoient tous les deux des notes ou des mouvements de potards, certains peuvent arriver faussés à l'appareil suivant (une mauvaise note, ou une note qui ne s'arrête plus), surtout s'ils jouent en même temps : le Cycles fait suivre ce qu'il reçoit au fil de l'eau, sans attendre les messages entiers comme le fait un boîtier de fusion MIDI. L'horloge et start/stop ne sont pas touchés. Le mieux est qu'un seul des deux joue des notes.</span></dd></div>
+          <div><dt><span data-l="en">Mods</span><span data-l="fr">Mods</span></dt><dd><span data-l="en">goes with every other mod, except <a href="#midi-both">MIDI OUT while in THRU</a>: pick one of the two.</span><span data-l="fr">se combine avec tous les autres mods, sauf <a href="#midi-both">MIDI OUT pendant THRU</a> : choisissez l'un des deux.</span></dd></div>
+          <div><dt><span data-l="en">Tested</span><span data-l="fr">Testé</span></dt><dd><span data-l="en">by AveyCole on a Model:Cycles, and in the emulator on the OS's own code: the shortcut with and without FUNC from each setting, the three places that hold the Cycles' MIDI back in THR, the forwarding of incoming MIDI, the screen and the saved settings, alone and with the other mods.</span><span data-l="fr">par AveyCole sur un Model:Cycles, et en émulation sur le code de l'OS : le raccourci avec et sans FUNC depuis chaque réglage, les trois endroits qui retiennent le MIDI du Cycles en THR, le relais du MIDI reçu, l'écran et les réglages enregistrés, seul et avec les autres mods.</span></dd></div>
+        </dl>
+      </section>
+
       <section id="samples">
-        <h2><span class="n">18</span><span data-l="en">Samples OS</span><span data-l="fr">OS Samples</span></h2>
+        <h2><span class="n">20</span><span data-l="en">Samples OS</span><span data-l="fr">OS Samples</span></h2>
         <p class="lede"><span data-l="en">The Model:Cycles starts as a Model:Samples: you load and play your own samples, managed with Elektron Transfer.</span><span data-l="fr">Le Model:Cycles démarre en Model:Samples : vous chargez et jouez vos propres samples, gérés avec Elektron Transfer.</span></p>
         <p><span data-l="en">The flasher puts the official Model:Samples OS inside your Model:Cycles firmware file:</span><span data-l="fr">Le flasher place l'OS officiel du Model:Samples dans le fichier firmware de votre Model:Cycles :</span></p>
         <dl class="layers fig">
@@ -675,13 +714,13 @@
       </section>
 
       <section id="stock">
-        <h2><span class="n">19</span><span data-l="en">Back to stock</span><span data-l="fr">Revenir à l'origine</span></h2>
+        <h2><span class="n">21</span><span data-l="en">Back to stock</span><span data-l="fr">Revenir à l'origine</span></h2>
         <p><span data-l="en">The <b>Official firmware</b> tab of the flasher sends your OS file unchanged, over USB, like a normal update. It is also a good rehearsal before a first mod: it checks the cable and the setup without changing anything.</span><span data-l="fr">L'onglet <b>Firmware officiel</b> du flasher renvoie votre fichier d'OS sans le modifier, par USB, comme une mise à jour normale. C'est aussi une bonne répétition avant un premier mod : elle vérifie le câble et l'installation sans rien changer.</span></p>
         <p><span data-l="en">With Syntakt engines, the MACRO machine or Model-TG's Sampler, first set your tracks back to an original machine.</span><span data-l="fr">Avec des moteurs du Syntakt, la machine MACRO ou le Sampler de Model-TG, remettez d'abord vos pistes sur une machine d'origine.</span></p>
       </section>
 
       <section id="recovery">
-        <h2><span class="n">20</span><span data-l="en">Recovery</span><span data-l="fr">Secours</span></h2>
+        <h2><span class="n">22</span><span data-l="en">Recovery</span><span data-l="fr">Secours</span></h2>
         <p class="lede"><span data-l="en">If the Model:Cycles no longer starts, its startup menu can always reinstall the OS: it lives in an area that updates never write.</span><span data-l="fr">Si le Model:Cycles ne démarre plus, son menu de démarrage peut toujours réinstaller l'OS : il vit dans une zone que les mises à jour n'écrivent jamais.</span></p>
         <figure class="fig">
           <div data-device data-scenes="func @logo | func,mainvol | s4 @READY TO/>RECEIVE" data-ms="1300"></div>
@@ -695,7 +734,7 @@
       </section>
 
       <section id="trouble">
-        <h2><span class="n">21</span><span data-l="en">Troubleshooting</span><span data-l="fr">Dépannage</span></h2>
+        <h2><span class="n">23</span><span data-l="en">Troubleshooting</span><span data-l="fr">Dépannage</span></h2>
         <div class="faq">
           <details>
             <summary><span data-l="en">Nothing happens on the Model:Cycles screen</span><span data-l="fr">Rien ne se passe sur l'écran du Model:Cycles</span></summary>
@@ -759,8 +798,8 @@
   </div>
 </footer>
 
-<script src="../assets/release.js?v=2026-10-10-10"></script>
-<script src="../assets/cycles.js?v=2026-10-10-10"></script>
-<script src="../assets/site.js?v=2026-10-10-10"></script>
+<script src="../assets/release.js?v=2026-10-11-02"></script>
+<script src="../assets/cycles.js?v=2026-10-11-02"></script>
+<script src="../assets/site.js?v=2026-10-11-02"></script>
 </body>
 </html>

@@ -50,6 +50,8 @@ Going back to the official firmware is one click away.
 | **Multi-line browser** | The preset browser shows three names at once in a small font instead of one in big letters, with a `>` on the name under the cursor. From an idea by a community member. | ✅ Tested |
 | **Volume and pan as numbers** | On the main screen, turning `LEVEL/DATA` shows the track's volume (0 to 127) as a number; with `FUNC` held, its pan (-64 to 63). `LEVEL/DATA` then moves in steps of 1 instead of 2 there. Based on a mod by djd_oz. | ✅ Tested |
 | **Dimmed trigless trigs** | A trig key that holds a trigless trig lights dimmed, so you can tell it from a note trig. Based on a mod by djd_oz. | ✅ Tested |
+| **MIDI OUT while in THRU** | With `THR` selected (CONFIG › MIDI › PORTS › OUT/THRU), the Model:Cycles forwards incoming MIDI and also sends its own clock, notes and parameter changes. `OUT` and the menu stay as they are. Best when only one side plays notes, since what comes in is passed on as it arrives. By [AveyCole](https://github.com/AveyCole/Modded-Cycles). | ✅ Tested |
+| **Live MIDI OUT + THRU toggle** | With `THR` selected, hold `FUNC` and press the `LEVEL/DATA` knob to add the Cycles' own MIDI to what it forwards, or take it away. The screen stays on `THR`. By AveyCole. | ✅ Tested |
 | **Easier trig removal** | A quick press on a step that holds a trig removes it, instead of opening it as a hold. | ✅ Tested |
 | **Latching mute** | Hold `TRACK` and tap `FUNC`: mute mode stays on, no more holding `FUNC`. By [drumkilla](https://github.com/drumkilla/elektron-model-tweaks). | ✅ Tested |
 | **Trig preview** | Sequencer stopped or paused: hold a step and press `PAGE` to hear it, with its note, length and p-locks. By drumkilla. | ✅ Tested |
@@ -57,7 +59,7 @@ Going back to the official firmware is one click away.
 | **Samples OS** | Turns the Model:Cycles into a Model:Samples, built from both official OS files. Coming back needs a MIDI interface. | ✅ Tested |
 | **Cycles OS for Model:Samples** | The other way round: turns a Model:Samples into a Model:Cycles, over USB, from both official OS files. Going back to the Model:Samples OS works over USB too, from the same tab. | 🧪 Experimental |
 
-The mods can be combined freely (Samples OS and Cycles OS for Model:Samples are separate installs; Chord Keys and Model-TG not together). Each one is explained step by step, with the buttons to press, in the
+The mods can be combined freely (the two MIDI THRU mods are alternatives; Samples OS and Cycles OS for Model:Samples are separate installs; Chord Keys and Model-TG not together). Each one is explained step by step, with the buttons to press, in the
 **[guide](https://18nelli18.github.io/Modded-Cycles/guide/)**.
 
 <p align="center">

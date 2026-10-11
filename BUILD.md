@@ -449,6 +449,36 @@ python3 tools/emu/test_trigless_dim.py --cycles model-cycles_OS1.13.syx \
 | `model-tg,level-pan-values,trigless-dim` | `551e86a8aa2a0288440a8e620ff1cdf11da34676489a5895f4f9a031021efd07` |
 | `6ch-usbup,model-tg-st,syntakt-tg-sd-cp-toy-bits-swarm,trig-hold,arp,tempo-max,boot-anim,level-pan-values,trigless-dim` | `366aebfc88b31a9f6d8206e53fa94b76897ef7fc929ff0237aa57578e3fe7540` |
 
+### THRU qui envoie aussi le MIDI du Cycles (d'AveyCole)
+
+Deux tweaks d'AveyCole ([AveyCole/Modded-Cycles](https://github.com/AveyCole/Modded-Cycles), commit `ba5f8bb`), produits par
+`tools/gen_midi_thru.py`, qui s'excluent ([note 53](notes/53-midi-thru-aveycole.md)) :
+
+- `50-midi-both.json` (`midi-both`) : avec THR choisi dans CONFIG › MIDI › PORTS › OUT/THRU, le Cycles relaie le MIDI reçu et
+  envoie aussi son horloge, ses notes et ses paramètres. Les trois portes de sortie (`0x4000154a`, `0x4000156a`, `0x40001590`)
+  ne lisent plus le réglage. Aucune place libre.
+- `51-midi-live-both.json` (`midi-live-both`) : sur la ligne OUT/THRU qui affiche THR, FUNC + appui sur LEVEL/DATA alterne THR
+  seul et THR + MIDI du Cycles (valeur 2 du réglage `0x404e9b50`). `tools/machines/midi_thru/midi_thru.S` (132 o) est assemblé
+  dans le masque de sprite 34×34 libéré `0x40192ba4` (`tools/sprites.py`) ; le fork le mettait en `0x40167c50`.
+
+La preuve fait tourner les vraies portes de sortie, le vrai relais, la vraie touche de la ligne et son affichage, d'origine et
+modifiés, et compare avec la version du fork :
+```sh
+python3 tools/gen_midi_thru.py --cycles model-cycles_OS1.13.syx [--check]
+python3 tools/emu/test_midi_thru.py --cycles model-cycles_OS1.13.syx \
+    [--with 6ch-usbup,model-tg-st,syntakt-tg-sd-cp-toy-bits-swarm,trig-hold,arp,tempo-max --syntakt Syntakt_OS1.42.syx]
+```
+
+| `-t` | MAIN OS patché (SHA-256) |
+|---|---|
+| `midi-both` | `5d0755ef0bd34617bcd5adbb54f09c77cd066e7439d26cc460bbadb0090bb75f` |
+| `midi-live-both` | `ca439a48cb8d818c8c09a8bfc8fa1ac391ffa5f9263e971db39ff602afce6742` |
+| `6ch-usbup,midi-both` | `efc0f1c328f8b65eedd45bc20dd68b513eb091ea1c67d8d3fba0d0e60081b17a` |
+| `6ch-usbup,midi-live-both` | `09f5b51061b2d387c897824984618f7f8b92d2d5028750115b3f6cb3eb2748dc` |
+| `model-tg,midi-live-both` | `29e4b13b5cf8a995c163ddfd8040c7e41567f687fde27bd6985d3bf2042ca048` |
+| `6ch-usbup,model-tg-st,syntakt-tg-sd-cp-toy-bits-swarm,trig-hold,arp,tempo-max,boot-anim,multiline-browser,midi-both` | `705302a9ddf03d02dc2dae40422796b476d1583261e2971560a195dd033d18a8` |
+| `6ch-usbup,model-tg-st,syntakt-tg-sd-cp-toy-bits-swarm,trig-hold,arp,tempo-max,boot-anim,multiline-browser,midi-live-both` | `a00ac9d50ce7e11a92737ee54ddf782ac94ce29bdd9f40caf29cb4be434319ad` |
+
 ### Écoute d'un pas en pause
 
 `trig-preview` (et sa copie dans Model-TG) accepte le séquenceur en pause, où le met un Stop MIDI reçu même à l'arrêt : 3 octets
