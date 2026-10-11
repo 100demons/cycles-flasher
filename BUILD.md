@@ -403,11 +403,13 @@ Incompatible avec MACRO, les moteurs du Syntakt et SD VINTAGE (même mécanique,
 
 | `-t` | MAIN OS patché (SHA-256) |
 |---|---|
-| `acid` | `5414e9c5c9cc9f2a7f02ff5efcb40a1ef57e22fb96c52501eb6126f0a7df17c1` |
-| `6ch-usbup,acid` | `b219a182882ea56e194d591aa3d5cdd7a4475cb2f72f10530a3d4a546ec8123c` |
-| `model-tg-st,acid-tg` | `17d933fce1db46581b17f6cdd5d4fd0f0d20c5a27d2428372445e3e52acbd73b` |
-| `6ch-usbup,model-tg-st,acid-tg,trig-hold,arp,tempo-max,boot-anim` | `4d65471bedb3dea770bcb83ff736d5ad7407c04fba813c6e6d9fe4445f2ae4b8` |
-| `6ch-usbup,model-tg-st,sample-preview-st,acid-tg,trig-hold,arp,tempo-max,boot-anim,multiline-browser,level-pan-values,trigless-dim` | `640b2fd387c99474210ffe8be59315d808145d4f10c57add3684ddc9d70a9e46` |
+| `acid` | `575787a216f0e840ebc4b13bea08196729f0eb9e1bbcbad55e05980cacd87a59` |
+| `6ch-usbup,acid` | `c803d8f78b50dfea27d74b21db1628c5f053205fb8b5728361e34a4a6c8ca532` |
+| `model-tg-st,acid-tg` | `cea79442887d3e318809e89b5d9e18249fa091c0017a3423133c13812b8a78be` |
+| `6ch-usbup,model-tg-st,acid-tg,trig-hold,arp,tempo-max,boot-anim` | `ccfe86b21325e38431fb6cfa4233b311dc15e7dd4c2cf7a4a80b21fa5731fc52` |
+| `6ch-usbup,model-tg-st,sample-preview-st,acid-tg,trig-hold,arp,tempo-max,boot-anim,multiline-browser,level-pan-values,trigless-dim` | `d54495435dfe302bbe2044614ab7603eabe6383105210f85d13ea68abdc827c9` |
+| `6ch-usbup,acid,trig-hold,arp,tempo-max,boot-anim,multiline-browser,level-pan-values,trigless-dim` | `6fe2cf2ba1450f92f7e2e91e2403fd2a817bae7df2cfd2eb9fcfa72392636d56` |
+| `6ch-usbup,acid,track-filter,trig-hold,arp,tempo-max,boot-anim,multiline-browser,level-pan-values,trigless-dim` | `9ebda7222c94322cf85b1a79379c0c43f4c21a9e026508ec44b90e96d5660281` |
 
 ### Navigateur sur plusieurs lignes
 

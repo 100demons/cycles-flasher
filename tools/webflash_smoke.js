@@ -215,7 +215,7 @@ async function main() {
     check(ids.slice(0, 24).join() === "6ch-usbup,model-tg,model-tg-st,sample-preview,sample-preview-st,latching-mute,trig-preview,browser-scroll,trig-hold,arp,tempo-max,boot-anim,multiline-browser,level-pan-values,trigless-dim,midi-both,midi-live-both,macro,macro-tg,acid,acid-tg,chord-keys,track-filter,syntakt-sd"
       && ids.length === 23 + 4 * ((1 << nEng) - 1) && ids.includes("syntakt-sd-cp") && ids.includes("syntakt-tg-sd-cp-toy-bits")
       && ids.includes("syntakt-sd-macro") && ids.includes("syntakt-tg-sd-cp-toy-bits-swarm-macro")
-      && ids.includes("arp") && !ids.some((x) => /exact|snare|multiout/.test(x)) && w.MC_TWEAKS.features.length === 19,
+      && ids.includes("arp") && !ids.some((x) => /exact|snare|multiout/.test(x)) && w.MC_TWEAKS.features.length === 20,
       `MC_TWEAKS: only USB-friendly tweaks, one tweak per choice of the ${nEng} Syntakt engines (no SNARE replacement), alone and with Model-TG, with and without MACRO: ${ids.length} tweaks`);
     check(/build \d{4}-/.test(text(doc, "build-stamp")), "version stamp shown");
     const srcs = [...doc.querySelectorAll("script[src]")].map((x) => x.getAttribute("src"));
@@ -610,7 +610,7 @@ async function main() {
     check(box("feat-arp") !== arp && doc.activeElement && doc.activeElement.id === "feat-arp", "focus kept on the ticked box after the rebuild");
     await clearAll();
     // search: hidden under 20 mods; from 20, by words in both languages, accents ignored
-    check(box("mod-find").hidden, `no search field with ${feats.length} mods`);
+    check(box("mod-find").hidden === feats.length < 20, `search field ${feats.length < 20 ? "hidden" : "shown"} with ${feats.length} mods`);
     const usb = feats.find((f) => f.id === "usb6");
     for (let k = 0, n = 21 - feats.length; k < n; k++) feats.push(Object.assign({}, usb, { id: "usb6-copy-" + k, credit: null }));
     app.applyLang("en");
@@ -626,7 +626,7 @@ async function main() {
       "search from 20 mods: « ÉCOUTE » finds Trig preview and Sample preview (French names, any case or accent); Esc shows all again");
     feats.splice(feats.findIndex((f) => f.id === "usb6-copy-0"));
     app.applyLang("en");
-    check(box("mod-find").hidden && !box("mod-usb6-copy-0"), "back to " + feats.length + " mods");
+    check(box("mod-find").hidden === feats.length < 20 && !box("mod-usb6-copy-0"), "back to " + feats.length + " mods");
     // French
     app.applyLang("fr");
     await click(box("feat-model-tg"));
