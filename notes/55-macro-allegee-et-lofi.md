@@ -213,6 +213,14 @@ tempo-max,boot-anim,multiline-browser,level-pan-values,trigless-dim` **TOUT OK**
 lo-fi (FINE 16 sur WAVE MAP, 40 sur TRIPLE SAW, 30 sur FM, 100 sur CSAW) : la passerelle y est liée à une autre adresse,
 avec d'autres relocalisations. Fin de l'image décompressée : `0x401e5104` seuls, `0x401fa98d` avec Model-TG.
 
+Avec le filtre par piste ([47](47-filtre-piste.md), après la fusion de main, 11/10/2026) :
+`test_track_filter.py --with macro` **TOUT OK** (62) ; `--with syntakt-sd-cp-toy-bits-swarm-macro,6ch-usbup,chord-keys,
+level-pan-values,trigless-dim,multiline-browser` **TOUT OK** (62) ; la section 5 de `test_macro.py` avec `track-filter,
+6ch-usbup,trig-hold,arp,tempo-max,boot-anim,multiline-browser,level-pan-values,trigless-dim` **TOUT OK**. Avec
+`chord-keys`, cette section s'arrête sur une lecture hors de la mémoire du moteur de `test_macro.py` (Chord Keys lit
+le BSS de l'OS sur une piste CHORD, que ce moteur ne place pas) : limite du banc, pas du firmware ; Chord Keys avec
+MACRO est couvert par la preuve du filtre ci-dessus.
+
 Flasher (`tools/webflash_smoke.sh` avec les deux fichiers officiels, après la fusion de main) : **ALL OK**, 758
 vérifications ; les 627 combinaisons de l'échantillon construites dans la page, chacune à son empreinte.
 
