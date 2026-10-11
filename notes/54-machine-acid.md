@@ -303,7 +303,7 @@ Model:Samples sans erreur.
 **Testé sur la machine (11/10/2026), version avec DRIVE**, fichiers ci-dessous : « ça marche nickel » (Maxime, fil
 du projet, 19:11 UTC ; il n'a pas dit lequel des deux fichiers il a flashé). ACID passe en « testé » dans le flasher.
 Il a demandé dans le même message si ACID marche en même temps que MACRO et les moteurs du Syntakt : pas encore, même
-place (§7).
+place (§7) ; fait depuis dans la même PR (§11).
 
 **Testé sur la machine (11/10/2026), première version (CONTOUR = accent)**, fichiers ci-dessous : « ça marche bien ».
 L'accent semblait ne rien changer, et Maxime ne le trouvait pas utile ici : remplacé par DRIVE (§3.2). Fichiers de cette
@@ -428,3 +428,62 @@ du Syntakt, Unicorn aurait exécuté ses `mac.l` lui-même, faux en mode fractio
 - Vrai séquenceur (`seqrig.py`) et coût, comme `test_acid.py`.
 
 Résultats : §11.6.
+
+### 11.6 Résultats (11/10/2026, `test_acid_combos.py --quick`, TOUT OK)
+
+`--quick` réduit les cas exacts d'ACID à 8 (les 3 premiers et les 5 derniers de `test_acid.py`) et ceux des moteurs ;
+le reste tourne en entier.
+
+| Versions | Avec | Vérifications | Résultat | Durée |
+|---|---|---|---|---|
+| `macro-acid` | — | 45 | TOUT OK | 26 min |
+| `macro-acid-tg` | `model-tg-st` | 38 | TOUT OK | 28 min |
+| `syntakt-sd-acid`, `syntakt-sd-macro-acid` | — | 97 | OK (voir plus bas) | 79 min |
+| `syntakt-tg-sd-acid`, `syntakt-tg-sd-macro-acid` | `model-tg-st` | 81 | TOUT OK | 80 min |
+| `syntakt-sd-cp-toy-bits-swarm-acid`, `…-macro-acid` | — | 97 | TOUT OK | 104 min |
+| `syntakt-tg-sd-cp-toy-bits-swarm-macro-acid` (la plus grosse) | `model-tg-st` | 45 | TOUT OK | 57 min |
+| `syntakt-sd-cp-toy-bits-swarm-macro-acid` (fichier de test sans Model-TG) | `6ch-usbup,track-filter,trig-hold,arp,tempo-max,boot-anim,multiline-browser,level-pan-values,trigless-dim` | 25 | TOUT OK | 46 min |
+| `syntakt-tg-sd-cp-toy-bits-swarm-macro-acid` (fichier de test avec Model-TG) | `6ch-usbup,model-tg-st,sample-preview-st,trig-hold,arp,tempo-max,boot-anim,multiline-browser,level-pan-values,trigless-dim` | 25 | TOUT OK | 42 min |
+
+- **Démarrage** : partout ok, cache d'instructions compris ; fins d'image du tableau de §11.2, la plus haute
+  `0x401fbdcc` (marge 16 948 o). Écran MACHINES avec Model-TG, 5 moteurs, MACRO et ACID : 14 repères sur 2 lignes,
+  les 7 premiers en haut, le plein sur la machine choisie (1, 7, 8, 14 vérifiées).
+- **Son** : ACID exacte avant la chaîne d'ampli, MACRO exacte, machines d'origine et moteurs identiques aux moteurs
+  seuls, piste ACID identique à ACID seule (scie, carré, GATE, DRIVE), piste MACRO identique à MACRO seule (9 modèles,
+  plus 4 avec le lo-fi), 6 pistes ACID, pistes mêlées, machine locks SNARE → moteur → MACRO → ACID → TONE → moteur →
+  ACID (carré) → MACRO → KICK : tout joue.
+- **Régulateur** : à 97 % de charge fixe, toutes les pistes ACID et MACRO s'éteignent en fondu (pistes 1 à 6 sans
+  Model-TG ; 1, 2, 4, 5, 6 avec, jamais le Sampler en piste 3), muettes ensuite ; à 46 % + 7 % par voix calculée,
+  une seule. Les pistes non éteintes restent identiques à la référence.
+- **`GOV_SKIP`** : la note tenue est éteinte dès le bloc 23 et n'est plus calculée pendant 76 blocs ; le trig suivant
+  la rejoue (cœur remis à zéro au bloc 101 : l'OS livre à la machine le trig du bloc 100 au bloc suivant, comme celui
+  du bloc 1 au bloc 2). ACID seule glisse au même endroit, et la même version avec le minuteur figé (ACID sans
+  `GOV_SKIP`) glisse depuis la note éteinte : la vérification distingue bien les deux.
+- **Coût d'une voix ACID** (instructions par bloc, scie / carré ; TONE dans la même version) : `macro-acid` 5 086 /
+  5 229 (TONE 5 291) ; `macro-acid-tg` 5 145 / 5 288 (5 669) ; avec les moteurs 5 406 / 5 557 (5 630), avec Model-TG
+  5 337 / 5 480 (5 861). Voix muette 142 à 335. Hors premier bloc d'une note, ACID coûte toujours un peu moins qu'une
+  voix TONE.
+
+La première version de la vérification `GOV_SKIP` attendait la remise à zéro au bloc où le séquenceur place le trig
+(1 et 100) : les deux versions SD seules ont échoué sur elle seule, avec le bon comportement (remises à zéro aux blocs
+2 et 101). Vérification corrigée (le trig livré au bloc suivant), relancée sur ces deux versions : ok.
+
+Générateurs, `--check` après coup : `gen_acid`, `gen_acid_combos` (126 tweaks), `gen_macro`, `gen_macro_syntakt`
+(5 moteurs ; SD avec Model-TG) : à jour ; aucun tweak existant ne change.
+
+### 11.7 Sur la machine
+
+Pas encore testé sur la machine : les versions combinées restent « expérimentales ». Fichiers de test construits par
+`tools/build.py` (dossier du projet `machine-acid/avec-macro-et-moteurs/`, jamais dans le dépôt) :
+
+- `model-cycles_acid-macro-syntakt.syx` : `6ch-usbup,syntakt-sd-cp-toy-bits-swarm-macro-acid,track-filter,trig-hold,
+  arp,tempo-max,boot-anim,multiline-browser,level-pan-values,trigless-dim`, MAIN OS `85139773…` ;
+- `model-cycles_acid-macro-syntakt_model-tg.syx` : `6ch-usbup,model-tg-st,sample-preview-st,
+  syntakt-tg-sd-cp-toy-bits-swarm-macro-acid,trig-hold,arp,tempo-max,boot-anim,multiline-browser,level-pan-values,
+  trigless-dim`, MAIN OS `d823ff90…`.
+
+À vérifier : le démarrage et l'écran MACHINES (13 machines, 14 avec Model-TG, ACID en dernier) ; ACID, MACRO et un
+moteur sur trois pistes en même temps, chacun comme seul ; un verrou de machine par pas ACID → MACRO → moteur ; une
+forte charge (les six pistes, tempo rapide) : le régulateur peut éteindre des notes, la machine ne doit pas se figer,
+et après une note éteinte le trig ACID suivant rejoue la note ; DRIVE, slide et GATE comme avant. Si tout marche :
+`HW_TESTED` / `HW_TESTED_TG` de `gen_acid_combos.py`, puis le passage à « testé », dans un commit à part.
