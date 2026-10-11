@@ -8,7 +8,8 @@ Le vrai code de l'OS, émulé (Unicorn), avec la charge utile telle que le croch
      BSS de l'OS ; avec Model-TG, boot_extra_hook, pile et registres intacts.
   2. Interface : les vérifications de test_syntakt_machines.py (seul) et de test_model_tg_syntakt.py (avec
      Model-TG), appliquées à MACRO : rangées, recherches, descripteurs (Model de 0 à 46), écran MACHINES, molette,
-     enregistrements, changement de machine réel, potards, icône.
+     enregistrements, changement de machine réel, potards, icône. Et le lo-fi sous FUNC + PITCH (lofi_ui.py,
+     notes/55 §8) : la vraie recherche du descripteur d'un potard, le vrai tour de potard avec FUNC, le vrai texte.
   3. Son :
      - avant la chaîne d'ampli, la sortie de MACRO est EXACTEMENT celle de Braids compilé pour l'ordinateur depuis
        les mêmes sources (braids_ref.cc), avec les réglages que la passerelle doit lui donner (calculés ici d'après
@@ -55,6 +56,7 @@ sys.path.insert(0, str(HERE.parent))
 import build                        # noqa: E402
 import gen_macro as gm              # noqa: E402
 import gen_syntakt_engines as gs    # noqa: E402
+import lofi_ui                      # noqa: E402
 import mcengine as E                # noqa: E402
 import test_model_tg as TM          # noqa: E402
 import test_model_tg_syntakt as tms  # noqa: E402
@@ -568,6 +570,9 @@ def with_others(stock, cycles, ids, alone, tg_fw, tg):
     print("démarrage")
     t7.X.bootstrap_depack_ok(cycles, fw.tweaks, None) or t7.FAIL.append("bootstrap avec " + label)
     boot(fw, tg if with_tg else None)
+    print("interface")
+    lofi_ui.check_lofi(ref_fw.img, fw.img, fw.payload, fw.index, f"MACRO avec {label}", check, end=fw.blob_end,
+                       base_end=ref_fw.blob_end, base="ces mods sans MACRO")
     print("son")
     stock_unchanged(ref_fw, fw, "ces mods sans MACRO")
     like(tg_fw if with_tg else alone, fw, f"MACRO avec {label} = MACRO {'avec Model-TG seul' if with_tg else 'seule'}")
@@ -778,6 +783,7 @@ def main():
         boot(alone)
         print("interface")
         interface_alone(stock, alone)
+        lofi_ui.check_lofi(stock, alone.img, alone.payload, alone.index, "MACRO seule", check)
         print("son")
         halfband()
         lite_spectrum(ref)
@@ -801,6 +807,8 @@ def main():
         boot(fw, tg)
         print("interface")
         tms.interface(ref_tg, fw, ["macro"], tg)
+        lofi_ui.check_lofi(ref_tg.img, fw.img, fw.payload, fw.index, "MACRO avec Model-TG", check, end=fw.blob_end,
+                           base_end=ref_tg.blob_end, base="Model-TG seul")
         print("son")
         # la passerelle est la même : avec Model-TG, chaque modèle, la voix qui se tait, le modèle qui change, et le
         # lo-fi (notes/55) de WAVE MAP et de FM, les plafonds, l'allégé <-> non allégé (ses tables relogées autrement)

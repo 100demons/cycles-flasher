@@ -75,8 +75,9 @@ MODELS = ("CSAW", "MORPH", "SAW_SQUARE", "SINE_TRIANGLE", "BUZZ", "SQUARE_SUB", 
 
 # --- la machine (comme une entrée de gs.CATALOG) -----------------------------------------------------------
 # knobs : COLOR, SHAPE, SWEEP, CONTOUR = (nom long, nom court, défaut[, min, max]) ; decay : défaut de l'Amp Decay ;
-# image : celle de TONE (l'OS n'en a que 6), dont MACRO reprend la chaîne d'ampli
-MACHINE = dict(name="MACRO", image=4, decay=50,
+# image : celle de TONE (l'OS n'en a que 6), dont MACRO reprend la chaîne d'ampli ; lofi : FUNC + PITCH règle FINE
+# (gs.lofi_asm, notes/55 §8)
+MACHINE = dict(name="MACRO", image=4, decay=50, lofi=True,
                knobs=(("Timbre", "TIMB", 64), ("Model", "MODL", 0, 0, len(MODELS) - 1), ("Color", "COLR", 64),
                       ("Env Timbre", "ENVT", 0)))
 
@@ -241,7 +242,7 @@ def build_tweak(img, repo, tg=None):
         tmp = pathlib.Path(d)
         blob, syms, bss_end = compile_machine(tmp, repo, pay)
         names_at, upd_at, rnd_at, map_at = gs.DATA, gs.DATA + 4 * nm, gs.DATA + 8 * nm, gs.DATA + 16 * nm
-        stubs, ssyms = assemble(tmp, "det", gs.detours_asm(n, [m["image"]], [76], tg)
+        stubs, ssyms = assemble(tmp, "det", gs.detours_asm(n, [m["image"]], [76], tg, lofi=True)
                                 + (dispatch_tg_asm(syms, rnd_at, tg) if tg else ""), gs.STUBS)
         if gs.STUBS + len(stubs) > gs.DATA:
             raise SystemExit("!! détours trop grands")

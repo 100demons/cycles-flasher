@@ -16,8 +16,11 @@ calcule *vraiment* moins d'échantillons, comme le RATE de Braids mais en allég
   filtre demi-bande. Même spectre qu'avant à environ 1 dB près par tiers d'octave (§2), pour **52 à 58 % du calcul
   d'avant** : WAVE MAP, le plus lourd, passe de 3,5 à 1,8 fois une voix TONE (§6). Ce sont justement les plus lourds
   (cartes d'ondes, TRIPLE SQUARE). Les 34 autres modèles restent à 96 kHz, échantillon pour échantillon comme avant.
-- **FUNC + PITCH (FINE) devient le lo-fi des pistes MACRO** `[HYP]` (que ce geste règle FINE vient de la table des
-  paramètres, [14 §1](14-machine-sd-vintage.md), pas lu dans le code de l'interface ; à confirmer sur la machine) :
+- **FUNC + PITCH (FINE) devient le lo-fi des pistes MACRO**. Sur la machine, la 1.46 ne le faisait pas : FUNC + PITCH
+  y réglait encore PITCH, par demi-tons, et FINE n'était sous aucun potard (retour Discord du 11/10/2026, §8). Corrigé
+  en 1.51 : sur une piste MACRO, FUNC + PITCH règle FINE, un pas par cran, et l'écran dit `OFF`, la fréquence (`46k` ..
+  `4k`) ou les bits (`12b` .. `2b`) ; prouvé sur le vrai code de l'interface `[FAIT en émulation]`, à essayer sur la
+  machine :
   - au centre (64, la valeur par défaut) : rien ne change, les projets existants sonnent comme avant ;
   - à gauche, **RATE** : 64 pas de 48 kHz × 2^(−86/1536) chacun, de 46 kHz à 4 kHz. Les 13 modèles allégés sont alors
     vraiment rendus à cette fréquence (encore moins de calcul : 32 % d'avant vers 24 kHz, 17 % vers 7,5 kHz pour WAVE
@@ -25,9 +28,9 @@ calcule *vraiment* moins d'échantillons, comme le RATE de Braids mais en allég
   - à droite, **BITS** : de 12 bits à 2 bits, arrondis au plus près.
 - En échange, **FINE n'accorde plus MACRO**. Un projet dont une piste MACRO a FINE ≠ 64 sonne maintenant lo-fi au lieu
   d'être désaccordé (MACRO existe depuis la version 1.31).
-- **Testé sur la machine (11/10/2026)** : « ça marche nickel sur machine » (Maxime, §7). La carte MACRO et Model-TG +
-  les 5 moteurs + MACRO repassent en « Testé » (expérimentales entre-temps : le test du 10/10/2026 portait sur la
-  version d'avant).
+- **Testé sur la machine (11/10/2026)** : « ça marche nickel sur machine » (Maxime, §7) : les modèles à 48 kHz, MACRO
+  et Model-TG + les 5 moteurs + MACRO. Le lo-fi, lui, n'était pas joignable (§8) : il repasse en expérimental jusqu'à
+  l'essai de la 1.51.
 
 ## 1. Pourquoi 96 kHz, et ce que change 48 kHz `[FAIT]`
 
@@ -167,8 +170,8 @@ preuve vérifie les 13 modèles retenus à chaque passage (§5).
 
 - `FINE` (mot 8.8 en `p + 0x22`, 0..127) est arrondi à l'entier ; il ne s'ajoute plus à la note. Un p-lock de FINE
   donne un lo-fi par pas ; avec le mod slide, il glisse.
-- `[HYP]` FUNC + PITCH règle FINE (table des paramètres, [14 §1](14-machine-sd-vintage.md)) : à confirmer, avec ce que
-  l'écran affiche.
+- ~~`[HYP]` FUNC + PITCH règle FINE~~ : faux. Dans l'OS, FUNC + PITCH règle PITCH par demi-tons, et FINE n'est sous
+  aucun potard (§8). Depuis la 1.51, nos détours mettent FINE sous FUNC + PITCH sur les pistes MACRO.
 
 ## 4. Place
 
@@ -270,3 +273,69 @@ Ce qui était à vérifier :
 Testé sur la machine le 11/10/2026 : « ça marche nickel sur machine je viens de testé. Si c ok pour toi tu peux
 fusionner » (Maxime). Il n'a pas détaillé les points un par un : ce que l'écran affiche avec FUNC + PITCH (§3.4,
 `[HYP]`) reste à noter.
+
+Le même jour, sur Discord (fil de la 1.46, relayé par Maxime à 17 h 11 UTC) : « when i press funktion and turn pitch it
+still makes fine tuning so the pitch is changing but nothing happens on the bitrate or sample rate » (RICARDOPABLO909),
+« same here » (amok_san). Le lo-fi n'était donc pas joignable : §8.
+
+## 8. FUNC + PITCH : ce que l'OS en fait, et la correction (1.51)
+
+### 8.1 Ce que l'OS fait de FUNC + PITCH `[FAIT]`
+
+- **Le descripteur sous un potard** : `0x4001e814` (slot 124 de la vtable de ParameterPageView, `0x4010052c`),
+  `(vue, potard, FUNC, -1)`. FUNC = la touche de code 1 (`0x4007faf4(1)`). L'enregistrement de la machine
+  (`0x4004df5c`, 76 o) porte 17 descripteurs à +8 ; l'OS lit l'entrée `potard − 2` (PITCH = potard 2 → entrée 0 =
+  descripteur 42, PITCH), et avec FUNC, l'entrée `potard` pour les potards 14 et 15 seulement (`0x4001e8e2`). Les
+  enregistrements des 6 machines (`0x400de244`, relus dans l'émulateur) : `[42, DECAY, COLOR, SHAPE, SWEEP, CONTOUR,
+  26, 27, 29, 25, 23, 22, 39, 37, 40, 38, 9]`. **FINE (descripteur 43) n'y est pas** : aucun potard ne le règle.
+  L'entrée 16 n'est lue par personne (les autres lecteurs, `0x4000bee4`, `0x4000bf4e`, `0x4000c500`, `0x400140c8`,
+  `0x40014936`, lisent les entrées 0..11 ou 1..5).
+- **Un tour de potard avec FUNC** : `0x4001f81a` voit FUNC tenu, d'où `fine = 1` (après deux crans ignorés,
+  `0x4006fb3a` / `0x4006fb68`) ; `vt[84]` (`0x4001e1dc`) passe à l'objet des paramètres de la piste (vtable
+  `0x400fd134`), `vt[32]` = `0x4000b7d6`. Avec `fine`, la nouvelle valeur vient d'une `std::function` de l'objet
+  d'interface du descripteur (`0x4004df40(d)` = `0x40a71754 + 100 d`, invocateur à +0x50) :
+  `(valeur, delta, min, max, défaut)`, puis `0x4000b274` borne et écrit. Pour PITCH : `0x4004e84c`, le demi-ton
+  suivant ou précédent (table de 49 demi-tons), c'est ce que les utilisateurs ont entendu. Pour FINE : `0x4004552c`,
+  qui rend le **défaut** (`0x4000`) : sous FUNC, FINE reviendrait au centre à chaque cran.
+- Son texte (+0x20 de l'objet d'interface, `std::function` aussi) : `-64` .. `63`.
+
+### 8.2 La correction
+
+Dans les détours communs aux trois sortes de MACRO (`gs.detours_asm(…, lofi=True)` : `25-macro`, `32-macro-tg`, les 62
+`syntakt-…-macro`, où MACRO est la dernière machine ajoutée) :
+
+- `knob_vec` (appelé en `0x4001e8da`, juste avant la lecture de l'entrée) : sur la machine MACRO, si FUNC est tenu
+  (`d5`) et que le potard est PITCH (`d2 = 2`), l'entrée lue devient 16 (`d3`), et les fonctions de l'objet
+  d'interface de FINE deviennent les nôtres (`lofi_step` à +0x50, `lofi_fmt` à +0x20 de `0x40a72820`) ;
+- `rec_build` (enregistrement d'une machine ajoutée) : l'entrée 16 de celui de MACRO vaut 43 ;
+- `lofi_step` : la valeur arrondie au pas (0x100), plus le delta arrondi vers le haut à des pas entiers (un cran = un
+  pas au moins ; l'accélération de l'OS reste), bornée à 0..0x7f00. 64 crans du centre au bout ;
+- `lofi_fmt` : `OFF` au centre ; à gauche la fréquence de RATE en kHz arrondis (`46k` .. `4k`, §3.2) ; à droite les
+  bits de BITS (`12b` .. `2b`, §3.3) ; trois caractères au plus, comme le reste de l'écran.
+
+FINE n'étant sous aucun potard ailleurs, les deux fonctions remplacées ne changent rien aux autres machines. Sans FUNC,
+PITCH reste PITCH ; FUNC + PITCH sur une autre machine reste le demi-ton. Le nom affiché reste celui de l'OS pour FINE
+(`FTUN`) `[HYP]` : les noms sont dans la table des descripteurs, partagée. Place : 316 o de plus dans les détours
+(`STUBS`, 2 Ko : 1 848 o au plus, avec Model-TG et les 5 moteurs). Le son ne change pas : la passerelle lit FINE comme avant (§3.4).
+
+### 8.3 Preuve `[FAIT en émulation]`
+
+`tools/emu/lofi_ui.py`, appelé par `test_macro.py` (seule, avec Model-TG, et avec `--with`) et `test_macro_syntakt.py`
+(les deux versions, et avec `--with`) : le code de l'interface de l'OS, objets d'interface construits par `0x400de244`.
+
+- La vraie recherche (par le slot 124, donc aussi par `tf_knob` du filtre par piste) : sur une piste MACRO, FUNC +
+  PITCH → 43, PITCH seul → 42 ; ses potards 3 à 13 avec FUNC comme sans ; toutes les autres machines, les 14 potards,
+  avec et sans FUNC : le même descripteur que les mêmes mods sans MACRO.
+- Le vrai tour de potard avec FUNC (`0x4000b7d6`, `fine = 1`) : sans MACRO, FINE revient à `0x4000` ; avec, 81 cas
+  (valeurs aux bords, au centre, fractionnaire ; deltas de 1, d'un cran, de plusieurs, du bout au bout) donnent le pas
+  attendu ; FUNC + PITCH reste le demi-ton de l'OS.
+- Le texte des 128 pas par le vrai `sprintf` : `4k` .. `46k`, `OFF`, `12b` .. `2b`, ce que `macro.cc` règle.
+- Les tweaks de la 1.46 échouent à ces vérifications (FUNC + PITCH → 42, FINE remis à `0x4000`, `-64` .. `63`) :
+  le banc reproduit ce que la machine a montré.
+
+### 8.4 Sur la machine
+
+À essayer : sur une piste MACRO (modèle WAVE MAP, une note tenue), FUNC tenu puis PITCH vers la gauche : l'écran
+descend de `46k` à `4k` et le son devient granuleux ; vers la droite : `12b` à `2b`, de plus en plus écrasé ; au centre
+`OFF`, le son d'avant ; PITCH sans FUNC accorde toujours. Une piste d'une autre machine : FUNC + PITCH change la note
+par demi-tons, comme avant.

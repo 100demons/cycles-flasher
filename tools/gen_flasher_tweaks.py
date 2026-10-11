@@ -258,8 +258,9 @@ FEATURES = [
                 "sont coches aussi) : les 47 modeles du code libre "
                 "de Braids d'Emilie Gillet. SHAPE choisit le modele, COLOR et SWEEP le reglent, CONTOUR ouvre le "
                 "timbre avec l'enveloppe, FUNC + PITCH donne le lo-fi (RATE a gauche, BITS a droite).",
-        # 13 modeles a 48 kHz et le lo-fi (notes/55) : testes sur la machine le 11/10/2026
-        "status": "tested",
+        # 13 modeles a 48 kHz (notes/55) : testes sur la machine le 11/10/2026 ; le lo-fi n'y etait pas joignable par
+        # FUNC + PITCH (notes/55 §8), corrige en 1.51 : experimental jusqu'a son essai
+        "status": "experimental",
         "credit": {"kind": "based", "who": "Émilie Gillet", "repo": "pichenettes/eurorack"},
         "license": "LICENSE-Braids",
         # avec les moteurs du Syntakt : la combinaison de moteurs prend sa version avec MACRO (notes/50)
