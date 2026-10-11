@@ -931,6 +931,218 @@ window.MC_TWEAKS = {
    ]
   },
   {
+   "id": "level-pan-values",
+   "order": 46,
+   "name": "Volume et pan en chiffres sur l'écran principal",
+   "description": [
+    "Écran principal : en tournant LEVEL/DATA, le volume de la piste sélectionnée (0 à 127) s'affiche en chiffres à la place du haut-parleur de la barre de volume ; avec FUNC tenu, le pan (-64 à 63) à la place du « R » de la barre de pan.",
+    "Le chiffre reste 3 s après le dernier mouvement (90 ticks de l'interface à 30 Hz), puis part au redessin suivant (au plus 1 s après). Pas d'affichage quand la valeur change autrement (MIDI, chargement).",
+    "LEVEL/DATA avance de 1 par cran sur l'écran principal au lieu de 2 (volume et pan, une piste ou TRK pour toutes) ; le mode rapide (x16) ne change pas.",
+    "D'après le mod de djd_oz (envoyé à Maxime le 06/10/2026), réécrit pour s'exécuter en place : même police, mêmes positions.",
+    "Code et état dans deux masques de sprites 47x47 libérés (tools/sprites.py) : 360 o en 0x4018f4b4, 364 o en 0x4018fc74. Généré par tools/gen_level_pan.py, notes/44."
+   ],
+   "device": "Model:Cycles",
+   "os": "1.13",
+   "section": 3,
+   "symbols": {
+    "lp_cnt": "0x4018fd9c",
+    "lp_pan": "0x4018fda0",
+    "lp_lvl": "0x4018fdc0"
+   },
+   "writes": [
+    {
+     "off": 32242,
+     "old": "4eb940090f48",
+     "new": "4eb94018f4b4"
+    },
+    {
+     "off": 108110,
+     "old": "4fefffe048d70cfc",
+     "new": "4ef94018f4c04e71"
+    },
+    {
+     "off": 108218,
+     "old": "48780002",
+     "new": "48780001"
+    },
+    {
+     "off": 110122,
+     "old": "4e56ffc048d73cfc",
+     "new": "4ef94018f52c4e71"
+    },
+    {
+     "off": 705564,
+     "old": "4018fc74",
+     "new": "40172220"
+    },
+    {
+     "off": 705744,
+     "old": "4018f4b4",
+     "new": "40172220"
+    },
+    {
+     "off": 1634484,
+     "old": "fffffffffffe0000fffffffffffe0000fffffffffffe0000fffffffffffe0000fffffffffffe0000fffffffffffe0000fffffffffffe0000fffffffffffe0000fffffffffffe0000fffffffffffe0000fffffffffffe0000fffffffffffe0000fffffffffffe0000fffffffffffe0000fffffffffffe0000fffffffffffe0000fffffffffffe0000fffffffffffe0000fffffffffffe0000fffffffffffe0000fffffffffffe0000fffffffffffe0000fffffffffffe0000fffffffffffe0000fffffffffffe0000fffffffffffe0000fffffffffffe0000fffffffffffe0000fffffffffffe0000fffffffffffe0000fffffffffffe0000fffffffffffe0000fffffffffffe0000fffffffffffe0000fffffffffffe0000fffffffffffe0000fffffffffffe0000fffffffffffe0000fffffffffffe0000fffffffffffe0000fffffffffffe0000fffffffffffe0000fffffffffffe0000fffffffffffe0000fffffffffffe0000",
+     "new": "52b94018fd9c4ef940090f482f2f00082f2f0008610007c4508f206f00087201b2a8000c66502f002f0a487800014eb94007faf4588f45f94018fdc04a80670645f94018fda0610007787206b081642222394018fd9c06810000005a25810c007201158108182f2f000c4eb940076082588f245f201f4e752f2f00082f2f000861000766508f4fefffec48d70c1c246f001c4eb9400cf9a82f004eb94006b704588f4a006626610007187206b081641c240047f94018fda0611c6702613647f94018fdc0611067046100072c4cd70c1c4fef00144e754a332818671622394018fd9c92b32c006b084233281870004e7570014e754eb9400cf8662f004eb94000eb9c2f022f004eb9400097f04fef000c204022502269001c4878001c2f084e91508fe08072409081280042a74878001d4878007f48780015487800722f0a4eb940070dea4fef001876734a846a084484700a61000718610007004a8067046100070c200460000706"
+    },
+    {
+     "off": 1636468,
+     "old": "fffffffffffe0000fffffffffffe0000fffffffffffe0000fffffffffffe0000fffffffffffe0000fffffffffffe0000fffffffffffe0000fffffffffffe0000fffffffffffe0000fffffffffffe0000fffffffffffe0000fffffffffffe0000fffffffffffe0000fffffffffffe0000fffffffffffe0000fffffffffffe0000fffffffffffe0000fffffffffffe0000fffffffffffe0000fffffffffffe0000fffffffffffe0000fffffffffffe0000fffffffffffe0000fffffffffffe0000fffffffffffe0000fffffffffffe0000fffffffffffe0000fffffffffffe0000fffffffffffe0000fffffffffffe0000fffffffffffe0000fffffffffffe0000fffffffffffe0000fffffffffffe0000fffffffffffe0000fffffffffffe0000fffffffffffe0000fffffffffffe0000fffffffffffe0000fffffffffffe0000fffffffffffe0000fffffffffffe0000fffffffffffe0000fffffffffffe0000fffffffffffe0000ffffffff",
+     "new": "4eb9400cf8662f004eb94000eb902e804eb940012412588f4e754fefffe048d70cfc4ef94001aa564e56ffc048d73cfc4ef94001b2324eb9400cf8662f004eb94000eb9c2f022f004eb940009c5a4fef000c7800180042a7487800104878004d48780008487800412f0a4eb940070dea4fef001876427264b8816508988170016126600c5883720ab88164045883600461066114200460107000720ab88165069881528060f64e757209600272164feffff048d7007441fa00442a300c007c1f9c8178077001eda874020505671672029282d2834c2a1800000ce589226a001081b1180053826ae2e68d5386538466d44cd700744fef001058834e75001edb6f000b2497001c9f27001c9e4f0016de49001e4e4f001e4f6f001c9492001edf6f001ede4f00000e000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000"
+    }
+   ]
+  },
+  {
+   "id": "trigless-dim",
+   "order": 47,
+   "name": "Trigless trigs atténués sur les touches de pas",
+   "description": [
+    "Mode grille : une touche de pas qui porte un trigless trig (lock trig, FUNC + pas) s'allume à 33 % au lieu de pleine lumière ; elle garde le clignotement d'origine (éteinte 0,35 s toutes les 2 s).",
+    "L'état de sa LED devient 260 au lieu de 4 (traité comme 4 par l'OS). La LED est allumée 1 ms sur 3 (333 Hz, régulier) : l'interruption du panneau recharge les verrous des rangées qui portent une touche atténuée, à chaque cycle de 1 ms, juste avant la rangée du tour. Trigs de note, trigs avec p-locks, lumière de lecture, pads : inchangés.",
+    "D'après le mod de djd_oz (envoyé à Maxime le 06/10/2026) : même état 260, même clignotement ; le découpage de la lumière est refait dans l'interruption du panneau (la version 1, 16 ticks sur 25 de l'horloge des LED à 120 Hz, scintillait irrégulièrement).",
+    "Code et état dans deux masques de sprites 47x47 libérés (tools/sprites.py) : 114 o en 0x4018dba8, 318 o en 0x40192734. Généré par tools/gen_trigless_dim.py, notes/45."
+   ],
+   "device": "Model:Cycles",
+   "os": "1.13",
+   "section": 3,
+   "symbols": {
+    "td_lock": "0x40192848",
+    "td_last": "0x40192850",
+    "td_cur": "0x40192858",
+    "td_ph": "0x40192860",
+    "td_led": "0x40192734"
+   },
+   "writes": [
+    {
+     "off": 23350,
+     "old": "b2ac00286730",
+     "new": "4ef94018dba8"
+    },
+    {
+     "off": 23686,
+     "old": "4ef94008e77e",
+     "new": "4ef94018dbc8"
+    },
+    {
+     "off": 138068,
+     "old": "0004",
+     "new": "0104"
+    },
+    {
+     "off": 367082,
+     "old": "76ff781533c38c000000",
+     "new": "4ef9401927344e714e71"
+    },
+    {
+     "off": 704178,
+     "old": "40192734",
+     "new": "40172220"
+    },
+    {
+     "off": 706814,
+     "old": "4018dba8",
+     "new": "40172220"
+    },
+    {
+     "off": 1628072,
+     "old": "fffffffffffe0000fffffffffffe0000fffffffffffe0000fffffffffffe0000fffffffffffe0000fffffffffffe0000fffffffffffe0000fffffffffffe0000fffffffffffe0000fffffffffffe0000fffffffffffe0000fffffffffffe0000fffffffffffe0000fffffffffffe0000ffff",
+     "new": "222c00280c8100000104670e0c810000000467064ef940005f3c4ef940005f6c206f00044feffff448d7001c42a742a741e8002843f94010abf87836201824190c8000000104660c4a826b082602e68b05f73800538466e423df4019284823df4019284c4cd7001c4fef000c4ef94008e77e"
+    },
+    {
+     "off": 1647412,
+     "old": "fffffffffffe0000fffffffffffe0000fffffffffffe0000fffffffffffe0000fffffffffffe0000fffffffffffe0000fffffffffffe0000fffffffffffe0000fffffffffffe0000fffffffffffe0000fffffffffffe0000fffffffffffe0000fffffffffffe0000fffffffffffe0000fffffffffffe0000fffffffffffe0000fffffffffffe0000fffffffffffe0000fffffffffffe0000fffffffffffe0000fffffffffffe0000fffffffffffe0000fffffffffffe0000fffffffffffe0000fffffffffffe0000fffffffffffe0000fffffffffffe0000fffffffffffe0000fffffffffffe0000fffffffffffe0000fffffffffffe0000fffffffffffe0000fffffffffffe0000fffffffffffe0000fffffffffffe0000fffffffffffe0000fffffffffffe0000fffffffffffe0000fffffffffffe0000fffffffffffe",
+     "new": "4fefffec48d706e043f94019284876ff281188a90004662028290008b8a9001066162829000cb8a90014660c1380280813802810600000982829001852847a03b88565027800234400182a3c00009249e8ad45e9001c7c067e0078000d05660479b1680073b16808888173b16810b881671013846810e18c2206eb89888134c4528753866ad41380280878000505660479b128008084138028104a87673043e9001c247c8c000000348376003819354400026100003678083544000a6100002c78f73544000661000022538766de4cd706e04fef0014720078154a83670633c38c0000004ef940059df44e7178407bf9fc08c0045384671a73f9fc08c0042c059c816a06068600002c010c860000011065e24e750000000000000000ffffffffffffffffffffffffffffffff000000000000000000000000000000000000"
+    }
+   ]
+  },
+  {
+   "id": "midi-both",
+   "order": 50,
+   "name": "THRU qui envoie aussi le MIDI du Cycles",
+   "description": [
+    "Avec THR choisi dans CONFIG › MIDI › PORTS › OUT/THRU, le Cycles relaie toujours le MIDI reçu sur son MIDI IN et envoie aussi son horloge, ses notes et ses paramètres. OUT ne change pas, le menu non plus.",
+    "Les trois portes qui jetaient le MIDI généré en THR (0x4000154a, 0x4000156a, 0x40001590) reçoivent moveq #0,d0 au lieu de l'appel au réglage. Aucune place libre. Ne va pas avec midi-live-both.",
+    "D'AveyCole (https://github.com/AveyCole/Modded-Cycles, commit ba5f8bb), testé sur son Model:Cycles le 10/10/2026.",
+    "Généré par tools/gen_midi_thru.py, notes/53."
+   ],
+   "device": "Model:Cycles",
+   "os": "1.13",
+   "section": 3,
+   "conflicts": [
+    "midi-live-both"
+   ],
+   "writes": [
+    {
+     "off": 4426,
+     "old": "4eb940044df8",
+     "new": "70004e714e71"
+    },
+    {
+     "off": 4458,
+     "old": "4eb940044df8",
+     "new": "70004e714e71"
+    },
+    {
+     "off": 4496,
+     "old": "4eb940044df8",
+     "new": "70004e714e71"
+    }
+   ]
+  },
+  {
+   "id": "midi-live-both",
+   "order": 51,
+   "name": "THRU + MIDI du Cycles, commutable (FUNC + appui)",
+   "description": [
+    "Dans CONFIG › MIDI › PORTS, sur la ligne OUT/THRU qui affiche THR : FUNC + appui sur le potard LEVEL/DATA ajoute au relais l'envoi de l'horloge, des notes et des paramètres du Cycles, ou le retire. L'écran reste sur THR ; un appui sans FUNC passe en OUT comme à l'origine.",
+    "Valeur 2 du réglage 0x404e9b50 (0 OUT, 1 THR), écrite par la copie de l'OS 0x40044b88 ; seules les trois portes de sortie la distinguent de THR. Ne va pas avec midi-both.",
+    "D'AveyCole (https://github.com/AveyCole/Modded-Cycles, commit ba5f8bb), testé sur son Model:Cycles le 10/10/2026 avec ce code en 0x40167c50.",
+    "Code dans le masque de sprite 34x34 libéré 0x40192ba4 (tools/sprites.py) : 132 o. Généré par tools/gen_midi_thru.py, notes/53."
+   ],
+   "device": "Model:Cycles",
+   "os": "1.13",
+   "section": 3,
+   "conflicts": [
+    "midi-both"
+   ],
+   "symbols": {
+    "midi_key": "0x40192ba4",
+    "midi_gate": "0x40192c14"
+   },
+   "writes": [
+    {
+     "off": 4426,
+     "old": "4eb940044df8",
+     "new": "4eb940192c14"
+    },
+    {
+     "off": 4458,
+     "old": "4eb940044df8",
+     "new": "4eb940192c14"
+    },
+    {
+     "off": 4496,
+     "old": "4eb940044df8",
+     "new": "4eb940192c14"
+    },
+    {
+     "off": 217610,
+     "old": "4eb940044df84a8057c0710044802f4000044ef940044dc2",
+     "new": "4ef940192ba44e714e714e714e714e714e714e714e714e71"
+    },
+    {
+     "off": 704118,
+     "old": "40192ba4",
+     "new": "4016bfc8"
+    },
+    {
+     "off": 1648548,
+     "old": "ffffffffc0000000ffffffffc0000000ffffffffc0000000ffffffffc0000000ffffffffc0000000ffffffffc0000000ffffffffc0000000ffffffffc0000000ffffffffc0000000ffffffffc0000000ffffffffc0000000ffffffffc0000000ffffffffc0000000ffffffffc0000000ffffffffc0000000ffffffffc0000000ffffffff",
+     "new": "487800014eb94007faf4588f4a80670000484eb940044df84a806700003c1039404e9b500c0000026700000870026000000470014e56fffc1d40ffff48780001486effff4879404e9b504eb940044b884fef000c4e5e4e754eb940044df84a8057c0710044802f4000044ef940044dc21039404e9b500c000001670470004e7570014e75"
+    }
+   ]
+  },
+  {
    "id": "macro",
    "order": 25,
    "name": "Machine MACRO : les 47 modèles de synthèse de Braids (Émilie Gillet, MIT)",
@@ -2578,6 +2790,508 @@ window.MC_TWEAKS = {
     "macro_render": "0x4670037a",
     "braids_render": "0x46700f90"
    }
+  },
+  {
+   "id": "chord-keys",
+   "order": 45,
+   "name": "Accords de gamme sur TRIG 1–16",
+   "description": [
+    "Mode Keys dans FUNC + RETRIG : une piste CHORD, gamme et tonique, extensions par degré.",
+    "TRIG 1–7 jouent I–VII, 8–14 les mêmes degrés une octave plus haut, 15–16 I–II deux octaves plus haut.",
+    "Les grands pads T1–T6 gardent leur sélection et leur jeu stock. L'édition des pas reste disponible.",
+    "Sept modes ; triades, septièmes, neuvièmes, onzièmes ou treizièmes diatoniques, quatre voix au plus.",
+    "Les accords 9/11/13 omettent la quinte (et les extensions intermédiaires pour 11/13).",
+    "SHAPE choisit BASE, CLS0–3 ou OPN0–3 ; COLOR règle le mélange sans déplacer les octaves.",
+    "I–VII restent seuls responsables des extensions.",
+    "Réglages par piste sauvegardés avec le pattern. Dernière touche prioritaire, sans retour à la précédente.",
+    "Model-TG incompatible : son Scale Lock transforme les notes avant le moteur. Expérimental.",
+    "Code et état dans 14 masques 47×47 redirigés, 5063 octets.",
+    "Généré par tools/gen_chord_keys.py ; sources tools/machines/chord_keys/ ; notes/42."
+   ],
+   "device": "Model:Cycles",
+   "os": "1.13",
+   "section": 3,
+   "conflicts": [
+    "model-tg",
+    "model-tg-st"
+   ],
+   "symbols": {
+    "CSWTCH.14": "0x401798a2",
+    "chord_audio_original": "0x4018cd78",
+    "chord_audio_prepare": "0x4016b9e8",
+    "chord_audio_ratios": "0x4018cd48",
+    "chord_audio_update": "0x40185968",
+    "chord_for": "0x40182c2a",
+    "chord_keys_build": "0x40172608",
+    "ck_audio_config": "0x40185d12",
+    "ck_shape_draw": "0x40185a22",
+    "ck_shape_format": "0x40179828",
+    "ck_shape_name": "0x40183254",
+    "ck_storage_init_hook": "0x4018d2a2",
+    "ck_storage_irq_restore": "0x40182f98",
+    "ck_storage_irq_save": "0x40185dc4",
+    "ck_storage_load": "0x40183118",
+    "ck_storage_load_hook": "0x4016b846",
+    "ck_storage_read": "0x401850de",
+    "ck_storage_reset": "0x4018cdfc",
+    "ck_storage_valid": "0x40185140",
+    "ck_ui_cancel_track": "0x4016bb1c",
+    "ck_ui_config_get": "0x4018d2f2",
+    "ck_ui_config_set": "0x40185c58",
+    "ck_ui_item_change": "0x40182b38",
+    "ck_ui_item_draw": "0x40171f30",
+    "ck_ui_item_label": "0x4018d278",
+    "ck_ui_key": "0x40185018",
+    "ck_ui_menu_ctor": "0x40179730",
+    "ck_voicing_apply": "0x40182f08",
+    "ck_voicing_index": "0x4018d4ec",
+    "defaults": "0x40185d70",
+    "extensions": "0x4018d538",
+    "field_value": "0x4018cdc4",
+    "get32": "0x4018d1ea",
+    "handle_press": "0x4016b6f8",
+    "held": "0x40182e28",
+    "invoke.0": "0x4018d54c",
+    "key_velocity": "0x4018ce32",
+    "labels": "0x4018d2ca",
+    "labels.0": "0x4018d4a8",
+    "modes": "0x40182c94",
+    "notes": "0x4018d21a",
+    "positions": "0x4018d318",
+    "release_key": "0x4018ce96",
+    "scales": "0x4018ce64",
+    "selected_track": "0x4018d50a",
+    "semitone_ratios": "0x40172048",
+    "shape_enabled": "0x401831f2",
+    "sort_notes": "0x4018cd86",
+    "ui_header_object": "0x4018d4cc",
+    "voicings": "0x4018d524"
+   },
+   "writes": [
+    {
+     "off": 116542,
+     "old": "4eb94002d138",
+     "new": "4eb940179730"
+    },
+    {
+     "off": 123082,
+     "old": "4eb94000b22a",
+     "new": "4eb940183254"
+    },
+    {
+     "off": 372904,
+     "old": "7001156b001c001c",
+     "new": "4ef94016b8464e71"
+    },
+    {
+     "off": 397668,
+     "old": "1140001b48780010",
+     "new": "4ef94018d2a24e71"
+    },
+    {
+     "off": 699016,
+     "old": "4fefffe448d71c3c",
+     "new": "4ef9401859684e71"
+    },
+    {
+     "off": 699620,
+     "old": "d1fc4012142c",
+     "new": "4ef94018cd48"
+    },
+    {
+     "off": 706902,
+     "old": "4018d4a8",
+     "new": "40172220"
+    },
+    {
+     "off": 706934,
+     "old": "4018d1b8",
+     "new": "40172220"
+    },
+    {
+     "off": 706994,
+     "old": "4018cd48",
+     "new": "40172220"
+    },
+    {
+     "off": 710112,
+     "old": "40185c58",
+     "new": "40172220"
+    },
+    {
+     "off": 710144,
+     "old": "40185968",
+     "new": "40172220"
+    },
+    {
+     "off": 710568,
+     "old": "40185018",
+     "new": "40172220"
+    },
+    {
+     "off": 711582,
+     "old": "40183118",
+     "new": "40172220"
+    },
+    {
+     "off": 711610,
+     "old": "40182e28",
+     "new": "40172220"
+    },
+    {
+     "off": 711642,
+     "old": "40182b38",
+     "new": "40172220"
+    },
+    {
+     "off": 717386,
+     "old": "40179730",
+     "new": "40172220"
+    },
+    {
+     "off": 721220,
+     "old": "40172608",
+     "new": "40172220"
+    },
+    {
+     "off": 721312,
+     "old": "40171f30",
+     "new": "40172220"
+    },
+    {
+     "off": 724764,
+     "old": "4016b9e8",
+     "new": "40172220"
+    },
+    {
+     "off": 724798,
+     "old": "4016b6f8",
+     "new": "40172220"
+    },
+    {
+     "off": 1035632,
+     "old": "4000a70e",
+     "new": "40179828"
+    },
+    {
+     "off": 1035636,
+     "old": "4000a66a",
+     "new": "40185a22"
+    },
+    {
+     "off": 1045964,
+     "old": "4001a0d2",
+     "new": "40185018"
+    },
+    {
+     "off": 1487608,
+     "old": "fffffffffffe0000fffffffffffe0000fffffffffffe0000fffffffffffe0000fffffffffffe0000fffffffffffe0000fffffffffffe0000fffffffffffe0000fffffffffffe0000fffffffffffe0000fffffffffffe0000fffffffffffe0000fffffffffffe0000fffffffffffe0000fffffffffffe0000fffffffffffe0000fffffffffffe0000fffffffffffe0000fffffffffffe0000fffffffffffe0000fffffffffffe0000fffffffffffe0000fffffffffffe0000fffffffffffe0000fffffffffffe0000fffffffffffe0000fffffffffffe0000fffffffffffe0000fffffffffffe0000fffffffffffe0000fffffffffffe0000fffffffffffe0000fffffffffffe0000fffffffffffe0000fffffffffffe0000fffffffffffe0000fffffffffffe0000fffffffffffe0000fffffffffffe0000fffffffffffe0000fffffffffffe0000fffffffffffe0000fffffffffffe0000fffffffffffe0000fffffffffffe0000fffffffffffe0000fffffffffffe0000",
+     "new": "4e56ffc8206e000c70022f032f02c0a800104a80671042822002242effc0262effc44e5e4e75487800014eb94007faf4588f4a8066e0487800024eb94007faf4588f4a8066d0487800034eb94007faf4588f4a8066c04eb9400cf9a82f0024004eb94006b978588f4a0066aa2f024eb94006bb18588f4a00669c4eb94018d50a72052d40ffc8b280658c2f0042a74eb94001e318508f5b804a806600ff7a2f2effc84eb94018d2f2588f4a806c00ff68486effd02f2e00102f004eb940182c2a4fef000c24004a80677e2f2effc84eb94018ce32262effe02d40ffcc302e0012c0fc000e068040182e282f004eb94018ce962f2effc84eb94016bb1c222e0010700e4c001800202e000841f940182e2821801800202effc82183180821801804303c01013180180c4878ffff2f2effcc2f032f2effc82f2e00084eb940019e7a4fef00206000fed274016000fecc4feffff048d703032f0b2f0a4eb940183118508f4cd703034fef00107001156b001c001c4ef94005b4b0"
+    },
+    {
+     "off": 1488360,
+     "old": "fffffffffffe0000fffffffffffe0000fffffffffffe0000fffffffffffe0000fffffffffffe0000fffffffffffe0000fffffffffffe0000fffffffffffe0000fffffffffffe0000fffffffffffe0000fffffffffffe0000fffffffffffe0000fffffffffffe0000fffffffffffe0000fffffffffffe0000fffffffffffe0000fffffffffffe0000fffffffffffe0000fffffffffffe0000fffffffffffe0000fffffffffffe0000fffffffffffe0000fffffffffffe0000fffffffffffe0000fffffffffffe0000fffffffffffe0000fffffffffffe0000fffffffffffe0000fffffffffffe0000fffffffffffe0000fffffffffffe0000fffffffffffe0000fffffffffffe0000fffffffffffe0000fffffffffffe0000fffffffffffe0000fffffffffffe0000fffffffffffe0000fffffffffffe0000fffffffffffe0000fffffffffffe0000fffffffffffe0000fffffffffffe0000fffffffffffe0000fffffffffffe0000fffffffffffe0000fffffffffffe",
+     "new": "4fefffd4202f003448d74c3c2c6f00304a806c4e721c74072800e2acc882b484674076157a7f2400e6aa222f003806810000000cc4857a0c4c45200392834c4510023204c2fc000720414281d1fc4018ce6477b01800b483672252817607b68166f04cd74c3c4fef002c4e75307c0004602422301cd0d2816000009c36017a04c6fc0003e6a87607c083ba8065d44a8066da307c0003e5882d48005847ef001c4283244b20402004e788d1fc4018d31890842240d3fc4018ce6471b038007a075283d0814c4500044c450000c0fc000c79b148009082d08426c07004b08366da736e00182f014eb94018d4ec2f002f2e00582f0a4eb940182f084fef0010428041f940172048223208007417b4816500ff6222301c002d81084476105880b68066e43a3c070070012d4000543d4500186000ff304feffff448d70c0445f940182e28428247f94018ce964a2a000c6710202f0010b0aa000466062f0a4e93588f528245ea000e7010b08266de4cd70c044fef000c4e75"
+    },
+    {
+     "off": 1514288,
+     "old": "fffffffffffe0000fffffffffffe0000fffffffffffe0000fffffffffffe0000fffffffffffe0000fffffffffffe0000fffffffffffe0000fffffffffffe0000fffffffffffe0000fffffffffffe0000fffffffffffe0000fffffffffffe0000fffffffffffe0000fffffffffffe0000fffffffffffe0000fffffffffffe0000fffffffffffe0000fffffffffffe0000fffffffffffe0000fffffffffffe0000fffffffffffe0000fffffffffffe0000fffffffffffe0000fffffffffffe0000fffffffffffe0000fffffffffffe0000fffffffffffe0000fffffffffffe0000fffffffffffe0000fffffffffffe0000fffffffffffe0000fffffffffffe0000fffffffffffe0000fffffffffffe0000fffffffffffe0000fffffffffffe0000fffffffffffe0000fffffffffffe0000fffffffffffe0000fffffffffffe0000fffffffffffe0000fffffffffffe0000fffffffffffe0000fffffffffffe0000fffffffffffe0000fffffffffffe0000fffffffffffe0000",
+     "new": "4fefffe8206f001c48d7401c205026104eb94018d50a7205b280650000922f004eb94018d2f2588f2f0378012f004eb94018cdc4508f2f3c40140ab0240f0682000000142f022c404eb940072260222f0030508f068100000018b8836656260e780c4c4430004c44300341f94018d21a2c43486effff2f300c0048794018d563487800042f2f003c2f012f022f2f00404eb940071a044fef00202f024eb9400720804cef401c00044fef001c4e7542806000ff764a83662e4a8e6754203c4018d55c2f0048794018d568487800042f2f00382f012f022f2f003c4eb940071a044fef001c60b455834a8366147606b68e64029dce41f940182c942030ec0060c27804b88e64029dce41f94018d53860ea203c4018d55f60aa04000000043ce3e5047d66b104c1bf83050a28be0556e04205a8279a05fe443606597fa906ba27e607208f82078d0dfa080000000879c7c908facd6209837f050a14517d0aadc0840b504f330bfc886c0cb2ff530d744fcd0e411f040f1a1bf4"
+    },
+    {
+     "off": 1516040,
+     "old": "fffffffffffe0000fffffffffffe0000fffffffffffe0000fffffffffffe0000fffffffffffe0000fffffffffffe0000fffffffffffe0000fffffffffffe0000fffffffffffe0000fffffffffffe0000fffffffffffe0000fffffffffffe0000fffffffffffe0000fffffffffffe0000fffffffffffe0000fffffffffffe0000fffffffffffe0000fffffffffffe0000fffffffffffe0000fffffffffffe0000fffffffffffe0000fffffffffffe0000fffffffffffe0000fffffffffffe0000fffffffffffe0000fffffffffffe0000fffffffffffe0000fffffffffffe0000fffffffffffe0000fffffffffffe0000fffffffffffe0000fffffffffffe0000fffffffffffe0000fffffffffffe0000fffffffffffe0000fffffffffffe0000fffffffffffe0000fffffffffffe0000fffffffffffe0000fffffffffffe0000fffffffffffe0000fffffffffffe0000fffffffffffe0000fffffffffffe0000fffffffffffe0000ffff",
+     "new": "4fefffcc226f003848d75c7c202f003c206f00404a89660c70014cd75c7c4fef00344e754a8867f0720fb28065ea2611747fb48365e22a2900047806b88565d8220906810000002445e900087c04bc9265c6588ab28a66f4220078074c44180222312c084a816600008c7803e58947ef002493c942af0030284b2c412205e789ddfc4018d524244195c5d5fc4018d1b873b698007c07d2804c4618054c461801c3fc000c7bb25800d283d28528817a7fba816d4a588c5289b3c466d4214000044c4608002082242f00242149000c41e8001042812140fff8201b20c0b2896c1a90822140000c7c045281bc8166ea42806000ff2878046000ff74428060e470026000ff184323004423004500460046230047004723004100412300420054524900370039003131003133004d414a00444f5200504852004c5944004d4958004d494e4f52004c4f43004b65797300526f6f74005363616c65004949490049560056490056494900257300"
+    },
+    {
+     "off": 1545008,
+     "old": "fffffffffffe0000fffffffffffe0000fffffffffffe0000fffffffffffe0000fffffffffffe0000fffffffffffe0000fffffffffffe0000fffffffffffe0000fffffffffffe0000fffffffffffe0000fffffffffffe0000fffffffffffe0000fffffffffffe0000fffffffffffe0000fffffffffffe0000fffffffffffe0000fffffffffffe0000fffffffffffe0000fffffffffffe0000fffffffffffe0000fffffffffffe0000fffffffffffe0000fffffffffffe0000fffffffffffe0000fffffffffffe0000fffffffffffe0000fffffffffffe0000fffffffffffe0000fffffffffffe0000fffffffffffe0000fffffffffffe0000fffffffffffe0000fffffffffffe0000fffffffffffe0000fffffffffffe0000fffffffffffe0000fffffffffffe0000fffffffffffe0000fffffffffffe0000fffffffffffe0000fffffffffffe0000fffffffffffe0000fffffffffffe0000fffffffffffe0000fffffffffffe0000fffffffffffe0000ffffffffff",
+     "new": "4fefff9c48d74cfc2f2f0068428445f94018d2ca4eb94002d138588f2a0f2c0f2e0f068500000054068600000044068700000034260f06830000002447f94018d54c42822c43487800044eb9400802e0588f4a826600008e22324c0020405282208172042c80203c4002cf0042ae00042d4000084dee00102d5bfffcb28266c6487800544eb9400802e0487800084878ffff2f052f062f072f0324002f004eb9400734b04fef001c2e8242822f2f006c4eb940072ce6508f2f034eb9400cf0445282068300000010588f7004b08266e85284720ab2846600ff5c4cd74cfc4fef00644e757201b2826608222f00686000ff6c22046000ff664feffff048d7003c262f0018242f0014282f001c2a2f00202f032f024eb9401831f2508f4a8067342f044eb94018d4ec2f4500184cef003c000441f94018d4a841f00c00203c4017276f2f40001c2f5000204fef00144ef940000e6e2f4500202f44001c2f4300182f4200144cd7003c4fef00104ef94000a70e1f151c"
+    },
+    {
+     "off": 1582904,
+     "old": "fffffffffffe0000fffffffffffe0000fffffffffffe0000fffffffffffe0000fffffffffffe0000fffffffffffe0000fffffffffffe0000fffffffffffe0000fffffffffffe0000fffffffffffe0000fffffffffffe0000fffffffffffe0000fffffffffffe0000fffffffffffe0000fffffffffffe0000fffffffffffe0000fffffffffffe0000fffffffffffe0000fffffffffffe0000fffffffffffe0000fffffffffffe0000fffffffffffe0000fffffffffffe0000fffffffffffe0000fffffffffffe0000fffffffffffe0000fffffffffffe0000fffffffffffe0000fffffffffffe0000fffffffffffe0000fffffffffffe0000fffffffffffe0000fffffffffffe0000fffffffffffe0000fffffffffffe0000fffffffffffe0000fffffffffffe0000fffffffffffe0000fffffffffffe0000fffffffffffe0000fffffffffffe0000fffffffffffe0000fffffffffffe0000fffffffffffe0000fffffffffffe0000fffffffffffe0000fffffffffffe0000",
+     "new": "4fefffe8206f001c48d7047c242f0024205024504eb94018d50a26007005b08365502f034eb94018d2f2588f72012c00b28a67484a8a674a70024285b08a664878062f0a2f064eb94018cdc4508fd480ba826f022405b882643224044a8a66382f0342a74eb94001e318508f5b804a8067404cd7047c4fef00184e757a18783060c04285780160ba780460b64a8a66084a8266cc781f60207002b08a651e41f9401798a2720179b0a800b28a67167a07601479b9401798a27a01600a45f2aaf7280a60ea7a7fe9ad2f034eb94016bb1ce9aa2f43002022054681c28682824cef047c00042f4100244fef001c4ef940185c584e56ffdc222e000820012f03767f2f027415e4a8741c41eeffe4c6802001e4a82d43ffdc7607c68042802d43ffe02401e0aa76075680c48320c27415b48066ee2f2e00102f2e000c486effdc4eb9401726084fef000c242effd44a8057c0262effd8710044804e5e4e7540172733401727374017273b4017273f40172743401727474017274d"
+    },
+    {
+     "off": 1583656,
+     "old": "fffffffffffe0000fffffffffffe0000fffffffffffe0000fffffffffffe0000fffffffffffe0000fffffffffffe0000fffffffffffe0000fffffffffffe0000fffffffffffe0000fffffffffffe0000fffffffffffe0000fffffffffffe0000fffffffffffe0000fffffffffffe0000fffffffffffe0000fffffffffffe0000fffffffffffe0000fffffffffffe0000fffffffffffe0000fffffffffffe0000fffffffffffe0000fffffffffffe0000fffffffffffe0000fffffffffffe0000fffffffffffe0000fffffffffffe0000fffffffffffe0000fffffffffffe0000fffffffffffe0000fffffffffffe0000fffffffffffe0000fffffffffffe0000fffffffffffe0000fffffffffffe0000fffffffffffe0000fffffffffffe0000fffffffffffe0000fffffffffffe0000fffffffffffe0000fffffffffffe0000fffffffffffe0000fffffffffffe0000fffffffffffe0000fffffffffffe0000fffffffffffe0000fffffffffffe0000fffffffffffe0000",
+     "new": "00000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000004fefffe848d70c3c282f0024246f001c242f00204a84676e204a4280b48066402f022f0a47f94018cd864e93260453837003c680508f4a8366347a04ba84644641ea00047001b48062322f4200202f4a001c4cd70c3c4fef00184ef94018cd8626107a0c52804c45300120c160ae720c5383d3922f022f0a4e9360b8720c5480d390508860c04cd70c3c4fef00184e75202f000446c04e75"
+    },
+    {
+     "off": 1584408,
+     "old": "fffffffffffe0000fffffffffffe0000fffffffffffe0000fffffffffffe0000fffffffffffe0000fffffffffffe0000fffffffffffe0000fffffffffffe0000fffffffffffe0000fffffffffffe0000fffffffffffe0000fffffffffffe0000fffffffffffe0000fffffffffffe0000fffffffffffe0000fffffffffffe0000fffffffffffe0000fffffffffffe0000fffffffffffe0000fffffffffffe0000fffffffffffe0000fffffffffffe0000fffffffffffe0000fffffffffffe0000fffffffffffe0000fffffffffffe0000fffffffffffe0000fffffffffffe0000fffffffffffe0000fffffffffffe0000fffffffffffe0000fffffffffffe0000fffffffffffe0000fffffffffffe0000fffffffffffe0000fffffffffffe0000fffffffffffe0000fffffffffffe0000fffffffffffe0000fffffffffffe0000fffffffffffe0000fffffffffffe0000fffffffffffe0000fffffffffffe0000fffffffffffe0000fffffffffffe0000fffffffffffe",
+     "new": "4fefffe048d77c1c246f0024266f00284a8a670000bc4a8b670000b6486b002049f94018d1ea4e944beb0028588f47eb0040260d4df9401851400c80434b01a757c2750244824a826704b7c366664eb940185dc426004a82676a42824875280078184e94588f2200e8a915812828220042414841158128292200e0891581282a1580282b5882b88266d27043784b1540002015440021700178a715400022154400232f4300244cd77c1c4fef00204ef940182f982f034e9458832f004e96508f240060822f0a4eb940185d70588f60d24cd77c1c4fef00204e752f027048b0af000c67064280241f4e754eb9400cf8662f004eb94000eb9c222f000c588f9280240170280682fffffe08b08265d67007c2804a8166cee68a2f0242a74eb94001e318508f5b804a8066ba2f024eb94018d2f2588fd0809180448060aa2f032f02262f0010242f000c2f032f024eb9401831f2508f4a8066122f4300102f42000c241f261f4ef94000b22a241f203c4018d56b261f4e75"
+    },
+    {
+     "off": 1592344,
+     "old": "fffffffffffe0000fffffffffffe0000fffffffffffe0000fffffffffffe0000fffffffffffe0000fffffffffffe0000fffffffffffe0000fffffffffffe0000fffffffffffe0000fffffffffffe0000fffffffffffe0000fffffffffffe0000fffffffffffe0000fffffffffffe0000fffffffffffe0000fffffffffffe0000fffffffffffe0000fffffffffffe0000fffffffffffe0000fffffffffffe0000fffffffffffe0000fffffffffffe0000fffffffffffe0000fffffffffffe0000fffffffffffe0000fffffffffffe0000fffffffffffe0000fffffffffffe0000fffffffffffe0000fffffffffffe0000fffffffffffe0000fffffffffffe0000fffffffffffe0000fffffffffffe0000fffffffffffe0000fffffffffffe0000fffffffffffe0000fffffffffffe0000fffffffffffe0000fffffffffffe0000fffffffffffe0000fffffffffffe0000fffffffffffe0000fffffffffffe0000fffffffffffe0000fffffffffffe0000ffffffff",
+     "new": "4feffff0700f48d70c0c266f0018262f0014242b000c0682fffffff0b08264162f4b00182f4300144cd70c0c4fef00104ef94001a0d2202b0010080000006630720e4c0218002441d5fc40182e284a2a000c671c2f0a4eb94018ce964201588f1541000c4cd70c0c70014fef00104e7544c06a14700e4c0028002042d1fc40182e344a10679a60dc7209c08153804a80668e700e4c0208002440d5fc40182e282f0a4eb94018ce9642001540000c2f022f0b2f034eb94016b6f84fef00104a806700ff5e609e4feffff448d70c04246f0010242f00144a8a6608243c06000000603a7005b08265f2486a002047f94018d1ea4e93588f0c80434b01a766dc06820000000a75c248722c004e932f0024004eb940185140508f4a8067be20024cd70c044fef000c4e752f027415202f00082200e4a9747fc28274180681ffffffe8b48164064280241f4e7522000281700000000c817000000067ea72077407c48020427404b48865dce68853814a8166ec700160d2"
+    },
+    {
+     "off": 1594728,
+     "old": "fffffffffffe0000fffffffffffe0000fffffffffffe0000fffffffffffe0000fffffffffffe0000fffffffffffe0000fffffffffffe0000fffffffffffe0000fffffffffffe0000fffffffffffe0000fffffffffffe0000fffffffffffe0000fffffffffffe0000fffffffffffe0000fffffffffffe0000fffffffffffe0000fffffffffffe0000fffffffffffe0000fffffffffffe0000fffffffffffe0000fffffffffffe0000fffffffffffe0000fffffffffffe0000fffffffffffe0000fffffffffffe0000fffffffffffe0000fffffffffffe0000fffffffffffe0000fffffffffffe0000fffffffffffe0000fffffffffffe0000fffffffffffe0000fffffffffffe0000fffffffffffe0000fffffffffffe0000fffffffffffe0000fffffffffffe0000fffffffffffe0000fffffffffffe0000fffffffffffe0000fffffffffffe0000fffffffffffe0000fffffffffffe0000fffffffffffe0000fffffffffffe0000fffffffffffe0000ffffffff",
+     "new": "4fefff984280206f007448d744042c6f0070220e45ef000c0681bdcf77d843f008007442359108005480b48066f042af0060428074060c810000031b633cb480662e2f0a2f0e2f2f00744eb94018cd784fef000c4aaf0060670c7003b0af0064660442ae00144cd744044fef00684e750681fffffce4528060bab48067c44a8166c0242f006c727f484248c2b28265b22f004eb940185d122f022f002f0a4eb94016b9e84fef00104aaf00606794243c000bd2f12d42007060884fefffdc48d7443c242f002c2c6f0028262f0030282f00382a2f003c246f00402f6f003400182f022f0e4eb9401831f2508f4a80662c2f4a00402f45003c2f4400382f4300302f42002c2f4e00284cd7443c2f6f001800344fef00244ef94000a66a2f3c4014120c4def00202f0e4eb9400722602f034eb94018d4ec41f94018d4a82f300c0048794017276f48780002486a00062f052f0e2f044eb940071a044fef00242e8e4eb9400720804cef443c000470014fef00284e75"
+    },
+    {
+     "off": 1595480,
+     "old": "fffffffffffe0000fffffffffffe0000fffffffffffe0000fffffffffffe0000fffffffffffe0000fffffffffffe0000fffffffffffe0000fffffffffffe0000fffffffffffe0000fffffffffffe0000fffffffffffe0000fffffffffffe0000fffffffffffe0000fffffffffffe0000fffffffffffe0000fffffffffffe0000fffffffffffe0000fffffffffffe0000fffffffffffe0000fffffffffffe0000fffffffffffe0000fffffffffffe0000fffffffffffe0000fffffffffffe0000fffffffffffe0000fffffffffffe0000fffffffffffe0000fffffffffffe0000fffffffffffe0000fffffffffffe0000fffffffffffe0000fffffffffffe0000fffffffffffe0000fffffffffffe0000fffffffffffe0000fffffffffffe0000fffffffffffe0000fffffffffffe0000fffffffffffe0000fffffffffffe0000fffffffffffe0000fffffffffffe0000fffffffffffe0000fffffffffffe0000fffffffffffe0000fffffffffffe0000fffffffffffe",
+     "new": "4fefffec700548d70c0c242f0018262f001cb0826500009a2f034eb940185140588f4a806700008a4eb94018d4cc24404a80677c266a00104a8b67744eb940185dc42f400010486b00204eb94018d1ea588f0c80434b01a7670a2f0b4eb940185d70588f721806820000000a75c22003e2a817802c0020034240484017802c012003e08817802c0217832c032f2f00104eb940182f9820522f4a001c4cef0c0c000442af0020226800104fef00184ed14cd70c0c4fef00144e752f0a247940fe4228207940a7887c4a8a660a203c06000000245f4e754a8867f27005b0af000865ea486877f24eb94018d1ea588f725fb28065d8223c000002dc4c0108000680000014482032083c2f2f00082f004eb9401850de508f60ba4200206f000443e80028114000201140002111400022114000232008068000000040420112bc000658891341fffd1341fffe1341ffffb08966e87043724b1140002011410021700172a711400022114100234e75700040c046fc27004e75"
+    },
+    {
+     "off": 1624392,
+     "old": "fffffffffffe0000fffffffffffe0000fffffffffffe0000fffffffffffe0000fffffffffffe0000fffffffffffe0000fffffffffffe0000fffffffffffe0000fffffffffffe0000fffffffffffe0000fffffffffffe0000fffffffffffe0000fffffffffffe0000fffffffffffe0000fffffffffffe0000fffffffffffe0000fffffffffffe0000fffffffffffe0000fffffffffffe0000fffffffffffe0000fffffffffffe0000fffffffffffe0000fffffffffffe0000fffffffffffe0000fffffffffffe0000fffffffffffe0000fffffffffffe0000fffffffffffe0000fffffffffffe0000fffffffffffe0000fffffffffffe0000fffffffffffe0000fffffffffffe0000fffffffffffe0000fffffffffffe0000fffffffffffe0000fffffffffffe0000fffffffffffe0000fffffffffffe0000fffffffffffe0000fffffffffffe0000fffffffffffe0000fffffffffffe0000fffffffffffe0000fffffffffffe0000fffffffffffe0000fffffffffffe0000",
+     "new": "4aab0054671e256b00440050256b004800c8256b004c0140256b005001b84ef9400ab158d1fc4012142c4ef9400ab0ea4fefffe448d71c3c4ef9400aae902f0370012f02206f000c5888b0af00106506241f261f4e752410224822002629fffcb483640a2283538159894a8166ee226f000c5280588823821c0060ce206f00087202202f0004b288651643f9401798a273b18800e2a872014a886610c0814e7541f08af72208e2a8720760f0b28866f8727f60e8598f2f02242f000c4a8267244eb940185dc42f022f4000084eb940185d70588f2f6f0004000c241f588f4ef940182f98241f588f4e754eb9400cf8662f004eb94000f2082f2f00082f004eb94000cfcc2f004eb940015ac44fef0010120071804a016c02707f4e750002040507090b0002030507090a0001030507080a0002040607090b0002040507090a0002030507080a0001030506080a002f0a246f00084a2a000d671a2f2a00082f2a00042f124eb940019c844fef000c42001540000d245f4e75"
+    },
+    {
+     "off": 1625528,
+     "old": "fffffffffffe0000fffffffffffe0000fffffffffffe0000fffffffffffe0000fffffffffffe0000fffffffffffe0000fffffffffffe0000fffffffffffe0000fffffffffffe0000fffffffffffe0000fffffffffffe0000fffffffffffe0000fffffffffffe0000fffffffffffe0000fffffffffffe0000fffffffffffe0000fffffffffffe0000fffffffffffe0000fffffffffffe0000fffffffffffe0000fffffffffffe0000fffffffffffe0000fffffffffffe0000fffffffffffe0000fffffffffffe0000fffffffffffe0000fffffffffffe0000fffffffffffe0000fffffffffffe0000fffffffffffe0000fffffffffffe0000fffffffffffe0000fffffffffffe0000fffffffffffe0000fffffffffffe0000fffffffffffe0000fffffffffffe0000fffffffffffe0000fffffffffffe0000fffffffffffe0000fffffffffffe0000fffffffffffe0000fffffffffffe0000fffffffffffe0000fffffffffffe0000fffffffffffe0000ffffffff",
+     "new": "0002040507090b0002030507090a0001030507080a0002040607090b0002040507090a0002030507080a0001030506080a002f027418226f0008121110290001e5a930401029000234087180e188758248424242828275a900038282241f80814e754017274f4017270c401727414017270f401727124017271440172716401727194017271b4017271e40172720401727234241534500434c533000434c533100434c533200434c5333004f504e30004f504e31004f504e32004f504e330000226f000422514e56fffc2f02486effff2f1124082f084eb9400f980c4fef000c2002242efff84e5e4e754feffff048d703032f084eb94018cdfc588f4cd703034fef00101140001b487800104ef94006156c40172751401727564017275b4017276340172762401727614017276540172766401727684017276b4eb94018d4cc20404a8067122f2f00042f2800104eb9401850de508f4e75203c0600000060f60002040000020406000206080002060a0002060c"
+    },
+    {
+     "off": 1626280,
+     "old": "fffffffffffe0000fffffffffffe0000fffffffffffe0000fffffffffffe0000fffffffffffe0000fffffffffffe0000fffffffffffe0000fffffffffffe0000fffffffffffe0000fffffffffffe0000fffffffffffe0000fffffffffffe0000fffffffffffe0000fffffffffffe0000fffffffffffe0000fffffffffffe0000fffffffffffe0000fffffffffffe0000fffffffffffe0000fffffffffffe0000fffffffffffe0000fffffffffffe0000fffffffffffe0000fffffffffffe0000fffffffffffe0000fffffffffffe0000ffff",
+     "new": "4018d24a4018d24f4018d2544018d2594018d25e4018d2634018d2684018d26d4018d272203940fe42284a8067142f004eb94000f208588f4a80670606800000002c4e75202f00044a806d0e0c8000001fff6e0a720ae2a84e75428060fa700860f64eb9400cf8662f004eb94000eb902f004eb940012412508f4e750002040000020406000206080002060a0002060c40172725401727294017272b4017272d401727304018d2784002ccd040171f3040182b384f4e004f464600257325640025730043686f726420566f6963696e670000"
+    }
+   ]
+  },
+  {
+   "id": "track-filter",
+   "order": 48,
+   "name": "Filtre par piste : passe-bas, OFF, passe-haut",
+   "description": [
+    "Un filtre 2 pôles par piste, après Volume + Dist et avant le panoramique, les envois et le mixage (comme sur le Model:Samples) :",
+    "MACHINES tenu + SWEEP = Filter Cutoff (L64..OFF..H63 : passe-bas à gauche, rien au centre, passe-haut à droite, 5 Hz à 20 kHz), + CONTOUR = Filter Reso (Q 0,5 à 50),",
+    "+ COLOR = Filter Env (l'enveloppe, relancée à chaque note, monte ou descend la fréquence), + SHAPE = Env Decay (5 ms à 10 s).",
+    "Quatre paramètres de toutes les machines (descripteurs 1 à 4, k 28 à 31) : p-locks, LFO, vélocité, CC 74 et 71 ; sauvegardés avec le son (emplacements 30, 31, 18) et le pattern.",
+    "Corrige au passage les p-locks des paramètres k >= 23 dans le pattern (ils revenaient sur LFO Speed).",
+    "Au centre, la piste n'est pas touchée (bit pour bit) ; environ 640 instructions par bloc et par piste filtrée (0,6 % d'un bloc).",
+    "Code, tables et état dans quinze masques de sprites 35x35 libérés (tools/sprites.py) : 2999 o. Généré par tools/gen_track_filter.py, notes/47."
+   ],
+   "device": "Model:Cycles",
+   "os": "1.13",
+   "section": 3,
+   "conflicts": [
+    "model-tg",
+    "model-tg-st"
+   ],
+   "symbols": {
+    "tf_post": "0x4014ab5c",
+    "tf_knob": "0x401625bc",
+    "tf_objs": "0x40162612",
+    "tf_fmt_cut": "0x40163fb8",
+    "tf_boot": "0x4016680a",
+    "tf_load": "0x40166760",
+    "tf_save2": "0x4016616c",
+    "tf_save1": "0x40166188",
+    "tf_conv": "0x401667ea",
+    "tf_ptab": "0x40160ee8",
+    "tf_kst": "0x40160b6c",
+    "tf_cst": "0x40160e6c",
+    "tf_trig": "0x40160ee4"
+   },
+   "writes": [
+    {
+     "off": 279660,
+     "old": "4eb94005a274",
+     "new": "4eb94016680a"
+    },
+    {
+     "off": 365650,
+     "old": "4eb940056f58",
+     "new": "4eb94014ab5c"
+    },
+    {
+     "off": 370228,
+     "old": "7417b480640c",
+     "new": "4ef9401667ea"
+    },
+    {
+     "off": 371404,
+     "old": "4feffff448d7",
+     "new": "4ef940166760"
+    },
+    {
+     "off": 371616,
+     "old": "4feffff448d7",
+     "new": "4ef94016616c"
+    },
+    {
+     "off": 371796,
+     "old": "4feffff448d7",
+     "new": "4ef940166188"
+    },
+    {
+     "off": 374168,
+     "old": "4010ee4c",
+     "new": "40160ee8"
+    },
+    {
+     "off": 374474,
+     "old": "4010ee4c",
+     "new": "40160ee8"
+    },
+    {
+     "off": 729902,
+     "old": "40166760",
+     "new": "4014a660"
+    },
+    {
+     "off": 730264,
+     "old": "4016616c",
+     "new": "4014a660"
+    },
+    {
+     "off": 733384,
+     "old": "40163fb8",
+     "new": "4014a660"
+    },
+    {
+     "off": 735786,
+     "old": "401625bc",
+     "new": "4014a660"
+    },
+    {
+     "off": 738350,
+     "old": "40160e6c",
+     "new": "4014a660"
+    },
+    {
+     "off": 738416,
+     "old": "40160b6c",
+     "new": "4014a660"
+    },
+    {
+     "off": 738476,
+     "old": "40160864",
+     "new": "4014a660"
+    },
+    {
+     "off": 739146,
+     "old": "401601fc",
+     "new": "4014a660"
+    },
+    {
+     "off": 740392,
+     "old": "4015f50c",
+     "new": "4014a660"
+    },
+    {
+     "off": 746124,
+     "old": "4015b8f8",
+     "new": "4014a660"
+    },
+    {
+     "off": 756794,
+     "old": "401548b4",
+     "new": "4014a660"
+    },
+    {
+     "off": 757208,
+     "old": "401542f8",
+     "new": "4014a660"
+    },
+    {
+     "off": 763944,
+     "old": "4014d74c",
+     "new": "4014a660"
+    },
+    {
+     "off": 764494,
+     "old": "4014b85c",
+     "new": "4014a660"
+    },
+    {
+     "off": 765216,
+     "old": "4014ab5c",
+     "new": "4014a660"
+    },
+    {
+     "off": 1049000,
+     "old": "4001e814",
+     "new": "401625bc"
+    },
+    {
+     "off": 1104152,
+     "old": "ffffffffffffffff0000000000000000000000000000000100010021ffffffff000000010000000000007fff401256f04012bc6f40125326ffffffffffffffff0000000000000000000000000000000100020022ffffffff000000020000000000007fff401256f04012bc6f40125326ffffffffffffffff0000000000000000000000000000000100060026ffffffff000000030000000000007fff401256f04012bc6f40125326ffffffffffffffff00000000000000000000000000000000ffffffffffffffff000000040000000000007fff401256f04012bc6f40125326",
+     "new": "000000070000001c0000000000007f000000400000000000004affff00000094000000000000060000000048401640084012988240164037000000070000001d0000000000007f0000000000000000000047ffff0000009500000000000006000000004940164016401298824016403c000000070000001e0000000000007f000000400000000000ffffffffffffffff00000000000006000000004a401640224012988240164041000000070000001f0000000000007f000000400000000000ffffffffffffffff00000000000006000000004b4016402d4012988240164046"
+    },
+    {
+     "off": 1353564,
+     "old": "ffffffffe0000000ffffffffe0000000ffffffffe0000000ffffffffe0000000ffffffffe0000000ffffffffe0000000ffffffffe0000000ffffffffe0000000ffffffffe0000000ffffffffe0000000ffffffffe0000000ffffffffe0000000ffffffffe0000000ffffffffe0000000ffffffffe0000000ffffffffe0000000ffffffffe0000000ffffffffe0000000ffffffffe0000000",
+     "new": "2f2f00082f2f00084eb940056f58508f4fefffd048d77cfca9802f40002ca93c000000a0a13c00000000a33c00000000a53c00000000202b001023c040160ee44bea000e41f98000185849f940160b6c4df940160e6c70062f002f084eb94014b85c205f41e8008049ec00244dee00144bed0042203940160ee4e28823c040160ee4539766d4588f202f002ca9004cd77cfc4fef00304e75"
+    },
+    {
+     "off": 1356892,
+     "old": "ffffffffe0000000ffffffffe0000000ffffffffe0000000ffffffffe0000000ffffffffe0000000ffffffffe0000000ffffffffe0000000ffffffffe0000000ffffffffe0000000ffffffffe0000000ffffffffe0000000ffffffffe0000000ffffffffe0000000ffffffffe0000000ffffffffe0000000ffffffffe0000000ffffffffe0000000ffffffffe0000000ffffffff",
+     "new": "282e000c43f940160ee7081100006708283c7fffffff602a4a84672a716d003e6a02700043f94016086472094eb940154374a8000800a1c40c8400010000640278002d44000c7c004a846710716d003c048000004000a8000800a1c6716d00382400048200004000660642ae00084e75736d003a48403001b0966606bcae0004670c2c802d4600044eb9401542f84ef94014d74c"
+    },
+    {
+     "off": 1364812,
+     "old": "ffffffffe0000000ffffffffe0000000ffffffffe0000000ffffffffe0000000ffffffffe0000000ffffffffe0000000ffffffffe0000000ffffffffe0000000ffffffffe0000000ffffffffe0000000ffffffffe0000000ffffffffe0000000ffffffffe0000000ffffffffe0000000ffffffffe0000000ffffffffe0000000ffffffffe0000000ffffffffe0000000ffffffffe0000000ffffffffe0000000ffffffff",
+     "new": "43e800804aae0008661870012d400008429470004aae001066022010294000046036244870007207809a809a809a809a53816af44a80662020146a024480222c00046a02448180810c80000010006408429442ac00044e754cd400fe246c001c266c00202010a2030800a0040800a4040900a4850800a2840800a0860a00a0070a10a40a0810a20b0810a1c1a3c2a40a0810a20b0810a5c020c0b1c966c648d400064e75"
+    },
+    {
+     "off": 1392376,
+     "old": "ffffffffe0000000ffffffffe0000000ffffffffe0000000ffffffffe0000000ffffffffe0000000ffffffffe0000000ffffffffe0000000ffffffffe0000000ffffffffe0000000ffffffffe0000000ffffffffe0000000ffffffffe0000000ffffffffe0000000ffffffffe0000000ffffffffe0000000ffffffffe0000000ffffffffe0000000ffffffffe0000000ffffffffe0000000ffffffffe0000000ffff",
+     "new": "2e017a0026026a0c4483200206800000400060047a0120022d450010283c7fffffff0c8300000100640628037217e3acd0866a0270000c8000003fff6f06203c00003fff2c0043f94015b8f87208612c2440200643f94015f50c7208611e4a876a027e00ae000800a1c043f9401601fc7209610826404ef9401548b42400e2a226312c0024312c049483448106810000001fe3a80880001fa0020800a1c0d0834e75"
+    },
+    {
+     "off": 1393844,
+     "old": "ffffffffe0000000ffffffffe0000000ffffffffe0000000ffffffffe0000000ffffffffe0000000ffffffffe0000000ffffffffe0000000ffffffffe0000000ffffffffe0000000ffffffffe0000000ffffffffe0000000ffffffffe0000000ffffffffe0000000ffffffffe0000000ffffffffe0000000ffffffffe0000000ffffffffe0000000ffffffffe0000000ffffffffe0000000ffffffffe0000000ffffffffe0000000ffffffffe0000000ffffffffe0000000ffffffffe0000000ffffffffe0000000ffffffffe000",
+     "new": "200ae280220be481d081220aa0010800a1c006800400000072000c80400000006c06d080528160f22400e282263c5d413ccd9682d6837c02a6000800a1c22e3c800000009e82ae030a00a1c353866ae874049481e4a3203c8000000090832203928029410008200aa6000800a1c0e7802940000c220aa0010a00a1c129410014203c8000000090819081294000102204e2814a856618203c800000009084e288294000182941001c42ac00204e75203c400000002940001844812941001c200ba0040800a1c04480294000204e75"
+    },
+    {
+     "off": 1422584,
+     "old": "ffffffffe0000000ffffffffe0000000ffffffffe0000000ffffffffe0000000ffffffffe0000000ffffffffe0000000ffffffffe0000000ffffffffe0000000ffffffffe0000000ffffffffe0000000ffffffffe0000000ffffffffe0000000ffffffffe0000000ffffffffe0000000ffffffffe0000000ffffffffe0000000ffffffffe0000000ffffffffe0000000ffffffffe0000000ffffffffe0000000ffffffffe0000000ffffffffe0000000ffffffffe0000000ffffffffe0000000ffffffffe0000000ffffffffe0000000ffffffffe0000000ffffffffe0000000ffffffffe0000000ffffffffe0000000ffffffffe0000000ffffffffe0000000ffffffff",
+     "new": "0002ae4b00030e6a00037c010003f8f100048760000529c30005e2e50006b5f40007a6930008b8e60009f1a6000b5633000cecb1000ebc1e0010cc75001326cb0015d57f0018e463001c60ee00205a7d0024e293002a0d28002ff0fd0036a808003e4fdf00470a400050fda1005c55e100694505007804190088d42a009bff7000b1da9200cac62d00e7308201079774012c8acd0156aee50186bfb101bd946001fc239902438886029508ed02f21c91035c765c03d60fda046137f20500a62405b7943c0689e179077c43c008948e5809da1a2f0b56642b0d16053b0f2a454111abc5e914bf443b189ea0ca1dab730e249972502ede2bb6401bf98364a8e6c8776cf5d1"
+    },
+    {
+     "off": 1437964,
+     "old": "ffffffffe0000000ffffffffe0000000ffffffffe0000000ffffffffe0000000ffffffffe0000000ffffffffe0000000ffffffffe0000000ffffffffe0000000ffffffffe0000000ffffffffe0000000ffffffffe0000000ffffffffe0000000ffffffffe0000000ffffffffe0000000ffffffffe0000000ffffffffe0000000ffffffffe0000000ffffffffe0000000ffffffffe0000000ffffffffe0000000ffffffffe0000000ffffffffe0000000ffffffffe0000000ffffffffe0000000ffffffffe0000000ffffffffe0000000ffffffffe0000000ffffffffe0000000ffffffffe0000000ffffffffe0000000ffffffffe0000000ffffffffe0000000ffffffff",
+     "new": "000000000000000000000000000000000000000000000000064333ec101a8c8a1b52c34f281d44bc36b2697447526e785a46901e6fe24caf7fffff7c7fffff487fffff017ffffe9f7ffffe167ffffd577ffffc4f7ffffae17ffff8e57ffff6237ffff2507fffed017fffe5a37fffdb6b7fffcd3b7fffb98b7fff9e387fff784d7fff43ad7ffefaa67ffe954d7ffe08a67ffd45757ffc36937ffabea57ff8b4f07ff5e0ea7ff1f4217fec81b47fe4f28a7fda74f27fcbe5ea7fb7b1997f9ba7887f74bdea7f3ebd537ef3cbc37e8bca4f7dfb73e57d3324a37c1d28077a9b5ece7883fb68759cfa5a7195d8f76bfedc0f643cf4895978f21c4a88320f35cc432a2edb1d67"
+    },
+    {
+     "off": 1441276,
+     "old": "ffffffffe0000000ffffffffe0000000ffffffffe0000000ffffffffe0000000ffffffffe0000000ffffffffe0000000ffffffffe0000000ffffffffe0000000ffffffffe0000000ffffffffe0000000ffffffffe0000000ffffffffe0000000ffffffffe0000000ffffffffe0000000ffffffffe0000000ffffffffe0000000ffffffffe0000000ffffffffe0000000ffffffffe0000000ffffffffe0000000ffffffffe0000000ffffffffe0000000ffffffffe0000000ffffffffe0000000ffffffffe0000000ffffffffe0000000ffffffffe0000000ffffffffe0000000ffffffffe0000000ffffffffe0000000ffffffffe0000000ffffffffe0000000ffffffff",
+     "new": "7fffffff770bb6796eb7c85c66f8fde65fc4e83e5911d35c52d6b9014d0b348b47a777a442a43fc53dfacc6739a4d5f1359c853d31dc6bbf2e5f7c322b2103c7281ca3d5254e4bf522b234872044d99c1e02f63a1be97ff419f5a2d01824bd7b16745dbc14e23d27136c3e11121068b210cce87f0fa009b50e88370d0d83f79b0c91eccd0bb0d09d0adf73ce0a1cbc5e0967a40208bf36ca082291d70790e2270709637d068b5f5506162bef05a92b6d0543cafb04e5820a048dd19a043c438b03f06a0303a9ded5036842fc032b3e1802f27df602bdb625028c9f8c025ef80d02348226020d04a801e84a5f01c621d301a65d000188d11c016d565a0153c7b6013c02c3"
+    },
+    {
+     "off": 1442916,
+     "old": "ffffffffe0000000ffffffffe0000000ffffffffe0000000ffffffffe0000000ffffffffe0000000ffffffffe0000000ffffffffe0000000ffffffffe0000000ffffffffe0000000ffffffffe0000000ffffffffe0000000ffffffffe0000000ffffffffe0000000ffffffffe0000000ffffffffe0000000ffffffffe0000000ffffffffe0000000ffffffffe0000000ffffffffe0000000ffffffffe0000000ffffffffe0000000ffffffffe0000000ffffffffe0000000ffffffffe0000000ffffffffe0000000ffffffffe0000000ffffffffe0000000ffffffffe0000000ffffffffe0000000ffffffffe0000000ffffffffe0000000ffffffffe0000000ffffffff",
+     "new": "7005ade871b84d10733f6723749ec79b75da04ba76f47acd77f149ea78d35586799d45767a5187e87af254107b81ad4c7c0166837c73259e7cd8670c7d32812b7d82a7917dc9ee2e7e094c397e419eef7e73ac1a7ea024637ec7a5787eeabbfc7f09e54a7f25910e7f3e22ba7f53f2d17f6750157f7880917f87c2907f954d717fa1526b7fabfd387fb574b27fbddb5d7fc54fdf7fcbed707fd1cc3c7fd701b97fdba0f47fdfbad77fe35e667fe698f37fe976537fec01057fee42597ff042957ff2090e7ff39c477ff502087ff63f6f7ff7590b7ff852e37ff9308e7ff9f5387ffaa3b47ffb3e817ffbc7d87ffc41b17ffcadcc7ffd0db57ffd62cc7ffdae4a7ffdf144"
+    },
+    {
+     "off": 1443692,
+     "old": "ffffffffe0000000ffffffffe0000000ffffffffe0000000ffffffffe0000000ffffffffe0000000ffffffffe0000000ffffffffe0000000ffffffffe0000000ffffffffe0000000ffffffffe0000000ffffffffe0000000ffffffffe0000000ffffffffe0000000ffffffffe0000000ffffffffe0000000ffffffffe0000000ffffffffe0000000ffffffffe0000000ffffffffe0000000ffffffffe0000000ffffffffe0000000ffffffffe0000000ffffffffe0000000ffffffffe0000000ffffffffe0000000ffffffffe0000000ffffffffe0000000",
+     "new": "000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000"
+    },
+    {
+     "off": 1444460,
+     "old": "ffffffffe0000000ffffffffe0000000ffffffffe0000000ffffffffe0000000ffffffffe0000000ffffffffe0000000ffffffffe0000000ffffffffe0000000ffffffffe0000000ffffffffe0000000ffffffffe0000000ffffffffe0000000ffffffffe0000000ffffffffe0000000ffffffffe0000000ffffffffe0000000ffffffffe0000000ffffffffe0000000ffffffffe0000000ffffffffe0000000ffffffffe0000000ffffffffe0000000ffffffffe0000000ffffffffe0000000ffffffffe0000000ffffffffe0000000ffffffffe0000000ffffffffe0000000ffffffffe0000000ffffffffe0000000ffffffffe0000000ffffffffe0000000",
+     "new": "ffffffff00000000000000000000000000000000ffffffff00000000000000000000000000000000ffffffff00000000000000000000000000000000ffffffff00000000000000000000000000000000ffffffff00000000000000000000000000000000ffffffff0000000000000000000000000000000000000000000000000000000100000002000000030000000400000005000000060000000700000008000000090000000a0000000b0000000c0000000d0000000e0000000f0000001000000011000000130000001400000015000000160000001700000018000000190000001a0000001b0000001c0000001d0000001e0000001f0000002000000000"
+    },
+    {
+     "off": 1450428,
+     "old": "ffffffffe0000000ffffffffe0000000ffffffffe0000000ffffffffe0000000ffffffffe0000000ffffffffe0000000ffffffffe0000000ffffffffe0000000ffffffffe0000000ffffffffe0000000ffffffffe0000000ffffffffe0000000ffffffffe0000000ffffffffe0000000ffffffffe0000000ffffffffe0000000ffffffffe0000000",
+     "new": "61542f2f00102f2f00102f2f00102f2f00104eb94001e8144fef0010222f000859810c810000000362262f002f01487800054eb94007faf4588f221f2240201fb3fc00000000670841fa000871b018004e750304010241f940a717b843fa001a720420192140002042a8002c41e80064538166ee4e75000040163fb8400456c840045bd6400456c8"
+    },
+    {
+     "off": 1457080,
+     "old": "ffffffffe0000000ffffffffe0000000ffffffffe0000000ffffffffe0000000ffffffffe0000000ffffffffe0000000ffffffffe0000000ffffffffe0000000ffffffffe0000000ffffffffe0000000ffffffffe0000000ffffffffe0000000ffffffffe0000000ffffffffe0000000ffffffffe0000000ffffffffe0000000ffffffffe0000000ffffffffe0000000ffffff",
+     "new": "202f0008048000004000672a41fa00404a806a06448041fa0034e0802f002f084879401277672f2f00184eb940000e6e4fef00104e75202f000c487940124b672f004eb940000e6e508f4e754c00480046696c746572204375746f66660046696c746572205265736f0046696c74657220456e7600456e762044656361790046524551005245534f0046454e56004644454300"
+    },
+    {
+     "off": 1465708,
+     "old": "ffffffffe0000000ffffffffe0000000ffffffffe0000000ffffffffe0000000ffffffffe0000000ffffffffe0000000ffffffffe0000000ffffffffe0000000ffffffffe0000000ffffffffe0000000ffffffffe0000000ffffffffe0000000ffffffffe0000000ffffffffe0000000ffffffffe0000000ffffffffe0000000ffffffffe0000000ffffffffe0000000ffffffffe0000000ffffffffe0000000ffffffff",
+     "new": "2f2f00082f2f00084879401661a44feffff448d71c004ef94005afa82f2f00082f2f00084879401661a44feffff448d71c004ef94005b05c2057226f00042e803229004c0a8100004000314100583229004e3141005a73a900500a8100000040e18971a900520a800000004082803141004071a9001c61141140005220290058610a114000532017508f4e75220004810000001c7003b0816506701cd0814e7570004e75"
+    },
+    {
+     "off": 1467232,
+     "old": "ffffffffe0000000ffffffffe0000000ffffffffe0000000ffffffffe0000000ffffffffe0000000ffffffffe0000000ffffffffe0000000ffffffffe0000000ffffffffe0000000ffffffffe0000000ffffffffe0000000ffffffffe0000000ffffffffe0000000ffffffffe0000000ffffffffe0000000ffffffffe0000000ffffffffe0000000ffffffffe0000000ffffffffe0000000ffffffffe0000000ffffffffe0000000ffffffffe0000000ffffffffe0000000ffffffffe0000000ffffffffe0000000ffffffffe0000000",
+     "new": "2f2f00082f2f000848794016677c4feffff448d71c004ef94005aed42257206f00042e80322800580a81000040003341004c3228005a3341004e73a800400a8100000040e1893341005073a800410a8100000040e189334100524269001471a800524eb9401661f84a806706e1883340001c71a800534eb9401661f84a806704234000582017508f4e757417b480640e7420b480650e53804ef94005aa504ef94005aa464ef94005aa3a20794005a2deb1fc4010dce0671241e8003843f94010dd18703820d9538066fa4ef94005a274"
+    }
+   ]
   },
   {
    "id": "syntakt-sd",
@@ -97824,6 +98538,82 @@ window.MC_TWEAKS = {
    ]
   },
   {
+   "id": "level-pan-values",
+   "label": "Volume et pan en chiffres",
+   "desc": "Sur l'ecran principal, LEVEL/DATA affiche le volume de la piste (0 a 127) en chiffres, FUNC + LEVEL/DATA son pan (-64 a 63), pendant 3 s. LEVEL/DATA y avance de 1 par cran au lieu de 2.",
+   "status": "tested",
+   "credit": {
+    "kind": "based",
+    "who": "djd_oz"
+   },
+   "cat": "screen",
+   "variants": [
+    {
+     "id": "level-pan-values",
+     "label": null
+    }
+   ]
+  },
+  {
+   "id": "trigless-dim",
+   "label": "Trigless trigs attenues",
+   "desc": "Une touche de pas qui porte un trigless trig (FUNC + touche) s'allume attenuee au lieu de pleine lumiere : on la distingue d'un trig de note. Elle garde son clignotement habituel.",
+   "status": "tested",
+   "credit": {
+    "kind": "based",
+    "who": "djd_oz"
+   },
+   "cat": "seq",
+   "variants": [
+    {
+     "id": "trigless-dim",
+     "label": null
+    }
+   ]
+  },
+  {
+   "id": "midi-both",
+   "label": "MIDI OUT pendant THRU",
+   "desc": "Avec THR choisi dans CONFIG > MIDI > PORTS > OUT/THRU, le Cycles relaie le MIDI recu et envoie aussi son horloge, ses notes et ses parametres. OUT ne change pas, le menu non plus.",
+   "status": "tested",
+   "credit": {
+    "kind": "by",
+    "who": "AveyCole",
+    "repo": "AveyCole/Modded-Cycles"
+   },
+   "cat": "io",
+   "variants": [
+    {
+     "id": "midi-both",
+     "label": null
+    }
+   ],
+   "excludes": [
+    "midi-live-both"
+   ]
+  },
+  {
+   "id": "midi-live-both",
+   "label": "Basculer MIDI OUT + THRU en direct",
+   "desc": "Sur la ligne OUT/THRU qui affiche THR, FUNC + appui sur le potard LEVEL/DATA ajoute au relais l'envoi de l'horloge, des notes et des parametres du Cycles, ou le retire. L'ecran reste sur THR.",
+   "status": "tested",
+   "credit": {
+    "kind": "by",
+    "who": "AveyCole",
+    "repo": "AveyCole/Modded-Cycles"
+   },
+   "cat": "io",
+   "variants": [
+    {
+     "id": "midi-live-both",
+     "label": null
+    }
+   ],
+   "excludes": [
+    "midi-both"
+   ]
+  },
+  {
    "id": "macro",
    "label": "Machine MACRO",
    "desc": "Une machine ajoutee apres Chord (apres le Sampler avec Model-TG, apres les moteurs du Syntakt s'ils sont coches aussi) : les 47 modeles du code libre de Braids d'Emilie Gillet. SHAPE choisit le modele, COLOR et SWEEP le reglent, CONTOUR ouvre le timbre avec l'enveloppe.",
@@ -97845,6 +98635,44 @@ window.MC_TWEAKS = {
     "model-tg": "macro-tg"
    },
    "license": "LICENSE-Braids.txt"
+  },
+  {
+   "id": "chord-keys",
+   "label": "Accords de gamme sur TRIG 1–16",
+   "desc": "Une piste CHORD, sept modes et une extension par degré. TRIG 1–7 jouent I–VII, 8–14 une octave plus haut, 15–16 I–II deux octaves plus haut. T1–T6 gardent leurs fonctions. Réglages dans FUNC + RETRIG, sauvés avec le pattern.",
+   "status": "tested",
+   "credit": {
+    "kind": "by",
+    "who": "Nico Heuser",
+    "repo": "byNicoHeuser"
+   },
+   "cat": "live",
+   "variants": [
+    {
+     "id": "chord-keys",
+     "label": null
+    }
+   ],
+   "excludes": [
+    "model-tg"
+   ]
+  },
+  {
+   "id": "track-filter",
+   "label": "Filtre par piste (LP / OFF / HP)",
+   "desc": "MACHINES tenu + SWEEP : un filtre par piste, passe-bas a gauche, rien au centre, passe-haut a droite. CONTOUR : resonance ; COLOR et SHAPE : enveloppe du filtre (quantite, decay). P-locks, LFO, CC 74 / 71.",
+   "status": "tested",
+   "credit": null,
+   "cat": "sound",
+   "variants": [
+    {
+     "id": "track-filter",
+     "label": null
+    }
+   ],
+   "excludes": [
+    "model-tg"
+   ]
   },
   {
    "id": "syntakt",

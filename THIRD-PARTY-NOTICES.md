@@ -47,6 +47,21 @@ The web flasher serves the MIT texts next to the code that carries them (`docs/f
 Methods and ideas only, no code: [octamax](https://github.com/mxldyn/octamax) by mxldyn (no license published) and
 [octa-bt-pt](https://github.com/bryantysinger/octa-bt-pt) by Bryan Tysinger (MIT). See `notes/03` and `notes/05`.
 
+## Contributed mods
+
+These mods came from people outside the project before it had a license. Written confirmation that each contribution
+is under the MIT License, like the rest of the project, is still pending (see [`CONTRIBUTING.md`](CONTRIBUTING.md)):
+
+- **Chord Keys** (`45-chord-keys.json`): by Nico Heuser ([byNicoHeuser](https://github.com/byNicoHeuser)), contributed
+  as [PR #46](https://github.com/18nelli18/Modded-Cycles/pull/46).
+- **MIDI THRU mods** (`50-midi-both.json`, `51-midi-live-both.json`): by AveyCole, from
+  [AveyCole/Modded-Cycles](https://github.com/AveyCole/Modded-Cycles), a fork with no license file, also offered as
+  [PR #73](https://github.com/18nelli18/Modded-Cycles/pull/73).
+- **Volume and pan values, dimmed trigless trigs** (`46-level-pan-values.json`, `47-trigless-dim.json`): rewritten by
+  this project from mods djd_oz sent to Maxime as firmware files.
+- **Multi-line browser** (`44-multiline-browser.json`): written by this project from the idea and display choices of a
+  community member's script; none of its code is used.
+
 ## Tools used but not included
 
 The emulation proofs import [Unicorn](https://www.unicorn-engine.org/) (GPL-2.0) and numpy (BSD-3-Clause); the

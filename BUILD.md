@@ -284,6 +284,53 @@ python3 tools/emu/test_boot_anim.py --cycles model-cycles_OS1.13.syx [--gif anim
 | `model-tg,boot-anim` | `cbec181684805bf37dd07c62dc47f7daf35e6abab530a3f3b06ec5db590278ec` |
 | `6ch-usbup,model-tg-st,syntakt-tg-sd-cp-toy-bits-swarm,trig-hold,arp,tempo-max,boot-anim` | `d468a729f32780870dbd591e52e8c782a5cdd347459ac1c61ef35473e26c9323` |
 
+### Accords de gamme sur TRIG 1–16
+
+Contribution de Nico Heuser ([PR #46](https://github.com/18nelli18/Modded-Cycles/pull/46)).
+`45-chord-keys.json` est généré depuis `tools/machines/chord_keys/` par `tools/gen_chord_keys.py`
+(GCC m68k-elf 16.2.0, binutils 2.47 : ceux de Homebrew, ou compilés depuis les sources d'Ubuntu comme au
+[§16 de la note 42](notes/42-clavier-accords-diatoniques.md)). Le générateur refuse `m68k-linux-gnu-gcc` : son ABI lit
+dans `a0` les pointeurs que l'OS rend dans `d0`, ce qui fausserait les appels à l'OS ([note 42 §6](notes/42-clavier-accords-diatoniques.md)).
+**Testé** sur la machine par Maxime, seul et avec six autres mods (07/10/2026), puis la correction de la note
+bloquée (note 42 §16, 10/10/2026). Sélectionnez une piste CHORD,
+puis activez **Keys** dans **FUNC + RETRIG**. Root, Scale et I–VII choisissent la tonique, le mode
+et les extensions diatoniques ; le majeur s'affiche **MAJ**. Hors édition des pas, TRIG 1–7 jouent I–VII,
+8–14 les mêmes degrés une octave plus haut, 15–16 I–II deux octaves plus haut. Les grands pads T1–T6
+conservent leur sélection et leur jeu stock ; les accords des TRIG ne déclenchent pas le retrig/arpège.
+Réglages par piste, enregistrés avec le pattern. **I–VII** seuls choisissent les extensions ; **SHAPE** règle
+la disposition (**BASE**, **CLS0–3**, **OPN0–3**) et **COLOR** les niveaux, sans changement d'octave.
+Model-TG est explicitement incompatible.
+
+Quatorze masques identiques sont redirigés avant d'y placer les 5 063 octets de code, constantes et état ; seule la section 3 change. Aucun firmware
+n'est distribué dans le dépôt. Génération, preuve autonome, puis preuve avec tous les mods compatibles :
+
+```sh
+python3 tools/test_chord_keys.py
+python3 tools/gen_chord_keys.py --cycles firmware/model-cycles_OS1.13.syx --check
+python3 tools/emu/test_chord_keys.py --cycles firmware/model-cycles_OS1.13.syx
+python3 tools/emu/test_chord_keys.py --cycles firmware/model-cycles_OS1.13.syx \
+  --with 6ch-usbup,latching-mute,trig-preview,browser-scroll,trig-hold,arp,tempo-max,boot-anim,syntakt-sd-cp-toy-bits-swarm \
+  --syntakt firmware/Syntakt_OS1.42.syx
+python3 tools/emu/test_chord_keys_release.py --cycles firmware/model-cycles_OS1.13.syx
+python3 tools/build.py -i firmware/model-cycles_OS1.13.syx -t chord-keys \
+  -o build/model-cycles_OS1.13_chord-keys.syx
+```
+
+| `-t` | MAIN OS patché (SHA-256) |
+|---|---|
+| `chord-keys` | `901675f5b8291f3b91d134208236e83431d6a079c73c2d5f1e4e54ebc334321f` |
+| `6ch-usbup,chord-keys` | `d6e43f0ca6a8df953df7a12da7458c70552f1b3a8de1bb39213f0c52168f0352` |
+| `6ch-usbup,arp,trig-hold,tempo-max,boot-anim,chord-keys` | `0922d3967c6d29ea86c14ffe41a5555cfb5346ecffb6298fe84c8ba3e3c51c43` |
+| `macro,chord-keys` | `80a12bae5cbd3a541d3e093223fe5305684193063e2d3be8cee9d1858e805133` |
+| `6ch-usbup,latching-mute,trig-preview,browser-scroll,trig-hold,arp,tempo-max,boot-anim,chord-keys,syntakt-sd-cp-toy-bits-swarm` | `569e6bb39b628ebbd8a8f1ef64e43f0097f4c3d4bb8430974f01dab6d82ca110` |
+
+La preuve exécute les touches, pads, menus, sauvegardes et calculs CHORD du véritable OS ; 14 000 accords
+BASE, 2 205 combinaisons SHAPE et les chemins inactifs sont comparés à la référence. COLOR, les frontières de
+SHAPE, les libellés et le plafond aigu du premier opérateur sont contrôlés. Les frontières simulées, le coût en instructions et
+les vérifications restantes sur la machine sont détaillés dans [la note 42](notes/42-clavier-accords-diatoniques.md).
+Les accords étendus restent limités à quatre notes ; l'enregistrement conserve la fondamentale et le réglage
+du degré s'applique à la relecture, sans enregistrer une extension différente par trig.
+
 ### Machine MACRO (les modèles de Braids)
 
 `tweaks/model-cycles_OS1.13/25-macro.json` (7e machine) et `32-macro-tg.json` (avec Model-TG : 8e machine, par-dessus
@@ -359,6 +406,100 @@ python3 tools/emu/test_multiline_browser.py --cycles model-cycles_OS1.13.syx [--
 | `model-tg,multiline-browser` | `428e7bc4f18fde071a201544266d97012dd41556220867b60b59df193d861221` |
 | `boot-anim,multiline-browser` | `120860e74d59d207951128ed926d8e0196d9d16142c6a67b004d64510bed339e` |
 | `6ch-usbup,model-tg-st,syntakt-tg-sd-cp-toy-bits-swarm,trig-hold,arp,tempo-max,boot-anim,multiline-browser` | `0787cf23a48549870bb9580b3b99e284c72056c677986671659e7f949d67d1e2` |
+
+### Volume et pan en chiffres sur l'écran principal
+
+`tweaks/model-cycles_OS1.13/46-level-pan-values.json` est produit par `tools/gen_level_pan.py` : d'après le mod de djd_oz,
+LEVEL/DATA affiche le volume de la piste sélectionnée (0 à 127) à la place du haut-parleur, FUNC + LEVEL/DATA son pan (-64 à
+63) à la place du « R », 3 s après le dernier mouvement ; LEVEL/DATA avance de 1 au lieu de 2 sur l'écran principal. Assemblé
+depuis `tools/machines/level_pan/` dans deux masques de sprites libérés ([note 44](notes/44-volume-pan-en-chiffres.md)). La
+preuve passe par le vrai tick de la tâche de l'interface, le pas de LEVEL/DATA, le gestionnaire des encodeurs et le dessin de
+l'écran principal, compare chaque pixel au modèle pour les 256 valeurs, et, avec `--djd`, au fichier de djd_oz ; `--show`
+dessine l'écran avec les barres de l'OS :
+```sh
+python3 tools/gen_level_pan.py --cycles model-cycles_OS1.13.syx [--check]
+python3 tools/emu/test_level_pan.py --cycles model-cycles_OS1.13.syx [--show] \
+    [--djd model-cycles_OS1.13_PAN-Level-values-3s-turn-only.syx] \
+    [--with 6ch-usbup,model-tg-st,syntakt-tg-sd-cp-toy-bits-swarm,arp,trig-hold,tempo-max,boot-anim,trigless-dim \
+     --syntakt Syntakt_OS1.42.syx]
+```
+
+### Trigless trigs atténués
+
+`tweaks/model-cycles_OS1.13/47-trigless-dim.json` est produit par `tools/gen_trigless_dim.py` : d'après le mod de djd_oz, en
+mode grille, une touche qui porte un trigless trig prend l'état de LED 260 (traité comme 4 par l'OS) ; l'interruption du
+panneau, qui charge les verrous des LED, ne l'allume qu'une milliseconde sur trois (333 Hz) en rechargeant sa rangée en plus
+du tour d'origine. Assemblé depuis `tools/machines/trigless_dim/` dans deux masques de sprites libérés
+([note 45](notes/45-trigless-trigs-attenues.md)). La preuve fait tourner le vrai code de l'interruption du panneau, du tick des
+LED et de l'image de l'interface sur une même ligne de temps, d'origine contre modifié, avec un modèle des verrous ; `--defsym`
+construit les variantes d'essai (jamais versionnées, `--out` hors de `tweaks/`) :
+```sh
+python3 tools/gen_trigless_dim.py --cycles model-cycles_OS1.13.syx [--check]
+python3 tools/gen_trigless_dim.py --cycles model-cycles_OS1.13.syx --defsym WAIT=68 --out essai-0p5us.json
+python3 tools/emu/test_trigless_dim.py --cycles model-cycles_OS1.13.syx \
+    [--with 6ch-usbup,model-tg-st,syntakt-tg-sd-cp-toy-bits-swarm,arp,trig-hold,tempo-max,boot-anim,level-pan-values \
+     --syntakt Syntakt_OS1.42.syx]
+```
+
+| `-t` | MAIN OS patché (SHA-256) |
+|---|---|
+| `level-pan-values` | `7fb415147e8605ab035e3fc064986b1c640cddc7ced972ad5b6ff6fcaa9f5eb7` |
+| `trigless-dim` | `ff47b71399d7ab72a53f73e2e0ff0f5759e4ef20fe1da1780eb0c28e85ed4631` |
+| `level-pan-values,trigless-dim` | `c4a547df87f681e27e5f7d0b04d9e08d601017577f810e2dced51eb4a68797e6` |
+| `model-tg,level-pan-values,trigless-dim` | `551e86a8aa2a0288440a8e620ff1cdf11da34676489a5895f4f9a031021efd07` |
+| `6ch-usbup,model-tg-st,syntakt-tg-sd-cp-toy-bits-swarm,trig-hold,arp,tempo-max,boot-anim,level-pan-values,trigless-dim` | `366aebfc88b31a9f6d8206e53fa94b76897ef7fc929ff0237aa57578e3fe7540` |
+
+### THRU qui envoie aussi le MIDI du Cycles (d'AveyCole)
+
+Deux tweaks d'AveyCole ([AveyCole/Modded-Cycles](https://github.com/AveyCole/Modded-Cycles), commit `ba5f8bb`), produits par
+`tools/gen_midi_thru.py`, qui s'excluent ([note 53](notes/53-midi-thru-aveycole.md)) :
+
+- `50-midi-both.json` (`midi-both`) : avec THR choisi dans CONFIG › MIDI › PORTS › OUT/THRU, le Cycles relaie le MIDI reçu et
+  envoie aussi son horloge, ses notes et ses paramètres. Les trois portes de sortie (`0x4000154a`, `0x4000156a`, `0x40001590`)
+  ne lisent plus le réglage. Aucune place libre.
+- `51-midi-live-both.json` (`midi-live-both`) : sur la ligne OUT/THRU qui affiche THR, FUNC + appui sur LEVEL/DATA alterne THR
+  seul et THR + MIDI du Cycles (valeur 2 du réglage `0x404e9b50`). `tools/machines/midi_thru/midi_thru.S` (132 o) est assemblé
+  dans le masque de sprite 34×34 libéré `0x40192ba4` (`tools/sprites.py`) ; le fork le mettait en `0x40167c50`.
+
+La preuve fait tourner les vraies portes de sortie, le vrai relais, la vraie touche de la ligne et son affichage, d'origine et
+modifiés, et compare avec la version du fork :
+```sh
+python3 tools/gen_midi_thru.py --cycles model-cycles_OS1.13.syx [--check]
+python3 tools/emu/test_midi_thru.py --cycles model-cycles_OS1.13.syx \
+    [--with 6ch-usbup,model-tg-st,syntakt-tg-sd-cp-toy-bits-swarm,trig-hold,arp,tempo-max --syntakt Syntakt_OS1.42.syx]
+```
+
+| `-t` | MAIN OS patché (SHA-256) |
+|---|---|
+| `midi-both` | `5d0755ef0bd34617bcd5adbb54f09c77cd066e7439d26cc460bbadb0090bb75f` |
+| `midi-live-both` | `ca439a48cb8d818c8c09a8bfc8fa1ac391ffa5f9263e971db39ff602afce6742` |
+| `6ch-usbup,midi-both` | `efc0f1c328f8b65eedd45bc20dd68b513eb091ea1c67d8d3fba0d0e60081b17a` |
+| `6ch-usbup,midi-live-both` | `09f5b51061b2d387c897824984618f7f8b92d2d5028750115b3f6cb3eb2748dc` |
+| `model-tg,midi-live-both` | `29e4b13b5cf8a995c163ddfd8040c7e41567f687fde27bd6985d3bf2042ca048` |
+| `6ch-usbup,model-tg-st,syntakt-tg-sd-cp-toy-bits-swarm,trig-hold,arp,tempo-max,boot-anim,multiline-browser,midi-both` | `705302a9ddf03d02dc2dae40422796b476d1583261e2971560a195dd033d18a8` |
+| `6ch-usbup,model-tg-st,syntakt-tg-sd-cp-toy-bits-swarm,trig-hold,arp,tempo-max,boot-anim,multiline-browser,midi-live-both` | `a00ac9d50ce7e11a92737ee54ddf782ac94ce29bdd9f40caf29cb4be434319ad` |
+
+### Filtre par piste
+
+`tweaks/model-cycles_OS1.13/48-track-filter.json` est produit par `tools/gen_track_filter.py` : le filtre (`track_filter.S`), les
+potards, l'affichage et la sauvegarde (`tf_ui.S`) sont assemblés depuis `tools/machines/track_filter/` et liés par
+`track_filter.ld` dans quinze masques de sprites 35×35 libérés (3 001 o) ; les tables sont calculées par le générateur. Quatre
+paramètres de toutes les machines sur les descripteurs « Error » 1 à 4, accroche après Volume + Dist ([note 47](notes/47-filtre-piste.md)).
+Incompatible avec Model-TG pour l'instant. La preuve fait tourner la vraie boucle des voix et le vrai site de l'accroche, l'OS sans
+le filtre à côté, puis l'interface et la sauvegarde fonction par fonction :
+```sh
+python3 tools/gen_track_filter.py --cycles model-cycles_OS1.13.syx [--check]
+python3 tools/emu/test_track_filter.py --cycles model-cycles_OS1.13.syx [--quick] \
+    [--with 6ch-usbup,syntakt-sd-cp-toy-bits-swarm,arp,trig-hold,tempo-max,boot-anim --syntakt Syntakt_OS1.42.syx]
+    [--with syntakt-sd-cp-toy-bits-swarm-macro,6ch-usbup,chord-keys,level-pan-values,trigless-dim,multiline-browser,… --syntakt Syntakt_OS1.42.syx]
+```
+
+| `-t` | MAIN OS patché (SHA-256) |
+|---|---|
+| `track-filter` | `f5db01334779499fc0932cfdc4a23c899319d333fed98fc5169972080b662967` |
+| `6ch-usbup,track-filter` | `340fb353bacb25fc2923f836b7d685a704c710e43988258cdc2d21f42b997016` |
+| `6ch-usbup,syntakt-sd-cp-toy-bits-swarm,trig-hold,arp,tempo-max,boot-anim,track-filter` | `5493f878652f5050a75ed0aab4aba9b19671764455943c5dd525484465c3f5ac` |
+| `macro,track-filter` | `fd3cb1440d5123d7b8a227024064fdce09e1a70ac12d3587ff6a0930dd87a19c` |
 
 ### Écoute d'un pas en pause
 

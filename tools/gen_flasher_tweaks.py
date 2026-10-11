@@ -39,7 +39,8 @@ OUT = ROOT / "docs" / "flasher" / "tweaks.js"
 # tweaks demande (« requires » de son JSON) le tweak correspondant de l'autre : check_requires le verifie.
 # Les moteurs s'ajoutent en machines supplementaires : sdvintage-exact (a la place de SNARE) reste dans build.py.
 # status : "tested" (flashe sur un vrai Model:Cycles) ou "experimental".
-# credit : auteur du travail d'origine, affiche sur la carte (voir aussi les credits de la page).
+# credit : auteur du travail d'origine, affiche sur la carte (voir aussi les credits de la page) ; sans « repo »
+# (un mod recu sans depot public), la carte dit « d'apres un mod de … », sans lien.
 # license : fichier de licence (dans tweaks/model-cycles_OS1.13/) du code tiers que la carte embarque ; servi a cote
 # de la page (docs/flasher/<license>.txt) et lie depuis la carte.
 # cat : rubrique du flasher, une de CATS (meme liste que CATS dans docs/flasher/app.js, plus « other »). Sans cat,
@@ -200,6 +201,56 @@ FEATURES = [
         ],
     },
     {
+        "id": "level-pan-values",
+        "cat": "screen",
+        "label": "Volume et pan en chiffres",
+        "desc": "Sur l'ecran principal, LEVEL/DATA affiche le volume de la piste (0 a 127) en chiffres, FUNC + "
+                "LEVEL/DATA son pan (-64 a 63), pendant 3 s. LEVEL/DATA y avance de 1 par cran au lieu de 2.",
+        "status": "tested",
+        "credit": {"kind": "based", "who": "djd_oz"},
+        "variants": [
+            {"file": "46-level-pan-values", "label": None},
+        ],
+    },
+    {
+        "id": "trigless-dim",
+        "cat": "seq",
+        "label": "Trigless trigs attenues",
+        "desc": "Une touche de pas qui porte un trigless trig (FUNC + touche) s'allume attenuee au lieu de pleine "
+                "lumiere : on la distingue d'un trig de note. Elle garde son clignotement habituel.",
+        "status": "tested",
+        "credit": {"kind": "based", "who": "djd_oz"},
+        "variants": [
+            {"file": "47-trigless-dim", "label": None},
+        ],
+    },
+    {
+        "id": "midi-both",
+        "cat": "io",
+        "label": "MIDI OUT pendant THRU",
+        "desc": "Avec THR choisi dans CONFIG > MIDI > PORTS > OUT/THRU, le Cycles relaie le MIDI recu et envoie aussi "
+                "son horloge, ses notes et ses parametres. OUT ne change pas, le menu non plus.",
+        "status": "tested",                # par AveyCole, sur sa machine (notes/53 §9)
+        "credit": {"kind": "by", "who": "AveyCole", "repo": "AveyCole/Modded-Cycles"},
+        "excludes": ["midi-live-both"],
+        "variants": [
+            {"file": "50-midi-both", "label": None},
+        ],
+    },
+    {
+        "id": "midi-live-both",
+        "cat": "io",
+        "label": "Basculer MIDI OUT + THRU en direct",
+        "desc": "Sur la ligne OUT/THRU qui affiche THR, FUNC + appui sur le potard LEVEL/DATA ajoute au relais l'envoi "
+                "de l'horloge, des notes et des parametres du Cycles, ou le retire. L'ecran reste sur THR.",
+        "status": "tested",                # par AveyCole, sur sa machine (notes/53 §9)
+        "credit": {"kind": "by", "who": "AveyCole", "repo": "AveyCole/Modded-Cycles"},
+        "excludes": ["midi-both"],
+        "variants": [
+            {"file": "51-midi-live-both", "label": None},
+        ],
+    },
+    {
         "id": "macro",
         "cat": "sound",
         "label": "Machine MACRO",
@@ -217,6 +268,32 @@ FEATURES = [
         ],
         # avec Model-TG : la version qui s'ajoute apres model-tg-st (Model-TG prend cette base, « with » ci-dessus)
         "with": {"model-tg": "32-macro-tg"},
+    },
+    {
+        "id": "chord-keys",
+        "cat": "live",
+        "label": "Accords de gamme sur TRIG 1–16",
+        "desc": "Une piste CHORD, sept modes et une extension par degré. TRIG 1–7 jouent I–VII, "
+                "8–14 une octave plus haut, 15–16 I–II deux octaves plus haut. T1–T6 gardent leurs fonctions. "
+                "Réglages dans FUNC + RETRIG, sauvés avec le pattern.",
+        "status": "tested",
+        "credit": {"kind": "by", "who": "Nico Heuser", "repo": "byNicoHeuser"},
+        "excludes": ["model-tg"],
+        "variants": [{"file": "45-chord-keys", "label": None}],
+    },
+    {
+        "id": "track-filter",
+        "cat": "sound",
+        "label": "Filtre par piste (LP / OFF / HP)",
+        "desc": "MACHINES tenu + SWEEP : un filtre par piste, passe-bas a gauche, rien au centre, passe-haut a droite. "
+                "CONTOUR : resonance ; COLOR et SHAPE : enveloppe du filtre (quantite, decay). P-locks, LFO, CC 74 / 71.",
+        "status": "tested",
+        "credit": None,
+        # meme geste que le filtre de Model-TG (MACHINES + SWEEP / CONTOUR) : pas ensemble pour l'instant (notes/47 §7, §11)
+        "excludes": ["model-tg"],
+        "variants": [
+            {"file": "48-track-filter", "label": None},
+        ],
     },
     {
         "id": "syntakt",
