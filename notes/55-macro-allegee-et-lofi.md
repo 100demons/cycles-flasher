@@ -18,8 +18,8 @@ calcule *vraiment* moins d'échantillons, comme le RATE de Braids mais en allég
   (cartes d'ondes, TRIPLE SQUARE). Les 34 autres modèles restent à 96 kHz, échantillon pour échantillon comme avant.
 - **FUNC + PITCH (FINE) devient le lo-fi des pistes MACRO**. Sur la machine, la 1.46 ne le faisait pas : FUNC + PITCH
   y réglait encore PITCH, par demi-tons, et FINE n'était sous aucun potard (retour Discord du 11/10/2026, §8). Corrigé
-  en 1.51 : sur une piste MACRO, FUNC + PITCH règle FINE, un pas par cran, et l'écran dit `OFF`, la fréquence (`46k` ..
-  `4k`) ou les bits (`12b` .. `2b`) ; prouvé sur le vrai code de l'interface `[FAIT en émulation]`, à essayer sur la
+  en 1.51 : sur une piste MACRO, FUNC + PITCH règle FINE, un pas par cran, et l'écran dit `OFF`, la fréquence (`46K` ..
+  `4K`) ou les bits (`12B` .. `2B`) ; prouvé sur le vrai code de l'interface `[FAIT en émulation]`, à essayer sur la
   machine :
   - au centre (64, la valeur par défaut) : rien ne change, les projets existants sonnent comme avant ;
   - à gauche, **RATE** : 64 pas de 48 kHz × 2^(−86/1536) chacun, de 46 kHz à 4 kHz. Les 13 modèles allégés sont alors
@@ -298,6 +298,16 @@ still makes fine tuning so the pitch is changing but nothing happens on the bitr
   suivant ou précédent (table de 49 demi-tons), c'est ce que les utilisateurs ont entendu. Pour FINE : `0x4004552c`,
   qui rend le **défaut** (`0x4000`) : sous FUNC, FINE reviendrait au centre à chaque cran.
 - Son texte (+0x20 de l'objet d'interface, `std::function` aussi) : `-64` .. `63`.
+- **La fenêtre de valeur** (ce qui s'affiche quand on tourne un potard) : `0x4001d818`, slot 144 de la vtable de
+  ParameterPageView, `(vue, bitmap, descripteur, valeur, drapeau, 1)` (appelé en `0x4001e634`). Elle dessine le nom,
+  cinq points de position, puis la valeur par `vt[64]` de l'objet des paramètres (`0x4000a66a`) : si l'objet
+  d'interface a une fonction de dessin (`std::function` en +0x24, gestionnaire +0x2c, invocateur +0x30,
+  `(valeur, bitmap, x, y, drapeau)`), elle seule dessine, et **aucun texte**. Sinon `vt[60]` (`0x4000a70e`) écrit le
+  texte (+0x20) et `0x40071a04(bitmap, police, 0x60, 0x22, 2, "%s", texte)` le dessine dans la grande police
+  (`0x401429ec`). Celle de FINE (`0x40045fe0`) dessine une jauge (sprite de la série `0x40fe28c4`, de 0 à `0x7f00`) :
+  c'est la « jauge bizarre, sans valeur » que Maxime a vue avec la première version de la correction (11/10/2026).
+  Celle de PITCH (`0x4004dcca`) dessine la note en texte ; celles de la plupart des paramètres de machine, un potard
+  (`0x40045dec`).
 
 ### 8.2 La correction
 
@@ -306,17 +316,23 @@ Dans les détours communs aux trois sortes de MACRO (`gs.detours_asm(…, lofi=T
 
 - `knob_vec` (appelé en `0x4001e8da`, juste avant la lecture de l'entrée) : sur la machine MACRO, si FUNC est tenu
   (`d5`) et que le potard est PITCH (`d2 = 2`), l'entrée lue devient 16 (`d3`), et les fonctions de l'objet
-  d'interface de FINE deviennent les nôtres (`lofi_step` à +0x50, `lofi_fmt` à +0x20 de `0x40a72820`) ;
+  d'interface de FINE deviennent les nôtres (`lofi_step` à +0x50, `lofi_fmt` à +0x20, `lofi_draw` à +0x30 de
+  `0x40a72820`) ;
 - `rec_build` (enregistrement d'une machine ajoutée) : l'entrée 16 de celui de MACRO vaut 43 ;
 - `lofi_step` : la valeur arrondie au pas (0x100), plus le delta arrondi vers le haut à des pas entiers (un cran = un
   pas au moins ; l'accélération de l'OS reste), bornée à 0..0x7f00. 64 crans du centre au bout ;
-- `lofi_fmt` : `OFF` au centre ; à gauche la fréquence de RATE en kHz arrondis (`46k` .. `4k`, §3.2) ; à droite les
-  bits de BITS (`12b` .. `2b`, §3.3) ; trois caractères au plus, comme le reste de l'écran.
+- `lofi_fmt` : `OFF` au centre ; à gauche la fréquence de RATE en kHz arrondis (`46K` .. `4K`, §3.2) ; à droite les
+  bits de BITS (`12B` .. `2B`, §3.3) ; trois caractères au plus, comme le reste de l'écran ; en majuscules : la
+  grande police de la fenêtre de valeur n'a ni `k` ni `b` (ses seules minuscules : `m`), les fichiers `-v3` montraient
+  donc `46`, `12` sans lettre ;
+- `lofi_draw` (ajouté après l'essai de Maxime, §8.4) : à la place de la jauge, ce texte, dessiné exactement comme l'OS
+  dessine la valeur d'un paramètre sans dessin : `0x40072260` (police `0x401429ec` dans un objet sur la pile),
+  `0x40071a04(bitmap, police, x, y, 2, "%s", texte)` en (`0x60`, `0x22`), puis `0x40072080`.
 
-FINE n'étant sous aucun potard ailleurs, les deux fonctions remplacées ne changent rien aux autres machines. Sans FUNC,
+FINE n'étant sous aucun potard ailleurs, les trois fonctions remplacées ne changent rien aux autres machines. Sans FUNC,
 PITCH reste PITCH ; FUNC + PITCH sur une autre machine reste le demi-ton. Le nom affiché reste celui de l'OS pour FINE
-(`FTUN`) `[HYP]` : les noms sont dans la table des descripteurs, partagée. Place : 316 o de plus dans les détours
-(`STUBS`, 2 Ko : 1 848 o au plus, avec Model-TG et les 5 moteurs). Le son ne change pas : la passerelle lit FINE comme avant (§3.4).
+(`FTUN`) `[HYP]` : les noms sont dans la table des descripteurs, partagée. Place : 424 o de plus dans les détours
+(`STUBS`, 2 Ko : 1 956 o au plus, avec Model-TG et les 5 moteurs ; image jusqu'à `0x401faaf6`). Le son ne change pas : la passerelle lit FINE comme avant (§3.4).
 
 ### 8.3 Preuve `[FAIT en émulation]`
 
@@ -329,13 +345,68 @@ PITCH reste PITCH ; FUNC + PITCH sur une autre machine reste le demi-ton. Le nom
 - Le vrai tour de potard avec FUNC (`0x4000b7d6`, `fine = 1`) : sans MACRO, FINE revient à `0x4000` ; avec, 81 cas
   (valeurs aux bords, au centre, fractionnaire ; deltas de 1, d'un cran, de plusieurs, du bout au bout) donnent le pas
   attendu ; FUNC + PITCH reste le demi-ton de l'OS.
-- Le texte des 128 pas par le vrai `sprintf` : `4k` .. `46k`, `OFF`, `12b` .. `2b`, ce que `macro.cc` règle.
+- Le texte des 128 pas par le vrai `sprintf` : `4K` .. `46K`, `OFF`, `12B` .. `2B`, ce que `macro.cc` règle ; chacun
+  de leurs caractères dessine des points dans la grande police (et `k` n'en dessine pas : la vérification attrape la
+  version `-v3`).
+- La vraie fenêtre de valeur (`0x4001d818` par le slot 144, dans un écran 128 × 64 ; les sprites, construits au
+  démarrage, sont notés au lieu d'être dessinés) : sans MACRO, FINE y dessine une jauge et aucun texte ; avec, pour 8
+  valeurs (bords, centre, ±1), le texte, pixel pour pixel celui du chemin texte de l'OS (`0x4000a70e`, la valeur
+  acceptée par `vt[24]`) ; plus de jauge. Les objets d'interface des 76 autres descripteurs sont ceux de la base :
+  leurs fenêtres ne changent pas. Ce que l'émulateur dessine (x = 64 à 123, y = 0 en bas ; en bas, les cinq points
+  de position de l'OS, y = 28 à 33 vides omis) :
+
+```
+OFF (centre)                                                      7B (+36)
+y=55  .............####.........############.....############.....    ..................############.....#########................
+y=54  ...........########......##############...##############....    .................##############...############..............
+y=53  ..........##########.....##############...##############....    .................##############...#############.............
+y=52  .........############....#############....#############.....    ..................#############...#############.............
+y=51  .........####....####....####.............####..............    ..........................####....####.....#####............
+y=50  ........####......####...####.............####..............    ..........................####....####......####............
+y=49  ........####......####...####.............####..............    .........................#####....####......####............
+y=48  ........####......####...####.............####..............    .........................####.....####......####............
+y=47  ........####......####...####.............####..............    .........................####.....####.....#####............
+y=46  ........####......####...##########.......##########........    ........................#####.....#############.............
+y=45  ........####......####...###########......###########.......    ........................####......############..............
+y=44  ........####......####...###########......###########.......    ........................####......############..............
+y=43  ........####......####...##########.......##########........    .......................#####......#############.............
+y=42  ........####......####...####.............####..............    .......................####.......####.....#####............
+y=41  ........####......####...####.............####..............    .......................####.......####......####............
+y=40  ........####......####...####.............####..............    ......................#####.......####......####............
+y=39  ........####......####...####.............####..............    ......................####........####......####............
+y=38  .........####....####....####.............####..............    ......................####........####.....#####............
+y=37  .........############....####.............####..............    .....................#####........#############.............
+y=36  ..........##########.....####.............####..............    .....................####.........#############.............
+y=35  ...........########......####.............####..............    .....................####.........############..............
+y=34  .............####.........##...............##...............    ......................##...........#########................
+y=27  .............###......###......###......###......###........    .............###......###......###......###......###........
+y=26  ............#...#....#...#....#####....#...#....#...#.......    ............#...#....#...#....#...#....#####....#...#.......
+y=25  ............#...#....#...#....#####....#...#....#...#.......    ............#...#....#...#....#...#....#####....#...#.......
+y=24  ............#...#....#...#....#####....#...#....#...#.......    ............#...#....#...#....#...#....#####....#...#.......
+y=23  .............###......###......###......###......###........    .............###......###......###......###......###........
+```
 - Les tweaks de la 1.46 échouent à ces vérifications (FUNC + PITCH → 42, FINE remis à `0x4000`, `-64` .. `63`) :
   le banc reproduit ce que la machine a montré.
 
+Résultats (11/10/2026, version `-v4`) : `test_macro.py --with 6ch-usbup,model-tg-st,sample-preview-st,trig-hold,arp,
+tempo-max,boot-anim,multiline-browser,level-pan-values,trigless-dim` TOUT OK (112 vérifications) ; `test_macro_syntakt.py`
+TOUT OK (92), avec `--with 6ch-usbup,trig-hold,arp,tempo-max,boot-anim,multiline-browser,level-pan-values,trigless-dim`
+TOUT OK (27), et le même avec `model-tg-st,sample-preview-st` TOUT OK (27) ; `test_track_filter.py --with macro` et
+`--with syntakt-sd-cp-toy-bits-swarm-macro,6ch-usbup,chord-keys,level-pan-values,trigless-dim,multiline-browser` TOUT OK
+(61 chacun) ; MACRO avec le filtre par piste et les autres mods TOUT OK (22) ; `test_mods_for_samples.py` tout est ok
+(empreintes de BUILD.md mises à jour) ; démarrage de Model-TG + 5 moteurs + MACRO prouvé (image jusqu'à `0x401faaf6`) ;
+`gen_macro.py --check` et `gen_macro_syntakt.py --check` (62 fichiers) à jour ; test du flasher : les 816 combinaisons
+de `REF_MAINOS` à leur empreinte, `REF_MODS` pour les 145 tweaks.
+
 ### 8.4 Sur la machine
 
+**Essai de Maxime (11/10/2026, 19:31)** avec les fichiers `-v2` : « ça marche », le lo-fi s'entend ; mais « aucune
+valeur numérique n'est affichée, y'a juste une sorte de jauge bizarre » : la jauge de FINE (§8.1). D'où `lofi_draw`
+(§8.2). Les fichiers `-v3` l'affichaient en minuscules, absentes de la grande police (retirés avant
+l'essai) ; fichiers `-v4` en majuscules (MAIN OS `d15698c4…` pour MACRO seule, `d8c0c0d6…` pour Model-TG + les 5
+moteurs + MACRO).
+
 À essayer : sur une piste MACRO (modèle WAVE MAP, une note tenue), FUNC tenu puis PITCH vers la gauche : l'écran
-descend de `46k` à `4k` et le son devient granuleux ; vers la droite : `12b` à `2b`, de plus en plus écrasé ; au centre
+descend de `46K` à `4K` et le son devient granuleux ; vers la droite : `12B` à `2B`, de plus en plus écrasé ; au centre
 `OFF`, le son d'avant ; PITCH sans FUNC accorde toujours. Une piste d'une autre machine : FUNC + PITCH change la note
 par demi-tons, comme avant.

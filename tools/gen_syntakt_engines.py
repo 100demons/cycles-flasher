@@ -578,11 +578,13 @@ def detours_asm(n, images, firsts, tg=None, lofi=False):
         # MACRO, FUNC tenu, potard PITCH (d5 : FUNC, d2 : potard, d3 = potard - 2 : l'entrée lue) : l'entrée 16 de
         # son enregistrement, FINE (0x4001e8e2 : avec FUNC, seuls les potards 14 et 15 lisent une autre entrée).
         # L'OS applique un tour de potard avec FUNC par la fonction de l'objet d'interface du descripteur (+0x50) :
-        # pour FINE, elle rend le défaut (0x4000) ; et son texte (+0x20) dit -64..63. Les nôtres à la place.
+        # pour FINE, elle rend le défaut (0x4000) ; son texte (+0x20) dit -64..63 ; et la fenêtre de valeur
+        # (0x4001d818) le dessine en jauge (+0x30, un sprite) au lieu du texte. Les nôtres à la place.
         ins(f"moveq #{top}, %d1"); ins("cmp.l %d1, %d0"); ins("bne.s 2f"); ins("tst.b %d5"); ins("beq.s 2f")
         ins("moveq #2, %d1"); ins("cmp.l %d1, %d2"); ins("bne.s 2f"); ins("moveq #16, %d3")
         ins("move.l #lofi_step, %d1"); ins(f"move.l %d1, {UI_REC + 100 * FTUN + 0x50:#x}")
         ins("move.l #lofi_fmt, %d1"); ins(f"move.l %d1, {UI_REC + 100 * FTUN + 0x20:#x}")
+        ins("move.l #lofi_draw, %d1"); ins(f"move.l %d1, {UI_REC + 100 * FTUN + 0x30:#x}")
     lab("2"); ins("rts")
     if lofi:
         a.append(lofi_asm())
@@ -637,11 +639,15 @@ def lofi_asm():
     """FINE de MACRO sous FUNC + PITCH (notes/55 §8) : le pas d'un tour de potard et le texte de la valeur.
     lofi_step(fonction, valeur, delta, min, max, défaut) : la valeur arrondie à un pas (0x100), plus delta arrondi
     vers le haut à des pas entiers (un cran = un pas au moins, l'accélération de l'OS conservée), bornée.
-    lofi_fmt(fonction, valeur, tampon) : « OFF » au centre, la fréquence à gauche (« 46k » .. « 4k », RATE), les
-    bits à droite (« 12b » .. « 2b », BITS) : trois caractères au plus, comme macro.cc les calcule."""
+    lofi_fmt(fonction, valeur, tampon) : « OFF » au centre, la fréquence à gauche (« 46K » .. « 4K », RATE), les
+    bits à droite (« 12B » .. « 2B », BITS) : trois caractères au plus, comme macro.cc les calcule ; en majuscules,
+    la grande police de la fenêtre de valeur n'ayant pas de minuscules (sauf m).
+    lofi_draw(fonction, valeur, bitmap, x, y, drapeau) : le dessin de la valeur dans la fenêtre de valeur
+    (0x4001d818 par 0x4000a66a ; en (0x60, 0x22)) : ce texte, dessiné comme l'OS y dessine le texte des paramètres
+    sans dessin (0x40071a04, grande police 0x401429ec, alignement 2, « %s »), à la place de la jauge de FINE."""
     khz = ", ".join(str(lofi_khz(r)) for r in range(1, 65))
     return f"""
-	.globl	lofi_step, lofi_fmt
+	.globl	lofi_step, lofi_fmt, lofi_draw
 lofi_step:
 	move.l	8(%sp), %d0
 	addi.l	#0x80, %d0
@@ -702,8 +708,34 @@ lofi_fmt:
 	jsr	0x40000e6e
 	addq.l	#8, %sp
 	rts
-lofi_s_k:	.asciz	"%dk"
-lofi_s_b:	.asciz	"%db"
+lofi_draw:
+	lea	-24(%sp), %sp
+	move.l	%sp, %d0
+	move.l	%d0, -(%sp)
+	move.l	36(%sp), -(%sp)
+	clr.l	-(%sp)
+	bsr.w	lofi_fmt
+	lea	12(%sp), %sp
+	pea	0x401429ec
+	pea	20(%sp)
+	jsr	0x40072260
+	addq.l	#8, %sp
+	move.l	%sp, %d0
+	move.l	%d0, -(%sp)
+	pea	0x40124b58
+	pea	2
+	move.l	56(%sp), -(%sp)
+	move.l	56(%sp), -(%sp)
+	pea	36(%sp)
+	move.l	60(%sp), -(%sp)
+	jsr	0x40071a04
+	lea	28(%sp), %sp
+	pea	16(%sp)
+	jsr	0x40072080
+	lea	28(%sp), %sp
+	rts
+lofi_s_k:	.asciz	"%dK"
+lofi_s_b:	.asciz	"%dB"
 lofi_khz:	.byte	{khz}
 	.balign	2
 """

@@ -1,7 +1,8 @@
 """Lo-fi de MACRO sous FUNC + PITCH (notes/55 §8), sur le code de l'interface de l'OS : la recherche du descripteur
 d'un potard (0x4001e814, ou le slot 124 de la vtable de ParameterPageView quand un tweak l'a remplacé), puis
 l'application d'un tour de potard avec FUNC (0x4000b7d6, l'objet des paramètres d'une piste), puis le texte de la
-valeur (le formateur de l'objet d'interface du descripteur, vrai sprintf).
+valeur (le formateur de l'objet d'interface du descripteur, vrai sprintf), puis la fenêtre de valeur qui s'ouvre quand
+on tourne le potard (0x4001d818, le slot 144 de la vtable de ParameterPageView), dessinée dans un écran de 128 × 64.
 
 Utilisé par test_macro.py et test_macro_syntakt.py. Sur la machine, FUNC + PITCH réglait PITCH par demi-tons
 (0x4004e84c) : FINE, que lit le lo-fi, n'était sous aucun potard (retour de deux utilisateurs, 11/10/2026)."""
@@ -23,6 +24,12 @@ VTABLE = 0x400fd134
 UI_REC = 0x40a71754                  # objets d'interface, 100 o par descripteur
 PITCH, FTUN = 42, 43
 PITCH_KNOB = 2
+PAGE_VT = 0x4010052c                 # vtable de ParameterPageView (slot 124 en 0x401005a8)
+POPUP_SLOT = PAGE_VT + 144           # 0x4001d818 : (vue, bitmap, descripteur, valeur, drapeau, 1)
+BITMAP = 0x40070172                  # Bitmap(this, largeur, hauteur, image, masque)
+DRAW_TEXT = 0x40071a04               # (bitmap, police, x, y, alignement, format, ...)
+DRAW_SPRITE = 0x40071da4             # (bitmap, sprite, x, y, mode)
+BIG_FONT, FMT_S = 0x401429ec, 0x40124b58     # grande police de la fenêtre de valeur ; « %s »
 
 
 class UI:
@@ -100,6 +107,48 @@ class UI:
         puts = [c for c in self.calls if c[0] == "put"]
         return puts[0][1][2] if len(puts) == 1 and self.sp_ok and not self.bad else None
 
+    def popup(self, desc, v, text_path=False):
+        """La fenêtre de valeur de ce descripteur à cette valeur : le vrai 0x4001d818 (par le slot 144, comme l'OS),
+        dans un écran 128 × 64 neuf ; rend ses pixels (colonne par colonne). La vue rend (vt[128]) un objet des
+        paramètres d'une piste (vtable 0x400fd134). text_path : le chemin texte de l'OS pour ce descripteur (sans
+        dessin, comme les paramètres sans jauge) : référence de ce que l'OS y écrit."""
+        S = SCRATCH + 0x2000
+        bmp, fb, view, pvt, stub, obj, ovt, ok = S, S + 0x100, S + 0x800, S + 0xa00, S + 0xe00, S + 0xe10, S + 0xf00, \
+            S + 0xff0
+        self.uc.mem_write(fb, bytes(0x400))
+        self.call(BITMAP, bmp, 128, 64, fb, 0)
+        self.uc.mem_write(pvt, bytes(self.uc.mem_read(PAGE_VT, 0x200)))
+        self.uc.mem_write(pvt + 128, struct.pack(">I", stub))
+        self.uc.mem_write(view, struct.pack(">I", pvt))
+        self.uc.mem_write(ovt, bytes(self.uc.mem_read(VTABLE, 0x80)))
+        self.uc.mem_write(obj, struct.pack(">II", ovt, 0))
+        self.hooks[stub] = ("object", obj)
+        r = UI_REC + 100 * desc
+        saved = bytes(self.uc.mem_read(r + 0x2c, 4))
+        if text_path:                    # sans dessin (+0x2c nul) ; la valeur est acceptée (vt[24], 0x4000c0a6)
+            self.uc.mem_write(r + 0x2c, bytes(4))
+            self.uc.mem_write(ovt + 24, struct.pack(">I", ok))
+            self.hooks[ok] = ("valid", 1)
+        self.hooks[DRAW_SPRITE] = ("sprite", 0)          # les jauges : des sprites construits au démarrage, notés
+        self.calls.clear()
+        self.call(self.u32(POPUP_SLOT), view, bmp, desc, v, 0, 1)
+        self.uc.mem_write(r + 0x2c, saved)
+        del self.hooks[DRAW_SPRITE]
+        good = self.sp_ok and not self.bad
+        sprites = [c[1][1] for c in self.calls if c[0] == "sprite"]
+        return (bytes(self.uc.mem_read(fb, 0x400)), sprites) if good else None
+
+    def glyph(self, ch):
+        """Points allumés par ce caractère seul dans la grande police de la fenêtre de valeur (0x401429ec)."""
+        S = SCRATCH + 0x6000
+        bmp, fb, font, s = S, S + 0x100, S + 0x600, S + 0x700
+        self.uc.mem_write(fb, bytes(0x400))
+        self.call(BITMAP, bmp, 128, 64, fb, 0)
+        self.call(0x40072260, font, BIG_FONT)
+        self.uc.mem_write(s, ch.encode() + b"\0")
+        self.call(DRAW_TEXT, bmp, font, 0x60, 0x22, 2, FMT_S, s)
+        return sum(bin(x).count("1") for x in self.uc.mem_read(fb, 0x400))
+
     def text(self, desc, v):
         r = UI_REC + 100 * desc
         self.uc.mem_write(SCRATCH + 0x1000, bytes(32))
@@ -108,12 +157,24 @@ class UI:
 
 
 def want_text(fine):
-    """Ce que macro.cc fait de FINE (notes/55) : RATE à gauche (en kHz), BITS à droite."""
+    """Ce que macro.cc fait de FINE (notes/55) : RATE à gauche (en kHz), BITS à droite. En majuscules : la grande
+    police de la fenêtre de valeur n'a pas de minuscules (sauf m)."""
     if fine == 64:
         return "OFF"
     if fine < 64:
-        return f"{round(48 * 2 ** (-86 * (64 - fine) / 1536))}k"
-    return f"{12 - (fine - 65) * 10 // 62}b"
+        return f"{round(48 * 2 ** (-86 * (64 - fine) / 1536))}K"
+    return f"{12 - (fine - 65) * 10 // 62}B"
+
+
+def pix(fb, x, y):
+    w = struct.unpack(">I", fb[(x * 2 + y // 32) * 4:(x * 2 + y // 32) * 4 + 4])[0]
+    return (w >> (31 - (y & 31))) & 1
+
+
+def ascii_popup(fb, x0=64, x1=124, y0=22, y1=57):
+    """La moitié droite de la fenêtre (y = 0 en bas de l'écran)."""
+    return "\n".join(f"        y={y:2d}  " + "".join("#" if pix(fb, x, y) else "." for x in range(x0, x1))
+                     for y in range(y1 - 1, y0 - 1, -1))
 
 
 def want_step(cur, delta):
@@ -163,3 +224,28 @@ def check_lofi(base_img, fw_img, payload, top, label, check, end=None, base_end=
           f"{label} : texte des 128 pas (vrai sprintf) : {shown[0]} .. {shown[63]} {shown[64]} {shown[65]} .. "
           f"{shown[127]}, trois caractères au plus, comme macro.cc les règle")
     check(a.text(FTUN, 0x2000) == "-32", f"{base} : FINE s'affiche -64..63")
+    # 4. la fenêtre de valeur (0x4001d818) : sans MACRO, FINE y est une jauge (un sprite) et aucun texte ; avec, le
+    # texte, dessiné comme l'OS dessine le texte d'un paramètre sans jauge (son propre chemin, 0x4000a70e)
+    gauge, plain = a.popup(FTUN, 0x2000), a.popup(FTUN, 0x2000, text_path=True)
+    check(gauge is not None and plain is not None and gauge[1] and not plain[1] and plain[0] != gauge[0],
+          f"{base} : la fenêtre de valeur de FINE dessine une jauge (un sprite, 0x40045fe0), "
+          f"aucun texte (ce que la machine a montré)")
+    steps = (0, 1, 31, 63, 64, 65, 100, 127)
+    shots = {n: (b.popup(FTUN, n << 8), b.popup(FTUN, n << 8, text_path=True)) for n in steps}
+    bad = [n for n, (x, y) in shots.items() if x is None or y is None or x != y or x[1] or x[0] == gauge[0]]
+    check(not bad, f"{label} : fenêtre de valeur de FINE (vrai 0x4001d818) : le texte "
+                   f"{', '.join(want_text(n) for n in steps)}, pixel pour pixel celui que l'OS dessine par son chemin "
+                   f"texte (0x4000a70e, 0x40071a04, grande police) ; plus de jauge {bad}")
+    chars = sorted(set("".join(shown)))
+    missing = [c for c in chars if not b.glyph(c)]
+    check(not missing and b.glyph("k") == 0, f"{label} : chaque caractère de ces textes ({''.join(chars)}) existe dans "
+                                            f"la grande police de la fenêtre (elle n'a pas de minuscules) {missing}")
+    if not bad:
+        for n in (23, 64, 100):
+            print(f"      fenêtre de valeur, FUNC + PITCH à {n - 64:+d} (« {want_text(n)} ») :")
+            print(ascii_popup(b.popup(FTUN, n << 8)[0]))
+    recs = [(bytes(b.uc.mem_read(UI_REC + 100 * d, 100)), bytes(a.uc.mem_read(UI_REC + 100 * d, 100)))
+            for d in range(77)]
+    diff = [d for d, (x, y) in enumerate(recs) if x != y]
+    check(diff == [FTUN], f"{label} : objets d'interface des 77 descripteurs comme {base}, sauf FINE (pas, texte, dessin "
+                          f"de la valeur) : les fenêtres des autres paramètres ne changent pas ({diff})")
