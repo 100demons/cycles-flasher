@@ -258,20 +258,25 @@ async function main() {
       && doc.getElementById("drop3-wrap").hidden, "last engine unticked -> the card turns off");
     const credits = [...doc.querySelectorAll("#features .credit a")].map((a) => a.href);
     const creditOf = (id) => [...doc.querySelectorAll(`label[for=feat-${id}] .credit a`)].map((a) => a.href);
-    check(credits.length === 12 && creditOf("usb6").join() === "https://github.com/scottmetoyer/ms-multi-output"
+    check(credits.length === 17 && creditOf("usb6")[0] === "https://github.com/scottmetoyer/ms-multi-output"
+      && /\/LICENSE-ms-multi-output\.txt$/.test(creditOf("usb6")[1])
       && creditOf("model-tg")[0] === "https://github.com/TinyGregAudio/Model-TG" && /\/LICENSE-Model-TG\.txt$/.test(creditOf("model-tg")[1])
-      && creditOf("sample-preview").join() === "https://github.com/TinyGregAudio/Model-TG"
-      && ["latching-mute", "trig-preview", "browser-scroll"].every((id) => creditOf(id).join() === "https://github.com/drumkilla/elektron-model-tweaks")
+      && creditOf("sample-preview")[0] === "https://github.com/TinyGregAudio/Model-TG" && /\/LICENSE-Model-TG\.txt$/.test(creditOf("sample-preview")[1])
+      && ["latching-mute", "trig-preview", "browser-scroll"].every((id) => creditOf(id)[0] === "https://github.com/drumkilla/elektron-model-tweaks"
+        && /\/LICENSE-elektron-model-tweaks\.txt$/.test(creditOf(id)[1]))
       && creditOf("macro")[0] === "https://github.com/pichenettes/eurorack" && /\/LICENSE-Braids\.txt$/.test(creditOf("macro")[1])
       && creditOf("chord-keys").join() === "https://github.com/byNicoHeuser"
       && ["midi-both", "midi-live-both"].every((id) => creditOf(id).join() === "https://github.com/AveyCole/Modded-Cycles"),
-      "each row credits its author, Model-TG and MACRO with their MIT license, sample preview based on Model-TG, Chord Keys by Nico Heuser, the MIDI THRU mods by AveyCole: " + JSON.stringify(credits));
+      "each row credits its author, with a link to the MIT license of the code it carries, Chord Keys by Nico Heuser, the MIDI THRU mods by AveyCole: " + JSON.stringify(credits));
     const djd = ["level-pan-values", "trigless-dim"].map((id) => doc.querySelector(`label[for=feat-${id}] .credit`));
     check(djd.every((c) => c && c.textContent === "based on a mod by djd_oz" && !c.querySelector("a")),
       "djd_oz's two mods: “based on a mod by djd_oz”, no link (no public repository)");
     const list = [...doc.querySelectorAll("#credits-list a")].map((a) => a.textContent);
-    check(list.join() === "scottmetoyer/ms-multi-output,drumkilla/elektron-model-tweaks,pichenettes/eurorack,TinyGregAudio/Model-TG,mischa85/elektron-firmware-tool,mxldyn/octamax",
-      "credits section lists the 6 upstream repositories");
+    check(list.join() === "scottmetoyer/ms-multi-output,drumkilla/elektron-model-tweaks,pichenettes/eurorack,TinyGregAudio/Model-TG,mischa85/elektron-firmware-tool,dagargo/elektroid,mxldyn/octamax",
+      "credits section lists the 7 upstream repositories");
+    const lic = [...doc.querySelectorAll("#credits a")].map((a) => a.href).filter((h) => /LICENSE|NOTICES/.test(h));
+    check(lic.join() === "https://github.com/18nelli18/Modded-Cycles/blob/main/LICENSE,https://github.com/18nelli18/Modded-Cycles/blob/main/THIRD-PARTY-NOTICES.md",
+      "credits section links the project's MIT license and the third-party notices: " + JSON.stringify(lic));
     const box = (id) => doc.getElementById(id);
     // MACRO (notes/43): with Model-TG, Model-TG takes its base and MACRO the version built on it. With the Syntakt
     // engines (notes/50) both stay ticked: MACRO adds nothing itself, the engines take their version with MACRO
@@ -396,7 +401,8 @@ async function main() {
     check(/Audio USB 6 canaux/.test(text(doc, "features")) && /Mode mute verrouillé/.test(text(doc, "features"))
       && /par drumkilla/.test(text(doc, "features")) && /Vrais moteurs du Syntakt/.test(text(doc, "features"))
       && /Testé/.test(text(doc, "features")), "FR switch translates the feature cards and credits");
-    check(/Crédits/.test(text(doc, "credits")) && /boîte à outils/.test(text(doc, "credits")), "FR switch translates the credits section");
+    check(/Crédits/.test(text(doc, "credits")) && /boîte à outils/.test(text(doc, "credits")) && /publié sous licence MIT/.test(text(doc, "credits")),
+      "FR switch translates the credits section");
     check(/Tempo jusqu'à 546 BPM/.test(text(doc, "features")) && doc.querySelector('label[for=feat-tempo-max] a.feat-guide, #features a[href$="#tempo"]'),
       "FR: tempo card translated, with its guide link");
     check(/Animation de démarrage modded-cycles/.test(text(doc, "features")) && doc.querySelector('#features a[href$="#boot-anim"]'),

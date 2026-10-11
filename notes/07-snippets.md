@@ -10,7 +10,7 @@ Ce qui ne peut être testé qu'avec l'image firmware est marqué **`[À TESTER]`
 
 ## 1. Stubs ASM relogés pour le Model:Cycles OS 1.13
 
-Syntaxe GAS m68k (MIT, registres `%`) identique aux sources de l'auteur. Le code est le même que sur le Samples, avec les constantes du Cycles.
+Syntaxe GAS m68k (registres `%`) identique aux sources de l'auteur : ces stubs sont ceux de [ms-multi-output](https://github.com/scottmetoyer/ms-multi-output), Copyright (c) 2026 Scott Metoyer, licence MIT (texte : `tweaks/model-cycles_OS1.13/LICENSE-ms-multi-output`). Le code est le même que sur le Samples, avec les constantes du Cycles.
 Chaque listing a été vérifié instruction par instruction contre les octets `write` de `cycles6.json`.
 Branches en **`.w` explicite** pour retrouver les mêmes octets : GAS pourrait sinon choisir la forme `.b`.
 Assemblage : voir §7.
@@ -354,37 +354,21 @@ r2 -a m68k -b 32 -e cfg.bigendian=true -m 0x40000400 build/section_3_MAIN_OS.bin
     -loader-baseAddr 0x40000400 -processor 68000:BE:32:Coldfire      # [À TESTER]
 ```
 
-## 8. hookcheck minimal (réimplémentation de l'idée d'octamax)
+## 8. hookcheck : aucune cible à l'intérieur d'un trou
 
-À lancer sur l'image **patchée** : les branchements internes au trou sont alors devenus des `nop` et ne génèrent plus de faux positifs.
-Des faux positifs restent possibles, car une donnée peut ressembler à un branchement : examiner chaque hit.
+Règle R4 de la [note 05](05-methode-patch.md) : un crochet écrase N octets en supposant qu'on n'y entre que par le
+premier. Avant de garder un crochet, chercher dans l'image **patchée** tout ce qui viserait l'intérieur du trou (tout
+sauf son premier octet) :
+- les branchements relatifs `bra`/`bsr`/`bcc` (déplacement sur 8, 16 ou 32 bits) ;
+- les `jmp`/`jsr` en adresse absolue (`abs.l`) et relatifs au PC (`d16,pc`) ;
+- l'adresse elle-même stockée comme donnée sur 32 bits (tables de sauts, champs de callback).
 
-```python
-def interior_targets(img: bytes, holes):
-    """holes = [(va, nbytes)] ; signale tout Bcc/BSR, jmp/jsr (abs.l ou d16,pc) ou constante BE32
-    qui vise l'INTÉRIEUR d'un trou (tout sauf son 1er octet)."""
-    import mcfw
-    inside = {a for va, n in holes for a in range(va + 1, va + n)}
-    hits = []
-    for o in range(0, len(img) - 5, 2):
-        va, op, d8 = mcfw.off2va(o), img[o], img[o + 1]
-        if 0x60 <= op <= 0x6F:                                  # bra/bsr/bcc
-            if d8 == 0x00:   t = va + 2 + int.from_bytes(img[o + 2:o + 4], "big", signed=True)
-            elif d8 == 0xFF: t = va + 2 + int.from_bytes(img[o + 2:o + 6], "big", signed=True)
-            else:            t = va + 2 + (d8 - 256 if d8 > 127 else d8)
-            if t in inside: hits.append((va, "bcc", t))
-        w = img[o:o + 2]
-        if w in (b"\x4e\xf9", b"\x4e\xb9") and mcfw.be32(img, o + 2) in inside:
-            hits.append((va, "jmp/jsr abs.l", mcfw.be32(img, o + 2)))
-        if w in (b"\x4e\xfa", b"\x4e\xba"):
-            t = va + 2 + int.from_bytes(img[o + 2:o + 4], "big", signed=True)
-            if t in inside: hits.append((va, "jmp/jsr (d16,pc)", t))
-    for a in inside:                                            # tables de sauts, callbacks
-        j = img.find(a.to_bytes(4, "big"))
-        while j >= 0:
-            hits.append((mcfw.off2va(j), "constante", a)); j = img.find(a.to_bytes(4, "big"), j + 1)
-    return hits
+Sur l'image patchée, les branchements internes au trou sont devenus des `nop` et ne donnent plus de faux positifs. Il
+en reste, car une donnée peut ressembler à un branchement : examiner chaque résultat.
 
-# trous de ms-multi-output (Cycles) : (site, octets écrasés)
-HOLES_MC6 = [(0x400027e8, 22), (0x400029e4, 10), (0x40002a06, 24), (0x40002a42, 10)]
-```
+Trous de ms-multi-output sur le Cycles (site, octets écrasés) : `(0x400027e8, 22)`, `(0x400029e4, 10)`,
+`(0x40002a06, 24)`, `(0x40002a42, 10)`.
+
+L'idée et l'outil d'origine viennent d'octamax ([`tools/hookcheck.py`](https://github.com/mxldyn/octamax)).
+*07/10/2026 : le listing Python qui figurait ici suivait de trop près ce fichier, publié sans licence ; il a été
+retiré, seule la méthode reste.*

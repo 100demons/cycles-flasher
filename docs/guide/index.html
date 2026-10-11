@@ -11,8 +11,8 @@
 <link rel="preconnect" href="https://fonts.googleapis.com">
 <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
 <link rel="stylesheet" href="https://fonts.googleapis.com/css2?family=Familjen+Grotesk:wght@400..700&family=Tiny5&display=swap">
-<link rel="stylesheet" href="../assets/site.css?v=2026-10-11-05">
-<link rel="stylesheet" href="../assets/guide.css?v=2026-10-11-05">
+<link rel="stylesheet" href="../assets/site.css?v=2026-10-11-09">
+<link rel="stylesheet" href="../assets/guide.css?v=2026-10-11-09">
 <script>try{var l=localStorage.getItem("mc-lang"),t=localStorage.getItem("mc-theme")}catch(e){}document.documentElement.lang=l||(/^fr\b/i.test(navigator.language||"")?"fr":"en");if(t)document.documentElement.setAttribute("data-theme",t)</script>
 </head>
 <body data-page="guide">
@@ -317,6 +317,7 @@
         <p class="note"><span data-l="en">In SMP, use Transfer for samples only and never accept an OS update from it. Install an OS only while Transfer is on CYC; every power-on starts on CYC.</span><span data-l="fr">En SMP, ne servez-vous de Transfer que pour les échantillons et n'acceptez jamais de mise à jour d'OS de sa part. N'installez un OS que lorsque Transfer est sur CYC ; chaque démarrage repart sur CYC.</span></p>
 
         <h3 id="sample-preview"><span data-l="en">Sample preview</span><span data-l="fr">Écoute des samples</span></h3>
+        <p class="by"><span data-l="en">Based on</span><span data-l="fr">D'après</span> <a href="https://github.com/TinyGregAudio/Model-TG" target="_blank" rel="noopener">Model-TG</a> <span data-l="en">by TinyGregAudio</span><span data-l="fr">de TinyGregAudio</span> · <span data-l="en">MIT license</span><span data-l="fr">licence MIT</span></p>
         <p><span data-l="en">An option of its own, the <b>Sample preview</b> row of the flasher, under Screen &amp; browsing (ticking it ticks Model-TG too). In the preset menu of a Sampler track, the track's pad plays the sample under the cursor, the way the original OS lets you hear a preset before you pick it.</span><span data-l="fr">Une option à part, la ligne <b>Écoute des samples</b> du flasher, sous Écran et navigation (la cocher coche aussi Model-TG). Dans le menu des presets d'une piste Sampler, le pad de la piste joue l'échantillon sous le curseur, comme l'OS d'origine fait écouter un preset avant de le choisir.</span></p>
         <ol>
           <li><span data-l="en">On a Sampler track, press <b>FUNC</b> + <b>MACHINES</b> (preset menu) and move the cursor onto a sample file. Nothing plays while you scroll, as with presets.</span><span data-l="fr">Sur une piste Sampler, appuyez sur <b>FUNC</b> + <b>MACHINES</b> (menu des presets) et placez le curseur sur un fichier d'échantillon. Rien ne joue pendant le défilement, comme pour les presets.</span></li>
@@ -801,12 +802,14 @@
         <h3><span data-l="en">Credits</span><span data-l="fr">Crédits</span></h3>
         <ul class="credits">
           <li><a href="https://github.com/scottmetoyer/ms-multi-output" target="_blank" rel="noopener">scottmetoyer/ms-multi-output</a>, <span data-l="en">the 6-channel USB audio mod</span><span data-l="fr">le mod audio USB 6 canaux</span></li>
-          <li><a href="https://github.com/TinyGregAudio/Model-TG" target="_blank" rel="noopener">TinyGregAudio/Model-TG</a>, <span data-l="en">the Sampler machine, resampling, retrig and master effects, slide trigs (MIT license)</span><span data-l="fr">la machine Sampler, le rééchantillonnage, le retrig et les effets master, les slide trigs (licence MIT)</span></li>
+          <li><a href="https://github.com/TinyGregAudio/Model-TG" target="_blank" rel="noopener">TinyGregAudio/Model-TG</a>, <span data-l="en">the Sampler machine, resampling, retrig and master effects, slide trigs, and a short piece of code reused by Sample preview (MIT license)</span><span data-l="fr">la machine Sampler, le rééchantillonnage, le retrig et les effets master, les slide trigs, et un court passage de code repris par l'écoute des samples (licence MIT)</span></li>
           <li><a href="https://github.com/pichenettes/eurorack" target="_blank" rel="noopener">pichenettes/eurorack</a>, <span data-l="en">Émilie Gillet's Braids code: the synthesis models of the MACRO machine (MIT license)</span><span data-l="fr">le code de Braids d'Émilie Gillet : les modèles de synthèse de la machine MACRO (licence MIT)</span></li>
           <li><a href="https://github.com/drumkilla/elektron-model-tweaks" target="_blank" rel="noopener">drumkilla/elektron-model-tweaks</a>, <span data-l="en">latching mute, trig preview, scrolling names, and the firmware toolkit the flasher is ported from</span><span data-l="fr">mute verrouillé, écoute d'un pas, noms qui défilent, et la boîte à outils firmware dont le flasher est un portage</span></li>
           <li><a href="https://github.com/mischa85/elektron-firmware-tool" target="_blank" rel="noopener">mischa85/elektron-firmware-tool</a>, <span data-l="en">the Elektron firmware container and its signature</span><span data-l="fr">le conteneur firmware Elektron et sa signature</span></li>
+          <li><a href="https://github.com/dagargo/elektroid" target="_blank" rel="noopener">dagargo/elektroid</a>, <span data-l="en">the Elektron Transfer update protocol behind the fast USB sending (GPL-3.0 license)</span><span data-l="fr">le protocole de mise à jour d'Elektron Transfer derrière l'envoi USB rapide (licence GPL-3.0)</span></li>
           <li><a href="https://github.com/mxldyn/octamax" target="_blank" rel="noopener">mxldyn/octamax</a>, <span data-l="en">the reverse-engineering method</span><span data-l="fr">la méthode de rétro-ingénierie</span></li>
         </ul>
+        <p><span data-l="en">Modded-Cycles is released under the <a href="https://github.com/18nelli18/Modded-Cycles/blob/main/LICENSE" target="_blank" rel="noopener">MIT license</a>. Third-party code keeps its own license and Elektron's firmware is not covered: see the <a href="https://github.com/18nelli18/Modded-Cycles/blob/main/THIRD-PARTY-NOTICES.md" target="_blank" rel="noopener">notices</a>.</span><span data-l="fr">Modded-Cycles est publié sous <a href="https://github.com/18nelli18/Modded-Cycles/blob/main/LICENSE" target="_blank" rel="noopener">licence MIT</a>. Le code tiers garde sa propre licence et le firmware d'Elektron n'est pas couvert : voir les <a href="https://github.com/18nelli18/Modded-Cycles/blob/main/THIRD-PARTY-NOTICES.md" target="_blank" rel="noopener">mentions</a>.</span></p>
       </section>
     </article>
   </div>
@@ -822,8 +825,8 @@
   </div>
 </footer>
 
-<script src="../assets/release.js?v=2026-10-11-05"></script>
-<script src="../assets/cycles.js?v=2026-10-11-05"></script>
-<script src="../assets/site.js?v=2026-10-11-05"></script>
+<script src="../assets/release.js?v=2026-10-11-09"></script>
+<script src="../assets/cycles.js?v=2026-10-11-09"></script>
+<script src="../assets/site.js?v=2026-10-11-09"></script>
 </body>
 </html>

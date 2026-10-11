@@ -15,8 +15,10 @@ boot_stub:
 #elif defined(APLIB)
 	/* MACRO avec les moteurs du Syntakt (notes/50) : la charge utile entiere (zeros compris) est rangee compressee,
 	 * au format aPLib d'Elektron (tools/mtlib/aplib.py, sans l'en-tete de 8 o), et decompressee ici de PAYLOAD_SRC
-	 * vers PAYLOAD_DST. Bits en attente dans d6 : (d6 & 0xff) == 0, lire un octet. Les registres que l'appelant
-	 * garde (d2..d7, a2) sont remis a la fin. */
+	 * vers PAYLOAD_DST. Ce decompresseur est ecrit d'apres depack() de tools/mtlib/aplib.py (drumkilla, licence MIT,
+	 * tools/mtlib/LICENSE), lui-meme d'apres aplib.c d'elektron-firmware-tool (Marcel Bierling, licence MIT,
+	 * tools/mtlib/LICENSE-elektron-firmware-tool). Bits en attente dans d6 : (d6 & 0xff) == 0, lire un octet. Les
+	 * registres que l'appelant garde (d2..d7, a2) sont remis a la fin. */
 	lea	-24(%sp), %sp
 	movem.l	%d2-%d6/%a2, (%sp)
 	lea	PAYLOAD_SRC, %a0

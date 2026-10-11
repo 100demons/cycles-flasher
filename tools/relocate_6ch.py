@@ -47,7 +47,8 @@ SRC = DEV / "10-6ch-multiout.json"
 DST = DEV / "11-6ch-usbup.json"
 BASE = 0x40000400                       # VA = offset dans la section 3 + BASE
 
-# Stubs de ms-multi-output relogés pour le Cycles : octets de notes/07 §1, recoupés ici
+# Stubs de ms-multi-output (Copyright (c) 2026 Scott Metoyer, licence MIT :
+# tweaks/model-cycles_OS1.13/LICENSE-ms-multi-output) relogés pour le Cycles : octets de notes/07 §1, recoupés ici
 # avec les écritures de 10-6ch-multiout.json. (nom, VA d'origine, octets, crochet, reprise)
 STUBS = [
     ("prime6", 0x4019b136,
