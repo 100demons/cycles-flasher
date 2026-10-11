@@ -1056,6 +1056,93 @@ window.MC_TWEAKS = {
    ]
   },
   {
+   "id": "midi-both",
+   "order": 50,
+   "name": "THRU qui envoie aussi le MIDI du Cycles",
+   "description": [
+    "Avec THR choisi dans CONFIG › MIDI › PORTS › OUT/THRU, le Cycles relaie toujours le MIDI reçu sur son MIDI IN et envoie aussi son horloge, ses notes et ses paramètres. OUT ne change pas, le menu non plus.",
+    "Les trois portes qui jetaient le MIDI généré en THR (0x4000154a, 0x4000156a, 0x40001590) reçoivent moveq #0,d0 au lieu de l'appel au réglage. Aucune place libre. Ne va pas avec midi-live-both.",
+    "D'AveyCole (https://github.com/AveyCole/Modded-Cycles, commit ba5f8bb), testé sur son Model:Cycles le 10/10/2026.",
+    "Généré par tools/gen_midi_thru.py, notes/53."
+   ],
+   "device": "Model:Cycles",
+   "os": "1.13",
+   "section": 3,
+   "conflicts": [
+    "midi-live-both"
+   ],
+   "writes": [
+    {
+     "off": 4426,
+     "old": "4eb940044df8",
+     "new": "70004e714e71"
+    },
+    {
+     "off": 4458,
+     "old": "4eb940044df8",
+     "new": "70004e714e71"
+    },
+    {
+     "off": 4496,
+     "old": "4eb940044df8",
+     "new": "70004e714e71"
+    }
+   ]
+  },
+  {
+   "id": "midi-live-both",
+   "order": 51,
+   "name": "THRU + MIDI du Cycles, commutable (FUNC + appui)",
+   "description": [
+    "Dans CONFIG › MIDI › PORTS, sur la ligne OUT/THRU qui affiche THR : FUNC + appui sur le potard LEVEL/DATA ajoute au relais l'envoi de l'horloge, des notes et des paramètres du Cycles, ou le retire. L'écran reste sur THR ; un appui sans FUNC passe en OUT comme à l'origine.",
+    "Valeur 2 du réglage 0x404e9b50 (0 OUT, 1 THR), écrite par la copie de l'OS 0x40044b88 ; seules les trois portes de sortie la distinguent de THR. Ne va pas avec midi-both.",
+    "D'AveyCole (https://github.com/AveyCole/Modded-Cycles, commit ba5f8bb), testé sur son Model:Cycles le 10/10/2026 avec ce code en 0x40167c50.",
+    "Code dans le masque de sprite 34x34 libéré 0x40192ba4 (tools/sprites.py) : 132 o. Généré par tools/gen_midi_thru.py, notes/53."
+   ],
+   "device": "Model:Cycles",
+   "os": "1.13",
+   "section": 3,
+   "conflicts": [
+    "midi-both"
+   ],
+   "symbols": {
+    "midi_key": "0x40192ba4",
+    "midi_gate": "0x40192c14"
+   },
+   "writes": [
+    {
+     "off": 4426,
+     "old": "4eb940044df8",
+     "new": "4eb940192c14"
+    },
+    {
+     "off": 4458,
+     "old": "4eb940044df8",
+     "new": "4eb940192c14"
+    },
+    {
+     "off": 4496,
+     "old": "4eb940044df8",
+     "new": "4eb940192c14"
+    },
+    {
+     "off": 217610,
+     "old": "4eb940044df84a8057c0710044802f4000044ef940044dc2",
+     "new": "4ef940192ba44e714e714e714e714e714e714e714e714e71"
+    },
+    {
+     "off": 704118,
+     "old": "40192ba4",
+     "new": "4016bfc8"
+    },
+    {
+     "off": 1648548,
+     "old": "ffffffffc0000000ffffffffc0000000ffffffffc0000000ffffffffc0000000ffffffffc0000000ffffffffc0000000ffffffffc0000000ffffffffc0000000ffffffffc0000000ffffffffc0000000ffffffffc0000000ffffffffc0000000ffffffffc0000000ffffffffc0000000ffffffffc0000000ffffffffc0000000ffffffff",
+     "new": "487800014eb94007faf4588f4a80670000484eb940044df84a806700003c1039404e9b500c0000026700000870026000000470014e56fffc1d40ffff48780001486effff4879404e9b504eb940044b884fef000c4e5e4e754eb940044df84a8057c0710044802f4000044ef940044dc21039404e9b500c000001670470004e7570014e75"
+    }
+   ]
+  },
+  {
    "id": "macro",
    "order": 25,
    "name": "Machine MACRO : les 47 modèles de synthèse de Braids (Émilie Gillet, MIT)",
@@ -98239,6 +98326,48 @@ window.MC_TWEAKS = {
      "id": "trigless-dim",
      "label": null
     }
+   ]
+  },
+  {
+   "id": "midi-both",
+   "label": "MIDI OUT pendant THRU",
+   "desc": "Avec THR choisi dans CONFIG > MIDI > PORTS > OUT/THRU, le Cycles relaie le MIDI recu et envoie aussi son horloge, ses notes et ses parametres. OUT ne change pas, le menu non plus.",
+   "status": "tested",
+   "credit": {
+    "kind": "by",
+    "who": "AveyCole",
+    "repo": "AveyCole/Modded-Cycles"
+   },
+   "cat": "io",
+   "variants": [
+    {
+     "id": "midi-both",
+     "label": null
+    }
+   ],
+   "excludes": [
+    "midi-live-both"
+   ]
+  },
+  {
+   "id": "midi-live-both",
+   "label": "Basculer MIDI OUT + THRU en direct",
+   "desc": "Sur la ligne OUT/THRU qui affiche THR, FUNC + appui sur le potard LEVEL/DATA ajoute au relais l'envoi de l'horloge, des notes et des parametres du Cycles, ou le retire. L'ecran reste sur THR.",
+   "status": "tested",
+   "credit": {
+    "kind": "by",
+    "who": "AveyCole",
+    "repo": "AveyCole/Modded-Cycles"
+   },
+   "cat": "io",
+   "variants": [
+    {
+     "id": "midi-live-both",
+     "label": null
+    }
+   ],
+   "excludes": [
+    "midi-both"
    ]
   },
   {
