@@ -42,10 +42,9 @@ const REF_MAINOS = {
   "trigless-dim": "ff47b71399d7ab72a53f73e2e0ff0f5759e4ef20fe1da1780eb0c28e85ed4631",
   "midi-both": "5d0755ef0bd34617bcd5adbb54f09c77cd066e7439d26cc460bbadb0090bb75f",
   "midi-live-both": "ca439a48cb8d818c8c09a8bfc8fa1ac391ffa5f9263e971db39ff602afce6742",
-  "macro": "beb70b58001c12da348427b5f46f33567a6d6c2178cf7f4b7902741757e83e33",
-  "va": "5e7ec9e18a2ad9ec0dfc5804c17be46706264cd30b31ecd54f551a81166259cc",
+  "macro": "f39223c286166b1d018d215b36e3fbd3dedaba9ed05681a2784c407c92f6d7c6",
   "chord-keys": "901675f5b8291f3b91d134208236e83431d6a079c73c2d5f1e4e54ebc334321f",
-  "model-tg+generate": "08cddfd5961958b96cf24730ccdf68ef82cd3b0d5059c580a6ee6f5c8f5e85d2",
+  "track-filter": "f5db01334779499fc0932cfdc4a23c899319d333fed98fc5169972080b662967",
   "lfo-plus": "61c48e85f74bca0387871df4bd82cd8bfa770759fbfab9dc629ec62e4b9dd26c",
   "syntakt-sd": "6fc3e84db5e7a0203d1b838adc908ea555bc070f8214e8720e2bea3ad158dfde",
   "syntakt-cp": "e9e3a8c7aa438a00cc028574b78dac33a6b7a44cdf98623eaa1edcf4668ac1ee",
@@ -93,10 +92,9 @@ const REF_MAINOS = {
   "6ch-usbup+trigless-dim": "f137fab012bb193595bdfa3171a86d10f857643c28a349b46ae049e69f2fb27c",
   "6ch-usbup+midi-both": "efc0f1c328f8b65eedd45bc20dd68b513eb091ea1c67d8d3fba0d0e60081b17a",
   "6ch-usbup+midi-live-both": "09f5b51061b2d387c897824984618f7f8b92d2d5028750115b3f6cb3eb2748dc",
-  "6ch-usbup+macro": "32932ae6eca06406f1c954368dc3465cf83e1026128b39ebfc7e746e9e01023f",
-  "6ch-usbup+va": "cbc45da6ae0ce2accb6b7adf6143f851d89e84975f422a0e461da1171d444953",
+  "6ch-usbup+macro": "bf83bbf3c61495114e427dd70f46fb84270617476afd5309456adb4c9fe21bc0",
   "6ch-usbup+chord-keys": "d6e43f0ca6a8df953df7a12da7458c70552f1b3a8de1bb39213f0c52168f0352",
-  "6ch-usbup+model-tg+generate": "e8edc3c835271da2d69b294bde3693a2980166007dda803f843b2f190a44d5c2",
+  "6ch-usbup+track-filter": "340fb353bacb25fc2923f836b7d685a704c710e43988258cdc2d21f42b997016",
   "6ch-usbup+lfo-plus": "4d753f73d83f71f5ac0a5ecb5c3627337b4ba682a03a15df24ce2fdea79ee19c",
   "6ch-usbup+syntakt-sd": "ab39c7e2e487831ecc54edcc3ae4c5d8e5171ebd2a32de64248f7fb270d83edd",
   "6ch-usbup+syntakt-cp": "5e8441691c7de47566defb975c4e6b6db396218c5375fa70807eef72888d573b",
@@ -138,8 +136,7 @@ const REF_MAINOS = {
   "model-tg+trigless-dim": "601be6982e9f0211ef4afc771cd69738bbe1045679ca3456349f66829e1be4bc",
   "model-tg+midi-both": "e5959d5383f207e5e44a9b9c4b5247aaa8a77eccce588df159c1d4eefa471101",
   "model-tg+midi-live-both": "29e4b13b5cf8a995c163ddfd8040c7e41567f687fde27bd6985d3bf2042ca048",
-  "model-tg-st+macro-tg": "d738fafaa86bbac86e328e6f0b70dd9688c1d9c3b05a423c957751c74abbd8d8",
-  "model-tg-st+va-tg": "af009dd2da9e70e95bb749b7363d8d21d8eeb558c839bbae387301a00d827359",
+  "model-tg-st+macro-tg": "606b7e5673bd47d4b9bfa7d2816e4c29bbe9b42883108950b0a42067eb4f94be",
   "model-tg+lfo-plus": "32a8bbfe233fb0440f9ef622b9ee5ede0eaf7e8258d63c10aa5fcc70aad07a61",
   "model-tg-st+syntakt-tg-sd": "f09ab68d48b7cfb58604ce6dc31f0998def25390e0a02aa83ecd304754ef8321",
   "model-tg-st+syntakt-tg-cp": "ff77c45ed61905291ae2e9526cccbc439d04b742a012b863ad7c850ba1cf37e2",
@@ -181,9 +178,7 @@ const REF_MAINOS = {
   "model-tg+sample-preview+trigless-dim": "55ff76730e1fec967d3ae43b8fdf3ecedfdf8ccc8783e51c70012a3059b197f5",
   "model-tg+sample-preview+midi-both": "a0f8f33c03cd40609bab1474cf805e582256372ca506f654a6cb03695ce8dcaf",
   "model-tg+sample-preview+midi-live-both": "8db403acf5760e8071ead00213c2436825ecdaa11a8980af9145ccf9a2946c60",
-  "model-tg-st+sample-preview-st+macro-tg": "a371d4a3a7df7e5d8b8078da4cdd8a0b34efee558b52f7ecb78811c21e6f98bd",
-  "model-tg-st+sample-preview-st+va-tg": "52105250b90ef1df2817a1268df7ba8828d9f63fe4d4c5c14dc85d0ff9d0fe7d",
-  "model-tg+sample-preview+generate": "cb999ba935ea36de7bb00a3d00ebae6fd7696f821d77d132d79826c2ede80a16",
+  "model-tg-st+sample-preview-st+macro-tg": "9da219fbb5bccd19e496e880c00af5192d08d2d2a11995f209db09f9697dc9f4",
   "model-tg+sample-preview+lfo-plus": "9318f0ea4bd118b7c69bb732b7db5dafcac1f6d28ee1b9753901843e52bd3663",
   "model-tg-st+sample-preview-st+syntakt-tg-sd": "2557d21b5d2f20cdd909e727ae458fa71ce59ed864ab701c43d1f86730c31d17",
   "model-tg-st+sample-preview-st+syntakt-tg-cp": "4bd58aa6815923c15fefa6fd0972ba408af31d3b5c9aeaa698dde8823fb11ae6",
@@ -227,9 +222,9 @@ const REF_MAINOS = {
   "latching-mute+trigless-dim": "8aa571483a407cf329a819e5eff10c4ab438517fcb19a2bec7274dced9d8a228",
   "latching-mute+midi-both": "6aba63354d860af03ae58b1326d32822a4944a4db06d5a63e3244fdc1383565f",
   "latching-mute+midi-live-both": "ceb6a700bf186703de284d75eb1a4ce8ab1f0383ad0d43d9391f96db73798b62",
-  "latching-mute+macro": "e2d628d6cc5a271eab998dd501d3c127ce82b7a729d07d69f6653c33bfbf852f",
-  "latching-mute+va": "bf4608517eb9135222eb6e967c13791ea6db445693669dd121e4a013d8a5c9c1",
+  "latching-mute+macro": "858a2864b91c1d82c4bbc011ad744bacc16318a87a3836ee30a44acb09862499",
   "latching-mute+chord-keys": "ff8889bd827c0b9485ef46a17ba5f94afebf8637a9f20dff1294c35fff098bbc",
+  "latching-mute+track-filter": "0f1b518b047535970025f0ebdf924400e7a925addcab76c03608cff217f77a42",
   "latching-mute+lfo-plus": "82193e0be0ab70607978afb9ffc7dfba9b89eb9e24eb45273976c4af6741d857",
   "latching-mute+syntakt-sd": "3f2d760809f9f92b09fb7fc1dc2c8142f388b31ecca752cafbe54b5c29319fbb",
   "latching-mute+syntakt-cp": "4934fafbfd89d4f2d7e8853662c8625fcc36d9eff549c619eda150635f8bec6a",
@@ -272,9 +267,9 @@ const REF_MAINOS = {
   "trig-preview+trigless-dim": "34fc78630d010c112962003c7e6f2959b35f942b17a7be2501b582a61b2bc3d1",
   "trig-preview+midi-both": "96d068fab5495867f7ecf2fae11383dc825c0bf92480a881863d978a21997bb8",
   "trig-preview+midi-live-both": "ae30fb293bcfb966cd302ac1d0a2d8fd3da5ef9a02aa5b95b7e481573af42d37",
-  "trig-preview+macro": "f3f961ea371af658e334f532f2cd6e1a5adc59e11e7ef826860e0367ef5120fa",
-  "trig-preview+va": "1bba51d3049a4775b44c8fa21b8ad25d6cb6552f820223936a58361e20809d50",
+  "trig-preview+macro": "0af0b5d8c84b67d648e1e7a52ba3aeabd7118659c5387aefb6240dffb2ed30bc",
   "trig-preview+chord-keys": "f4f19229ae1aa8e463373140569f986160e5cbcee01af82144a960baa299bf83",
+  "trig-preview+track-filter": "cb71266baa397a06e4d5f14654845a60191821dc7ccbf9390f8b994599033b9c",
   "trig-preview+lfo-plus": "e5081eec0eb66f34763505657b54be99e754261226f4725fa935522d91e91238",
   "trig-preview+syntakt-sd": "cbaa9dba68fbee282b11b4ce0eef1d98dfa2473ff9beb0157e0086e04046462c",
   "trig-preview+syntakt-cp": "dfc2f9890fa75a9dc438a39fb0bd29bdd71e9bdd9e0c0c46d504cc15054bfc3f",
@@ -316,9 +311,9 @@ const REF_MAINOS = {
   "browser-scroll+trigless-dim": "fdcb22c31ff565adc593c3f9f0a502fb681451214ed685ff1c369a1f8a0b8248",
   "browser-scroll+midi-both": "bf5bacceafb957b4744232b85a1bfd74d317693f1cb83d03627b22632035fa8e",
   "browser-scroll+midi-live-both": "e4d0e26c293aae494fb8aa86cb623b733bd5d9a682c82f5e066bd65f2de7c7c2",
-  "browser-scroll+macro": "8cea30e7cb079ee969bda51d77af37949ff203e5ac68312ef4606236ca3d6a6c",
-  "browser-scroll+va": "950698cfc7fe2c90f4f56fb26ca5b1e1223d0083e92814480ff29e8e19cbe9b5",
+  "browser-scroll+macro": "ab7cc66d917e30df996c933de63096ba307232dbc6ad4c40bc1548e1c0f2c9ee",
   "browser-scroll+chord-keys": "5b592bdcec5ed3053d6ae1a839495780a7ff71e1cee8aa703f0f70088085f069",
+  "browser-scroll+track-filter": "06b5a31e5ec1063416a0144d062f5745ab2d7dd91a5bdfcc93b7f179a4830471",
   "browser-scroll+lfo-plus": "4f5dde625c75a9ed5de3884bb5f83f684a37f016b79b37cc230d02bc0e1404c5",
   "browser-scroll+syntakt-sd": "b8f0890b988420e274a8ce513f8d3ec2de667fedbd666477e598758274a161f2",
   "browser-scroll+syntakt-cp": "efa1a490d081f60b7db4b93f73fdd11cfc4d8021cb483976831a83f6f73576ed",
@@ -359,10 +354,9 @@ const REF_MAINOS = {
   "trig-hold+trigless-dim": "8a5e8c7507f75b18d4a667fdf3ad31183fb25a0abba34a2511cd165bb3fac55c",
   "trig-hold+midi-both": "6e4a6a26678cbc6667c8d886c893c9f9d0dd7e52b15055e13ab6b0069fe79487",
   "trig-hold+midi-live-both": "1eacd420b9ccd5d2e291b14f63ad08d26daf61f7851dceb8b91eaa6a0a3a9ad2",
-  "trig-hold+macro": "a9c0bce8b15db38dd200d8caf19ccf79a8eb3e28a228a0f7dce2756d51108241",
-  "trig-hold+va": "909d2d8d56cafd62da8c671712ce59ca0d4c5a2582ab6271b8609a569ad08c49",
+  "trig-hold+macro": "d1c278c60a1cfa899a9d9c54b36fa314b72ae9f75a86d3b0406a3eaf4c954742",
   "trig-hold+chord-keys": "cb2818ccecf7360d92525b5570d5adffce0639e23454cdca9d68d67328accdf5",
-  "model-tg+trig-hold+generate": "fd007c5cf77cb2d9b807db0d3c4b3b1bdc99bb59d9b7502f7e154aea6cdbc823",
+  "trig-hold+track-filter": "148ba4d3bb80d593424762fb460f068c38ccec161f10108d6114216dbac7fead",
   "trig-hold+lfo-plus": "01fb9049d916c44047b36465dd0babe1dcc8ac3324e4dad00ffea44e1e934c90",
   "trig-hold+syntakt-sd": "08b91f801c205c30789463b2729e213b01af3c46c133b443611e6165d4703c8f",
   "trig-hold+syntakt-cp": "db66ed33a127c6a91bdaeb88b88f3d8f17c77793625f74f7bf11fb73185c7c06",
@@ -402,10 +396,9 @@ const REF_MAINOS = {
   "arp+trigless-dim": "08ca36945e0ba5647b39e854f607e7e7ee4eea239ef787abd6fd91ceeda2d55b",
   "arp+midi-both": "cfa59aa15a282f37b171416818f5fee24b653b2d7e05b27c133b8c908bc8b8bb",
   "arp+midi-live-both": "45a7adb7d6048ce331e83e742caad0eaf273f3c6715c03e14563e64ac7c8e4ad",
-  "arp+macro": "296bf61018cb2d0f2d4beb1576874992f02415db602355d6b38dcaec6243de93",
-  "arp+va": "8c45c7c67f1001ca1bfdcffbe1b553a6cf9e8f8f91dab6414ec75f22af5be13f",
+  "arp+macro": "9c4fe7e353456646454062b548b1f0d52690301ca794493ac019975aa1e4e36b",
   "arp+chord-keys": "adea870f07943ff0c0c89fd185c8a4e8c3729d8090b5fdbc9bb283e8d332bf41",
-  "model-tg+arp+generate": "36f9a28f2732c7befd3af6e0eb19618b1cdeb9816ba6daf110fd89e3e9db586b",
+  "arp+track-filter": "dbf3f7e4149d0d4f5d9697e395cd8d97810430cb4c9e842baf5694f05165db19",
   "arp+lfo-plus": "0fda4fd64b6c0427f80a9fac5f93d194fb3ebde907197c274bf96a47281f46f3",
   "arp+syntakt-sd": "fc2d1debe3b59d5f52740e840f553fb6645057dbd8cbb614ac2cb598332011ac",
   "arp+syntakt-cp": "0a7f14e314555266dc4545aa7593fea9ed08e3e09eab2e77ac3e4a1c9237f6bf",
@@ -444,10 +437,9 @@ const REF_MAINOS = {
   "tempo-max+trigless-dim": "d2f522b685ec4cc0e976959bf179998293e058e1331ac07222c1a219e9a60e42",
   "tempo-max+midi-both": "9d27f7129bba42666c83c5d9446088addcf57d970e1913c7e6937f0acf9c7e66",
   "tempo-max+midi-live-both": "9cd9151939f5524560b6f30352160f3b7d65482958d229dc5565b44dd52a31ae",
-  "tempo-max+macro": "d328fca9a61962370f5f2e632b0de0045a12b1076ab36e843c48c288af455c41",
-  "tempo-max+va": "acf6a96f1992015e8866a119d2437ee38e0998f2a92436db1b3877ae28a4c8ee",
+  "tempo-max+macro": "47911a43b305dfeb047704349caba3990665ea920a29c90fbda3502be5f1ba1b",
   "tempo-max+chord-keys": "65b043025fa6c3d4ac50ae9c231aba98a0dc67e70a1e376e86529a6e21d6d9a8",
-  "model-tg+tempo-max+generate": "ccedb83de1f5667902f748dd3b6192a03eb1ef0d08f6d12e02ad3abd51314e96",
+  "tempo-max+track-filter": "1245bf05b121ae58006322269cf665a51188f4ace622e82daf8df75928bf6eb1",
   "tempo-max+lfo-plus": "af577ba9f81b069598a23ae599f9dc1a5174c41db486dc325ca95d3a77d0e1fd",
   "tempo-max+syntakt-sd": "c5779f0972acda3d188be7d2628bffcdb14e2fe0e3586bc38ff45495923497af",
   "tempo-max+syntakt-cp": "5b2e37eb0a84b47a4c37c3ccc573dcc4f605a50271e92a6781bf80f5f4dc6f16",
@@ -485,10 +477,9 @@ const REF_MAINOS = {
   "boot-anim+trigless-dim": "12f4bd1f0c6156ca2338cdf5aff0ad79067f4132bf088197f3e4178f82316b1a",
   "boot-anim+midi-both": "650073f8e79489f7e66f3672770be7a291a641ec87fdfde2c7b5498f397f6068",
   "boot-anim+midi-live-both": "45f1a95306f023b018bcc4a0a0d5605676bfbfc9d20cccfaf19579273756a039",
-  "boot-anim+macro": "d5ee2dc42e6e2f0503b48675550380f1f47a6a2b03954f23b9cd9d67dbd65e71",
-  "boot-anim+va": "b03389deeecfed2e29e2b3b65f188f5fd68bc59c80d2029adeb3d2bdb5d5ba85",
+  "boot-anim+macro": "71f6fe06d415341539bceb423af6a5b8bda2bd1f2d7b11ada5b8576e6852f3d3",
   "boot-anim+chord-keys": "79a5170bee00365835c015bf821eaf24f78f9be0f2aca7d689289b3fe4935381",
-  "model-tg+boot-anim+generate": "3883f95f5aac11fdbade5f05b6a5b08fbb8cba8d23be2c846416562479e2cd33",
+  "boot-anim+track-filter": "cd9a1a76374d0385f107b3c72f1f7f777212ffb4a76b54f8ef08cba279f22a36",
   "boot-anim+lfo-plus": "aca0272eacc296becbf3b592cda1fde8f2c6423a284ecd4999994bad973ed889",
   "boot-anim+syntakt-sd": "04ad309c9a86f88712a5f4f272fdce1d5400387f0e94d97923b1be512cd58cca",
   "boot-anim+syntakt-cp": "f89ffbf03bc5ad76c7cc372175303eb51f59b2203c595676ba35852c5da823ee",
@@ -525,10 +516,9 @@ const REF_MAINOS = {
   "multiline-browser+trigless-dim": "7e9465da3bab107e9852fbd2fd66c66fa440b6f5478d3553f002a01ce090160c",
   "multiline-browser+midi-both": "fa7fba091de71ac5a775c3eb4c0bcb4b24c138936d05f06e9e3a6061732ef70a",
   "multiline-browser+midi-live-both": "284bc1a2bbb906797a2468302d9e605cf359b5b69f16ac2a352c4f205acacdf1",
-  "multiline-browser+macro": "806f35a33ec516a296e63c4db4e89e551d1f7d744872692fe05dc7c8d9b00097",
-  "multiline-browser+va": "3e173ff73911d1f4b9fa5def81adedac9c7ab89b4957197193cd2c6e9ac973a0",
+  "multiline-browser+macro": "9b1f87c1faa1bf573f95eab503a3648dffb41e76185eea222896c88858209ffb",
   "multiline-browser+chord-keys": "0f8fa5ceea9cba3f0f076749edb8e81743151cc6a4e31862d7efdf6bfa66ce7f",
-  "model-tg+multiline-browser+generate": "94c77efeb09f94ad1b10fb8b3e706806b5a0a1eec167a8a23558bdf69aa3a95d",
+  "multiline-browser+track-filter": "1d1686c6f8fb31979922e06672891580ead0060b01bbd6555a11899fe1b29e63",
   "multiline-browser+lfo-plus": "4dae353c5de0947a705d5f0f0ac83595a690442056aa315eb40e847c655e184d",
   "multiline-browser+syntakt-sd": "9f763f090194171bd0e0be8d164bf6ae46a65a927b9c4ff86c03568d1f6a95a3",
   "multiline-browser+syntakt-cp": "a437bbca19dc7ee5d105e5e6d13ec3dca3450b7cb88ffc33929179980780874d",
@@ -564,10 +554,9 @@ const REF_MAINOS = {
   "level-pan-values+trigless-dim": "c4a547df87f681e27e5f7d0b04d9e08d601017577f810e2dced51eb4a68797e6",
   "level-pan-values+midi-both": "9174ba0191b59ec22abb652158332da20571e02797a6a3cb128df6193a2a18db",
   "level-pan-values+midi-live-both": "4cda22bc231353a3dfada94fbb1a8cdd9c594836180fa948a4747683d3252d79",
-  "level-pan-values+macro": "63c6204a7480e3b69f4c4c48483f186ca716c209fe3c3795227b34dd7a7b9d14",
-  "level-pan-values+va": "3d6253555c194d93c015afa84f04b5e0700810a184583636a75fbd8df395fe20",
+  "level-pan-values+macro": "924ab76eda5b2f6e78cbaffecdd8eaaabb3b295de3e11c6b1826f61e5f9ec8eb",
   "level-pan-values+chord-keys": "a09b64fc2b82471286c89c4d1d5019885110b7ac6efa539ee9daf893ffa22e53",
-  "model-tg+level-pan-values+generate": "be1c572ec595b1dde5cb7cfc5e1e2b3f117c558f311575f1d0965330dd4b9b55",
+  "level-pan-values+track-filter": "10af2885a7706cd3c52796598192cf06ca8ce25cdcf3381eb2617c207b699bc8",
   "level-pan-values+lfo-plus": "95e26e80af45c0efa7b467d2cd033a57c6bdb9a54adaf399a9993aaf35259bb4",
   "level-pan-values+syntakt-sd": "62fb94de84c9b8dae82c029cb218432cc9cb62390dcc05086acfa0fe7203a681",
   "level-pan-values+syntakt-cp": "545ffda1e7b936fe3ead82a58bd408685eda4a4e3e1a947c4dccfb9313017212",
@@ -602,10 +591,9 @@ const REF_MAINOS = {
   "level-pan-values+syntakt-sd-cp-toy-bits-swarm": "1eb3742a78102b34da052b9b02651821ab04d9f675a1b4ab4c5a7da76dba07df",
   "trigless-dim+midi-both": "69f12f13d94fda3fff0d30b4e055525cb99d9b15163484df4faf023393644f56",
   "trigless-dim+midi-live-both": "3b45e1448c42a0d5d1014ffed790909f45d84934f7f16c4869a987df6edd1966",
-  "trigless-dim+macro": "fd1f19b063e0704507b98403c32424d2f9611096975610ff2d0b88b52c5ab90f",
-  "trigless-dim+va": "160c684d994d03e603e6e7465ed6813c257f536718fa603f08ae0e64f3bf347a",
+  "trigless-dim+macro": "1c5adcb5c785a2e05755f351d0009b4e697d7de21b81d3d7fff3d1cc0e7c72d8",
   "trigless-dim+chord-keys": "a56a6b6539a4547029ec19b1e0f9802c41f795a3aa497d40a91ce0cfa14e9be2",
-  "model-tg+trigless-dim+generate": "78699b3a160df9745197cf1b3359b5206d0e852793146b48d904825989c76ac4",
+  "trigless-dim+track-filter": "c4de0f801509f17a5b3ee798e986b9b54109c8c58e33cfc0342385fa2323348f",
   "trigless-dim+lfo-plus": "3f10b7c0ef34546e90bc1a8c9f42bbab4e3371c04b4edbfec3117a03226e7c3d",
   "trigless-dim+syntakt-sd": "94048dbdf9bc773fc7313a2eab3785955d544b48ad92a2e5dc6c21d1f2b6113a",
   "trigless-dim+syntakt-cp": "d902c7115ed72729e7b95efcc4b15c46ee543da98c450c681afc85820ff35fab",
@@ -638,10 +626,9 @@ const REF_MAINOS = {
   "trigless-dim+syntakt-sd-toy-bits-swarm": "e75742666d4949651019425f959255a72bb31dde36c300024d154a13588eb861",
   "trigless-dim+syntakt-cp-toy-bits-swarm": "beabcf402f28fcf94c0c6af970f2876121415187c0169bc9e0bbd49b4a0de594",
   "trigless-dim+syntakt-sd-cp-toy-bits-swarm": "bba08bebf0f1cd5532a91d5bb439ab17022657c9e0b2f18fc96b93675a12e977",
-  "midi-both+macro": "753beec7b5504bc9e212ab2d06dff2d3a00466823ce78f49cf49f89f04913293",
-  "midi-both+va": "3e9cc32985196c28f173a5071cf2c4bb9d2f450e1c1dde7cb37284a2dde1df4b",
+  "midi-both+macro": "de14d7362cb0cd263e13e09e49f457207a5bff53da81db9db461b5436ce2d294",
   "midi-both+chord-keys": "43318adf4c52098501f0099f8b4c6afce74b5d996f0c154030aeeb1e95aa2fc8",
-  "model-tg+midi-both+generate": "3123378496472f19eee46b65b1dbdf51853ab832b4ea41dd2f5c8febdf2c175d",
+  "midi-both+track-filter": "ed058941c02bf2b15c735b41de4a3076fef106d8ff80801c7eb80ce9b9bb9868",
   "midi-both+lfo-plus": "2217cf6482ed28d94c01b7b8d9df36fbab588060fef3c97bb0182fa912674bd9",
   "midi-both+syntakt-sd": "b1e311e88ffc644a12f8e98973d369afa444aabb62c276c6e1233e60da216292",
   "midi-both+syntakt-cp": "90fbda089fa5f2a85825a00fb7723911c95f31c74ce2e3d878581d2e78ccbbf6",
@@ -674,10 +661,9 @@ const REF_MAINOS = {
   "midi-both+syntakt-sd-toy-bits-swarm": "4b969250a10d5e42c8bd3dae259238928146bae1901a626a68840dd063a6da9e",
   "midi-both+syntakt-cp-toy-bits-swarm": "9a13c9bd5218db2a3a504cba5764f4367f06336fb3eeb43470f1d4f516e3d940",
   "midi-both+syntakt-sd-cp-toy-bits-swarm": "2bd8b8ef426c67cd7b1e2823a46e93cc880148dc00e20624ab475a0faa2bf9f8",
-  "midi-live-both+macro": "85a6b146cb0d2cb2ae5c298b12562d511d479804c78c2fe0cae65c780897ca4f",
-  "midi-live-both+va": "b63efe53ec86e5aef12861c9815355dcbe57828121e9b4d59a128c5d88c7910d",
+  "midi-live-both+macro": "8ae86191dc75bce8a74148712edd95bd0fb2220016b56264c9284453ca0fc7d0",
   "midi-live-both+chord-keys": "55b949e67f4da751e16e1268bec3ee36de0e19e32f9961ddab6ccca8097609c3",
-  "model-tg+midi-live-both+generate": "8a1b83b5e7e5e9ce7c71f47c94678a0df7ac9b665210dd9f9ae966898cea7ab5",
+  "midi-live-both+track-filter": "c4fbf53dde7e7e7cba9b4f784b9d015592557cc50a7deb7dfdddfa6cecb77ea0",
   "midi-live-both+lfo-plus": "e316282af08e2be1cf3d7ae352435fb7959573091a8f657c35311ba8cff3ffa6",
   "midi-live-both+syntakt-sd": "86d175bbf31cfb1cc323049315bba1fba0d62398cf965ae0f32c1d9353e4f22b",
   "midi-live-both+syntakt-cp": "61d83d02a586fe3173cf1bdbe2926100e8b4f24c06b3c5b05b9172885f8e20c0",
@@ -710,43 +696,41 @@ const REF_MAINOS = {
   "midi-live-both+syntakt-sd-toy-bits-swarm": "7678b4108fe13f04c8cc9ec25d1d1cc5c25e3055295ead0d3fedb5985104381a",
   "midi-live-both+syntakt-cp-toy-bits-swarm": "f4daa8988bf8c2c54130846dc7d345326ce6db46695f47d604643c1cac6d35fc",
   "midi-live-both+syntakt-sd-cp-toy-bits-swarm": "cad38f5fced057e2bf3083f1e7dd4cd36cac5bf8ec31291e9587ae5f4f710cef",
-  "macro+chord-keys": "80a12bae5cbd3a541d3e093223fe5305684193063e2d3be8cee9d1858e805133",
-  "model-tg-st+macro-tg+generate-st": "e2b460623cbe5eb45dedd5b1b630658bf27949cc4c45e7dcee7f2daf897efb1c",
-  "macro+lfo-plus": "6f0cf34bf14a2ee2432ede5c022021a93bd3472adecbd64ec37718a4c641e611",
-  "syntakt-sd-macro": "5c096030a7035c766d0119e5f8053214e299c7dac9d28db8c6aa9b41df465f45",
-  "syntakt-cp-macro": "50d104248290f9bbedfa68b763b8a0d5aa482a60ff04e043eae148c1aa397be3",
-  "syntakt-toy-macro": "9842dd49da56a09718e4e0fbdfa300293e06ace5623e9a0af115bd1d82ec8e68",
-  "syntakt-bits-macro": "15af44b3dfd6c2dfab8d6d27254df3499584545b6a7f06cb00f5db81036dd786",
-  "syntakt-swarm-macro": "9157b435b56c4f5e626bf4ef9d4196ef5e75dcf57bb4bc9d1e5dd46fe882e0b3",
-  "syntakt-sd-cp-macro": "f41db6234e085a26b082bf5170a39cd8a4d34dc27f84ea35aadecdfaa5a366d4",
-  "syntakt-sd-toy-macro": "33b2f8660033f3327eadd56bb73258c0d01b0e3f3d7a5837425346f499d59bc6",
-  "syntakt-sd-bits-macro": "a57eb3ca47e8c7f3e75891d62764d52aae0ecc2a5b02c317f1a72bd969c355ae",
-  "syntakt-sd-swarm-macro": "f1f317cca06b15811261372991821d89852707446554883842de51769a2ac907",
-  "syntakt-cp-toy-macro": "924926e4d19b5a0b1ce3a5c29570f43eb0efce6ca4674570a58a3fb3b04f7953",
-  "syntakt-cp-bits-macro": "cf20f666b36b365ead250e992a1f04a4b643f371bf058d5e9dd53f5c89ec0935",
-  "syntakt-cp-swarm-macro": "e74d5eaabdac12e4d066db94a4e8a7ab191a5d554022c0e5019f84665ea2c48c",
-  "syntakt-toy-bits-macro": "48ee0b1ff4d44795e2bb12dce5017f18357cc27628db954fdd379dcdb6b2544e",
-  "syntakt-toy-swarm-macro": "4e0a0fcea25e12553907bd2f53770087d28c8f3eab64f2d93e7811aa4b3295a7",
-  "syntakt-bits-swarm-macro": "d06edd2c197e598d224bcafc6a378817b8a56cad99ae49c165eb75f6e5c15c12",
-  "syntakt-sd-cp-toy-macro": "91368affdfb95ffa4f6d30fac0cd92de350b626dd488bf435e1f14305914e326",
-  "syntakt-sd-cp-bits-macro": "5d046ef0263da80e44f81c11fa2fcd00c730a5d5a23c992ce01a5574c45ad024",
-  "syntakt-sd-cp-swarm-macro": "137a346fc6f5f2310ea2dcfc95a7cce2738c1ee21262fd1fd65b5f0249a602df",
-  "syntakt-sd-toy-bits-macro": "3409a59da96070d947f5a19b5288a6d5d95cc571e494c9bafcb0860684828054",
-  "syntakt-sd-toy-swarm-macro": "e7b7fecdd859dd4650a61cbdac1fcddcca1255bc98ac3144c4393cebd64c3e9a",
-  "syntakt-sd-bits-swarm-macro": "1d30f617164fdcd98c258a6aad88e5eb0cefea9e249642a2183af7f228e76353",
-  "syntakt-cp-toy-bits-macro": "8c452f4abdd7e97e62707124dbe773517d9d97667702552edb5fc59eb390bf3d",
-  "syntakt-cp-toy-swarm-macro": "84b050ffb573313fcd4c78e0e5859fd8156783bcacf639e26b33e53801062cd2",
-  "syntakt-cp-bits-swarm-macro": "69ddb5a46ba7908e86c97f07b1443533b6c2cd595a8e298b1c47bb3de262781f",
-  "syntakt-toy-bits-swarm-macro": "8c884d9a73a3f22279fc8e233b6f7b606a471bfc388152483cd43d7a7b263e2d",
-  "syntakt-sd-cp-toy-bits-macro": "766f4cfda35288d186676e6ec6aff173e81f47972d42406ec8a529ec1425ff64",
-  "syntakt-sd-cp-toy-swarm-macro": "0e14e0ce7a8bb9283a087d1f1be4d7ebdbd069845b73c2e50ef317deac4c426f",
-  "syntakt-sd-cp-bits-swarm-macro": "dc5b6d8acde9d9b243bbfa583d53c555755c1afbbe8b64da84466ab075d1c13b",
-  "syntakt-sd-toy-bits-swarm-macro": "c82690fa78e7206f12da58aa75cf9d7a8cc0cb82d07c0904f99b4819583f9209",
-  "syntakt-cp-toy-bits-swarm-macro": "6412d6ace29b1f8d4f555ffed1ee5fcd97594e58e73de526f1efc9e47e22f7b1",
-  "syntakt-sd-cp-toy-bits-swarm-macro": "f8be2f118bfb7f7b3033a9e6fa2e3ce9b146e428cf8a815f98d710dc1987b76b",
-  "va+chord-keys": "fedacb45a5f0ebffd3da5b7fbc942abd3d4391ee4b79801e61381f56647fd4aa",
-  "model-tg-st+va-tg+generate-st": "bc106cf045a8cac6d0fde5d5a6e870a4ebda1bddce0598622e944772e592ca48",
-  "va+lfo-plus": "d5f7f8884da6347df72d2ed1cc102f83a2a93f6aaadbffa9cc66e228241310bd",
+  "macro+chord-keys": "5acc062be3c532f94e13615c7da89f3e1a60eab8520a9ee1e89d2113669505e9",
+  "macro+track-filter": "cdbbe9725eec0ca135e4ae17bdb653b864553beb452c9eb72224e8219391a7d1",
+  "macro+lfo-plus": "213c8d74850a611f342da8fb414b142415ec0645ec86a3e80f5627b3e8c3d908",
+  "syntakt-sd-macro": "db0cf81eb99790a7da888cd220386dd93b4ad9f5d88495b4948d22e1e791d1f3",
+  "syntakt-cp-macro": "941462f06a6d7b3655bea905a43600ae7070fc617056f690c8f578bf3cf35525",
+  "syntakt-toy-macro": "b7f202c6183051679301b64b9d958cffebac954618c8a0949c452686f25e0225",
+  "syntakt-bits-macro": "839b7201e771e577c8c73adbb045206d03cc544b566f87aff9a046f2896a6584",
+  "syntakt-swarm-macro": "c04422c130c65f4b5a38250be7df9030223afe0d23a020a91b92108f88911190",
+  "syntakt-sd-cp-macro": "ccfe69778e813f9e85f594baadd31510cb2f1979e22172a00e55587536b9a954",
+  "syntakt-sd-toy-macro": "a36aaeca320343fe3cfa617e43896c4ce967dd14d53249afafdf2735379613d0",
+  "syntakt-sd-bits-macro": "99e29558b617c457e70af8e90861d231f49bb1ff8ccdf9bd887f53ca4e861914",
+  "syntakt-sd-swarm-macro": "2186cc8a439ecb6160c088de59434920fd639ec29eb50c2f56eae41418bcd3b0",
+  "syntakt-cp-toy-macro": "c47cf51cab045ffb5394a2a101096f377371c54ae7bc5f4a86412051dea0d6d2",
+  "syntakt-cp-bits-macro": "326f438eebd92e732db1d4ab219fccdff7e0232aefd21f3a20b8b47d285a71a7",
+  "syntakt-cp-swarm-macro": "4bb2bae3001814f92e2f452606bbc1d2d9447af4f06af6ba59196a66810d2533",
+  "syntakt-toy-bits-macro": "f3e655085e1f01174ea654fa838cd66906f69bf65825d4d1ed87b77a02645972",
+  "syntakt-toy-swarm-macro": "c5a04721a6fe09e393dceeced883841e8d01aaa970b2fc9dc0bfa6ad9a649a8d",
+  "syntakt-bits-swarm-macro": "47c0d71dc042d07254921f4e33d8098f8719d37742b6063ba9959bfa8ff6dde1",
+  "syntakt-sd-cp-toy-macro": "f2aa6d5cea4b4a31f602a4340bf566cd71d6a925688721104cce24cccca13b43",
+  "syntakt-sd-cp-bits-macro": "9295a20a805fc84e938a70c7ceb04cbc4b0ff6e64bd8e9d5cbb501e1c0b856e0",
+  "syntakt-sd-cp-swarm-macro": "af1c69971a01a5f38b548bab2d4808ec962e41a8fa6ff165d4a0edb04623c5b3",
+  "syntakt-sd-toy-bits-macro": "0f4169c1e56c843e1bae339f2f3cdee28786ed8b280e3c6b72a7f8e3919dceb5",
+  "syntakt-sd-toy-swarm-macro": "3c203ee58cd66b4b432d353bf95b4534673a4e9f10dc4b780297f8ba7ccc9078",
+  "syntakt-sd-bits-swarm-macro": "c1112eb49df998afa793c86686e7ebcab6514e1df87cbbec9f02b5f20b5d171f",
+  "syntakt-cp-toy-bits-macro": "82fcb9d430939b367d6e8048027e5602bbb8ace08135d349149e604f484b81a1",
+  "syntakt-cp-toy-swarm-macro": "3ed5d37cd90986c181cf779646a399552b5cb2ea6d6bf989965a97fa6671cd46",
+  "syntakt-cp-bits-swarm-macro": "bb346ce0cf041cd824221ab0d0e88a54c26d11535edadbfbd237d2c77b655809",
+  "syntakt-toy-bits-swarm-macro": "4114891fb6411097755e0aa9f8cb81b545aa7306dc28437d0bec81c73e8f96ed",
+  "syntakt-sd-cp-toy-bits-macro": "ab231b6156738adf380d536c39026e7df2a7cf107b484dafbf773c8dd8c7a58a",
+  "syntakt-sd-cp-toy-swarm-macro": "86ab837ec9f4fc344d73feca24f76a2eab0bd9953e9fc94d32c0a8751dbac513",
+  "syntakt-sd-cp-bits-swarm-macro": "70f9b7a5805d3b082b280b0f1b09a3fb681f48e0585a6caec2c2823e3af45c66",
+  "syntakt-sd-toy-bits-swarm-macro": "b088cebc9f18d19a1246dc605b0c8db4a120f2b81463355ff112b4d6f2cbb86e",
+  "syntakt-cp-toy-bits-swarm-macro": "bdab2cf5aa46dc0ae6f95dabd9bf2898635f30142865e6e00055a19429af7423",
+  "syntakt-sd-cp-toy-bits-swarm-macro": "10f4e481090ec12bdb73760f89cc307f9fc755060758173c24de15820217cb9f",
+  "chord-keys+track-filter": "2ec2f34f971521cc09d98afe9144d7a06df2cb0956d8fe1b9d1d37c8fa709931",
   "chord-keys+lfo-plus": "7d0384fabb6f12d3dc697b6f78a82e16ccfc095e70f0948e29b9b88539668368",
   "chord-keys+syntakt-sd": "d05c5d74de8863d406b40650fc6d8b0e32cf54d530e4d282229d3389ddc3d8c9",
   "chord-keys+syntakt-cp": "6037ce86b7291de777a7d0db0e75abba38cad4f537991fd5d9557d727ecbbbbe",
@@ -779,38 +763,37 @@ const REF_MAINOS = {
   "chord-keys+syntakt-sd-toy-bits-swarm": "93812cfbea4511402419e8f6093504c7f6f240cbb4cde3f133bd0bcf8fdf1895",
   "chord-keys+syntakt-cp-toy-bits-swarm": "daffb874baa3e235488fc890f68b708a23a44cec3e3e74d887372f6be5e3170a",
   "chord-keys+syntakt-sd-cp-toy-bits-swarm": "9de19468408550f2d333ee23c90fca77cee9b9d3d54b0de23ba82079bf0e2a47",
-  "model-tg+generate+lfo-plus": "2f7887894115dd593f3af9a1d20c693961d4cc794bcc61c58ba6ba47fa789539",
-  "model-tg-st+generate-st+syntakt-tg-sd": "8335a71f04d7afd93e8212f13c877b0bf01d222bb271a1200fccb3a79e00897f",
-  "model-tg-st+generate-st+syntakt-tg-cp": "4714f2788f871ba0711407d9306b32f8b273b80eb81434b6ee86dcc508d4e8c7",
-  "model-tg-st+generate-st+syntakt-tg-toy": "afba30bea54f7d76bce7b1519493b06d9552942a9dcf22ff391b446688d0fa23",
-  "model-tg-st+generate-st+syntakt-tg-bits": "469ff543334629e6f305f4108b6f8241f1c0eca504ea415f84dc80e6a6605c22",
-  "model-tg-st+generate-st+syntakt-tg-swarm": "12b042857c1d27d692f5305ac1e7eb6c0e47f6934ae3f79f28793476830eb4e9",
-  "model-tg-st+generate-st+syntakt-tg-sd-cp": "5a7908ec1f3cd5cf45716dafffa3eaed7b8e8040b38c2e534a5f9418399d5d33",
-  "model-tg-st+generate-st+syntakt-tg-sd-toy": "97687c378d32617dd6136f553d50a64caeb030f9473acf8bf4be31e4f81bec97",
-  "model-tg-st+generate-st+syntakt-tg-sd-bits": "84bbbf3645a553dfc8b95d8228c8ed06c8f591fac09179bbdc5ed2d0af4fa996",
-  "model-tg-st+generate-st+syntakt-tg-sd-swarm": "c9dc39a01d0de21ec0da06a0905c7b081fa21463714e15096b60f47343d6cb48",
-  "model-tg-st+generate-st+syntakt-tg-cp-toy": "f62675dd583e43ca6271c9ddf98b8d981dc05bfbe9c9ca264a0481ad714fce4a",
-  "model-tg-st+generate-st+syntakt-tg-cp-bits": "ecf526c4334bb095032d2340f4715630a11ca45e3135ceef6a90728c73459325",
-  "model-tg-st+generate-st+syntakt-tg-cp-swarm": "4c881c41c385b5f70e2214faae9dafaf5d403ca5d221e67e75df5ab4f6dc7333",
-  "model-tg-st+generate-st+syntakt-tg-toy-bits": "71de04679a19f539f388c1ef031cbf5fe54b529a7bbc68facbfa63bf45c8e9e1",
-  "model-tg-st+generate-st+syntakt-tg-toy-swarm": "d3f323d133f70952868f67d630806f5bda91975da515e5ba203dec4d85501a34",
-  "model-tg-st+generate-st+syntakt-tg-bits-swarm": "97caf241212418c7f8ddd6f57e2ab41e2f1cb4e19ba4406bb0463dcad245e1a7",
-  "model-tg-st+generate-st+syntakt-tg-sd-cp-toy": "8ba60ed54c7192f4bf3c4cfe431d9b0afbb38d3fb2f5ceb1832202aeddd36f2e",
-  "model-tg-st+generate-st+syntakt-tg-sd-cp-bits": "55a887dc77637f3eec5d97be22cd24b4c5fd1ee956e3e5703ff0d29791878315",
-  "model-tg-st+generate-st+syntakt-tg-sd-cp-swarm": "5bf92c2d6abf6b6176ac314e0ab609148bd3a0993d60a78d4fa476ff7bf1be29",
-  "model-tg-st+generate-st+syntakt-tg-sd-toy-bits": "61c074d4687cec61c6c1d484b488d5d7ba02ccd94c61843401f48860cd1f8ee1",
-  "model-tg-st+generate-st+syntakt-tg-sd-toy-swarm": "944f7036a9c98f6262de7c90dab334205f45aaf2abc6ff763b6fb168cd65cd7a",
-  "model-tg-st+generate-st+syntakt-tg-sd-bits-swarm": "b2d31ab130e4e5b6db889a813114336e9583afff5d9ed17b22fc5cd82330a6e8",
-  "model-tg-st+generate-st+syntakt-tg-cp-toy-bits": "576484f430f6895234b482ede03ebed2af19e4e159e0852bfcf22b1851534114",
-  "model-tg-st+generate-st+syntakt-tg-cp-toy-swarm": "4a4dea22259a68d9a582b985fb9a78867795e950c5dbbb3a9d340ad6e1e8824c",
-  "model-tg-st+generate-st+syntakt-tg-cp-bits-swarm": "33a60c5ed12ae2db54828f2b1c59b66e14bc71c451fd9ae0732c0d5206ee3846",
-  "model-tg-st+generate-st+syntakt-tg-toy-bits-swarm": "85a50933e8086106e8b6b0592aead4fba1f6d540574897ea13b8253f63d14c33",
-  "model-tg-st+generate-st+syntakt-tg-sd-cp-toy-bits": "6648154a856a723f5d24becfce3c34211347acc913dd5a6ab293143b78361c3d",
-  "model-tg-st+generate-st+syntakt-tg-sd-cp-toy-swarm": "252185b28d57ebdf7fb3acefbfd78b7a5dcc491b918e05cf21cf0eb9700a4212",
-  "model-tg-st+generate-st+syntakt-tg-sd-cp-bits-swarm": "c7a670c805c91276e2ed059eeb89d7622bd646718d03c54d8d406131e54210d4",
-  "model-tg-st+generate-st+syntakt-tg-sd-toy-bits-swarm": "877c261b207560bbf378bd7e9d42564adf21a649ce09aba2c787195f9e4d0197",
-  "model-tg-st+generate-st+syntakt-tg-cp-toy-bits-swarm": "ba9824ec610adcc3950b5d4c5816567cb67b0e9936cf2093ac12738e4a273769",
-  "model-tg-st+generate-st+syntakt-tg-sd-cp-toy-bits-swarm": "cc701c32a165fa6c95a35bb1964f277bf9a0766f1a7796525f8ffaa8f39fd54a",
+  "track-filter+syntakt-sd": "05921847bbca4ccf0661444f5fc9edce80626b59490133741dd54bf5aa219c27",
+  "track-filter+syntakt-cp": "20e90aa1f2a45bd3b45faffdf0dfdb550bf3b0dbb1689bed01a85e79254b197f",
+  "track-filter+syntakt-toy": "77787ca5fbca774c4f5218028905142a37aaac134d4f5ae24f2fbf12f163e85e",
+  "track-filter+syntakt-bits": "4058276c16b830800604d3beb92e9d53135bf031cf9ca26e0ab8f6a0dc1865d9",
+  "track-filter+syntakt-swarm": "22913811dd89d64ea138b1e598d0626705892f3d2cc5a460bbbbdb103e635769",
+  "track-filter+syntakt-sd-cp": "10bc8a08bc134f0f817b141e09c51ba0b866e18c1e58cc840a3399f4c09a757e",
+  "track-filter+syntakt-sd-toy": "aaac236ce864cabb6fae332a9c7dcf88c7730412c85f3067760b647422bfd3ed",
+  "track-filter+syntakt-sd-bits": "8c9a44a03b05cd7061566ae21097d2e6dcf8fed14d5a3acdce2388ad9623fed5",
+  "track-filter+syntakt-sd-swarm": "e52b667ed9efab492c3b3a519e626e7cedcdd9e6ced439293893e4cf5d495d3a",
+  "track-filter+syntakt-cp-toy": "44887e2668eef2cecc072d07b15a2352a79df5ef25e9ddbd6043aa3c3525b8f9",
+  "track-filter+syntakt-cp-bits": "da49c998a0d04d07695d8e23561c58ae3811699be236cc0c87c8fc02bacfb464",
+  "track-filter+syntakt-cp-swarm": "7129a416a9593567436f804f468f53a479d3370989f050817f02dcd48c1a58ed",
+  "track-filter+syntakt-toy-bits": "5efb839c649d4d16c81c89305ed8fe7e32e83ae7e7980762912ed4d9b4fab958",
+  "track-filter+syntakt-toy-swarm": "4219b9c6b77b2b0fcfd2fbd5f90c3ae093372719b31049d336425f2d8d43df45",
+  "track-filter+syntakt-bits-swarm": "75316c178ca10c7de498be3335f7889a96cb3eca75dfb3770867c560127ce8ad",
+  "track-filter+syntakt-sd-cp-toy": "816e81b37f079ac88a6da8632d5e31a86c13cc0495ab1e499d0e02ac2fd071e9",
+  "track-filter+syntakt-sd-cp-bits": "a09d62f890fd2992be164944e2e14da5e4a38b715afb384ac314fdc31dbf18db",
+  "track-filter+syntakt-sd-cp-swarm": "bce2e2fbde48d4f3a04e7217938234566d2c5f494e838ea973b310d03a612472",
+  "track-filter+syntakt-sd-toy-bits": "745da662ad983834b8e75255acc5cf948ec18181fe070638201bd79c5192d659",
+  "track-filter+syntakt-sd-toy-swarm": "c1f17fd3c87ecb5f1683bf7e0df68e493758d2bf0d2a6327677752929112299f",
+  "track-filter+syntakt-sd-bits-swarm": "3baf286db773be468681402ad2b6c3ac7a68f08faad1c6a0d10602eaf9f1e1ab",
+  "track-filter+syntakt-cp-toy-bits": "8bcf99df248d64e94fc63e0974b39e6eaddcfcc00ffc987527139e391005a0e1",
+  "track-filter+syntakt-cp-toy-swarm": "f13f661b2826379a0986165aa51a8c17dc26662f9e9eb71d3ccd5f344d58d530",
+  "track-filter+syntakt-cp-bits-swarm": "ee718b9602bb2185088e32b32c3c0545f92a7b1a8680c66e54632631efe92666",
+  "track-filter+syntakt-toy-bits-swarm": "7a29fa3837e9485a676810ebbcfaaf52778042f46eb5c06e9d95254cbf403f1c",
+  "track-filter+syntakt-sd-cp-toy-bits": "16eaddd2e036ecaa03883d2fe7d84e41403d97fba7e58d6ba73cfbfc3b15cb79",
+  "track-filter+syntakt-sd-cp-toy-swarm": "10e288f09e7934d9eb96fbe670b02bc81f1828b0569e51f1224cf0a9d3ab8e25",
+  "track-filter+syntakt-sd-cp-bits-swarm": "62791430c25c548607abb8b6a2d05d45ac7c0d233d687c64c625c7c42010ff36",
+  "track-filter+syntakt-sd-toy-bits-swarm": "0b0fd7e2a52f6862d75b3c213166f55e5de9d7311b8a81ee6d4a3a26df10c7d6",
+  "track-filter+syntakt-cp-toy-bits-swarm": "796ef817b774d4f32831c5509c0cc7cc945af9aed27637e856c888464adf719a",
+  "track-filter+syntakt-sd-cp-toy-bits-swarm": "a280f7ca1763fc3aa12aea1aba0a7bff7a99cd663f6ac23f2f5a6b08548cb5ac",
   "lfo-plus+syntakt-sd": "4596982fadc4dd7dcacf4330d282aac97a788e40fbf924169b32c21072ecd042",
   "lfo-plus+syntakt-cp": "c533389a9f1ee4a025c86480c4c8515ef19d3df02e5c455db634a5c227429b56",
   "lfo-plus+syntakt-toy": "b336557d52cf0889cc2c60bccc8aed5f93434438c297ffcb4fcf1cfc03d41744",
@@ -843,76 +826,78 @@ const REF_MAINOS = {
   "lfo-plus+syntakt-cp-toy-bits-swarm": "eead27de64a58783417a9c1adc5deb06a8b0054adbd476e725a42f464a72a31d",
   "lfo-plus+syntakt-sd-cp-toy-bits-swarm": "f90b165931880817bef1a9711ec283027a2efa39589996bf3dd6bb7e2e22a1a0",
   // the largest combinations: every compatible card ticked, from each card, both ways, with and without the Syntakt engines
-  "6ch-usbup+model-tg-st+sample-preview-st+trig-hold+arp+tempo-max+boot-anim+multiline-browser+level-pan-values+trigless-dim+midi-both+generate-st+lfo-plus+syntakt-tg-sd-cp-toy-bits-swarm-macro": "2fd4c0a2d37a393a7322f5d7f3611ccfc4048659e1d69d8e4629580abbcdb66c",
-  "6ch-usbup+model-tg-st+sample-preview-st+trig-hold+arp+tempo-max+boot-anim+multiline-browser+level-pan-values+trigless-dim+midi-live-both+generate-st+lfo-plus+syntakt-tg-sd-cp-toy-bits-swarm-macro": "074a9a81ffe1496ace142092490e2effee26b4be7d0a37a773f55d8ee2dd620c",
-  "6ch-usbup+model-tg-st+sample-preview-st+trig-hold+arp+tempo-max+boot-anim+multiline-browser+level-pan-values+trigless-dim+midi-both+macro-tg+generate-st+lfo-plus": "521985853bec44124cd9f420711ff4dc4bbbccd2f73ffb0fd176b0a604796444",
-  "6ch-usbup+model-tg-st+sample-preview-st+trig-hold+arp+tempo-max+boot-anim+multiline-browser+level-pan-values+trigless-dim+midi-live-both+va-tg+generate-st+lfo-plus": "bff886e239b2388dd1eea27f763b13451962a4aa98f2f939fe8dd9065be4c52b",
-  "6ch-usbup+latching-mute+trig-preview+browser-scroll+trig-hold+arp+tempo-max+boot-anim+multiline-browser+level-pan-values+trigless-dim+midi-both+chord-keys+lfo-plus+syntakt-sd-cp-toy-bits-swarm-macro": "f4f1f1bec2f5e684404895f4d1fc691baf59bee01aa8782b6b9aa1ef7d2d5944",
-  "6ch-usbup+latching-mute+trig-preview+browser-scroll+trig-hold+arp+tempo-max+boot-anim+multiline-browser+level-pan-values+trigless-dim+midi-live-both+chord-keys+lfo-plus+syntakt-sd-cp-toy-bits-swarm-macro": "af9a56bb93677b97e55ee5964b56d6ce72cc3cd783561bc47650c3acb09815f4",
-  "6ch-usbup+latching-mute+trig-preview+browser-scroll+trig-hold+arp+tempo-max+boot-anim+multiline-browser+level-pan-values+trigless-dim+midi-both+macro+chord-keys+lfo-plus": "6186db71bfc821b470a7406ab5638bf81728e769b20f7a00b6be5f1e5c076d2a",
-  "6ch-usbup+latching-mute+trig-preview+browser-scroll+trig-hold+arp+tempo-max+boot-anim+multiline-browser+level-pan-values+trigless-dim+midi-live-both+va+chord-keys+lfo-plus": "0a29deef889bbf6a8c006302f94c17998bdb20f5fe6cad154cc7cd949b3debb7",
-  "6ch-usbup+model-tg-st+sample-preview-st+trig-hold+arp+tempo-max+boot-anim+multiline-browser+level-pan-values+trigless-dim+midi-both+va-tg+generate-st+lfo-plus": "2b062f716978b4df9359c5649ae5b6fdabac7056246643ffe51d698eb486ff53",
-  "6ch-usbup+model-tg-st+sample-preview-st+trig-hold+arp+tempo-max+boot-anim+multiline-browser+level-pan-values+trigless-dim+midi-live-both+macro-tg+generate-st+lfo-plus": "486678aa3dca30f10f7d551e1e368df618345bdc289b7ad3f5432651af731271",
-  "6ch-usbup+model-tg-st+sample-preview-st+trig-hold+arp+tempo-max+boot-anim+multiline-browser+level-pan-values+trigless-dim+midi-both+generate-st+lfo-plus+syntakt-tg-sd-macro": "555382715223340f0fa2a9f95f2c18376ead5cd64e456e3e6df621346b03d4e8",
-  "6ch-usbup+model-tg-st+sample-preview-st+trig-hold+arp+tempo-max+boot-anim+multiline-browser+level-pan-values+trigless-dim+midi-live-both+generate-st+lfo-plus+syntakt-tg-sd-macro": "b918546642b1f8f8446f8a78ef8ed94b9c939520c9c60dbfa888a8c7fde27a39",
-  "6ch-usbup+model-tg-st+sample-preview-st+trig-hold+arp+tempo-max+boot-anim+multiline-browser+level-pan-values+trigless-dim+midi-both+generate-st+lfo-plus+syntakt-tg-cp-macro": "e73c28973f18770e6ab10b0e200d1489f5e2530549a5ac247cca145d8629b15a",
-  "6ch-usbup+model-tg-st+sample-preview-st+trig-hold+arp+tempo-max+boot-anim+multiline-browser+level-pan-values+trigless-dim+midi-live-both+generate-st+lfo-plus+syntakt-tg-cp-macro": "5e5da33742fe057b0aea29cb2c0412041f2ecd233d8e5edbdd9871733be81d96",
-  "6ch-usbup+model-tg-st+sample-preview-st+trig-hold+arp+tempo-max+boot-anim+multiline-browser+level-pan-values+trigless-dim+midi-both+generate-st+lfo-plus+syntakt-tg-toy-macro": "113bb72e622724ab5221364b07c7e5e950f801ef66ed7ab05049ce04d135f655",
-  "6ch-usbup+model-tg-st+sample-preview-st+trig-hold+arp+tempo-max+boot-anim+multiline-browser+level-pan-values+trigless-dim+midi-live-both+generate-st+lfo-plus+syntakt-tg-toy-macro": "01bb4e88a41cdaec5f77be319e2c603da4cfdd37854e903195c39af79ce88520",
-  "6ch-usbup+model-tg-st+sample-preview-st+trig-hold+arp+tempo-max+boot-anim+multiline-browser+level-pan-values+trigless-dim+midi-both+generate-st+lfo-plus+syntakt-tg-bits-macro": "46789bd71de18fccf55bfac0c37ff0b8ba87a48ab97543232813e80d32483c1c",
-  "6ch-usbup+model-tg-st+sample-preview-st+trig-hold+arp+tempo-max+boot-anim+multiline-browser+level-pan-values+trigless-dim+midi-live-both+generate-st+lfo-plus+syntakt-tg-bits-macro": "2ea006e2eb915f6a42d94c0f1d15bac5ac27d23ea2736da6a0e4108edbce4067",
-  "6ch-usbup+model-tg-st+sample-preview-st+trig-hold+arp+tempo-max+boot-anim+multiline-browser+level-pan-values+trigless-dim+midi-both+generate-st+lfo-plus+syntakt-tg-swarm-macro": "8c13773a18c95b1f1e68d17c998d6f24607a9c82f43e8ceff6debd8d71eb898d",
-  "6ch-usbup+model-tg-st+sample-preview-st+trig-hold+arp+tempo-max+boot-anim+multiline-browser+level-pan-values+trigless-dim+midi-live-both+generate-st+lfo-plus+syntakt-tg-swarm-macro": "17611784b25ec7ae41f5dffd09623ad984af1f250f7ee4a5c760c81d67282cc8",
-  "6ch-usbup+model-tg-st+sample-preview-st+trig-hold+arp+tempo-max+boot-anim+multiline-browser+level-pan-values+trigless-dim+midi-both+generate-st+lfo-plus+syntakt-tg-sd-cp-macro": "a1768b1b0ae42efda75001eddb079e15d9b5478c014c301aa9f5dfab1cf1c25f",
-  "6ch-usbup+model-tg-st+sample-preview-st+trig-hold+arp+tempo-max+boot-anim+multiline-browser+level-pan-values+trigless-dim+midi-live-both+generate-st+lfo-plus+syntakt-tg-sd-cp-macro": "c77a8e6bf3b71c713b93fe199323b0ad68f66f878cb110c4df16984ed11024b3",
-  "6ch-usbup+model-tg-st+sample-preview-st+trig-hold+arp+tempo-max+boot-anim+multiline-browser+level-pan-values+trigless-dim+midi-both+generate-st+lfo-plus+syntakt-tg-sd-toy-macro": "f8b3fcfa5b74e3896d325b12693b96ea28625ac08bc3daed39a5abe139fb4550",
-  "6ch-usbup+model-tg-st+sample-preview-st+trig-hold+arp+tempo-max+boot-anim+multiline-browser+level-pan-values+trigless-dim+midi-live-both+generate-st+lfo-plus+syntakt-tg-sd-toy-macro": "e3703eb27365cc941fd5a7d1f2a95a0195a0c19eec2586c4c4c43f4fe647b571",
-  "6ch-usbup+model-tg-st+sample-preview-st+trig-hold+arp+tempo-max+boot-anim+multiline-browser+level-pan-values+trigless-dim+midi-both+generate-st+lfo-plus+syntakt-tg-sd-bits-macro": "c34bfa9121bb5d6ab8ee2c8c9e2179a5c4bdd49c297ae5a358817eabfa12207c",
-  "6ch-usbup+model-tg-st+sample-preview-st+trig-hold+arp+tempo-max+boot-anim+multiline-browser+level-pan-values+trigless-dim+midi-live-both+generate-st+lfo-plus+syntakt-tg-sd-bits-macro": "5b5f9fc83f575575308e4b0879e03dc62a0ac98abd7810200ffef00ad3788a8f",
-  "6ch-usbup+model-tg-st+sample-preview-st+trig-hold+arp+tempo-max+boot-anim+multiline-browser+level-pan-values+trigless-dim+midi-both+generate-st+lfo-plus+syntakt-tg-sd-swarm-macro": "836dc6eebe5d3e53c79ae4ec07d82e17457845a2a4629ae89ea378f26592302e",
-  "6ch-usbup+model-tg-st+sample-preview-st+trig-hold+arp+tempo-max+boot-anim+multiline-browser+level-pan-values+trigless-dim+midi-live-both+generate-st+lfo-plus+syntakt-tg-sd-swarm-macro": "5d860d3a268cfb83f430e5bc20bfbbaf058b07ae85a5bc91b14d0b712f4cccd0",
-  "6ch-usbup+model-tg-st+sample-preview-st+trig-hold+arp+tempo-max+boot-anim+multiline-browser+level-pan-values+trigless-dim+midi-both+generate-st+lfo-plus+syntakt-tg-cp-toy-macro": "2805674ee9688a7b3f9a5caac0a88b325898cd7cbbdaeb592a045f08fe251ca1",
-  "6ch-usbup+model-tg-st+sample-preview-st+trig-hold+arp+tempo-max+boot-anim+multiline-browser+level-pan-values+trigless-dim+midi-live-both+generate-st+lfo-plus+syntakt-tg-cp-toy-macro": "69315862f5bac0624f4c5184b092acf6299a9a850f1a8769562198ddeb2b03f9",
-  "6ch-usbup+model-tg-st+sample-preview-st+trig-hold+arp+tempo-max+boot-anim+multiline-browser+level-pan-values+trigless-dim+midi-both+generate-st+lfo-plus+syntakt-tg-cp-bits-macro": "162e1999b1572531175d4d98f3e4cc23d2ac41c174c7408bd362a5418b6163dd",
-  "6ch-usbup+model-tg-st+sample-preview-st+trig-hold+arp+tempo-max+boot-anim+multiline-browser+level-pan-values+trigless-dim+midi-live-both+generate-st+lfo-plus+syntakt-tg-cp-bits-macro": "c4519beaabd5e6b2f5141a1579054d9095a5669f1e30c71c541141b580ea4b54",
-  "6ch-usbup+model-tg-st+sample-preview-st+trig-hold+arp+tempo-max+boot-anim+multiline-browser+level-pan-values+trigless-dim+midi-both+generate-st+lfo-plus+syntakt-tg-cp-swarm-macro": "f9106648d2c3cc70c4da13485efebdd936ef022c0ac30dfb37a4f29ddd8c751a",
-  "6ch-usbup+model-tg-st+sample-preview-st+trig-hold+arp+tempo-max+boot-anim+multiline-browser+level-pan-values+trigless-dim+midi-live-both+generate-st+lfo-plus+syntakt-tg-cp-swarm-macro": "6e4f878c35fda383a2e6ef43aea0300ec8f0e07dedbd7715416ee07b8e9d50d9",
-  "6ch-usbup+model-tg-st+sample-preview-st+trig-hold+arp+tempo-max+boot-anim+multiline-browser+level-pan-values+trigless-dim+midi-both+generate-st+lfo-plus+syntakt-tg-toy-bits-macro": "c40de0fc0c0ddc35017d1503c76ce72e33f3a46fcab8cabe7a7bdd32522bc06e",
-  "6ch-usbup+model-tg-st+sample-preview-st+trig-hold+arp+tempo-max+boot-anim+multiline-browser+level-pan-values+trigless-dim+midi-live-both+generate-st+lfo-plus+syntakt-tg-toy-bits-macro": "7dd98572795c2c6ea3d016db7c7cbf38be37c18e98a751cba720b0b5ee76d73e",
-  "6ch-usbup+model-tg-st+sample-preview-st+trig-hold+arp+tempo-max+boot-anim+multiline-browser+level-pan-values+trigless-dim+midi-both+generate-st+lfo-plus+syntakt-tg-toy-swarm-macro": "f194d158ea32718a3aeffe762f59103973aedf21a9502f06519515339be8987f",
-  "6ch-usbup+model-tg-st+sample-preview-st+trig-hold+arp+tempo-max+boot-anim+multiline-browser+level-pan-values+trigless-dim+midi-live-both+generate-st+lfo-plus+syntakt-tg-toy-swarm-macro": "a09e91945c43a6f34fa6c91a7b941ca6c90b156ed9403ff059fd03665f2b5c74",
-  "6ch-usbup+model-tg-st+sample-preview-st+trig-hold+arp+tempo-max+boot-anim+multiline-browser+level-pan-values+trigless-dim+midi-both+generate-st+lfo-plus+syntakt-tg-bits-swarm-macro": "bf4cc7c64353a77a20ec95ccf6b833517ec558604571f5b5d77e70d9d90d272d",
-  "6ch-usbup+model-tg-st+sample-preview-st+trig-hold+arp+tempo-max+boot-anim+multiline-browser+level-pan-values+trigless-dim+midi-live-both+generate-st+lfo-plus+syntakt-tg-bits-swarm-macro": "fbf851c2e1feab2040465851a56e5d2b948fcf4522ac35cda5aa52a13079c418",
-  "6ch-usbup+model-tg-st+sample-preview-st+trig-hold+arp+tempo-max+boot-anim+multiline-browser+level-pan-values+trigless-dim+midi-both+generate-st+lfo-plus+syntakt-tg-sd-cp-toy-macro": "980cebfbfc6df18f6afecbf404d8e164d89b1d2bd0276a5f726834c1488d20b1",
-  "6ch-usbup+model-tg-st+sample-preview-st+trig-hold+arp+tempo-max+boot-anim+multiline-browser+level-pan-values+trigless-dim+midi-live-both+generate-st+lfo-plus+syntakt-tg-sd-cp-toy-macro": "8be1730cfb0e80b9ca611cadca24f8d573dc5a30ae6b06375907fa19e78f723e",
-  "6ch-usbup+model-tg-st+sample-preview-st+trig-hold+arp+tempo-max+boot-anim+multiline-browser+level-pan-values+trigless-dim+midi-both+generate-st+lfo-plus+syntakt-tg-sd-cp-bits-macro": "3b8955e8dc092c3f825e6839c030130b56fcc00a5f97e8a647af64fbfa0b6601",
-  "6ch-usbup+model-tg-st+sample-preview-st+trig-hold+arp+tempo-max+boot-anim+multiline-browser+level-pan-values+trigless-dim+midi-live-both+generate-st+lfo-plus+syntakt-tg-sd-cp-bits-macro": "2a024c575819ac39329e2ed620f44aa2be097eed05dedab27b735e4748931a2f",
-  "6ch-usbup+model-tg-st+sample-preview-st+trig-hold+arp+tempo-max+boot-anim+multiline-browser+level-pan-values+trigless-dim+midi-both+generate-st+lfo-plus+syntakt-tg-sd-cp-swarm-macro": "bbab1314d00839e06216a46e810ddfb18d1b025cae71eb5f8392b44466c40dfe",
-  "6ch-usbup+model-tg-st+sample-preview-st+trig-hold+arp+tempo-max+boot-anim+multiline-browser+level-pan-values+trigless-dim+midi-live-both+generate-st+lfo-plus+syntakt-tg-sd-cp-swarm-macro": "beed8a5a47d921fd95511631c79d0ad796c206e658c34e0c1cee7dd683ae0832",
-  "6ch-usbup+model-tg-st+sample-preview-st+trig-hold+arp+tempo-max+boot-anim+multiline-browser+level-pan-values+trigless-dim+midi-both+generate-st+lfo-plus+syntakt-tg-sd-toy-bits-macro": "438c7e3ff09f9a8acf6e73e60adb327bb51a55a98d4bc3d5900e5fb88d7193c5",
-  "6ch-usbup+model-tg-st+sample-preview-st+trig-hold+arp+tempo-max+boot-anim+multiline-browser+level-pan-values+trigless-dim+midi-live-both+generate-st+lfo-plus+syntakt-tg-sd-toy-bits-macro": "2d2491070fecab148b3c09944091f17f1b192b6a126b856e8f4008fa470455f5",
-  "6ch-usbup+model-tg-st+sample-preview-st+trig-hold+arp+tempo-max+boot-anim+multiline-browser+level-pan-values+trigless-dim+midi-both+generate-st+lfo-plus+syntakt-tg-sd-toy-swarm-macro": "562dcbe0a966cfaac60435c7e6a0c1c82a5dd334b86d87f4d0abdd322f859a5c",
-  "6ch-usbup+model-tg-st+sample-preview-st+trig-hold+arp+tempo-max+boot-anim+multiline-browser+level-pan-values+trigless-dim+midi-live-both+generate-st+lfo-plus+syntakt-tg-sd-toy-swarm-macro": "ba82b2c8eea1965199c168dbfde254d2c5428f11be782fd7b2d8308657ed71ab",
-  "6ch-usbup+model-tg-st+sample-preview-st+trig-hold+arp+tempo-max+boot-anim+multiline-browser+level-pan-values+trigless-dim+midi-both+generate-st+lfo-plus+syntakt-tg-sd-bits-swarm-macro": "a1c6e543fbc2b2467ad0277ee9ea4024c5f4ef70fa5d3ca848225eff37c002b6",
-  "6ch-usbup+model-tg-st+sample-preview-st+trig-hold+arp+tempo-max+boot-anim+multiline-browser+level-pan-values+trigless-dim+midi-live-both+generate-st+lfo-plus+syntakt-tg-sd-bits-swarm-macro": "bbebb6668ef4a8da29383a44e057e9d2424c45e0aac83711e25409cc5c6759dd",
-  "6ch-usbup+model-tg-st+sample-preview-st+trig-hold+arp+tempo-max+boot-anim+multiline-browser+level-pan-values+trigless-dim+midi-both+generate-st+lfo-plus+syntakt-tg-cp-toy-bits-macro": "6d451845943395a806a02403251c5c7c6e478b4a25ed41002a5b9e1e011d1d40",
-  "6ch-usbup+model-tg-st+sample-preview-st+trig-hold+arp+tempo-max+boot-anim+multiline-browser+level-pan-values+trigless-dim+midi-live-both+generate-st+lfo-plus+syntakt-tg-cp-toy-bits-macro": "9b1dd1058ac2519a1ce500f2cefffbc457668267b3120ae480b01782f3e62d5a",
-  "6ch-usbup+model-tg-st+sample-preview-st+trig-hold+arp+tempo-max+boot-anim+multiline-browser+level-pan-values+trigless-dim+midi-both+generate-st+lfo-plus+syntakt-tg-cp-toy-swarm-macro": "c99ed6b81ca43a0fbbcbb7e66630a481bf505b7080e2f1137a3105d481f913cf",
-  "6ch-usbup+model-tg-st+sample-preview-st+trig-hold+arp+tempo-max+boot-anim+multiline-browser+level-pan-values+trigless-dim+midi-live-both+generate-st+lfo-plus+syntakt-tg-cp-toy-swarm-macro": "14622e2484a928377b0c17e1dba0b07abce4b4b2d403012c9224533c6bc89f1c",
-  "6ch-usbup+model-tg-st+sample-preview-st+trig-hold+arp+tempo-max+boot-anim+multiline-browser+level-pan-values+trigless-dim+midi-both+generate-st+lfo-plus+syntakt-tg-cp-bits-swarm-macro": "0f90797a3fd824b38b63a224126c4c3f47bc1d2471b451a5b2c0ab1bca8cfd76",
-  "6ch-usbup+model-tg-st+sample-preview-st+trig-hold+arp+tempo-max+boot-anim+multiline-browser+level-pan-values+trigless-dim+midi-live-both+generate-st+lfo-plus+syntakt-tg-cp-bits-swarm-macro": "bc14af8ddade915af0e2efbf4a0bbe4ca7a6c7238ac326bc53191c3d94798e91",
-  "6ch-usbup+model-tg-st+sample-preview-st+trig-hold+arp+tempo-max+boot-anim+multiline-browser+level-pan-values+trigless-dim+midi-both+generate-st+lfo-plus+syntakt-tg-toy-bits-swarm-macro": "44c82c62f8247f5f525784957009a548103566dec234874c6f2da4ee8b5db618",
-  "6ch-usbup+model-tg-st+sample-preview-st+trig-hold+arp+tempo-max+boot-anim+multiline-browser+level-pan-values+trigless-dim+midi-live-both+generate-st+lfo-plus+syntakt-tg-toy-bits-swarm-macro": "27b91f984fb38b5e48ab3288d14eecb8a45ff1db9b53361edb5baa7c478bb4dc",
-  "6ch-usbup+model-tg-st+sample-preview-st+trig-hold+arp+tempo-max+boot-anim+multiline-browser+level-pan-values+trigless-dim+midi-both+generate-st+lfo-plus+syntakt-tg-sd-cp-toy-bits-macro": "5bed08912213f5c538bd95232767ccc7af12b63b854b425b50706d8c4eb80f4f",
-  "6ch-usbup+model-tg-st+sample-preview-st+trig-hold+arp+tempo-max+boot-anim+multiline-browser+level-pan-values+trigless-dim+midi-live-both+generate-st+lfo-plus+syntakt-tg-sd-cp-toy-bits-macro": "1151c6e15e5ed48e4c955a7948a9e0620b6ee2b76b9565b097e8ae9c332ab28c",
-  "6ch-usbup+model-tg-st+sample-preview-st+trig-hold+arp+tempo-max+boot-anim+multiline-browser+level-pan-values+trigless-dim+midi-both+generate-st+lfo-plus+syntakt-tg-sd-cp-toy-swarm-macro": "7255bf6c4c4532b3d8104cd411ef869660d93478487d247f24cd7a2c3e5e40b1",
-  "6ch-usbup+model-tg-st+sample-preview-st+trig-hold+arp+tempo-max+boot-anim+multiline-browser+level-pan-values+trigless-dim+midi-live-both+generate-st+lfo-plus+syntakt-tg-sd-cp-toy-swarm-macro": "806681253ee71316e20e498cc3b0c48f6fc5aafb4d001a381fcefd2cb06fc61d",
-  "6ch-usbup+model-tg-st+sample-preview-st+trig-hold+arp+tempo-max+boot-anim+multiline-browser+level-pan-values+trigless-dim+midi-both+generate-st+lfo-plus+syntakt-tg-sd-cp-bits-swarm-macro": "54d8dd8d9c34f5af41b8887da08d87af8db68e9a0a4c60533869101a52170621",
-  "6ch-usbup+model-tg-st+sample-preview-st+trig-hold+arp+tempo-max+boot-anim+multiline-browser+level-pan-values+trigless-dim+midi-live-both+generate-st+lfo-plus+syntakt-tg-sd-cp-bits-swarm-macro": "4628ed67456315b284ee30abf671bab5927d4eb2602740469a4443b2bc3231e3",
-  "6ch-usbup+model-tg-st+sample-preview-st+trig-hold+arp+tempo-max+boot-anim+multiline-browser+level-pan-values+trigless-dim+midi-both+generate-st+lfo-plus+syntakt-tg-sd-toy-bits-swarm-macro": "4b0e3136a3498d6b5a04d92da9af502fa469c0957091fab2bb844ccb58e48d33",
-  "6ch-usbup+model-tg-st+sample-preview-st+trig-hold+arp+tempo-max+boot-anim+multiline-browser+level-pan-values+trigless-dim+midi-live-both+generate-st+lfo-plus+syntakt-tg-sd-toy-bits-swarm-macro": "a3b087a8dd5c12ab7a7f4a2bab22a22d449ce9ced6c595dab7afeb5b467a1ddb",
-  "6ch-usbup+model-tg-st+sample-preview-st+trig-hold+arp+tempo-max+boot-anim+multiline-browser+level-pan-values+trigless-dim+midi-both+generate-st+lfo-plus+syntakt-tg-cp-toy-bits-swarm-macro": "9a0c3284e0d64b0f5a6dfb2eb800e90a537f3eb7948d6de7e40db3ff13d1775b",
-  "6ch-usbup+model-tg-st+sample-preview-st+trig-hold+arp+tempo-max+boot-anim+multiline-browser+level-pan-values+trigless-dim+midi-live-both+generate-st+lfo-plus+syntakt-tg-cp-toy-bits-swarm-macro": "943eb58bdf3fceda14465a8e78714bf1fb45b1bce0a462cd055ebb5111876c9b",
+  "6ch-usbup+model-tg-st+sample-preview-st+trig-hold+arp+tempo-max+boot-anim+multiline-browser+level-pan-values+trigless-dim+midi-both+lfo-plus+syntakt-tg-sd-cp-toy-bits-swarm-macro": "e9b590f32c7d4bc33473a5bedf813ccfa63fea5331ba016b66254aaa8fb08a5f",
+  "6ch-usbup+latching-mute+trig-preview+browser-scroll+trig-hold+arp+tempo-max+boot-anim+multiline-browser+level-pan-values+trigless-dim+midi-live-both+chord-keys+lfo-plus+syntakt-sd-cp-toy-bits-swarm-macro": "3cff74fee286f60d180f2b53915af15d6de5b8b20a9329787f65ce990dd72087",
+  "6ch-usbup+model-tg-st+sample-preview-st+trig-hold+arp+tempo-max+boot-anim+multiline-browser+level-pan-values+trigless-dim+midi-both+macro-tg+lfo-plus": "cbc36501a69598b88c647dc7d6fe06e1238f0edc7b79ac104b0371e691af2347",
+  "6ch-usbup+latching-mute+trig-preview+browser-scroll+trig-hold+arp+tempo-max+boot-anim+multiline-browser+level-pan-values+trigless-dim+midi-live-both+macro+chord-keys+lfo-plus": "e1c26b2f83bd417ba84e7ade7eccaf8d18cff76fd03a87246a20f4da94304aec",
+  "6ch-usbup+model-tg-st+sample-preview-st+trig-hold+arp+tempo-max+boot-anim+multiline-browser+level-pan-values+trigless-dim+midi-live-both+lfo-plus+syntakt-tg-sd-cp-toy-bits-swarm-macro": "a7e346c923fda06396270780f56c0e6ab790722bf353ec9897ac35c77c4e041c",
+  "6ch-usbup+model-tg-st+sample-preview-st+trig-hold+arp+tempo-max+boot-anim+multiline-browser+level-pan-values+trigless-dim+midi-live-both+macro-tg+lfo-plus": "200df036c0c7eb28f4866936dc014ad9b9e93659e09d55345d8f826b890cad85",
+  "6ch-usbup+latching-mute+trig-preview+browser-scroll+trig-hold+arp+tempo-max+boot-anim+multiline-browser+level-pan-values+trigless-dim+midi-both+chord-keys+track-filter+syntakt-sd-cp-toy-bits-swarm-macro": "054afcf349b4718b0597b205eb85135f454802d709438d40618caf16ce919b5e",
+  "6ch-usbup+latching-mute+trig-preview+browser-scroll+trig-hold+arp+tempo-max+boot-anim+multiline-browser+level-pan-values+trigless-dim+midi-both+macro+chord-keys+track-filter": "19186e40f827fdb3a55e5f143c928c67f6163dd6156c89f3a33fd3040c9b12e3",
+  "6ch-usbup+latching-mute+trig-preview+browser-scroll+trig-hold+arp+tempo-max+boot-anim+multiline-browser+level-pan-values+trigless-dim+midi-both+chord-keys+lfo-plus+syntakt-sd-cp-toy-bits-swarm-macro": "3e9d707080ba38d8a6336110d390b9906e2af04fa9397ebe270b83eae1d8689c",
+  "6ch-usbup+latching-mute+trig-preview+browser-scroll+trig-hold+arp+tempo-max+boot-anim+multiline-browser+level-pan-values+trigless-dim+midi-both+macro+chord-keys+lfo-plus": "5daef17b8ac9877fa8eb0c546fb1b6b5879afb43bbbabb7ae423536c69844d4a",
+  "6ch-usbup+latching-mute+trig-preview+browser-scroll+trig-hold+arp+tempo-max+boot-anim+multiline-browser+level-pan-values+trigless-dim+midi-live-both+chord-keys+track-filter+syntakt-sd-cp-toy-bits-swarm-macro": "750b9df2b10babafabb077ca6dc4060070bdb8807d43de075518ca1b5ef22f65",
+  "6ch-usbup+latching-mute+trig-preview+browser-scroll+trig-hold+arp+tempo-max+boot-anim+multiline-browser+level-pan-values+trigless-dim+midi-live-both+macro+chord-keys+track-filter": "4e74b9bbca56059f57480b546a6aac01b164a2cd47f3d57bc0e9882c1494cfa8",
+  "6ch-usbup+model-tg-st+sample-preview-st+trig-hold+arp+tempo-max+boot-anim+multiline-browser+level-pan-values+trigless-dim+midi-both+lfo-plus+syntakt-tg-sd-macro": "13e877fb5442cd5c024fc3b5f1b3031eaeeb7933c10382e1b1ebf52b6bf42208",
+  "6ch-usbup+latching-mute+trig-preview+browser-scroll+trig-hold+arp+tempo-max+boot-anim+multiline-browser+level-pan-values+trigless-dim+midi-live-both+chord-keys+lfo-plus+syntakt-sd-macro": "a41f1974b4af6395d8a3ed5f90680842a9322a1e5d93fcc9512ea4b22dc6aeee",
+  "6ch-usbup+model-tg-st+sample-preview-st+trig-hold+arp+tempo-max+boot-anim+multiline-browser+level-pan-values+trigless-dim+midi-both+lfo-plus+syntakt-tg-cp-macro": "e82158eb8e4d5e7682518875a851946f584f85dfa79c6a3514526eefac1d7ed1",
+  "6ch-usbup+latching-mute+trig-preview+browser-scroll+trig-hold+arp+tempo-max+boot-anim+multiline-browser+level-pan-values+trigless-dim+midi-live-both+chord-keys+lfo-plus+syntakt-cp-macro": "74e2567e74d3552e59edc0701fc46be749c3bf52f849e8e551ae4f75f27e8947",
+  "6ch-usbup+model-tg-st+sample-preview-st+trig-hold+arp+tempo-max+boot-anim+multiline-browser+level-pan-values+trigless-dim+midi-both+lfo-plus+syntakt-tg-toy-macro": "cdc80150fd0a22ae819afb20f503c2c81f65478a0e5c72a6067d55050a92b0ef",
+  "6ch-usbup+latching-mute+trig-preview+browser-scroll+trig-hold+arp+tempo-max+boot-anim+multiline-browser+level-pan-values+trigless-dim+midi-live-both+chord-keys+lfo-plus+syntakt-toy-macro": "322f91dfd260b0249f259b46b369244ec1ad670bfc559f2a2daf92ea100df47c",
+  "6ch-usbup+model-tg-st+sample-preview-st+trig-hold+arp+tempo-max+boot-anim+multiline-browser+level-pan-values+trigless-dim+midi-both+lfo-plus+syntakt-tg-bits-macro": "a205da9c8a9b7bdccedbe4fd81652bf58921cc7967e6194aa68ef76631c3af28",
+  "6ch-usbup+latching-mute+trig-preview+browser-scroll+trig-hold+arp+tempo-max+boot-anim+multiline-browser+level-pan-values+trigless-dim+midi-live-both+chord-keys+lfo-plus+syntakt-bits-macro": "59dd0a2556ee227fa30b4faabcbaf3e8e0192e4ce4c4f6554c7a76c1f75e56b6",
+  "6ch-usbup+model-tg-st+sample-preview-st+trig-hold+arp+tempo-max+boot-anim+multiline-browser+level-pan-values+trigless-dim+midi-both+lfo-plus+syntakt-tg-swarm-macro": "30ff91e04a3c0b9196906923829023db02db04add99cb9fd644590e7fd9dce50",
+  "6ch-usbup+latching-mute+trig-preview+browser-scroll+trig-hold+arp+tempo-max+boot-anim+multiline-browser+level-pan-values+trigless-dim+midi-live-both+chord-keys+lfo-plus+syntakt-swarm-macro": "724f92a180ccd1af5e1a349af7813beb1b1798e1b5a4efc5f9e0f1ad2476ca78",
+  "6ch-usbup+model-tg-st+sample-preview-st+trig-hold+arp+tempo-max+boot-anim+multiline-browser+level-pan-values+trigless-dim+midi-both+lfo-plus+syntakt-tg-sd-cp-macro": "9081815f2025a50be53b627363a3d328853d716d11864e702e51351a15100a48",
+  "6ch-usbup+latching-mute+trig-preview+browser-scroll+trig-hold+arp+tempo-max+boot-anim+multiline-browser+level-pan-values+trigless-dim+midi-live-both+chord-keys+lfo-plus+syntakt-sd-cp-macro": "2e3965a8fe707b00c7aa07accef073bd259ed700a8762aa922cb5aee526677d0",
+  "6ch-usbup+model-tg-st+sample-preview-st+trig-hold+arp+tempo-max+boot-anim+multiline-browser+level-pan-values+trigless-dim+midi-both+lfo-plus+syntakt-tg-sd-toy-macro": "83f76b2bb1d63e5659b15083937b86ebf8e9ce27b3ce74203fa0680e325ae702",
+  "6ch-usbup+latching-mute+trig-preview+browser-scroll+trig-hold+arp+tempo-max+boot-anim+multiline-browser+level-pan-values+trigless-dim+midi-live-both+chord-keys+lfo-plus+syntakt-sd-toy-macro": "9d44e589aae4aff4804dd5bbe7a1698c44a0258f82b876caf8136e9cef91c28b",
+  "6ch-usbup+model-tg-st+sample-preview-st+trig-hold+arp+tempo-max+boot-anim+multiline-browser+level-pan-values+trigless-dim+midi-both+lfo-plus+syntakt-tg-sd-bits-macro": "ed93f2728072ae7df69dfea5b088db56b0d182ebf3148a8eba84e2427aabc8d1",
+  "6ch-usbup+latching-mute+trig-preview+browser-scroll+trig-hold+arp+tempo-max+boot-anim+multiline-browser+level-pan-values+trigless-dim+midi-live-both+chord-keys+lfo-plus+syntakt-sd-bits-macro": "62ae3c0679ad4eefc930424ed9ffbcd8665d7313e53a3fb143627a97a6544576",
+  "6ch-usbup+model-tg-st+sample-preview-st+trig-hold+arp+tempo-max+boot-anim+multiline-browser+level-pan-values+trigless-dim+midi-both+lfo-plus+syntakt-tg-sd-swarm-macro": "0310f91c85d00a9b49663d2dfe57ad9274481764de3d71c912441aee92e4c68f",
+  "6ch-usbup+latching-mute+trig-preview+browser-scroll+trig-hold+arp+tempo-max+boot-anim+multiline-browser+level-pan-values+trigless-dim+midi-live-both+chord-keys+lfo-plus+syntakt-sd-swarm-macro": "7c958992579b9be19b339ea66bca675952f0e903a6f44f87584084fd8b396f15",
+  "6ch-usbup+model-tg-st+sample-preview-st+trig-hold+arp+tempo-max+boot-anim+multiline-browser+level-pan-values+trigless-dim+midi-both+lfo-plus+syntakt-tg-cp-toy-macro": "d0c0e14cb7ccb3bac876679fe0848b44459a245a166d032eeeeca7695a193bc6",
+  "6ch-usbup+latching-mute+trig-preview+browser-scroll+trig-hold+arp+tempo-max+boot-anim+multiline-browser+level-pan-values+trigless-dim+midi-live-both+chord-keys+lfo-plus+syntakt-cp-toy-macro": "ca0c6960258b3f461fac1a74a22694394a547108e500e90c1ed25e325bbf28e8",
+  "6ch-usbup+model-tg-st+sample-preview-st+trig-hold+arp+tempo-max+boot-anim+multiline-browser+level-pan-values+trigless-dim+midi-both+lfo-plus+syntakt-tg-cp-bits-macro": "e49a5937c491783ab6eba02af1bb008044b72d400beab67952cff403fa7d8a0a",
+  "6ch-usbup+latching-mute+trig-preview+browser-scroll+trig-hold+arp+tempo-max+boot-anim+multiline-browser+level-pan-values+trigless-dim+midi-live-both+chord-keys+lfo-plus+syntakt-cp-bits-macro": "6f882068dc48fe237a7985f22d045392616d3cf2035b0ff8b8a67becac883153",
+  "6ch-usbup+model-tg-st+sample-preview-st+trig-hold+arp+tempo-max+boot-anim+multiline-browser+level-pan-values+trigless-dim+midi-both+lfo-plus+syntakt-tg-cp-swarm-macro": "c4996dd77add82ac1f1053bad5b8b9c393adf59af08eac7307a723b5584fdaa9",
+  "6ch-usbup+latching-mute+trig-preview+browser-scroll+trig-hold+arp+tempo-max+boot-anim+multiline-browser+level-pan-values+trigless-dim+midi-live-both+chord-keys+lfo-plus+syntakt-cp-swarm-macro": "1728b66680751a4dfd9afb2d01527044709cd632e0bdf3fbbded990936224883",
+  "6ch-usbup+model-tg-st+sample-preview-st+trig-hold+arp+tempo-max+boot-anim+multiline-browser+level-pan-values+trigless-dim+midi-both+lfo-plus+syntakt-tg-toy-bits-macro": "e7694e5d109eb2d67b3ee89a5b85842d341a32b8888530e00b13a20bdda42fb7",
+  "6ch-usbup+latching-mute+trig-preview+browser-scroll+trig-hold+arp+tempo-max+boot-anim+multiline-browser+level-pan-values+trigless-dim+midi-live-both+chord-keys+lfo-plus+syntakt-toy-bits-macro": "1bc84b445ea1da6f7733d39adf9c228fbd7649dbef611beaadf484e3945f9ae7",
+  "6ch-usbup+model-tg-st+sample-preview-st+trig-hold+arp+tempo-max+boot-anim+multiline-browser+level-pan-values+trigless-dim+midi-both+lfo-plus+syntakt-tg-toy-swarm-macro": "1cefd271527d8bb0067c08a020eb716443717b7c875e95a96921dfd14660bb4b",
+  "6ch-usbup+latching-mute+trig-preview+browser-scroll+trig-hold+arp+tempo-max+boot-anim+multiline-browser+level-pan-values+trigless-dim+midi-live-both+chord-keys+lfo-plus+syntakt-toy-swarm-macro": "b4d6ac7639fcdbe617bad34cbf7c48f3134e7a5c0bdb9197821c7817bf211930",
+  "6ch-usbup+model-tg-st+sample-preview-st+trig-hold+arp+tempo-max+boot-anim+multiline-browser+level-pan-values+trigless-dim+midi-both+lfo-plus+syntakt-tg-bits-swarm-macro": "c9f6a2e81c6c3b2870b9b73d92cafd09ea26e1fc2f130efcb0bbc34757978c4b",
+  "6ch-usbup+latching-mute+trig-preview+browser-scroll+trig-hold+arp+tempo-max+boot-anim+multiline-browser+level-pan-values+trigless-dim+midi-live-both+chord-keys+lfo-plus+syntakt-bits-swarm-macro": "8e9e7f2ca8360cc560fe2a8792cd57f403cec0da8e6691fbd577b2b63e70bb1c",
+  "6ch-usbup+model-tg-st+sample-preview-st+trig-hold+arp+tempo-max+boot-anim+multiline-browser+level-pan-values+trigless-dim+midi-both+lfo-plus+syntakt-tg-sd-cp-toy-macro": "0cf2e439db0d5b1bd79c264f268ca0566a27d4d153b033f3a6c5105ea20f0121",
+  "6ch-usbup+latching-mute+trig-preview+browser-scroll+trig-hold+arp+tempo-max+boot-anim+multiline-browser+level-pan-values+trigless-dim+midi-live-both+chord-keys+lfo-plus+syntakt-sd-cp-toy-macro": "2c7efa5e1f7ae200e1a9492134ec8304eed75a4e194c183a938b231b12cd526b",
+  "6ch-usbup+model-tg-st+sample-preview-st+trig-hold+arp+tempo-max+boot-anim+multiline-browser+level-pan-values+trigless-dim+midi-both+lfo-plus+syntakt-tg-sd-cp-bits-macro": "65e63de6b8d0d1909ef0a3d64c78f8ccf460d7d8da3c2b6218c478b3b4fb6035",
+  "6ch-usbup+latching-mute+trig-preview+browser-scroll+trig-hold+arp+tempo-max+boot-anim+multiline-browser+level-pan-values+trigless-dim+midi-live-both+chord-keys+lfo-plus+syntakt-sd-cp-bits-macro": "bea7d4fa209ba290e16874a8c116b4eecedea110cc0ecb6ba82a79bc64c1ebb9",
+  "6ch-usbup+model-tg-st+sample-preview-st+trig-hold+arp+tempo-max+boot-anim+multiline-browser+level-pan-values+trigless-dim+midi-both+lfo-plus+syntakt-tg-sd-cp-swarm-macro": "140a5a98ad958ae07b420d36d93166e043d866ab26a5c9a348a5936a4ebd7398",
+  "6ch-usbup+latching-mute+trig-preview+browser-scroll+trig-hold+arp+tempo-max+boot-anim+multiline-browser+level-pan-values+trigless-dim+midi-live-both+chord-keys+lfo-plus+syntakt-sd-cp-swarm-macro": "db19fb63712aff9d4b1e5cd78ecbf929f9c4829800ff6ff10387393c310d94f6",
+  "6ch-usbup+model-tg-st+sample-preview-st+trig-hold+arp+tempo-max+boot-anim+multiline-browser+level-pan-values+trigless-dim+midi-both+lfo-plus+syntakt-tg-sd-toy-bits-macro": "0220ed54aa14a69125c62672c70a0d4f1da0606aff2a1b8acfadb3934770ba9a",
+  "6ch-usbup+latching-mute+trig-preview+browser-scroll+trig-hold+arp+tempo-max+boot-anim+multiline-browser+level-pan-values+trigless-dim+midi-live-both+chord-keys+lfo-plus+syntakt-sd-toy-bits-macro": "e7d1959daea7602b93b6a3298e2f28d61f035478da8c8ddd6eacef637727d75a",
+  "6ch-usbup+model-tg-st+sample-preview-st+trig-hold+arp+tempo-max+boot-anim+multiline-browser+level-pan-values+trigless-dim+midi-both+lfo-plus+syntakt-tg-sd-toy-swarm-macro": "0caf5dac8f535c6253b70b8f1282bc7a495ecfdd68952e189d3d72de60374498",
+  "6ch-usbup+latching-mute+trig-preview+browser-scroll+trig-hold+arp+tempo-max+boot-anim+multiline-browser+level-pan-values+trigless-dim+midi-live-both+chord-keys+lfo-plus+syntakt-sd-toy-swarm-macro": "5d7cc6a001a1448ec98ee746870d038b5f7248d04e2efd337233b0b438aca09e",
+  "6ch-usbup+model-tg-st+sample-preview-st+trig-hold+arp+tempo-max+boot-anim+multiline-browser+level-pan-values+trigless-dim+midi-both+lfo-plus+syntakt-tg-sd-bits-swarm-macro": "b60d4ff0b087db98a8aae3f38d6ab9b4002d2b7a08912b65249c483b51abfea8",
+  "6ch-usbup+latching-mute+trig-preview+browser-scroll+trig-hold+arp+tempo-max+boot-anim+multiline-browser+level-pan-values+trigless-dim+midi-live-both+chord-keys+lfo-plus+syntakt-sd-bits-swarm-macro": "1b2b60bc00a7cc03c62646e19cc71b82bc680f37caba5383a25fdcff5a28f37a",
+  "6ch-usbup+model-tg-st+sample-preview-st+trig-hold+arp+tempo-max+boot-anim+multiline-browser+level-pan-values+trigless-dim+midi-both+lfo-plus+syntakt-tg-cp-toy-bits-macro": "09ca6712fb0a830a9bb89e62fb477b75e208c45ef727283420b476181479da32",
+  "6ch-usbup+latching-mute+trig-preview+browser-scroll+trig-hold+arp+tempo-max+boot-anim+multiline-browser+level-pan-values+trigless-dim+midi-live-both+chord-keys+lfo-plus+syntakt-cp-toy-bits-macro": "434e3c47eb6a00659a3764cab6158cf51cd3d475d46eb0a002b0f3ce74e0d594",
+  "6ch-usbup+model-tg-st+sample-preview-st+trig-hold+arp+tempo-max+boot-anim+multiline-browser+level-pan-values+trigless-dim+midi-both+lfo-plus+syntakt-tg-cp-toy-swarm-macro": "b15d1a595bc2e4c92146e8a8539ee01d65ee3edad1ebd210d518144554768534",
+  "6ch-usbup+latching-mute+trig-preview+browser-scroll+trig-hold+arp+tempo-max+boot-anim+multiline-browser+level-pan-values+trigless-dim+midi-live-both+chord-keys+lfo-plus+syntakt-cp-toy-swarm-macro": "f773ded79bd86183393e6a4db1e160e003656143920f6ba137d80a3f25fe36b6",
+  "6ch-usbup+model-tg-st+sample-preview-st+trig-hold+arp+tempo-max+boot-anim+multiline-browser+level-pan-values+trigless-dim+midi-both+lfo-plus+syntakt-tg-cp-bits-swarm-macro": "d4aaf8048c45f5d2f352fef4952508a56270aba3c2ed5c500e93d78533defeb3",
+  "6ch-usbup+latching-mute+trig-preview+browser-scroll+trig-hold+arp+tempo-max+boot-anim+multiline-browser+level-pan-values+trigless-dim+midi-live-both+chord-keys+lfo-plus+syntakt-cp-bits-swarm-macro": "a167b982665e7bee36e7cdf4f9d5c30ea6b1eacae299e2e90a42db6f9e841dc4",
+  "6ch-usbup+model-tg-st+sample-preview-st+trig-hold+arp+tempo-max+boot-anim+multiline-browser+level-pan-values+trigless-dim+midi-both+lfo-plus+syntakt-tg-toy-bits-swarm-macro": "a70e64bc58fed28fae455094876409876c8c66413339233ba36315e152ad44dc",
+  "6ch-usbup+latching-mute+trig-preview+browser-scroll+trig-hold+arp+tempo-max+boot-anim+multiline-browser+level-pan-values+trigless-dim+midi-live-both+chord-keys+lfo-plus+syntakt-toy-bits-swarm-macro": "eea810513f5c0b3867ba8e33af838561e3825a812f0b86a9e924c255f4dbaeb2",
+  "6ch-usbup+model-tg-st+sample-preview-st+trig-hold+arp+tempo-max+boot-anim+multiline-browser+level-pan-values+trigless-dim+midi-both+lfo-plus+syntakt-tg-sd-cp-toy-bits-macro": "e7b9edc49d556f0c347efd1a5dbea60fc0fbbfabe667024d8fddf8e8f3b1ed8d",
+  "6ch-usbup+latching-mute+trig-preview+browser-scroll+trig-hold+arp+tempo-max+boot-anim+multiline-browser+level-pan-values+trigless-dim+midi-live-both+chord-keys+lfo-plus+syntakt-sd-cp-toy-bits-macro": "07706183ed533c670b04cec24be3f954036ec4b5bd4357fc3490052230fbc710",
+  "6ch-usbup+model-tg-st+sample-preview-st+trig-hold+arp+tempo-max+boot-anim+multiline-browser+level-pan-values+trigless-dim+midi-both+lfo-plus+syntakt-tg-sd-cp-toy-swarm-macro": "679fb22df2e7a19fafeab3a0f233d4d5d3561e68d5d60a2f5e8628c6a4ee4d5d",
+  "6ch-usbup+latching-mute+trig-preview+browser-scroll+trig-hold+arp+tempo-max+boot-anim+multiline-browser+level-pan-values+trigless-dim+midi-live-both+chord-keys+lfo-plus+syntakt-sd-cp-toy-swarm-macro": "40c038cc28112ce8b037d89a90f5d981b584b4e4b7b5696c31355adecf5da86d",
+  "6ch-usbup+model-tg-st+sample-preview-st+trig-hold+arp+tempo-max+boot-anim+multiline-browser+level-pan-values+trigless-dim+midi-both+lfo-plus+syntakt-tg-sd-cp-bits-swarm-macro": "84c80d45775e3de0890a28d4bd08502feab449a452fc1fc4213294c65a54bf43",
+  "6ch-usbup+latching-mute+trig-preview+browser-scroll+trig-hold+arp+tempo-max+boot-anim+multiline-browser+level-pan-values+trigless-dim+midi-live-both+chord-keys+lfo-plus+syntakt-sd-cp-bits-swarm-macro": "facca177538d5d1a4577c948c4194ecfac1b5d2bf5e9d873662ca2c1505701aa",
+  "6ch-usbup+model-tg-st+sample-preview-st+trig-hold+arp+tempo-max+boot-anim+multiline-browser+level-pan-values+trigless-dim+midi-both+lfo-plus+syntakt-tg-sd-toy-bits-swarm-macro": "83b521983129f35707fa05e98b8949600a3cd9352cc2d4f84f9422c5c81823fd",
+  "6ch-usbup+latching-mute+trig-preview+browser-scroll+trig-hold+arp+tempo-max+boot-anim+multiline-browser+level-pan-values+trigless-dim+midi-live-both+chord-keys+lfo-plus+syntakt-sd-toy-bits-swarm-macro": "d176770248965cebad2ab9094c55ffcb295766c8892525027a63dc78841bcf6c",
+  "6ch-usbup+model-tg-st+sample-preview-st+trig-hold+arp+tempo-max+boot-anim+multiline-browser+level-pan-values+trigless-dim+midi-both+lfo-plus+syntakt-tg-cp-toy-bits-swarm-macro": "76756d6c6aea706cebbc27c52c1805ee81526da6c1046995498a1ca3c0604750",
+  "6ch-usbup+latching-mute+trig-preview+browser-scroll+trig-hold+arp+tempo-max+boot-anim+multiline-browser+level-pan-values+trigless-dim+midi-live-both+chord-keys+lfo-plus+syntakt-cp-toy-bits-swarm-macro": "bda1773b2824f28580c9c06f4f765f7d95bed76b597ae227f2648941d2af30ea",
 };
 const REF_MODS = {
   "6ch-usbup": {"w": "9e4a546894a480c25a8bac2b283d4f6dd81d8b5c2b39f321256ae42016ad5009"},
@@ -932,138 +917,135 @@ const REF_MODS = {
   "trigless-dim": {"w": "4efc73f035aab33963e8ae8f3f6343925e2cd5149b4cad6780051d0c185e32e1"},
   "midi-both": {"w": "260b8eeba4d71e5cefdd8ccd4fc94794b76902e7675b960d3867f35c5ed6ca6c"},
   "midi-live-both": {"w": "e7dfae924d6474abea22b375002ff58b1e3cde301aa9ca8a2ec980593316c942"},
-  "macro": {"w": "85bacb039fb24d2a425ba67323d0c3d49bf22fa5e4a3ad7f800e6500738f8d1a", "p": "29085f8877c80137fec46b16ebbfdb428b098c79b39a4c9a89ba033138ace30b"},
-  "macro-tg": {"w": "3e6981c2a7bf05ec648364b4f07d16987737df9f750630ee1fe4dd08d80be72e", "p": "9958c81e9b155d478bba3613d2843f2b1618757300390e8fc89bace3fa93eb31"},
-  "va": {"w": "d5250506efe38ef04ddbb1b9d7657d79129f8db10a47f85d61607eba1be55c2c", "p": "21d1a63605c004656b2a728d8259e3452dbc66dd5ade05d714b0751975acb5d5"},
-  "va-tg": {"w": "2b459c1b231b5f27fa8713e976fe1a7d165be62a9b6d7889c1138d43155d833b", "p": "d9f834b6b3709e74e068a53f3486d43dfe394a5aa22b402b192a7bf5683f4cad"},
+  "macro": {"w": "201b87d55c58f7a50532c57b1ba5285a60bd2e98a05bf91da47d3b123a64dccf", "p": "4f7b9b94290a8d979080eec46e7f9c3bdce0f57bb41853ca5a2b8e74fdd7199a"},
+  "macro-tg": {"w": "e4d279d30063e4678c834b20de80cc7040f093e7e212b1c75d407e3eccb2f212", "p": "5113e12a220d64d9a89a4502c67dbb48b547f8194b4c92bacd03528ab17f0a41"},
   "chord-keys": {"w": "0fcfc8956479f7dedb0d151db495afed026a5fe422f873c00ae9b97fd935eca0"},
-  "generate": {"w": "6d3b054cdb00776c849ca7831db71a3adef2a89a3be07efeb8621f961015efb9"},
-  "generate-st": {"w": "6d3b054cdb00776c849ca7831db71a3adef2a89a3be07efeb8621f961015efb9"},
+  "track-filter": {"w": "6b02de9c4519883e33abb2ed2e956665a0db2fd7b2b86a502d9ac3e0b386fae2"},
   "lfo-plus": {"w": "8443b08fdb4ce7cf1ba26821b27e7df3ab4ca5396e35e7e9a8e591fc430569b6"},
   "syntakt-sd": {"w": "302e17ec196915060072e1dabab1ffddb4dd0dd9db8eeee75fbfcb8a4d479949", "p": "e4313c5df5b583392463ae00fba165b8fd892d819bac145d9e1b85a7fbeb572c"},
   "syntakt-tg-sd": {"w": "9c2d77a0c27270c16cf111b7ee2f6d45b6d0724d21d1055cfc102236f773c920", "p": "e1569a046be718e9fa1dacf6cc904f30082f321783a2a615dbdbcf752321c200"},
-  "syntakt-sd-macro": {"w": "7373af7f30678b22f8a258da59bc9f4e1c86c669c5b2d5a5c507aa6b4cc1c196", "p": "6e2a55d05358afde2cf267176be95833d9f571357753bcf845f3b690abf850c8"},
-  "syntakt-tg-sd-macro": {"w": "16dcaaa464f0af3f82f3efed89790a993e059de9c3efde4c84f60db537095e3e", "p": "5aa360c86ebf31ec411ec5237820b9d46f5d99e0cd7ce0393d19a17204bfa9dc"},
+  "syntakt-sd-macro": {"w": "7373af7f30678b22f8a258da59bc9f4e1c86c669c5b2d5a5c507aa6b4cc1c196", "p": "84093d0a4b493ed7eac7f9cf78d3a883970b3d7a0081280a94d950ea5eca95c7"},
+  "syntakt-tg-sd-macro": {"w": "16dcaaa464f0af3f82f3efed89790a993e059de9c3efde4c84f60db537095e3e", "p": "16f762190f3133bcdbf08bce6a3ecca78159d4cff330409370cd7a85453c9b05"},
   "syntakt-cp": {"w": "302e17ec196915060072e1dabab1ffddb4dd0dd9db8eeee75fbfcb8a4d479949", "p": "49fe2722a5bdce42d5083d8ce42b4e24c02f399efca86333dcd41875f25b424a"},
   "syntakt-tg-cp": {"w": "9c2d77a0c27270c16cf111b7ee2f6d45b6d0724d21d1055cfc102236f773c920", "p": "d1b45c64989e4baf39b2d622513b86872a8e07556cb7cc0649d03efb97a4fa81"},
-  "syntakt-cp-macro": {"w": "7373af7f30678b22f8a258da59bc9f4e1c86c669c5b2d5a5c507aa6b4cc1c196", "p": "a66e601777d5e4d3fd955d9294e98bc599005ce4d2aa2ea9a2896b3fb9a25a55"},
-  "syntakt-tg-cp-macro": {"w": "16dcaaa464f0af3f82f3efed89790a993e059de9c3efde4c84f60db537095e3e", "p": "b783d614c67d0e10f780d75b37f9e6bd0be326cb0d204fb91b6b1e008d55724e"},
+  "syntakt-cp-macro": {"w": "7373af7f30678b22f8a258da59bc9f4e1c86c669c5b2d5a5c507aa6b4cc1c196", "p": "41ffc038a550e4bcba3fe3ae0bc88f11f1f03cc17309a2ec4e4630d680bfdbe9"},
+  "syntakt-tg-cp-macro": {"w": "16dcaaa464f0af3f82f3efed89790a993e059de9c3efde4c84f60db537095e3e", "p": "0faeb5c011f8069e4b1f0b3d6265f84736a8ee337a3c4bde2869f7427b4e0d40"},
   "syntakt-toy": {"w": "302e17ec196915060072e1dabab1ffddb4dd0dd9db8eeee75fbfcb8a4d479949", "p": "13d331b6db41320ceedcc75894dbe1d74688096564b628def63c39b839821912"},
   "syntakt-tg-toy": {"w": "3857c743d0b54c9816223c9d7c8e8748ab68cac799bba3948589229517091d29", "p": "ba150cecaea0661e8f5d96929c77c82902f20047e4441bcfb0d16a1a8be614f7"},
-  "syntakt-toy-macro": {"w": "7373af7f30678b22f8a258da59bc9f4e1c86c669c5b2d5a5c507aa6b4cc1c196", "p": "9870b0ac0a70954b7daf9ae7e835fc5f18c86e5fe6814012d7464ca47e23a338"},
-  "syntakt-tg-toy-macro": {"w": "16dcaaa464f0af3f82f3efed89790a993e059de9c3efde4c84f60db537095e3e", "p": "41659d7217f9a9e02531c2d6eb4e259789d6167a6d1dbf5f6c8a9f2c7bf75d17"},
+  "syntakt-toy-macro": {"w": "7373af7f30678b22f8a258da59bc9f4e1c86c669c5b2d5a5c507aa6b4cc1c196", "p": "ffbe0088e7b51811d6c9165a89edb225ca3c4ef3c176eb817c3cda35cfe85431"},
+  "syntakt-tg-toy-macro": {"w": "16dcaaa464f0af3f82f3efed89790a993e059de9c3efde4c84f60db537095e3e", "p": "a766832eb08cbcbd5c38383bafed1f779899ff3b24782c415908a817f3fe931c"},
   "syntakt-bits": {"w": "8ce1067da3d8ec2fdb852c23fe266b67f8a634b217072fd58dfff2d3191fdec9", "p": "12a8726a3a605b4dd7c8a3e96d86c147a2404d18aa881c140e6da49c9534fae5"},
   "syntakt-tg-bits": {"w": "8acf0672c2759a6d7cfd26c77c80dcb54de6ba7c841c4427c24bd77360e61b47", "p": "3dc44b3d47932062654680e8a9998b6f9c918e6df8c042b0c94392cb9d310f10"},
-  "syntakt-bits-macro": {"w": "e65bd91c46ae819b6def7dba337056dd4e9d74516a526d21aa449911286a06aa", "p": "bdb74e5efc1b5fada4223119f15a0555a1592b7ae14fc48f8a99dfd52323cbe7"},
-  "syntakt-tg-bits-macro": {"w": "5cbabb801c2352b58727e71e2cead7a9f0548988f93149480fbb277cc4a6039c", "p": "a275b436767b3b793c2429293c6066295d79157ef53b55d978f8ab27bb57d8dc"},
+  "syntakt-bits-macro": {"w": "e65bd91c46ae819b6def7dba337056dd4e9d74516a526d21aa449911286a06aa", "p": "f0adc0b55a1e6a0a2842def1ac1a463347afb77be9d393877fe7c1c326ae2843"},
+  "syntakt-tg-bits-macro": {"w": "5cbabb801c2352b58727e71e2cead7a9f0548988f93149480fbb277cc4a6039c", "p": "be2c16846fee9a081f8053ece648af6a70058ac2ba01ccdfbd459f4e2fde8043"},
   "syntakt-swarm": {"w": "360e6b8fd412574ecf5f39d489c3cef6dcfb9ac7102fae0bd785ce65af313293", "p": "3a6f2b7558952ae0ee98a24f94ced91e3549a171b8a0a9a49616fd2dee6eaf45"},
   "syntakt-tg-swarm": {"w": "125d625f4990b2c042998c61d907bc2ba42efd5a6777e69e479ac571f434d8d3", "p": "764cfac20bf1a9b732ab52ffe136fccea4d4271a2423812afc69750488797dcc"},
-  "syntakt-swarm-macro": {"w": "6dc7a7592ab6be86e63b45eead46c9a7cd7ea116d905b60afef77e908e82f429", "p": "43bddee2b6dc7168538e6e63617ed4f30769e1b6e4b63b12db3c0f6b5f6bdd84"},
-  "syntakt-tg-swarm-macro": {"w": "82ac9849d89a557e652f1cfa4b06fce9d107535384b7436d3a02f707a22aba21", "p": "5dea59072671d820cb1643a8e106b133958342a874b1a2f6d672abb7510837e0"},
+  "syntakt-swarm-macro": {"w": "6dc7a7592ab6be86e63b45eead46c9a7cd7ea116d905b60afef77e908e82f429", "p": "4a7f0d3f11dff08b1e80873737447aafd0686388ab6a20488c27190d2aadf09c"},
+  "syntakt-tg-swarm-macro": {"w": "82ac9849d89a557e652f1cfa4b06fce9d107535384b7436d3a02f707a22aba21", "p": "9c1492a984f9fdffdacd946b55158106aecbdfb92c50c9b3bf5fcd850ae1de31"},
   "syntakt-sd-cp": {"w": "b5cbdfffa4b4791ebb63f59298b8e47b443f8d293c99a3c26a283e99c5d4859e", "p": "14b6d040a0ee80677644b02925bb5398cf95d08fdf9529e458fdad256612677a"},
   "syntakt-tg-sd-cp": {"w": "f4e2e9684553ee0921706e12a19ef12d47c7ec590d5322f71edddb1535fce900", "p": "ac06d46fb8d7c4c4294fb6f06bc7d0ee7037bb0e9774c7a39ac67a832843ec8b"},
-  "syntakt-sd-cp-macro": {"w": "0cb9d714b14ae31a95398a58318778c9f9c8e03e03f4eb1b49225381f56af3f6", "p": "fc78434c7a40cfe4693591ed4a8ea24a1b5f049f8bf1aef6f11a244d2bc0749f"},
-  "syntakt-tg-sd-cp-macro": {"w": "aa699174d3acf85524e6781647397a75c908eeb0e087875c2f5285e9864809be", "p": "602bd982d1542baaa5c092c327cb714e601520871d8bf3d95fae8799804d41b7"},
+  "syntakt-sd-cp-macro": {"w": "0cb9d714b14ae31a95398a58318778c9f9c8e03e03f4eb1b49225381f56af3f6", "p": "acbc2be09e3c6b14155fc025e9d1f12214dfa81f68a50c92595d9a466eb56653"},
+  "syntakt-tg-sd-cp-macro": {"w": "aa699174d3acf85524e6781647397a75c908eeb0e087875c2f5285e9864809be", "p": "c76497d589b269e96e6c4b0112910b3d37443847e45c9e205480feb7ffd8c487"},
   "syntakt-sd-toy": {"w": "b5cbdfffa4b4791ebb63f59298b8e47b443f8d293c99a3c26a283e99c5d4859e", "p": "86009341c5627330f89f30de90cc9413148d9b7ba924b1c860d1c52db8b83a98"},
   "syntakt-tg-sd-toy": {"w": "a6458464c61122abaeda53756934558a30007cfb184057ab64bf397958b1847b", "p": "84fb2c682e3f1fdded50d429085eed5abfd493fafda225e40a865cd41f03de9b"},
-  "syntakt-sd-toy-macro": {"w": "0cb9d714b14ae31a95398a58318778c9f9c8e03e03f4eb1b49225381f56af3f6", "p": "7f0289f77252da7758cafb4cd8f8db94961b5b618f2496998e70644a7e85fcfa"},
-  "syntakt-tg-sd-toy-macro": {"w": "aa699174d3acf85524e6781647397a75c908eeb0e087875c2f5285e9864809be", "p": "9ae9329799a1a1142a549978512c3641b5eb6c02aa4e813a909a054691e61750"},
+  "syntakt-sd-toy-macro": {"w": "0cb9d714b14ae31a95398a58318778c9f9c8e03e03f4eb1b49225381f56af3f6", "p": "073b39146150ec850dcc2de27ac49111f98d2e4347894146a57e45078ed1bb7e"},
+  "syntakt-tg-sd-toy-macro": {"w": "aa699174d3acf85524e6781647397a75c908eeb0e087875c2f5285e9864809be", "p": "6b8d075de1eb08bb33b48b9f2f9a52cbf0c8481247d9d7114ebbf76f21213daa"},
   "syntakt-sd-bits": {"w": "6ca68900965c6e43dacc1013ad72670f4458317bc6d284a8701df3ad36cafc01", "p": "26b78d37e9cee75611ed43a387a89e3eb5f6e8ca6a3a9fccaa58d13c1c60a28c"},
   "syntakt-tg-sd-bits": {"w": "1772974bfe1ce3f16cd08bd6ee2f78d6efac6654e66e3a98b1b5e0087d794a39", "p": "7c7cef48a40350b6b4c6bb963a55a81ee43d8d0f71c60b805fcd506fa45c126f"},
-  "syntakt-sd-bits-macro": {"w": "23ffbcb0f92d5d881f000f9437f79e5899017c323869edd7e330388606defd25", "p": "561f671a4b7806224e9e3c329a6e42f16a81c49884442881081e742f820359d9"},
-  "syntakt-tg-sd-bits-macro": {"w": "268a2b4c0874e4b4c537997d0c332c19d67996045702cbf63f0bcd1badfe327c", "p": "40350bf2863c8af2752d993c938e6d7e98f6aad16aad35a16dae447c355edd15"},
+  "syntakt-sd-bits-macro": {"w": "23ffbcb0f92d5d881f000f9437f79e5899017c323869edd7e330388606defd25", "p": "5526d6444571f0a99f130f2827b52fe8ad9280a79c666b98f0e3489c8e28f98d"},
+  "syntakt-tg-sd-bits-macro": {"w": "268a2b4c0874e4b4c537997d0c332c19d67996045702cbf63f0bcd1badfe327c", "p": "44be51f166a2ba0d60c6c54197fb557655ef1f4806ee77c82db6e25aae4c144a"},
   "syntakt-sd-swarm": {"w": "6beb6cf8bb467020dd627770cd50dcf633409fe9568fd430699296a8055255cd", "p": "5cf17594198adc179d5103d2b5464c1e3746e8c30bacd9c916f41595411436a6"},
   "syntakt-tg-sd-swarm": {"w": "8b07e3ad361c7f91d4edb92180019e157f89c461c9510c09a5908d6b60d22ca5", "p": "81e3cfe33cd12da23a7a4e6b76c1685bf179d1e9a4f0c814f80af4fa0e4faaf6"},
-  "syntakt-sd-swarm-macro": {"w": "d8ee91282bd48dc62d8723ab9aaef492bcde3875163f0243f83cf689eeb3f0ca", "p": "02edadfd142bb08c8af874e06527f6f34f34e0d937ffdedb6bbe768ff1d4f07e"},
-  "syntakt-tg-sd-swarm-macro": {"w": "2a5e25a21187fe0b595014b35c3b8f8ff9790013334714539b1f6b6622921033", "p": "56eb82c6bed7d5d514bf48b59fc5c607bd57a661e2d6e4e4ad237c1bea25bc22"},
+  "syntakt-sd-swarm-macro": {"w": "d8ee91282bd48dc62d8723ab9aaef492bcde3875163f0243f83cf689eeb3f0ca", "p": "12e57947cb861b8e29bcf2434a9c6102a5f58b7760179a956c2f38a76a79ae91"},
+  "syntakt-tg-sd-swarm-macro": {"w": "2a5e25a21187fe0b595014b35c3b8f8ff9790013334714539b1f6b6622921033", "p": "df688a1dcce676672b1f444b52e581a1c6f11b70c97aa67f356277726f5f5404"},
   "syntakt-cp-toy": {"w": "b5cbdfffa4b4791ebb63f59298b8e47b443f8d293c99a3c26a283e99c5d4859e", "p": "7fa55e16f170350042166a4fce1893e57006c05a2dd970d6be956378d4fc64d9"},
   "syntakt-tg-cp-toy": {"w": "a6458464c61122abaeda53756934558a30007cfb184057ab64bf397958b1847b", "p": "506ba8619ce6b945f91250a13b412acbc7ce0efb8878799b146d65bd0fc9fbef"},
-  "syntakt-cp-toy-macro": {"w": "0cb9d714b14ae31a95398a58318778c9f9c8e03e03f4eb1b49225381f56af3f6", "p": "fc73617e0daa5551b1358c8b2db3f5c62251ca5be78df9d143caac4cca9db22d"},
-  "syntakt-tg-cp-toy-macro": {"w": "aa699174d3acf85524e6781647397a75c908eeb0e087875c2f5285e9864809be", "p": "31ec8738310cd105c88027d7c25711fbcd217174813ee847bd29e74bba362014"},
+  "syntakt-cp-toy-macro": {"w": "0cb9d714b14ae31a95398a58318778c9f9c8e03e03f4eb1b49225381f56af3f6", "p": "4662f9b79cf0d8dd1fbc87033318abc9f0b0bd39bd8fcd99e7e9bcd13129aeda"},
+  "syntakt-tg-cp-toy-macro": {"w": "aa699174d3acf85524e6781647397a75c908eeb0e087875c2f5285e9864809be", "p": "eca21bb42f821641b09534c8dd94f1b8d2fd98b96dc5be7232a2c62276bdf290"},
   "syntakt-cp-bits": {"w": "6ca68900965c6e43dacc1013ad72670f4458317bc6d284a8701df3ad36cafc01", "p": "31fb2a740e4374e9d6cdc6a1ee76fbf7f7273dc45390d87abeed22fd5dcebb9c"},
   "syntakt-tg-cp-bits": {"w": "4b54fb41056617d96971ebb91ca328a6f76ff8de82a6797c05c4f6d312dad0cb", "p": "873a44e1d263cf678a85a013b9bc4872dd5bb07c3d6f1491478873079e2fd903"},
-  "syntakt-cp-bits-macro": {"w": "23ffbcb0f92d5d881f000f9437f79e5899017c323869edd7e330388606defd25", "p": "9c182e23620d0738f8ce1188be332d477533e4931b4620de273db969647f40ed"},
-  "syntakt-tg-cp-bits-macro": {"w": "268a2b4c0874e4b4c537997d0c332c19d67996045702cbf63f0bcd1badfe327c", "p": "137f2579c2e0020330435746afdbe9a6df1b22382e12177cf7cff7e0b9fa62a6"},
+  "syntakt-cp-bits-macro": {"w": "23ffbcb0f92d5d881f000f9437f79e5899017c323869edd7e330388606defd25", "p": "d0b7ebf22e1a4ebdbe7375fca9d03d5f8566ebe9863a22836192b1b0756e0e9f"},
+  "syntakt-tg-cp-bits-macro": {"w": "268a2b4c0874e4b4c537997d0c332c19d67996045702cbf63f0bcd1badfe327c", "p": "f56340cd79635184bfbb07b9f6d444517c6822fdd6ec89df1d0dc4b75f112a76"},
   "syntakt-cp-swarm": {"w": "6beb6cf8bb467020dd627770cd50dcf633409fe9568fd430699296a8055255cd", "p": "385abff60fd340bddd0e887fcf00fe692ee6d13a6caf8c249ffb979fde5ea13d"},
   "syntakt-tg-cp-swarm": {"w": "fa6f2a6e21192b7047f0f7c0e88f422e9757585093edaa727db73a4841acb81e", "p": "a81cff848118ff1d8ce29325e3757007d7d09e0a922613880fe6e436fd3f1c92"},
-  "syntakt-cp-swarm-macro": {"w": "d8ee91282bd48dc62d8723ab9aaef492bcde3875163f0243f83cf689eeb3f0ca", "p": "93d9dde8b756eea8ab4cf9f7b8485f394b071a97bfdb2ce15908418a2c15fe0a"},
-  "syntakt-tg-cp-swarm-macro": {"w": "2a5e25a21187fe0b595014b35c3b8f8ff9790013334714539b1f6b6622921033", "p": "e6992530f9f8be26c04b3f9ea4515f9c04d11c1a3c627d14f8f469b549035136"},
+  "syntakt-cp-swarm-macro": {"w": "d8ee91282bd48dc62d8723ab9aaef492bcde3875163f0243f83cf689eeb3f0ca", "p": "0b4b72b140aa99dec3271e15b80087307ebd4179ed9abc84a010b9140ca37886"},
+  "syntakt-tg-cp-swarm-macro": {"w": "2a5e25a21187fe0b595014b35c3b8f8ff9790013334714539b1f6b6622921033", "p": "f01115dadbcc217841032ea4ef4fe3e25b054681333799719f2e6fb9db0eb21a"},
   "syntakt-toy-bits": {"w": "6ca68900965c6e43dacc1013ad72670f4458317bc6d284a8701df3ad36cafc01", "p": "422b80b4928879125760ba09bafe46f35e161d240385019d4d745d028ae394b9"},
   "syntakt-tg-toy-bits": {"w": "165cb44ca7ad0ade1ff3c21b5c9f979b100437e9d5f0969c88f7cc0be8f1ec8e", "p": "0fba45ee4f603c0ab22452f8928e078fc63ec54199f951a24fb96c79de1ba663"},
-  "syntakt-toy-bits-macro": {"w": "23ffbcb0f92d5d881f000f9437f79e5899017c323869edd7e330388606defd25", "p": "03dd8625b395eb3c3b8484b54ef5a9a9435cf3210c293e86dc297cee68ae72e2"},
-  "syntakt-tg-toy-bits-macro": {"w": "268a2b4c0874e4b4c537997d0c332c19d67996045702cbf63f0bcd1badfe327c", "p": "dec6a59ab3483a76e93732f28d4b78927ad6243a4238692df7e555e7806a5a56"},
+  "syntakt-toy-bits-macro": {"w": "23ffbcb0f92d5d881f000f9437f79e5899017c323869edd7e330388606defd25", "p": "f7920f814e4eff6c7758e2e88d942741cc30819092771cf5e9373709405ab562"},
+  "syntakt-tg-toy-bits-macro": {"w": "268a2b4c0874e4b4c537997d0c332c19d67996045702cbf63f0bcd1badfe327c", "p": "e6b69b153bb6699bfb4c9f91f0b4f397a5b11fa11066f6282c1bdc018e104e38"},
   "syntakt-toy-swarm": {"w": "6beb6cf8bb467020dd627770cd50dcf633409fe9568fd430699296a8055255cd", "p": "429b88bc92012100012550e82cc636d5541869a0ac5edb608766a56c2e1539a1"},
   "syntakt-tg-toy-swarm": {"w": "87047b1196d71e970e2cfb05e1189efca46e7a4d021ae940a8ccb95c4b9844b4", "p": "d36280aea4a5a245a3fd4182ddd1fa7c82a5f853fc1a0269abfe9493a7f3dc62"},
-  "syntakt-toy-swarm-macro": {"w": "d8ee91282bd48dc62d8723ab9aaef492bcde3875163f0243f83cf689eeb3f0ca", "p": "7ec053357d36a45ac4eea3a270acb44bc1fdb5f7d3bbc45cdff32c6470c03ea6"},
-  "syntakt-tg-toy-swarm-macro": {"w": "2a5e25a21187fe0b595014b35c3b8f8ff9790013334714539b1f6b6622921033", "p": "dd8c28ba380df233314bf9150a2051aa765994c04048fd631177bdc64d52b49d"},
+  "syntakt-toy-swarm-macro": {"w": "d8ee91282bd48dc62d8723ab9aaef492bcde3875163f0243f83cf689eeb3f0ca", "p": "4b37441dffa305da2523321eaaee6a6daeee4f416e828043e5c7385ef6c7446b"},
+  "syntakt-tg-toy-swarm-macro": {"w": "2a5e25a21187fe0b595014b35c3b8f8ff9790013334714539b1f6b6622921033", "p": "8d18c601ae1400993ce85d0a8d91a50367060f47a89c960d8f46413fd01080e7"},
   "syntakt-bits-swarm": {"w": "6beb6cf8bb467020dd627770cd50dcf633409fe9568fd430699296a8055255cd", "p": "f51be8e0b00a437eb1686e02dcafa9523f70d97978fe4ab70fe9fd3ec8bdfd6b"},
   "syntakt-tg-bits-swarm": {"w": "377d41640022a315491001d4402af4e5ae5b649cc8cb31f277305f63e04dc8c5", "p": "834b1f55c38b2cb66dddc83d0fea43db2e2b1597eff60d546424669e71b40c71"},
-  "syntakt-bits-swarm-macro": {"w": "d8ee91282bd48dc62d8723ab9aaef492bcde3875163f0243f83cf689eeb3f0ca", "p": "ab57da24617e955472d35f2de2337968b1b2ff709c43b2299da8da469090f788"},
-  "syntakt-tg-bits-swarm-macro": {"w": "2a5e25a21187fe0b595014b35c3b8f8ff9790013334714539b1f6b6622921033", "p": "7d69d4a3aaeaf82c6b42453c68631c9b5d086a4d0608a7b96f81b847991cce5b"},
+  "syntakt-bits-swarm-macro": {"w": "d8ee91282bd48dc62d8723ab9aaef492bcde3875163f0243f83cf689eeb3f0ca", "p": "e9c7ae7c6b8b8f1e6dc2a498b3062904e9eb48610b27d9bf3c1f77782e2a5db5"},
+  "syntakt-tg-bits-swarm-macro": {"w": "2a5e25a21187fe0b595014b35c3b8f8ff9790013334714539b1f6b6622921033", "p": "b9f28ea2bb315b777f5677eca8da7a0d82365a1472da2fd7d73b2c69a16cd955"},
   "syntakt-sd-cp-toy": {"w": "0dedfe732b6a22e819791dc679833fe83b8a1bba15ae69243aaa59d7a16ed8ee", "p": "634921523c879ca433c96fa3da0492b6734be63359cb3081cbbda54dfe8b24dd"},
   "syntakt-tg-sd-cp-toy": {"w": "ebe10368cfece778a23e1d46e82a13376b95cb422f8ca62232b0c69a4e808a66", "p": "da840e5ccac0dcc27b74b42a5a052d31bffa860729bc0bc7ae8d435462ace096"},
-  "syntakt-sd-cp-toy-macro": {"w": "81b8cdb925af4e71e7818ca62fe904901bf6456b03b9e4ba46516791cfe59890", "p": "b3a5be967f387859226a52c9e022d0371ca42c117b982b5483a123e565768127"},
-  "syntakt-tg-sd-cp-toy-macro": {"w": "f15e003a8dcd0fe557c65a0737b30c647fd0b5918756f9e5b2885ac88c63c3af", "p": "1aaaa0004152c03d956ea3fd1dd5e6e3b80ede2dfe4bdad78f62e610d4d630ff"},
+  "syntakt-sd-cp-toy-macro": {"w": "81b8cdb925af4e71e7818ca62fe904901bf6456b03b9e4ba46516791cfe59890", "p": "2dda94014136341fd9e5b9bb0a83f82dd6e8ecea3454bbd83ebb7e2cf08c7b5f"},
+  "syntakt-tg-sd-cp-toy-macro": {"w": "f15e003a8dcd0fe557c65a0737b30c647fd0b5918756f9e5b2885ac88c63c3af", "p": "f4d9da62803fe6e2f118f014551d995be75a89d082388ba22bee0eb868f7ecab"},
   "syntakt-sd-cp-bits": {"w": "4c592622fd417a96b01fcc884ca1c5634b43c19cd27ad4fc8515dc285aa2e156", "p": "3de431dd6b560c5ac407e35c5089621d8c083f05dbb7e7a44cec194f2e8c32da"},
   "syntakt-tg-sd-cp-bits": {"w": "2b03cc4ed4c529011d62a96d65cbf0025cd1d93019f671b796a6bc53627cff1a", "p": "e6a72e8ece7406e44ef3767c4f8b91aca6058eb5c0b50550a65be676d2063278"},
-  "syntakt-sd-cp-bits-macro": {"w": "17a14832ecf8d9a1fec7fd1c393cd8e33b88915426c1b46116aaa4077cc5bae4", "p": "3a53209e74cd1b2742b36ade6e2daf9fa4160f22a00be904c748b9607f1191b3"},
-  "syntakt-tg-sd-cp-bits-macro": {"w": "086f7858eabcec874f89eb617afa5e920b214543a0a720574cf0df1aff8f2daf", "p": "eb105fbda0550258eba80e6e4a520579ccc2ab1c1925936593fc508b1becb206"},
+  "syntakt-sd-cp-bits-macro": {"w": "17a14832ecf8d9a1fec7fd1c393cd8e33b88915426c1b46116aaa4077cc5bae4", "p": "2b287df5115344823d58eaaa0f3c346efed94d87d1a48ee67f8fb9622adf52bd"},
+  "syntakt-tg-sd-cp-bits-macro": {"w": "086f7858eabcec874f89eb617afa5e920b214543a0a720574cf0df1aff8f2daf", "p": "6bb02561052a9988671fb8a7678b7d31cfb94d47f90cb80e661ebe1e5dcef288"},
   "syntakt-sd-cp-swarm": {"w": "e2e264e5f6c6641db39131d2304b2f4e5b954eb51038c0815c6062b238d9e410", "p": "6c3dd4546d7df4852ed465553a80c622da892cb32429cde10f34ad383600ea98"},
   "syntakt-tg-sd-cp-swarm": {"w": "f9d64c29e840410ac6c947e181a45069153cb4e108bcdfaf42b497f45d5b3cca", "p": "ada5d11b51da0d3e90ac47dc55ab4d7827e5604bec07252f852a6e099e8c7632"},
-  "syntakt-sd-cp-swarm-macro": {"w": "57b7edc76f2c984676ad75fea46e2a23517365a028e4233f6527dcb61a96c210", "p": "d2224a0a14c2eae54cd1246d30cc73c038b738bb28d8a8ff1873b16c3cfc5501"},
-  "syntakt-tg-sd-cp-swarm-macro": {"w": "f5aad1c8dfa532977b69ba18fdf02af25dd3d3280f9a81a89be3e6a4667928ba", "p": "0f3c68910d46203fa47f79e010cb064000a345a09eb434818b21cd4f1421a4e6"},
+  "syntakt-sd-cp-swarm-macro": {"w": "57b7edc76f2c984676ad75fea46e2a23517365a028e4233f6527dcb61a96c210", "p": "04907a7086f2bce71eeec5b7aed3d1f97aeee4e2e8f7c2ae96dcf35ac37e4415"},
+  "syntakt-tg-sd-cp-swarm-macro": {"w": "f5aad1c8dfa532977b69ba18fdf02af25dd3d3280f9a81a89be3e6a4667928ba", "p": "f75f48e2c474158b3dd6e6962e821d57bf91d024dac19bdbd7e55fdf6bd8d7e5"},
   "syntakt-sd-toy-bits": {"w": "4c592622fd417a96b01fcc884ca1c5634b43c19cd27ad4fc8515dc285aa2e156", "p": "412b3f3b03c7c171d397238a006707373afcd8ea3a932e6949a28a5c8bc079e7"},
   "syntakt-tg-sd-toy-bits": {"w": "59f8db5a7fbc68bf25e00f2b9fe169717f50b1c3d9d2193bc91a11be4e922a81", "p": "8e89be4f0a8fcddc10b61b4ed584224bb1511ab2a4c16e526e60fc12c0ce20b2"},
-  "syntakt-sd-toy-bits-macro": {"w": "17a14832ecf8d9a1fec7fd1c393cd8e33b88915426c1b46116aaa4077cc5bae4", "p": "e52154c4e7d2dc04dce64899269e21396d7d3665fc2fab625ee836c230ff3e1e"},
-  "syntakt-tg-sd-toy-bits-macro": {"w": "086f7858eabcec874f89eb617afa5e920b214543a0a720574cf0df1aff8f2daf", "p": "95310b831bf270979c010ce45e95b63b7c7637c317e0b667732d6a92e74e1d3b"},
+  "syntakt-sd-toy-bits-macro": {"w": "17a14832ecf8d9a1fec7fd1c393cd8e33b88915426c1b46116aaa4077cc5bae4", "p": "ddaecddc0ab296f9f3648615f9d164f4002a2b890d318c7035f27864ffd2be13"},
+  "syntakt-tg-sd-toy-bits-macro": {"w": "086f7858eabcec874f89eb617afa5e920b214543a0a720574cf0df1aff8f2daf", "p": "a5e4357b65791e3266faf74432be787c6b9797f4de2508bb8ab0bac949c89f43"},
   "syntakt-sd-toy-swarm": {"w": "e2e264e5f6c6641db39131d2304b2f4e5b954eb51038c0815c6062b238d9e410", "p": "eedf7fd8d2f3ab9dbbb2012b27178b48ca7777338e3bfa3056e24c9d22efcffb"},
   "syntakt-tg-sd-toy-swarm": {"w": "6d01b0b6928568adeab0b21fd6a4867490d316bc37f6adc12abf29550c96bd1d", "p": "02234466f9dccae446425c696c7084df3e8d1e03b3751ebc714aa392dd563024"},
-  "syntakt-sd-toy-swarm-macro": {"w": "57b7edc76f2c984676ad75fea46e2a23517365a028e4233f6527dcb61a96c210", "p": "337a4e2c243775d0ca937a9b75b383b4ab97d37bd8c6f4ebf24a34a51308cfd4"},
-  "syntakt-tg-sd-toy-swarm-macro": {"w": "f5aad1c8dfa532977b69ba18fdf02af25dd3d3280f9a81a89be3e6a4667928ba", "p": "ec771047ce592dd016686694221fea28e749ad64271b73a4e244274910a7585a"},
+  "syntakt-sd-toy-swarm-macro": {"w": "57b7edc76f2c984676ad75fea46e2a23517365a028e4233f6527dcb61a96c210", "p": "03f247d695eccd5aac9435ea8bc8ab32dddfe0593a6e6f6734af650e962599ca"},
+  "syntakt-tg-sd-toy-swarm-macro": {"w": "f5aad1c8dfa532977b69ba18fdf02af25dd3d3280f9a81a89be3e6a4667928ba", "p": "cb95d5a5a2acba6f65211f930fcab26ac0025bef4c2304accf3d5a8496c4df84"},
   "syntakt-sd-bits-swarm": {"w": "e2e264e5f6c6641db39131d2304b2f4e5b954eb51038c0815c6062b238d9e410", "p": "3e96d9e16ccc8a0d45d9fbe90dbc659a214056aeff9c10cd3785214059375b64"},
   "syntakt-tg-sd-bits-swarm": {"w": "248d8783151d5163363a516994b2de4a41b6da184659888f64a10f9942ab450c", "p": "7c65c2d1bf6e861851935dd87e99d65a3c6b0c1c627b7e0a3430e052a3808c5b"},
-  "syntakt-sd-bits-swarm-macro": {"w": "57b7edc76f2c984676ad75fea46e2a23517365a028e4233f6527dcb61a96c210", "p": "86235a0fc356746746a3e7ffb2106bca4a6418609b3ca8d47ae62cbca67dcd12"},
-  "syntakt-tg-sd-bits-swarm-macro": {"w": "f5aad1c8dfa532977b69ba18fdf02af25dd3d3280f9a81a89be3e6a4667928ba", "p": "a0f5de2eb5382c55e4be702c793192552251780036b236102a690e867895235f"},
+  "syntakt-sd-bits-swarm-macro": {"w": "57b7edc76f2c984676ad75fea46e2a23517365a028e4233f6527dcb61a96c210", "p": "372bfe430f184dc3337dd1319e8612f9184657351a7f5b9d81264b241b6c8bb0"},
+  "syntakt-tg-sd-bits-swarm-macro": {"w": "f5aad1c8dfa532977b69ba18fdf02af25dd3d3280f9a81a89be3e6a4667928ba", "p": "e229a3cf92f0f3c3ed68d53f8ba5a694ac5200262100254d4ddea15eeaa7a8dc"},
   "syntakt-cp-toy-bits": {"w": "4c592622fd417a96b01fcc884ca1c5634b43c19cd27ad4fc8515dc285aa2e156", "p": "a799e1e55f0ddfea31a5ed8cd67bd1c99396aacdc9f4551ca0ed54fbb7313d82"},
   "syntakt-tg-cp-toy-bits": {"w": "834c62f3802c8f195ea97375d2431ba112582aaa3f7b8bfd233d4734892c90e6", "p": "25d7673f194115c2f8dd2100ec3f4fe91dfafd9639aa0727134560d2d8d6f58f"},
-  "syntakt-cp-toy-bits-macro": {"w": "17a14832ecf8d9a1fec7fd1c393cd8e33b88915426c1b46116aaa4077cc5bae4", "p": "20ae3b2c72e7f2463b3d0fdda0b23cebac70a7111c0b4f31baeb6c593682ceff"},
-  "syntakt-tg-cp-toy-bits-macro": {"w": "086f7858eabcec874f89eb617afa5e920b214543a0a720574cf0df1aff8f2daf", "p": "d054c17d3aa2be68463abaed4fb060da43d170d8c1725dfe06adb3e0334f3f66"},
+  "syntakt-cp-toy-bits-macro": {"w": "17a14832ecf8d9a1fec7fd1c393cd8e33b88915426c1b46116aaa4077cc5bae4", "p": "c5fdeca8173ff7080d2f3c6a2fa6abd94424f8caf9cc0b3afb6f96ac07d09961"},
+  "syntakt-tg-cp-toy-bits-macro": {"w": "086f7858eabcec874f89eb617afa5e920b214543a0a720574cf0df1aff8f2daf", "p": "7a53bf2f877596f4d5cb75206bc28e1964b860b83a5ba7a6041fcdfb5291858a"},
   "syntakt-cp-toy-swarm": {"w": "e2e264e5f6c6641db39131d2304b2f4e5b954eb51038c0815c6062b238d9e410", "p": "4a9bef6fa8c3e65d127c06ad985ad2054836e33c725cff0d1632a676cc9bdc5f"},
   "syntakt-tg-cp-toy-swarm": {"w": "a981e697e5375a08f6f6c4562be685e74c9bf9db7302338d53e20746ffeda1f3", "p": "ff81bcffc505dec316678746a08a8a63e04c56532f22ab76d16cb20da13b93eb"},
-  "syntakt-cp-toy-swarm-macro": {"w": "57b7edc76f2c984676ad75fea46e2a23517365a028e4233f6527dcb61a96c210", "p": "72e152c6ba793ea1e8ddd0807d2d76bfc80d7b5cdccb531257325f516bc4c8c9"},
-  "syntakt-tg-cp-toy-swarm-macro": {"w": "f5aad1c8dfa532977b69ba18fdf02af25dd3d3280f9a81a89be3e6a4667928ba", "p": "e4a3979602eb5df0365ea958558864b9ae0518066c3e857ffb495740c800bb14"},
+  "syntakt-cp-toy-swarm-macro": {"w": "57b7edc76f2c984676ad75fea46e2a23517365a028e4233f6527dcb61a96c210", "p": "2427c40de175648340bbcea339c76cb038d5e7979cdcd7cd0ecd4314666dd870"},
+  "syntakt-tg-cp-toy-swarm-macro": {"w": "f5aad1c8dfa532977b69ba18fdf02af25dd3d3280f9a81a89be3e6a4667928ba", "p": "5b373d97788fcc5b6364bff315ff5806bb71755f04c4f5bf68ba181d3ff97d51"},
   "syntakt-cp-bits-swarm": {"w": "e2e264e5f6c6641db39131d2304b2f4e5b954eb51038c0815c6062b238d9e410", "p": "68fbe1de3798fa0967f1de83e982c002e3007775ef410c2d10c3dcb93e1c1032"},
   "syntakt-tg-cp-bits-swarm": {"w": "d4d22314f7bf39d1f9d392e5111944d5aeb5555519ae236d3007952df5467d16", "p": "4da8349398fedbcf8a473f70ceee7494fcd4e3f6d5e9078d458d41ab21d2536d"},
-  "syntakt-cp-bits-swarm-macro": {"w": "57b7edc76f2c984676ad75fea46e2a23517365a028e4233f6527dcb61a96c210", "p": "ccb629eff0f45363859caaa79011a95fde25c6ce904f3415528ce7ba974433d5"},
-  "syntakt-tg-cp-bits-swarm-macro": {"w": "f5aad1c8dfa532977b69ba18fdf02af25dd3d3280f9a81a89be3e6a4667928ba", "p": "b41f0bacf8a2213dbdf2292a92d4dc19507d755294772a4150bd78d61484cb2e"},
+  "syntakt-cp-bits-swarm-macro": {"w": "57b7edc76f2c984676ad75fea46e2a23517365a028e4233f6527dcb61a96c210", "p": "487a94c018490770acb4a4b1d840b61c51d0e480e94bc52ec3bd2f40d2849a15"},
+  "syntakt-tg-cp-bits-swarm-macro": {"w": "f5aad1c8dfa532977b69ba18fdf02af25dd3d3280f9a81a89be3e6a4667928ba", "p": "a70aa009aa3cf08b626915e274d4f501257cfcb960432fc4d57657a75ffa76e2"},
   "syntakt-toy-bits-swarm": {"w": "e2e264e5f6c6641db39131d2304b2f4e5b954eb51038c0815c6062b238d9e410", "p": "b69670e3dceef5800b459909cb22cd8ba2c8490174bd4c9a57e52f63bf0a436f"},
   "syntakt-tg-toy-bits-swarm": {"w": "bfff22b0f49160f78e58028dae050eebe4726c4c8f00db710780303d8172ef29", "p": "c0083779130111bf2fb05be8b9ab4456648faacd8a66b02805a778700280c040"},
-  "syntakt-toy-bits-swarm-macro": {"w": "57b7edc76f2c984676ad75fea46e2a23517365a028e4233f6527dcb61a96c210", "p": "b59b65d643b9023b4c242e36fd7ca8aa72ca6fa40dc3af933309ad898debd943"},
-  "syntakt-tg-toy-bits-swarm-macro": {"w": "f5aad1c8dfa532977b69ba18fdf02af25dd3d3280f9a81a89be3e6a4667928ba", "p": "1370b9db6c246f0b489f5bc59de310e7455480c99b58438f04e8fe440378cdca"},
+  "syntakt-toy-bits-swarm-macro": {"w": "57b7edc76f2c984676ad75fea46e2a23517365a028e4233f6527dcb61a96c210", "p": "e8c422bc29856e380218fa273cd3e90a3b97cccbefe9dc64c0c781bfe3dc018b"},
+  "syntakt-tg-toy-bits-swarm-macro": {"w": "f5aad1c8dfa532977b69ba18fdf02af25dd3d3280f9a81a89be3e6a4667928ba", "p": "47646b6d76919a9b27d4fcc6187ee09eb0ed71c0789fc942ed2a91729250f563"},
   "syntakt-sd-cp-toy-bits": {"w": "6e40a243ef591ee13566db7c0ec4c03e064e459cfdb467f79c5231cdcaf859c5", "p": "c7d2dd362220832683eb5a61ad41258a66a56a1ac6e8b217b8bbb64857817627"},
   "syntakt-tg-sd-cp-toy-bits": {"w": "ff77376bdd8d3ec069a7815ff95cb5565e98e0bdcc465a146c86167649592a08", "p": "b19b9cebcd74251cbaab94a61cb8e2f47511768e23a9d40d2752619bf53d3919"},
-  "syntakt-sd-cp-toy-bits-macro": {"w": "6eaad5b396c6635123b3872041d3628a45e3bc1600a07e22cf4edebb0cf0cfe7", "p": "440716fbfe9f0e3e5e6fd7479a6ee16e3799779f16669bfa91048292ecdcffd1"},
-  "syntakt-tg-sd-cp-toy-bits-macro": {"w": "341841b4c4a3877993efb1dd2551bd17491e66930ee0c6e8f06ca9bef02e3686", "p": "8f1c6afac0c58e84a081a8d51e380d335b809862381e8d75637ae1f6c702dce8"},
+  "syntakt-sd-cp-toy-bits-macro": {"w": "6eaad5b396c6635123b3872041d3628a45e3bc1600a07e22cf4edebb0cf0cfe7", "p": "219c7e47432a58332ff22c77a626e84e05434a892bcec8f24129e7631f50703c"},
+  "syntakt-tg-sd-cp-toy-bits-macro": {"w": "341841b4c4a3877993efb1dd2551bd17491e66930ee0c6e8f06ca9bef02e3686", "p": "ce9a7fa3e4b81737fc9664a245d5e746f556d8d8a8a250e14e813473d9f56b1f"},
   "syntakt-sd-cp-toy-swarm": {"w": "0d37782baa71cf0e118589c68eaaf65854dcb8d312bfe5cdc223cf1862cd49f6", "p": "e6e2ce15aa68677d188326c7a3a9417fbed7c7b964d4f1624f47c285e44a1e9a"},
   "syntakt-tg-sd-cp-toy-swarm": {"w": "64eaf48daa7167499f5a0883481a672b142516da87fc07ea10f24fc5098f9c80", "p": "8fe4e32506aa155240a955c025300e9a32d327686ecbecb04185e89767d4341d"},
-  "syntakt-sd-cp-toy-swarm-macro": {"w": "8d1eea4c07e2c3226dad2659319c121eea40cb96c5390c1580994c21286eee7e", "p": "f4d2dbaa29d6052f8a9bb33f7b0cef5433098970fd7e2df8e3522c91d3c5add2"},
-  "syntakt-tg-sd-cp-toy-swarm-macro": {"w": "516bea48a0ceea68187643510840ccd1fbcddc7f183306c1a00d1604fedcf45a", "p": "fa96abc0c2cbbed76058bf7100166f916f3168a91c2a7d924a33dde2984ec9d8"},
+  "syntakt-sd-cp-toy-swarm-macro": {"w": "8d1eea4c07e2c3226dad2659319c121eea40cb96c5390c1580994c21286eee7e", "p": "9d3859569cdd9743f51d5bfee7d120048f7b0e4cf9e42a9aaeda6dd6f2f0d689"},
+  "syntakt-tg-sd-cp-toy-swarm-macro": {"w": "516bea48a0ceea68187643510840ccd1fbcddc7f183306c1a00d1604fedcf45a", "p": "3343812d48f5e9f5cf984496ad4ffd8461a4a1ea99d17efa04d0b307f58b4892"},
   "syntakt-sd-cp-bits-swarm": {"w": "0d37782baa71cf0e118589c68eaaf65854dcb8d312bfe5cdc223cf1862cd49f6", "p": "f86da834216e165764e0c2ea013021b509a596fa1097feac7b5da01d5cde00d5"},
   "syntakt-tg-sd-cp-bits-swarm": {"w": "2c1dcd6caa5aa535a587c4c3a1a3e3af40d4a7bd103b218cc502e2124cf86bf4", "p": "9d192d3d560b10c7e3115322c626a7768910ddf40d82f7e2f8ff9c4a197dad3f"},
-  "syntakt-sd-cp-bits-swarm-macro": {"w": "8d1eea4c07e2c3226dad2659319c121eea40cb96c5390c1580994c21286eee7e", "p": "626c76db90ce4d066b66297dd67dbe6fc6cf7daf9ccc0f306f064a8967015569"},
-  "syntakt-tg-sd-cp-bits-swarm-macro": {"w": "516bea48a0ceea68187643510840ccd1fbcddc7f183306c1a00d1604fedcf45a", "p": "6ee0a4a9b8d839ae128b5a8555074f779a71e2111fc79f0e946dc7a649f9f36e"},
+  "syntakt-sd-cp-bits-swarm-macro": {"w": "8d1eea4c07e2c3226dad2659319c121eea40cb96c5390c1580994c21286eee7e", "p": "07547567115bc5faad89f2de107d22089d0fdf7c94620bb4339169749f0781ad"},
+  "syntakt-tg-sd-cp-bits-swarm-macro": {"w": "516bea48a0ceea68187643510840ccd1fbcddc7f183306c1a00d1604fedcf45a", "p": "96537cef9c6c195f26d9c3a2d17744d05a13eb92153863086172a5dd6667687b"},
   "syntakt-sd-toy-bits-swarm": {"w": "0d37782baa71cf0e118589c68eaaf65854dcb8d312bfe5cdc223cf1862cd49f6", "p": "582e9083d79cd747b8061a39e22ca2f05554eeb0756af14799b1316e88f3fe8a"},
   "syntakt-tg-sd-toy-bits-swarm": {"w": "2c1dcd6caa5aa535a587c4c3a1a3e3af40d4a7bd103b218cc502e2124cf86bf4", "p": "99d0b37716fb4ea5f73c3c350c361f68109a4f0a5f4bb2281428a74c3006bd44"},
-  "syntakt-sd-toy-bits-swarm-macro": {"w": "8d1eea4c07e2c3226dad2659319c121eea40cb96c5390c1580994c21286eee7e", "p": "45a7d913ce5da014d1a0d101e1bc24983f4b4f74152d5218e7b63fa53662994f"},
-  "syntakt-tg-sd-toy-bits-swarm-macro": {"w": "516bea48a0ceea68187643510840ccd1fbcddc7f183306c1a00d1604fedcf45a", "p": "7fd33ea238ed04d57a85b1eb1c8be57287ffc3d09a2153bdae3aa7c0edb8e227"},
+  "syntakt-sd-toy-bits-swarm-macro": {"w": "8d1eea4c07e2c3226dad2659319c121eea40cb96c5390c1580994c21286eee7e", "p": "8f67870f5c672c1e2ade7764e0ca8476d1e4015e1041a2edfc274261c644b49b"},
+  "syntakt-tg-sd-toy-bits-swarm-macro": {"w": "516bea48a0ceea68187643510840ccd1fbcddc7f183306c1a00d1604fedcf45a", "p": "f69a3518eebf4e0da4861dfe116b412e1dd96b6e0641317ff6202202b1ba0cad"},
   "syntakt-cp-toy-bits-swarm": {"w": "0d37782baa71cf0e118589c68eaaf65854dcb8d312bfe5cdc223cf1862cd49f6", "p": "3433d4b81ee7cafa5400195a7a0aa770dbe097f2aa6c2fa499743d6c50b6768a"},
   "syntakt-tg-cp-toy-bits-swarm": {"w": "eb510cb2734b5e428dc67e4252e7c196b1b4e28a61859b65b57d907a939186f6", "p": "7a3e77c297549d39f1419639351cc328ee30eef2d88f430d6d7c2bd20d120bc2"},
-  "syntakt-cp-toy-bits-swarm-macro": {"w": "8d1eea4c07e2c3226dad2659319c121eea40cb96c5390c1580994c21286eee7e", "p": "5f6ff2c358f46da070d9508696113294ee5a9bf53af1cd0ff738ba7e9d84ebc7"},
-  "syntakt-tg-cp-toy-bits-swarm-macro": {"w": "516bea48a0ceea68187643510840ccd1fbcddc7f183306c1a00d1604fedcf45a", "p": "ab8a6a9baf9d53bbb3106cc4ab39e93e96ea1318256c3ebe5ad13ab5f3144800"},
+  "syntakt-cp-toy-bits-swarm-macro": {"w": "8d1eea4c07e2c3226dad2659319c121eea40cb96c5390c1580994c21286eee7e", "p": "2e41da89b9b9c13a37dcadf1232109f5dad5b001a736df069445cb90227a5a2d"},
+  "syntakt-tg-cp-toy-bits-swarm-macro": {"w": "516bea48a0ceea68187643510840ccd1fbcddc7f183306c1a00d1604fedcf45a", "p": "434d57d00bf014f92cfaf69180cd1dda74df169eb85406c1dbc6d5b64c8eb04f"},
   "syntakt-sd-cp-toy-bits-swarm": {"w": "d5a6c342d74317dcc4c0d9655e0ad5037b8f2972bd280b8bd2589f4528e2a66b", "p": "ebee93e96a83f16d8f2d81e3e13872614e1972c0226d7e5292bd9a54897ec39c"},
   "syntakt-tg-sd-cp-toy-bits-swarm": {"w": "e2151929c5d4023841f56047bb3752a7358c619114881158b1cd203d32a2cc41", "p": "9ae1a5b199ab1f33d0eb69e1bd267149e8909fdb6609230620c994bfeeb5d9b8"},
-  "syntakt-sd-cp-toy-bits-swarm-macro": {"w": "8b5f84d376e6780f5be1a32fcca977a017d33dd64728ed5b278ad9e5effb2de3", "p": "5ab430700bfbf5233bde74d8ab6216761d15d9e802b333cfb181a0865c6c3fd3"},
-  "syntakt-tg-sd-cp-toy-bits-swarm-macro": {"w": "51b6e806de8cf7d5bcb31683e947b14972a9da00283761ef2ce95636e8009fa6", "p": "79d09c02f5e9c439edf7f7f20a6221b447bd6ea4d768d2263ba7a050cee50f8f"},
+  "syntakt-sd-cp-toy-bits-swarm-macro": {"w": "8b5f84d376e6780f5be1a32fcca977a017d33dd64728ed5b278ad9e5effb2de3", "p": "315d09e423a24e7948db11a30a182e3609dc71cc6a8d2f9e1eb98547ee97445e"},
+  "syntakt-tg-sd-cp-toy-bits-swarm-macro": {"w": "51b6e806de8cf7d5bcb31683e947b14972a9da00283761ef2ce95636e8009fa6", "p": "fa43c029de9a7a2d9c71ace83f794214db9e65ed12f74627ebd559213afbf330"},
 };
 
 // "Samples OS" tab: official Model:Samples OS 1.13 inside the official Model:Cycles container
@@ -1078,18 +1060,20 @@ const REF_SAMPLES_BACK = "d63ce13dd1a5039d11b60d3f69d4e88e9d0f56fb2e7350c105ec64
 // Open-source work this flasher builds on (shown in the Credits section).
 const CREDITS = [
   { who: "scottmetoyer", repo: "scottmetoyer/ms-multi-output",
-    en: "the 6-channel USB audio mod", fr: "le mod audio USB 6 canaux" },
+    en: "the 6-channel USB audio mod (MIT license)", fr: "le mod audio USB 6 canaux (licence MIT)" },
   { who: "drumkilla", repo: "drumkilla/elektron-model-tweaks",
-    en: "latching mute, trig preview and name scrolling, and the firmware toolkit (mtlib) this page's builder is ported from",
-    fr: "le mute verrouillé, l'écoute d'un pas et le défilement des noms, et la boîte à outils firmware (mtlib) dont le builder de cette page est un portage" },
+    en: "latching mute, trig preview and name scrolling, and the firmware toolkit (mtlib) this page's builder is ported from (MIT license)",
+    fr: "le mute verrouillé, l'écoute d'un pas et le défilement des noms, et la boîte à outils firmware (mtlib) dont le builder de cette page est un portage (licence MIT)" },
   { who: "Émilie Gillet", repo: "pichenettes/eurorack",
     en: "the synthesis models of the MACRO machine: her Braids code (MIT license), compiled as is",
     fr: "les modèles de synthèse de la machine MACRO : son code de Braids (licence MIT), compilé tel quel" },
   { who: "TinyGregAudio", repo: "TinyGregAudio/Model-TG",
-    en: "Model-TG (MIT license), built here by its own build, with two changes: in mute mode, each track key mutes at once; with 6-channel audio, a muted track's stem is no longer cut off",
-    fr: "Model-TG (licence MIT), construit ici par son propre build, avec deux retouches : en mode mute, chaque touche de piste mute tout de suite ; avec l'audio 6 canaux, la piste USB d'une piste mutée n'est plus coupée net" },
+    en: "Model-TG (MIT license), built here by its own build, with two changes: in mute mode, each track key mutes at once; with 6-channel audio, a muted track's stem is no longer cut off; Sample preview reuses a short piece of its code",
+    fr: "Model-TG (licence MIT), construit ici par son propre build, avec deux retouches : en mode mute, chaque touche de piste mute tout de suite ; avec l'audio 6 canaux, la piste USB d'une piste mutée n'est plus coupée net ; l'écoute des samples reprend un court passage de son code" },
   { who: "mischa85", repo: "mischa85/elektron-firmware-tool",
-    en: "the Elektron firmware container format and its re-signing", fr: "le format du conteneur firmware Elektron et sa re-signature" },
+    en: "the Elektron firmware container format and its re-signing (MIT license)", fr: "le format du conteneur firmware Elektron et sa re-signature (licence MIT)" },
+  { who: "dagargo", repo: "dagargo/elektroid",
+    en: "the Elektron Transfer update protocol behind the fast USB sending (GPL-3.0 license)", fr: "le protocole de mise à jour d'Elektron Transfer derrière l'envoi USB rapide (licence GPL-3.0)" },
   { who: "mxldyn", repo: "mxldyn/octamax",
     en: "the reverse-engineering method for Elektron firmware", fr: "la méthode de rétro-ingénierie des firmwares Elektron" },
 ];
@@ -1116,8 +1100,7 @@ const GUIDE_OF = {
   "midi-live-both": "midi-live-both",
   macro: "macro",
   "chord-keys": "chord-keys",
-  va: "va",
-  generate: "generate",
+  "track-filter": "track-filter",
   "lfo-plus": "lfo-plus",
 };
 
@@ -1143,7 +1126,7 @@ const DISCORD = "https://discord.gg/hWegtJZcmm";
 const T = {
   en: {
     title: "Model:Cycles Flasher",
-    tagline: "Install mods on your Elektron Model:Cycles, right from your browser.",
+    tagline: "Install mods on your Elektron Model:Cycles or Model:Samples, right from your browser.",
     s1: "What do you want to install?",
     tab_mods: "Mods",
     tab_restore: "Official firmware",
@@ -1233,30 +1216,30 @@ const T = {
     drop3_sub: "the official Syntakt OS, for its engines, or click to choose it",
     get_os_syntakt: `Don't have it? <a href="${ELEKTRON_ST_DL}" target="_blank" rel="noopener">Download Syntakt OS 1.42 from elektron.se</a>, then unzip it. The page reads the engines from it, on your computer: no Syntakt needed.`,
     s3: "Connect your Model:Cycles over USB",
-    hu1: "Connect the Model:Cycles to the computer with a USB cable and turn it on normally.",
-    hu2: "On the Model:Cycles, press <b>SETTINGS</b>, open <b>CONFIG › UPGRADE</b> and confirm with <b>YES</b>. It now waits for the firmware.",
-    hu3: "Allow MIDI access below: the port named “Model:Cycles” is selected automatically.",
+    hu1: "Connect the {dev} to the computer with a USB cable and turn it on normally.",
+    hu2: "On the {dev}, press <b>SETTINGS</b>, open <b>CONFIG › UPGRADE</b> and confirm with <b>YES</b>. It now waits for the firmware.",
+    hu3: "Allow MIDI access below: the port named “{port}” is selected automatically.",
     m_fast: "Fast (USB)",
     m_slow: "Classic (CONFIG › UPGRADE)",
     method_fast: "The update protocol of Elektron Transfer, straight from this page: about 30 seconds. At the end, the Model:Cycles asks you to confirm (YES or NO).",
     method_slow: "The firmware is sent at MIDI speed while CONFIG › UPGRADE waits for it: 5 to 10 minutes. The fallback if the fast method doesn't work.",
-    hf1: "Connect the Model:Cycles to the computer with a USB cable and turn it on normally. Stay on its usual screen: no menu to open.",
-    hf2: "Close <b>Elektron Transfer</b> and any music software that uses the Model:Cycles: they hold its USB port.",
-    hf3: "Allow MIDI access below: the page finds the Model:Cycles and shows its OS version.",
+    hf1: "Connect the {dev} to the computer with a USB cable and turn it on normally. Stay on its usual screen: no menu to open.",
+    hf2: "Close <b>Elektron Transfer</b> and any music software that uses the {dev}: they hold its USB port.",
+    hf3: "Allow MIDI access below: the page finds the {dev} and shows its OS version.",
     allow: "Allow MIDI access",
     refresh: "Refresh",
     s4: "Flash",
     ack: "I've backed up my projects (Elektron Transfer) and I understand that flashing is at my own risk.",
-    flash_btn: "Flash the Model:Cycles",
+    flash_btn: "Flash the {dev}",
     flashing: "Flashing…",
     stop: "Stop",
     trouble: "Something went wrong?",
-    t1q: "Nothing happens on the Model:Cycles screen",
-    t1a: "Fast method: step 3 must say that the Model:Cycles was found. Classic method: check that <b>CONFIG › UPGRADE</b> is open and waiting. Either way, pick the port named “Model:Cycles” in step 3 and close Elektron Transfer, Overbridge and your music software (on Windows they lock the port), then try again.",
+    t1q: "Nothing happens on the {dev} screen",
+    t1a: "Fast method: step 3 must say that the {dev} was found. Classic method: check that <b>CONFIG › UPGRADE</b> is open and waiting. Either way, pick the port named “{port}” in step 3 and close Elektron Transfer, Overbridge and your music software (on Windows they lock the port), then try again.",
     t2q: "The transfer stops, or the Model:Cycles shows an error",
     t2a: "Turn the Model:Cycles off and on and flash again. With the classic method, open <b>CONFIG › UPGRADE</b> again and set <b>Advanced › Send speed margin</b> to 2.0 first.",
     t3q: "No MIDI port in the list",
-    t3a: "Connect the Model:Cycles with a USB cable that carries data (some cables only charge), turn it on, then click <b>Refresh</b>. Some systems only show a new device after the browser is restarted.",
+    t3a: "Connect the {dev} with a USB cable that carries data (some cables only charge), turn it on, then click <b>Refresh</b>. Some systems only show a new device after the browser is restarted.",
     t5q: "The fast method doesn't find the Model:Cycles, or stops",
     t5a: "Turn the Model:Cycles on normally (not in CONFIG › UPGRADE), close Elektron Transfer, then click <b>Refresh</b> in step 3. If it still fails, choose <b>Classic</b> in step 3: slower, but it doesn't need answers from the machine. Elektron Transfer works too: download the .syx (step 4) and drop it onto Transfer's window.",
     t4q: "The update over USB is refused, or the Model:Cycles doesn't start any more",
@@ -1267,7 +1250,8 @@ const T = {
     download: "Download the .syx",
     download_hint: "to drop onto <b>Elektron Transfer</b> (just as fast), or to keep.",
     credits: "Credits",
-    credits_intro: "This flasher stands on the shoulders of these open-source projects (MIT licence), none of which includes firmware:",
+    credits_intro: "This flasher stands on the shoulders of these projects, none of which includes firmware:",
+    credits_license: `Modded-Cycles is released under the <a href="${REPO}/blob/main/LICENSE" target="_blank" rel="noopener">MIT license</a>. Third-party code keeps its own license and Elektron's firmware is not covered: see the <a href="${REPO}/blob/main/THIRD-PARTY-NOTICES.md" target="_blank" rel="noopener">notices</a>.`,
     privacy: "Your firmware file never leaves your computer. Nothing is uploaded, no firmware is provided.",
     links: "Not affiliated with Elektron. Model:Cycles, Model:Samples and Syntakt are Elektron products.",
     // dynamic
@@ -1336,15 +1320,39 @@ const T = {
     done_sback: "It restarts as a <b>Model:Samples</b>, with its own OS.",
     dev_fwd_on_cycles: "This machine answers as a Model:Cycles: it would refuse this firmware. If it is a Model:Samples already running the Cycles OS, there is nothing to install; to go back, choose “Model:Samples: back to its OS” if that Cycles OS came from this page, or “Model:Cycles → Samples OS” if it was installed another way.",
     dev_back_on_samples: "This machine answers as a Model:Samples OS: there is nothing to bring back. If it actually runs the Cycles OS with Model-TG, set Model-TG's Transfer identity back to CYC (or restart the machine), then try again.",
+    // Mods tab, machine picker (notes/57): always the Model:Cycles OS, packed for the machine
+    mach_q: "Your machine",
+    mach_cyc: "Model:Cycles",
+    mach_smp: "Model:Samples, on its own OS",
+    mach_cos: "Model:Samples, already on the Cycles OS",
+    mach_title: "Mods on a Model:Samples",
+    mach_text: "Whatever the machine, the page installs the Model:Cycles OS with the mods you tick; on a Model:Samples, Model-TG's Sampler plays your samples. The firmware is packed inside your Model:Samples' own firmware (its startup menu, updater and signature stay in place), so step 2 also asks for the official Model:Samples OS file.",
+    mach_w_smp: "Choose this when the machine runs its Model:Samples OS (it starts as a Model:Samples).",
+    mach_w_cos: "Choose this when it already runs the Model:Cycles OS installed from this page (here, or from the Samples OS tab): this is how you change mods later. That OS refuses firmwares built for a Model:Cycles: nothing is written.",
+    mach_w1: "Tested on a real Model:Samples, both choices: on its own OS, and already on the Cycles OS to change mods.",
+    mach_w2: "Back up your samples and projects with Elektron Transfer first: the Model:Cycles OS uses the same storage.",
+    mach_w3: `The way back to the Model:Samples OS stays in the Samples OS tab, “Model:Samples: back to its OS” (<a href="${GUIDE}#mods-on-samples">guide</a>).`,
+    mach_w4: "Only for a real Model:Samples. A Model:Cycles running the Samples OS also answers as a Model:Samples and would take this firmware, then refuse Model:Cycles firmwares over USB until its startup menu reinstalls its OS through the MIDI IN.",
+    mach_w5: "A Model:Cycles OS installed with another tool refuses these firmwares (nothing is written): first bring the Model:Samples OS back with the Samples OS tab's first choice, “Model:Cycles → Samples OS”, then choose “Model:Samples, on its own OS” here.",
+    mach_credit: "Original flasher by RDS (AIM), integrated into Modded Cycles by DaftMaple.",
+    sel_samples: "+ your Model:Samples OS file, to load in step 2.",
+    needs_samples_file: "Load the official Model:Samples OS below: the mods go inside its firmware.",
+    built_smp: "Packed for your Model:Samples (on its own OS).",
+    built_cos: "Packed for your Model:Samples (on the Cycles OS).",
+    for_samples: "for Model:Samples",
+    done_mach: "It restarts as a <b>Model:Cycles</b> with your mods (Elektron Transfer sees a “Model:Samples” if Model-TG's Transfer identity is on SMP). To change mods later, choose “Model:Samples, already on the Cycles OS”; to go back, the Samples OS tab.",
+    dev_mach_smp_on_cycles: "This machine answers as a Model:Cycles. If it is a Model:Samples already running the Cycles OS from this page, choose “Model:Samples, already on the Cycles OS” in step 1; if it is a Model:Cycles, choose “Model:Cycles”.",
+    dev_mach_cos_on_samples: "This machine answers as a Model:Samples. If it runs its Model:Samples OS, choose “Model:Samples, on its own OS” in step 1. If it runs the Cycles OS with Model-TG, set Device Config › Transfer back to CYC (or restart it), then Refresh.",
+    cos_mods: "To add mods, use the Mods tab and choose your Model:Samples as the machine: it installs the same Model:Cycles OS, with the mods you tick.",
     done_samples: "It restarts as a <b>Model:Samples</b>: Elektron Transfer and your computer see a “Model:Samples”. Load your samples with Transfer.",
     pick_one: "Select at least one mod, or switch to “Official firmware”.",
     midi_asking: "Asking for MIDI access…",
     midi_wait: "Waiting for your permission: Chrome shows a prompt near the address bar. Click “Allow”. If you blocked it before, click the icon left of the address and allow MIDI.",
     midi_denied: "MIDI access was refused. Click the icon left of the address, allow MIDI, reload the page and try again.",
-    midi_none: "No MIDI output found. Connect the Model:Cycles over USB, turn it on, then click Refresh.",
-    midi_pick_dev: "The Model:Cycles USB port is selected.",
-    midi_no_dev: "The Model:Cycles doesn't appear over USB. Connect it, turn it on and click Refresh.",
-    warn_not_dev: "This doesn't look like the Model:Cycles: pick the port named “Model:Cycles”.",
+    midi_none: "No MIDI output found. Connect the {dev} over USB, turn it on, then click Refresh.",
+    midi_pick_dev: "The {dev} USB port is selected.",
+    midi_no_dev: "The {dev} doesn't appear over USB. Connect it, turn it on and click Refresh.",
+    warn_not_dev: "This doesn't look like the {dev}: pick the port named “{port}”.",
     choose_port: "Choose a MIDI output",
     via: "via",
     minutes: "about {m} min",
@@ -1362,12 +1370,12 @@ const T = {
     miss_probe: "Waiting for the Model:Cycles to answer (step 3).",
     miss_dev: "The Model:Cycles must answer first (step 3).",
     miss_dev_mismatch: "This machine can't take this firmware (step 3).",
-    dev_probing: "Looking for the Model:Cycles…",
+    dev_probing: "Looking for the {dev}…",
     dev_ok: "{device} found: OS {v}.",
-    dev_none: "The Model:Cycles doesn't answer. If CONFIG › UPGRADE is open, leave it (NO); close Elektron Transfer, then click Refresh. Or choose the classic method.",
+    dev_none: "The {dev} doesn't answer. If CONFIG › UPGRADE is open, leave it (NO); close Elektron Transfer, then click Refresh. Or choose the classic method.",
     dev_busy: "Its USB port is in use by another program: close Elektron Transfer, Overbridge and your music software, then click Refresh.",
-    dev_noinput: "The page sees no MIDI input from the Model:Cycles, and the fast method needs both directions. Click Refresh, or choose the classic method.",
-    dev_samples: `This machine answers as a Model:Samples, so it would refuse this firmware. With Model-TG, set Device Config › Transfer back to CYC (or turn it off and on). Under the Samples OS, the way back is in the <a href="${GUIDE}#recovery">guide</a>.`,
+    dev_noinput: "The page sees no MIDI input from the {dev}, and the fast method needs both directions. Click Refresh, or choose the classic method.",
+    dev_samples: `This machine answers as a Model:Samples, so it would refuse this firmware. With Model-TG, set Device Config › Transfer back to CYC (or turn it off and on). Under the Samples OS, the way back is in the <a href="${GUIDE}#recovery">guide</a>. A real Model:Samples: choose it in step 1.`,
     dev_other: "This Elektron machine ({name}) is not a Model:Cycles: nothing will be sent.",
     dev_wrong_file: "This firmware is for a Model:Samples, and this machine is a Model:Cycles: nothing will be sent.",
     watch_fast: "The Model:Cycles checks every block as it arrives. At the end it asks you to confirm the update on its screen.",
@@ -1378,7 +1386,7 @@ const T = {
     after_back_plain: "The {m} is back.",
     fast_timeout: "The Model:Cycles stopped answering. Turn it off and on, then flash again. If it happens again, choose the classic method in step 3.",
     fast_refused: "The Model:Cycles refused the update{why}. Turn it off and on and try again, or choose the classic method in step 3.",
-    fast_write: "The Model:Cycles reported an error while receiving{why}. Turn it off and on and try again, or choose the classic method in step 3.",
+    fast_write: "The {dev} reported an error while receiving{why}. Turn it off and on and try again, or choose the classic method in step 3.",
     stopped_fast: "Stopped before the end: the Model:Cycles hasn't received the whole firmware. Turn it off and on, then flash again.",
     log_start_fast: "Fast upgrade: {kb} KB in {n} blocks to “{port}” ({device} OS {v}).",
     watch: "Watch the Model:Cycles screen: it should show that it is receiving. If nothing happens within a few seconds, press <b>Stop</b>.",
@@ -1395,7 +1403,7 @@ const T = {
   },
   fr: {
     title: "Flasher Model:Cycles",
-    tagline: "Installez des mods sur votre Elektron Model:Cycles, depuis votre navigateur.",
+    tagline: "Installez des mods sur votre Elektron Model:Cycles ou Model:Samples, depuis votre navigateur.",
     s1: "Que voulez-vous installer ?",
     tab_mods: "Mods",
     tab_restore: "Firmware officiel",
@@ -1485,30 +1493,30 @@ const T = {
     drop3_sub: "l'OS officiel du Syntakt, pour ses moteurs, ou cliquez pour le choisir",
     get_os_syntakt: `Vous ne l'avez pas ? <a href="${ELEKTRON_ST_DL}" target="_blank" rel="noopener">Téléchargez l'OS Syntakt 1.42 sur elektron.se</a>, puis dézippez-le. La page y lit les moteurs, sur votre ordinateur : pas besoin d'avoir un Syntakt.`,
     s3: "Branchez le Model:Cycles en USB",
-    hu1: "Reliez le Model:Cycles à l'ordinateur avec un câble USB et allumez-le normalement.",
-    hu2: "Sur le Model:Cycles, appuyez sur <b>SETTINGS</b>, ouvrez <b>CONFIG › UPGRADE</b> et confirmez avec <b>YES</b>. Il attend alors le firmware.",
-    hu3: "Autorisez le MIDI ci-dessous : le port nommé « Model:Cycles » est choisi automatiquement.",
+    hu1: "Reliez le {dev} à l'ordinateur avec un câble USB et allumez-le normalement.",
+    hu2: "Sur le {dev}, appuyez sur <b>SETTINGS</b>, ouvrez <b>CONFIG › UPGRADE</b> et confirmez avec <b>YES</b>. Il attend alors le firmware.",
+    hu3: "Autorisez le MIDI ci-dessous : le port nommé « {port} » est choisi automatiquement.",
     m_fast: "Rapide (USB)",
     m_slow: "Classique (CONFIG › UPGRADE)",
     method_fast: "Le protocole de mise à jour d'Elektron Transfer, directement depuis cette page : une trentaine de secondes. À la fin, le Model:Cycles demande de confirmer (YES ou NO).",
     method_slow: "Le firmware est envoyé à la vitesse du MIDI pendant que CONFIG › UPGRADE l'attend : 5 à 10 minutes. La solution de secours si la méthode rapide ne marche pas.",
-    hf1: "Reliez le Model:Cycles à l'ordinateur avec un câble USB et allumez-le normalement. Restez sur son écran habituel : aucun menu à ouvrir.",
-    hf2: "Fermez <b>Elektron Transfer</b> et tout logiciel de musique qui utilise le Model:Cycles : ils occupent son port USB.",
-    hf3: "Autorisez le MIDI ci-dessous : la page trouve le Model:Cycles et affiche sa version d'OS.",
+    hf1: "Reliez le {dev} à l'ordinateur avec un câble USB et allumez-le normalement. Restez sur son écran habituel : aucun menu à ouvrir.",
+    hf2: "Fermez <b>Elektron Transfer</b> et tout logiciel de musique qui utilise le {dev} : ils occupent son port USB.",
+    hf3: "Autorisez le MIDI ci-dessous : la page trouve le {dev} et affiche sa version d'OS.",
     allow: "Autoriser le MIDI",
     refresh: "Rafraîchir",
     s4: "Flasher",
     ack: "J'ai sauvegardé mes projets (Elektron Transfer) et je comprends que je flashe à mes risques.",
-    flash_btn: "Flasher le Model:Cycles",
+    flash_btn: "Flasher le {dev}",
     flashing: "Flash en cours…",
     stop: "Arrêter",
     trouble: "Un problème ?",
-    t1q: "Rien ne se passe sur l'écran du Model:Cycles",
-    t1a: "Méthode rapide : l'étape 3 doit indiquer que le Model:Cycles a été trouvé. Méthode classique : vérifiez que <b>CONFIG › UPGRADE</b> est ouvert et en attente. Dans les deux cas, choisissez le port nommé « Model:Cycles » à l'étape 3 et fermez Elektron Transfer, Overbridge et votre logiciel de musique (sous Windows, ils bloquent le port), puis réessayez.",
+    t1q: "Rien ne se passe sur l'écran du {dev}",
+    t1a: "Méthode rapide : l'étape 3 doit indiquer que le {dev} a été trouvé. Méthode classique : vérifiez que <b>CONFIG › UPGRADE</b> est ouvert et en attente. Dans les deux cas, choisissez le port nommé « {port} » à l'étape 3 et fermez Elektron Transfer, Overbridge et votre logiciel de musique (sous Windows, ils bloquent le port), puis réessayez.",
     t2q: "Le transfert s'arrête, ou le Model:Cycles affiche une erreur",
     t2a: "Éteignez puis rallumez le Model:Cycles et relancez. Avec la méthode classique, rouvrez d'abord <b>CONFIG › UPGRADE</b> et réglez <b>Options avancées › Marge de vitesse</b> sur 2.0.",
     t3q: "Aucun port MIDI dans la liste",
-    t3a: "Branchez le Model:Cycles avec un câble USB qui transporte les données (certains câbles ne font que charger), allumez-le, puis cliquez sur <b>Rafraîchir</b>. Certains systèmes n'affichent un nouvel appareil qu'après un redémarrage du navigateur.",
+    t3a: "Branchez le {dev} avec un câble USB qui transporte les données (certains câbles ne font que charger), allumez-le, puis cliquez sur <b>Rafraîchir</b>. Certains systèmes n'affichent un nouvel appareil qu'après un redémarrage du navigateur.",
     t5q: "La méthode rapide ne trouve pas le Model:Cycles, ou s'arrête",
     t5a: "Allumez le Model:Cycles normalement (pas dans CONFIG › UPGRADE), fermez Elektron Transfer, puis cliquez sur <b>Rafraîchir</b> à l'étape 3. Si ça échoue encore, choisissez <b>Classique</b> à l'étape 3 : plus lent, mais sans besoin de réponse de la machine. Elektron Transfer marche aussi : téléchargez le .syx (étape 4) et déposez-le sur la fenêtre de Transfer.",
     t4q: "La mise à jour par USB est refusée, ou le Model:Cycles ne démarre plus",
@@ -1519,7 +1527,8 @@ const T = {
     download: "Télécharger le .syx",
     download_hint: "à déposer sur <b>Elektron Transfer</b> (aussi rapide), ou à garder.",
     credits: "Crédits",
-    credits_intro: "Ce flasher s'appuie sur ces projets open source (licence MIT), dont aucun ne contient de firmware :",
+    credits_intro: "Ce flasher s'appuie sur ces projets, dont aucun ne contient de firmware :",
+    credits_license: `Modded-Cycles est publié sous <a href="${REPO}/blob/main/LICENSE" target="_blank" rel="noopener">licence MIT</a>. Le code tiers garde sa propre licence et le firmware d'Elektron n'est pas couvert : voir les <a href="${REPO}/blob/main/THIRD-PARTY-NOTICES.md" target="_blank" rel="noopener">mentions</a>.`,
     privacy: "Votre fichier firmware ne quitte jamais votre ordinateur. Rien n'est envoyé en ligne, aucun firmware n'est fourni.",
     links: "Projet non affilié à Elektron. Model:Cycles, Model:Samples et Syntakt sont des produits Elektron.",
     no_webmidi: "Ce navigateur ne sait pas parler aux appareils MIDI. Ouvrez cette page dans <b>Chrome, Edge ou Opera</b> sur ordinateur (Firefox et Safari ne gèrent pas le Web MIDI). Vous pouvez quand même préparer le firmware ici.",
@@ -1587,15 +1596,38 @@ const T = {
     done_sback: "Il redémarre en <b>Model:Samples</b>, avec son propre OS.",
     dev_fwd_on_cycles: "Cette machine répond comme un Model:Cycles : elle refuserait ce firmware. Si c'est un Model:Samples déjà sous l'OS Cycles, il n'y a rien à installer ; pour revenir, choisissez « Model:Samples : retour à son OS » si cet OS Cycles vient de cette page, ou « Model:Cycles → OS Samples » s'il a été installé autrement.",
     dev_back_on_samples: "Cette machine répond comme l'OS du Model:Samples : il n'y a rien à rendre. Si elle tourne en fait sous l'OS Cycles avec Model-TG, remettez l'identité Transfer de Model-TG sur CYC (ou redémarrez la machine), puis réessayez.",
+    mach_q: "Votre machine",
+    mach_cyc: "Model:Cycles",
+    mach_smp: "Model:Samples, sous son OS",
+    mach_cos: "Model:Samples, déjà sous l'OS Cycles",
+    mach_title: "Des mods sur un Model:Samples",
+    mach_text: "Quelle que soit la machine, la page installe l'OS du Model:Cycles avec les mods cochés ; sur un Model:Samples, le Sampler de Model-TG joue vos samples. Le firmware est emballé dans le firmware de votre Model:Samples (son menu de démarrage, son updater et sa signature restent en place) : l'étape 2 demande donc aussi le fichier officiel de l'OS Model:Samples.",
+    mach_w_smp: "Choisissez ceci quand la machine tourne sous son OS Model:Samples (elle démarre en Model:Samples).",
+    mach_w_cos: "Choisissez ceci quand elle tourne déjà sous l'OS du Model:Cycles installé depuis cette page (ici, ou depuis l'onglet OS Samples) : c'est ainsi qu'on change de mods plus tard. Cet OS refuse les firmwares construits pour un Model:Cycles : rien n'est écrit.",
+    mach_w1: "Testé sur un vrai Model:Samples, les deux choix : sous son OS, et déjà sous l'OS Cycles pour changer de mods.",
+    mach_w2: "Sauvegardez d'abord vos samples et vos projets avec Elektron Transfer : l'OS du Model:Cycles utilise le même stockage.",
+    mach_w3: `Le retour à l'OS du Model:Samples reste dans l'onglet OS Samples, « Model:Samples : retour à son OS » (<a href="${GUIDE}#mods-on-samples">guide</a>).`,
+    mach_w4: "Seulement pour un vrai Model:Samples. Un Model:Cycles sous l'OS Samples répond lui aussi Model:Samples et prendrait ce firmware, puis refuserait les firmwares Model:Cycles par USB jusqu'à ce que son menu de démarrage réinstalle son OS par le MIDI IN.",
+    mach_w5: "Un OS Model:Cycles installé avec un autre outil refuse ces firmwares (rien n'est écrit) : rendez d'abord l'OS du Model:Samples avec le premier choix de l'onglet OS Samples, « Model:Cycles → OS Samples », puis choisissez ici « Model:Samples, sous son OS ».",
+    mach_credit: "Flasher d'origine de RDS (AIM), intégré à Modded Cycles par DaftMaple.",
+    sel_samples: "+ votre fichier d'OS Model:Samples, à charger à l'étape 2.",
+    needs_samples_file: "Déposez l'OS officiel du Model:Samples ci-dessous : les mods vont dans son firmware.",
+    built_smp: "Emballé pour votre Model:Samples (sous son OS).",
+    built_cos: "Emballé pour votre Model:Samples (sous l'OS Cycles).",
+    for_samples: "pour Model:Samples",
+    done_mach: "Il redémarre en <b>Model:Cycles</b> avec vos mods (Elektron Transfer voit un « Model:Samples » si l'identité Transfer de Model-TG est sur SMP). Pour changer de mods plus tard, choisissez « Model:Samples, déjà sous l'OS Cycles » ; pour revenir, l'onglet OS Samples.",
+    dev_mach_smp_on_cycles: "Cette machine répond comme un Model:Cycles. Si c'est un Model:Samples déjà sous l'OS Cycles de cette page, choisissez « Model:Samples, déjà sous l'OS Cycles » à l'étape 1 ; si c'est un Model:Cycles, choisissez « Model:Cycles ».",
+    dev_mach_cos_on_samples: "Cette machine répond comme un Model:Samples. Si elle tourne sous son OS Model:Samples, choisissez « Model:Samples, sous son OS » à l'étape 1. Si elle tourne sous l'OS Cycles avec Model-TG, remettez Device Config › Transfer sur CYC (ou redémarrez-la), puis Rafraîchir.",
+    cos_mods: "Pour ajouter des mods, utilisez l'onglet Mods et choisissez votre Model:Samples comme machine : il installe le même OS du Model:Cycles, avec les mods cochés.",
     done_samples: "Il redémarre en <b>Model:Samples</b> : Elektron Transfer et votre ordinateur voient un « Model:Samples ». Chargez vos samples avec Transfer.",
     pick_one: "Cochez au moins un mod, ou passez sur « Firmware officiel ».",
     midi_asking: "Demande d'accès MIDI…",
     midi_wait: "En attente de votre autorisation : Chrome affiche une demande près de la barre d'adresse. Cliquez sur « Autoriser ». Si vous l'avez bloquée, cliquez sur l'icône à gauche de l'adresse et autorisez le MIDI.",
     midi_denied: "Accès MIDI refusé. Cliquez sur l'icône à gauche de l'adresse, autorisez le MIDI, rechargez la page et réessayez.",
-    midi_none: "Aucune sortie MIDI. Branchez le Model:Cycles en USB, allumez-le, puis cliquez sur Rafraîchir.",
-    midi_pick_dev: "Le port USB du Model:Cycles est sélectionné.",
-    midi_no_dev: "Le Model:Cycles n'apparaît pas en USB. Branchez-le, allumez-le et cliquez sur Rafraîchir.",
-    warn_not_dev: "Ce port ne semble pas être le Model:Cycles : choisissez le port nommé « Model:Cycles ».",
+    midi_none: "Aucune sortie MIDI. Branchez le {dev} en USB, allumez-le, puis cliquez sur Rafraîchir.",
+    midi_pick_dev: "Le port USB du {dev} est sélectionné.",
+    midi_no_dev: "Le {dev} n'apparaît pas en USB. Branchez-le, allumez-le et cliquez sur Rafraîchir.",
+    warn_not_dev: "Ce port ne semble pas être le {dev} : choisissez le port nommé « {port} ».",
     choose_port: "Choisissez une sortie MIDI",
     via: "via",
     minutes: "environ {m} min",
@@ -1613,12 +1645,12 @@ const T = {
     miss_probe: "En attente d'une réponse du Model:Cycles (étape 3).",
     miss_dev: "Le Model:Cycles doit d'abord répondre (étape 3).",
     miss_dev_mismatch: "Cette machine ne peut pas recevoir ce firmware (étape 3).",
-    dev_probing: "Recherche du Model:Cycles…",
+    dev_probing: "Recherche du {dev}…",
     dev_ok: "{device} trouvé : OS {v}.",
-    dev_none: "Le Model:Cycles ne répond pas. Si CONFIG › UPGRADE est ouvert, quittez-le (NO) ; fermez Elektron Transfer, puis cliquez sur Rafraîchir. Ou choisissez la méthode classique.",
+    dev_none: "Le {dev} ne répond pas. Si CONFIG › UPGRADE est ouvert, quittez-le (NO) ; fermez Elektron Transfer, puis cliquez sur Rafraîchir. Ou choisissez la méthode classique.",
     dev_busy: "Son port USB est occupé par un autre programme : fermez Elektron Transfer, Overbridge et votre logiciel de musique, puis cliquez sur Rafraîchir.",
-    dev_noinput: "La page ne voit pas d'entrée MIDI venant du Model:Cycles, or la méthode rapide a besoin des deux sens. Cliquez sur Rafraîchir, ou choisissez la méthode classique.",
-    dev_samples: `Cette machine répond comme un Model:Samples : elle refuserait ce firmware. Avec Model-TG, remettez Device Config › Transfer sur CYC (ou éteignez-la et rallumez-la). Sous l'OS Samples, le retour est expliqué dans le <a href="${GUIDE}#recovery">guide</a>.`,
+    dev_noinput: "La page ne voit pas d'entrée MIDI venant du {dev}, or la méthode rapide a besoin des deux sens. Cliquez sur Rafraîchir, ou choisissez la méthode classique.",
+    dev_samples: `Cette machine répond comme un Model:Samples : elle refuserait ce firmware. Avec Model-TG, remettez Device Config › Transfer sur CYC (ou éteignez-la et rallumez-la). Sous l'OS Samples, le retour est expliqué dans le <a href="${GUIDE}#recovery">guide</a>. Un vrai Model:Samples : choisissez-le à l'étape 1.`,
     dev_other: "Cette machine Elektron ({name}) n'est pas un Model:Cycles : rien ne sera envoyé.",
     dev_wrong_file: "Ce firmware est pour un Model:Samples, et cette machine est un Model:Cycles : rien ne sera envoyé.",
     watch_fast: "Le Model:Cycles vérifie chaque bloc à son arrivée. À la fin, il demande de confirmer la mise à jour sur son écran.",
@@ -1629,7 +1661,7 @@ const T = {
     after_back_plain: "Le {m} est de retour.",
     fast_timeout: "Le Model:Cycles ne répond plus. Éteignez-le puis rallumez-le, et relancez. Si ça recommence, choisissez la méthode classique à l'étape 3.",
     fast_refused: "Le Model:Cycles a refusé la mise à jour{why}. Éteignez-le puis rallumez-le et réessayez, ou choisissez la méthode classique à l'étape 3.",
-    fast_write: "Le Model:Cycles a signalé une erreur pendant la réception{why}. Éteignez-le puis rallumez-le et réessayez, ou choisissez la méthode classique à l'étape 3.",
+    fast_write: "Le {dev} a signalé une erreur pendant la réception{why}. Éteignez-le puis rallumez-le et réessayez, ou choisissez la méthode classique à l'étape 3.",
     stopped_fast: "Arrêté avant la fin : le Model:Cycles n'a pas reçu tout le firmware. Éteignez-le puis rallumez-le, et relancez.",
     log_start_fast: "Mise à jour rapide : {kb} Ko en {n} blocs vers « {port} » ({device} OS {v}).",
     watch: "Regardez l'écran du Model:Cycles : il doit indiquer qu'il reçoit. S'il ne se passe rien en quelques secondes, cliquez sur <b>Arrêter</b>.",
@@ -1714,25 +1746,22 @@ const FEAT = {
       note: "Best when only one side plays notes. The Cycles passes on what it receives as it comes in, without waiting for whole messages like a MIDI merger box: if the device on MIDI IN and the Cycles both send notes or knob moves, some can reach the next device wrong (a wrong or stuck note). Clock and start/stop are not affected." },
     macro: { label: "MACRO machine",
       short: "One extra machine with 47 synthesis models, from Braids' open-source code.",
-      desc: "An extra machine after Chord (after the Sampler with Model-TG, after the Syntakt engines if you tick them too) with the 47 synthesis models of Braids, Émilie Gillet's open-source macro-oscillator, from her own code: analog-style waves, FM, vowels and speech, physical models, drums, wavetables and noises. SHAPE picks the model, COLOR and SWEEP shape it, CONTOUR lets the amp envelope open the timbre. DECAY, GATE and PUNCH work as on Tone.",
-      note: "About twice as heavy on the processor as an original machine. On its own it has no load governor: several MACRO tracks playing at once can make the sound crackle, so start with one or two. With the Syntakt engines, their load governor looks after MACRO tracks too. A project using MACRO needs a firmware with MACRO at the same place: it is the last machine, so its number depends on Model-TG and on the ticked Syntakt engines." },
+      desc: "An extra machine after Chord (after the Sampler with Model-TG, after the Syntakt engines if you tick them too) with the 47 synthesis models of Braids, Émilie Gillet's open-source macro-oscillator, from her own code: analog-style waves, FM, vowels and speech, physical models, drums, wavetables and noises. SHAPE picks the model, COLOR and SWEEP shape it, CONTOUR lets the amp envelope open the timbre. FUNC + PITCH gives lo-fi: turn left to lower the sample rate (RATE, down to about 4 kHz), right to lower the bit depth (BITS, down to 2 bits). DECAY, GATE and PUNCH work as on Tone.",
+      note: "About twice as heavy on the processor as an original machine; 13 models (the TRIPLE waves, the wavetables, CSAW…) are computed at 48 kHz and cost about half as much, and RATE lightens them further. On its own it has no load governor: several MACRO tracks playing at once can make the sound crackle, so start with one or two. On a MACRO track, FUNC + PITCH no longer fine-tunes the note. With the Syntakt engines, their load governor looks after MACRO tracks too. A project using MACRO needs a firmware with MACRO at the same place: it is the last machine, so its number depends on Model-TG and on the ticked Syntakt engines." },
     "chord-keys": { label: "Chord Keys",
       short: "On a CHORD track, TRIG 1–16 play the chords of your scale.",
       clash: "both change the notes of the TRIG keys (Model-TG has its own Scale Lock)",
       desc: "Play one CHORD track with the lower TRIG buttons: I–VII on 1–7, one octave higher on 8–14, then I–II two octaves higher on 15–16. T1–T6 keep their usual controls. FUNC + RETRIG adds Keys, Root, Scale and a triad/7/9/11/13 choice per degree, shared across octaves and saved with the pattern." },
-    va: { label: "VA machines",
-      short: "Four extra machines by DavidCaruso: a light two-oscillator synth, and an analog-style kick, snare and hihat.",
-      clash: "both add machines after Chord, at the same place",
-      desc: "Four machines after Chord (after the Sampler with Model-TG): VA, a light two-oscillator synth for basses and leads (saw, square or triangle each, detune, mix), and three analog-style drums, VA KICK, VA SNARE and VA HIHAT. Each has its own four knobs, named on the screen. The keys, PITCH and FINE set the note. DECAY, GATE and PUNCH work as on Tone. From DavidCaruso's Model-TG-VA-DR-v1 firmware, rewritten for this project: the same sound, sample for sample.",
-      note: "Light on the processor: VA about as heavy as Tone, the drums up to about twice (VA HIHAT). A silent VA track is not computed. Not yet with MACRO or the Syntakt engines. A project using these machines needs a firmware with them at the same place: machines 7 to 10, or 8 to 11 with Model-TG (David's numbers)." },
-    generate: { label: "Trig generator (SETTINGS + TRACK)",
-      short: "Euclidean or random trigs, scale notes and velocities on the selected track. Needs Model-TG.",
-      desc: "Hold SETTINGS and press TRACK to open the Generate list. Choose a mode (random density, or Euclidean hits and rotation), optional notes in a key and scale, optional random velocities, then press GEN: the whole selected track is rewritten. Idea by DavidCaruso, rewritten for this project.",
-      note: "No undo: GEN erases the track's trigs and their p-locks, so save your project first. The settings go back to their defaults at power-off. It needs Model-TG: unticking Model-TG unticks it." },
+    "track-filter": { label: "Per-track filter (LP / OFF / HP)",
+      short: "Hold MACHINES and turn SWEEP: low-pass to the left, off in the centre, high-pass to the right.",
+      clash: "both use MACHINES + SWEEP / CONTOUR for a track filter",
+      desc: "Hold MACHINES and turn SWEEP: a filter on the track, low-pass to the left, off in the centre, high-pass to the right, like a DJ mixer, with the Model:Samples' range (5 Hz to 20 kHz). CONTOUR sets the resonance, COLOR and SHAPE a filter envelope (amount up or down, decay) restarted by each note. Four real parameters on every machine: p-locks, LFO, velocity, MIDI CC 74 and 71, saved with the sound and the pattern.",
+      note: "Can't be ticked together with Model-TG for now: both use MACHINES + SWEEP / CONTOUR. Model-TG's filter will make way for this one once it is tested. A sound opened on another firmware plays without its filter." },
     "lfo-plus": { label: "LFO 2, 3, 4",
+      "clash_track-filter": "both keep their settings in the same place of the sound",
       short: "Three more LFOs on every track: press [LFO] again to reach LFO 2, 3 and 4.",
       desc: "Each track gets three more LFOs next to the original one. On the LFO page, press [LFO] again: a big 2, then 3, then 4 shows in the left box, and the fifth press closes the page. Each extra LFO has its own speed, multiplier, waveform, destination and depth. Fade, start phase and mode stay shared with LFO 1. LFO 2 is saved with the sound and can be p-locked. LFO 3 and 4 are for live play: one setting per track, not saved. From DavidCaruso's Model-TG-VA-DR-v1, rewritten for this project. Works with or without Model-TG.",
-      note: "An extra LFO set to LFO 1's destination does nothing, and the DEST knob skips destinations another LFO of the track already uses. LFO 3 and 4 go back to their defaults at power-on and cannot be p-locked. With Model-TG, it also fixes the Attack, Filter and Resonance p-locks, which came back on other parameters after reloading a pattern." },
+      note: "An extra LFO set to LFO 1's destination does nothing, and the DEST knob skips destinations another LFO of the track already uses. LFO 3 and 4 go back to their defaults at power-on and cannot be p-locked. With Model-TG, it also fixes the Attack, Filter and Resonance p-locks, which came back on other parameters after reloading a pattern. Not with the Per-track filter for now: both keep their settings in the same place of the sound." },
   },
   fr: {
     usb6: { label: "Audio USB 6 canaux",
@@ -1800,25 +1829,22 @@ const FEAT = {
       note: "Le mieux est qu'un seul côté joue des notes. Le Cycles fait suivre ce qu'il reçoit au fil de l'eau, sans attendre les messages entiers comme un boîtier de fusion MIDI : si l'appareil branché sur le MIDI IN et le Cycles envoient tous les deux des notes ou des mouvements de potards, certains peuvent arriver faussés à l'appareil suivant (note fausse ou bloquée). L'horloge et start/stop ne sont pas touchés." },
     macro: { label: "Machine MACRO",
       short: "Une machine en plus avec 47 modèles de synthèse, tirés du code libre de Braids.",
-      desc: "Une machine ajoutée après Chord (après le Sampler avec Model-TG, après les moteurs du Syntakt si vous les cochez aussi) avec les 47 modèles de synthèse de Braids, le macro-oscillateur libre d'Émilie Gillet, à partir de son propre code : ondes façon analogique, FM, voyelles et voix, modèles physiques, percussions, tables d'ondes et bruits. SHAPE choisit le modèle, COLOR et SWEEP le façonnent, CONTOUR laisse l'enveloppe d'ampli ouvrir le timbre. DECAY, GATE et PUNCH marchent comme sur Tone.",
-      note: "Environ deux fois plus gourmande en calcul qu'une machine d'origine. Seule, elle n'a pas de régulateur de charge : plusieurs pistes MACRO qui jouent en même temps peuvent faire craquer le son ; commencez avec une ou deux. Avec les moteurs du Syntakt, leur régulateur de charge veille aussi sur les pistes MACRO. Un projet qui utilise MACRO demande un firmware où MACRO est à la même place : c'est la dernière machine, son numéro dépend donc de Model-TG et des moteurs du Syntakt cochés." },
+      desc: "Une machine ajoutée après Chord (après le Sampler avec Model-TG, après les moteurs du Syntakt si vous les cochez aussi) avec les 47 modèles de synthèse de Braids, le macro-oscillateur libre d'Émilie Gillet, à partir de son propre code : ondes façon analogique, FM, voyelles et voix, modèles physiques, percussions, tables d'ondes et bruits. SHAPE choisit le modèle, COLOR et SWEEP le façonnent, CONTOUR laisse l'enveloppe d'ampli ouvrir le timbre. FUNC + PITCH donne le lo-fi : à gauche, la fréquence d'échantillonnage baisse (RATE, jusqu'à 4 kHz environ) ; à droite, la résolution (BITS, jusqu'à 2 bits). DECAY, GATE et PUNCH marchent comme sur Tone.",
+      note: "Environ deux fois plus gourmande en calcul qu'une machine d'origine ; 13 modèles (les TRIPLE, les tables d'ondes, CSAW…) sont calculés à 48 kHz et coûtent environ moitié moins, et RATE les allège encore. Seule, elle n'a pas de régulateur de charge : plusieurs pistes MACRO qui jouent en même temps peuvent faire craquer le son ; commencez avec une ou deux. Sur une piste MACRO, FUNC + PITCH n'accorde plus la note. Avec les moteurs du Syntakt, leur régulateur de charge veille aussi sur les pistes MACRO. Un projet qui utilise MACRO demande un firmware où MACRO est à la même place : c'est la dernière machine, son numéro dépend donc de Model-TG et des moteurs du Syntakt cochés." },
     "chord-keys": { label: "Chord Keys",
       short: "Sur une piste CHORD, les TRIG 1–16 jouent les accords de votre gamme.",
       clash: "les deux changent les notes des boutons TRIG (Model-TG a son propre Scale Lock)",
       desc: "Jouez une piste CHORD avec les boutons TRIG du bas : I–VII sur 1–7, une octave plus haut sur 8–14, puis I–II deux octaves plus haut sur 15–16. T1–T6 gardent leurs commandes habituelles. FUNC + RETRIG ajoute Keys, Root, Scale et le choix triade/7/9/11/13 par degré, commun aux octaves et enregistré avec le pattern." },
-    va: { label: "Machines VA",
-      short: "Quatre machines en plus, de DavidCaruso : un synthé léger à deux oscillateurs, et une grosse caisse, une caisse claire et un charleston façon analogique.",
-      clash: "les deux ajoutent des machines après Chord, au même endroit",
-      desc: "Quatre machines après Chord (après le Sampler avec Model-TG) : VA, un synthé léger à deux oscillateurs pour les basses et les leads (scie, carré ou triangle chacun, désaccord, mélange), et trois percussions façon analogique, VA KICK, VA SNARE et VA HIHAT. Chacune a ses quatre potards, nommés à l'écran. Les touches, PITCH et FINE règlent la note. DECAY, GATE et PUNCH marchent comme sur Tone. D'après le firmware Model-TG-VA-DR-v1 de DavidCaruso, réécrites pour ce projet : le même son, échantillon par échantillon.",
-      note: "Légères en calcul : VA à peu près comme Tone, les percussions jusqu'à deux fois environ (VA HIHAT). Une piste VA muette n'est pas calculée. Pas encore avec MACRO ni avec les moteurs du Syntakt. Un projet qui utilise ces machines demande un firmware où elles sont à la même place : machines 7 à 10, ou 8 à 11 avec Model-TG (les numéros de David)." },
-    generate: { label: "Générateur de trigs (SETTINGS + TRACK)",
-      short: "Trigs euclidiens ou aléatoires, notes dans une gamme et vélocités sur la piste sélectionnée. Model-TG requis.",
-      desc: "Tenez SETTINGS et appuyez sur TRACK pour ouvrir la liste Generate. Choisissez un mode (densité aléatoire, ou coups euclidiens et rotation), des notes dans une tonalité et une gamme si vous voulez, des vélocités aléatoires si vous voulez, puis appuyez sur GEN : toute la piste sélectionnée est réécrite. Idée de DavidCaruso, réécrite pour ce projet.",
-      note: "Pas d'annulation : GEN efface les trigs de la piste et leurs p-locks, sauvez donc le projet avant. Les réglages reviennent par défaut à l'extinction. Demande Model-TG : décocher Model-TG le décoche." },
+    "track-filter": { label: "Filtre par piste (LP / OFF / HP)",
+      short: "MACHINES tenu + SWEEP : passe-bas à gauche, rien au centre, passe-haut à droite.",
+      clash: "les deux utilisent MACHINES + SWEEP / CONTOUR pour un filtre de piste",
+      desc: "Maintenez MACHINES et tournez SWEEP : un filtre sur la piste, passe-bas à gauche, rien au centre, passe-haut à droite, comme sur une table de mixage DJ, avec la plage du Model:Samples (5 Hz à 20 kHz). CONTOUR règle la résonance, COLOR et SHAPE une enveloppe du filtre (quantité vers le haut ou le bas, decay) relancée à chaque note. Quatre vrais paramètres de toutes les machines : p-locks, LFO, vélocité, CC MIDI 74 et 71, enregistrés avec le son et le pattern.",
+      note: "Ne se coche pas avec Model-TG pour l'instant : les deux utilisent MACHINES + SWEEP / CONTOUR. Le filtre de Model-TG laissera la place à celui-ci une fois testé. Un son ouvert sur un autre firmware joue sans son filtre." },
     "lfo-plus": { label: "LFO 2, 3, 4",
+      "clash_track-filter": "les deux rangent leurs réglages au même endroit du son",
       short: "Trois LFO de plus sur chaque piste : appuyez encore sur [LFO] pour passer à LFO 2, 3 et 4.",
       desc: "Chaque piste reçoit trois LFO de plus, à côté de celui d'origine. Sur la page LFO, appuyez encore sur [LFO] : un grand 2, puis 3, puis 4 s'affiche dans le cadre de gauche, et le cinquième appui ferme la page. Chaque LFO de plus a sa vitesse, son multiplicateur, sa forme, sa destination et sa profondeur. Le fondu, la phase de départ et le mode restent communs avec LFO 1. LFO 2 est sauvé avec le son et se p-locke. LFO 3 et 4 servent au live : un réglage par piste, pas sauvé. D'après le Model-TG-VA-DR-v1 de DavidCaruso, réécrit pour ce projet. Marche avec ou sans Model-TG.",
-      note: "Un LFO de plus réglé sur la destination de LFO 1 ne fait rien, et la molette DEST saute les destinations déjà prises par un autre LFO de la piste. LFO 3 et 4 reviennent à leurs réglages par défaut à l'allumage et ne se p-lockent pas. Avec Model-TG, corrige aussi les p-locks d'Attack, de Filtre et de Résonance, qui revenaient sur d'autres paramètres au rechargement d'un pattern." },
+      note: "Un LFO de plus réglé sur la destination de LFO 1 ne fait rien, et la molette DEST saute les destinations déjà prises par un autre LFO de la piste. LFO 3 et 4 reviennent à leurs réglages par défaut à l'allumage et ne se p-lockent pas. Avec Model-TG, corrige aussi les p-locks d'Attack, de Filtre et de Résonance, qui revenaient sur d'autres paramètres au rechargement d'un pattern. Pas avec le Filtre par piste pour l'instant : les deux rangent leurs réglages au même endroit du son." },
   },
 };
 
@@ -1830,6 +1856,8 @@ const st = {
   mode: "mods",            // "mods" | "restore" | "samples"
   samplesOs: null,         // official Model:Samples OS { raw, name, sha } ("samples" mode)
   smpDir: "cyc",           // "samples" mode: "cyc" Samples OS for a Model:Cycles | "smp" Cycles OS for a Model:Samples | "back" its way back
+  machine: "cyc",          // "mods" mode, the machine that receives the (always Model:Cycles) OS: "cyc" a Model:Cycles |
+                           // "smp" a Model:Samples on its own OS | "cos" a Model:Samples already on the Cycles OS (notes/57)
   samplesError: null,
   syntakt: null,           // official Syntakt OS { raw, name, sha } (source of the Syntakt engines)
   syntaktError: null,
@@ -1859,7 +1887,27 @@ const st = {
 function t(key, vars) {
   let s = (T[st.lang] && T[st.lang][key]) || T.en[key] || key;
   if (vars) for (const k in vars) s = s.split("{" + k + "}").join(vars[k]);
-  return s;
+  return s.split("{dev}").join(deviceName()).split("{port}").join(portName());
+}
+
+// The machine being flashed, as the connection messages name it: a Model:Samples for the Mods tab's two Model:Samples
+// choices and for the Samples OS tab's last two (notes/57); otherwise the Model:Cycles.
+function deviceName() {
+  const smp = st.mode === "mods" ? st.machine !== "cyc" : st.mode === "samples" && st.smpDir !== "cyc";
+  return smp ? "Model:Samples" : "Model:Cycles";
+}
+// Its USB port is named after the OS it runs: Model:Samples only while it still runs its own OS.
+function portName() {
+  const smp = st.mode === "mods" ? st.machine === "smp" : st.mode === "samples" && st.smpDir === "smp";
+  return smp ? "Model:Samples" : "Model:Cycles";
+}
+// Step 3 texts that name the machine follow the tab and the machine chosen.
+function refreshDevTexts() {
+  document.querySelectorAll("[data-i18n],[data-i18n-html]").forEach((el) => {
+    const key = el.dataset.i18n || el.dataset.i18nHtml;
+    if (!/\{(dev|port)\}/.test(T.en[key] || "")) return;
+    if (el.dataset.i18n) el.textContent = t(key); else el.innerHTML = t(key);
+  });
 }
 function esc(s) {
   return String(s).replace(/[&<>"]/g, (c) => ({ "&": "&amp;", "<": "&lt;", ">": "&gt;", '"': "&quot;" }[c]));
@@ -1989,7 +2037,9 @@ const catOf = (f) => (f.cat && CATS.includes(f.cat) ? f.cat : "other");
 const order = () => CATS.flatMap((c) => features().filter((f) => catOf(f) === c));    // display order
 // the real "excludes" (explained to the user); excludes() above also counts what a pack includes
 const clashOnly = (f, g) => (f.excludes || []).includes(g.id) || (g.excludes || []).includes(f.id);
-const clashWhy = (f, g) => featText(f.id, "clash", "") || featText(g.id, "clash", "") || t("clash_generic");
+// "clash_<id>": why this card doesn't go with that one in particular; "clash": with any other
+const clashWhy = (f, g) => featText(f.id, "clash_" + g.id, "") || featText(g.id, "clash_" + f.id, "")
+  || featText(f.id, "clash", "") || featText(g.id, "clash", "") || t("clash_generic");
 // the card whose clash with g keeps f from going with g: f itself, or the card f requires (ticking sample preview
 // ticks Model-TG, so it doesn't go with what Model-TG doesn't go with); null if f goes with g
 function clashVia(f, g) {
@@ -2325,7 +2375,8 @@ function renderSelection() {
       `</div>` +
     `</div>` +
     `<div class="sel-body" id="sel-body">` +
-      `<ul class="chips">${on.map(chip).join("")}${choiceNeedsSyntakt() ? `<li class="sel-need">${esc(t("sel_syntakt"))}</li>` : ""}</ul>` +
+      `<ul class="chips">${on.map(chip).join("")}${choiceNeedsSyntakt() ? `<li class="sel-need">${esc(t("sel_syntakt"))}</li>` : ""}` +
+        `${st.machine !== "cyc" ? `<li class="sel-need">${esc(t("sel_samples"))}</li>` : ""}</ul>` +
       (sw ? `<p class="sel-msg">${esc(swapText(sw))} <button type="button" class="lnk" data-undo>${esc(t("undo"))}</button></p>` : "") +
       `<p class="sel-foot"><button type="button" class="lnk soft" data-clear>${esc(t("sel_clear"))}</button></p>` +
     `</div>`;
@@ -2491,9 +2542,27 @@ function setMode(mode) {
     $("tab-" + m).setAttribute("aria-selected", String(mode === m));
     $("panel-" + m).hidden = mode !== m;
   }
-  $("drop2-wrap").hidden = mode !== "samples";
   if (st.os) describeOs();
   update();
+}
+
+// Mods tab: which machine receives the Model:Cycles OS. On a Model:Samples the build goes inside the official Model:Samples
+// firmware (MCBuilder.modsForSamples = tools/mods_for_samples.py), in the packing of the OS the machine runs.
+function setMachine(m) {
+  if (!["cyc", "smp", "cos"].includes(m)) return;
+  st.machine = m;
+  try { localStorage.setItem("mc-machine", m); } catch (e) { /* private mode */ }
+  st.finished = null;
+  renderSelection();                               // its "+ your Model:Samples OS file" line
+  update();
+}
+
+// The Model:Samples OS file is needed: the Samples OS tab, or mods for a Model:Samples.
+function needsSamplesFile() {
+  return st.mode === "samples" || onSamples();
+}
+function onSamples() {
+  return st.mode === "mods" && st.machine !== "cyc";
 }
 
 // "Samples OS" tab: which machine, which way.
@@ -2641,7 +2710,7 @@ function prepareFirmware() {
   const key = tweaks.map((x) => x.id).join("+");
   const labels = chosenLabels();
   const syntakt = sdv ? st.syntakt.raw : null;     // only official files, all with the same section 7: same bytes for every key
-  buildCached(key, (raw) => {
+  const makeCycles = (raw) => {
     const opts = {};
     if (REF_MAINOS[key]) opts.expectMainOsSha = REF_MAINOS[key];
     opts.refMods = REF_MODS;                       // every mod, on every build (notes/49)
@@ -2651,6 +2720,21 @@ function prepareFirmware() {
     return { raw: r.raw, name: `model-cycles_OS1.13_${key}.syx`, kind: "built", mods: labels, sha: r.mainOsSha,
       ref: !!REF_MAINOS[key], modsRef: r.modsChecked, sixch: tweaks.some((x) => x.id.startsWith("6ch")),
       sdv: sdv && (tweaks.find((x) => x.append && x.append.syntakt) || {}).id, engines: sdv ? chosenEngines() : [] };
+  };
+  if (!onSamples()) { buildCached(key, makeCycles); return; }
+  // A Model:Samples: the same Model:Cycles build (checked as above), then inside the official Model:Samples firmware
+  // with the 32-byte key change, in the packing of the OS it runs (notes/57).
+  const smp = st.samplesOs;
+  if (!smp) { st.fw = null; st.fwError = "needs_samples_file"; return; }
+  const into = st.machine === "smp" ? "samples" : "cycles";
+  buildCached(`${key}@${st.machine}:${smp.sha}`, (raw) => {
+    const base = (st.cache[key] && st.cache[key].fw) || makeCycles(raw);
+    const r = window.MCBuilder.modsForSamples(base.raw, raw, smp.raw, into);
+    if (r.modsSha !== base.sha) throw new Error("packed MAIN OS differs from the Model:Cycles build");
+    log(`Packed ${key} for a Model:Samples (${into === "samples" ? "Samples OS" : "Cycles OS"} running): ` +
+      `MAIN OS ${r.mainOsSha.slice(0, 12)}…, ${r.raw.length} bytes.`, "is-ok");
+    return Object.assign({}, base, { raw: r.raw, machine: st.machine,
+      name: `model-cycles_OS1.13_${key}_for-samples_${st.machine === "smp" ? "smp-os" : "cyc-os"}.syx` });
   });
 }
 
@@ -2842,6 +2926,8 @@ function devProblem() {
   if (st.fw && st.fw.raw[4] !== d.product) {
     if (st.fw.kind === "sback" && d.id === 25) return "dev_back_on_samples";
     if (st.fw.kind === "cos" && d.id === 27) return "dev_fwd_on_cycles";
+    if (st.fw.machine === "smp" && d.id === 27) return "dev_mach_smp_on_cycles";
+    if (st.fw.machine === "cos" && d.id === 25) return "dev_mach_cos_on_samples";
     if (d.id === 25) return "dev_samples";
     if (d.id === 27) return "dev_wrong_file";
     return "dev_other";
@@ -2902,7 +2988,7 @@ function renderMidi() {
     if (!outs.length) rows.push(["is-warn", esc(t("midi_none"))]);
     else if (port && !isDevicePort(port.name) && !(fast && st.dev && st.dev.state === "ok")) rows.push(["is-warn", esc(t("warn_not_dev"))]);
     else if (port && fast) rows.push(devRow());
-    else if (port && /samples/i.test(port.name)) rows.push(["is-warn", esc(t("warn_samples_port"))]);
+    else if (port && /samples/i.test(port.name) && !(st.fw && st.fw.raw[4] === 0x0f)) rows.push(["is-warn", esc(t("warn_samples_port"))]);
     else if (port) rows.push(["is-ok", esc(t("midi_pick_dev"))]);
     else if (!outs.some((o) => isDevicePort(o.name))) rows.push(["is-warn", esc(t("midi_no_dev"))]);
   }
@@ -2932,6 +3018,10 @@ function missingReason() {
     if (!samplesAcked()) return st.smpDir === "smp" ? "miss_cos_ack" : "miss_samples_ack";
   }
   if (st.fwError === "pick_one") return "miss_mod";
+  if (onSamples()) {
+    if (!$("mach-ack").checked) return "miss_cos_ack";
+    if (!st.samplesOs && st.os.stock) return "miss_samples_file";
+  }
   if (needsSyntakt() && !st.syntakt) return "miss_syntakt";
   if (st.building) return "miss_build";
   if (!st.fw) return "miss_fw";
@@ -2940,7 +3030,8 @@ function missingReason() {
   if (st.method === "fast") {
     const why = devProblem();
     if (why === "probing") return "miss_probe";
-    if (["dev_samples", "dev_wrong_file", "dev_other", "dev_back_on_samples", "dev_fwd_on_cycles"].includes(why))
+    if (["dev_samples", "dev_wrong_file", "dev_other", "dev_back_on_samples", "dev_fwd_on_cycles", "dev_mach_smp_on_cycles",
+      "dev_mach_cos_on_samples"].includes(why))
       return "miss_dev_mismatch";
     if (why) return "miss_dev";
   }
@@ -2949,8 +3040,15 @@ function missingReason() {
 }
 
 function render() {
+  refreshDevTexts();
   // step 2 status
-  $("h2s").textContent = t(st.mode === "samples" ? "s2_samples" : "s2");
+  $("h2s").textContent = t(needsSamplesFile() ? "s2_samples" : "s2");
+  $("drop2-wrap").hidden = !needsSamplesFile();
+  $("mach-pane").hidden = st.machine === "cyc";
+  $("mach-w-smp").hidden = st.machine !== "smp";
+  $("mach-w-cos").hidden = st.machine !== "cos";
+  $("mach-w-only").hidden = st.machine !== "smp";
+  for (const m of ["cyc", "smp", "cos"]) $("mach-" + m).setAttribute("aria-checked", String(st.machine === m));
   if (st.os && st.mode === "samples" && !st.os.stock)
     setStatus("file-status", [["is-bad", t(st.smpDir === "cyc" ? "samples_needs_cycles" : "cos_needs_cycles")]]);
   else if (st.os) {
@@ -2963,11 +3061,13 @@ function render() {
     if (st.fwError === "restore_needs") rows.push(["is-bad", t("os_restore_needs")]);
     else if (st.fwError === "pick_one") rows.push(["", esc(t("pick_one"))]);
     else if (st.fwError === "needs_syntakt") rows.push(["", esc(t("needs_syntakt"))]);
+    else if (st.fwError === "needs_samples_file") rows.push(["", esc(t("needs_samples_file"))]);
     else if (st.building) rows.push(["is-busy", esc(t("building"))]);
     else if (st.fwError) rows.push(["is-bad", esc(t("build_failed", { err: st.fwError }))]);
     else if (st.fw && st.fw.kind === "built")
       rows.push(["is-ok", esc(t("built", { mods: st.fw.mods.join(" + ") })) + (st.fw.ref ? " " + esc(t("built_ref")) : st.fw.modsRef ? " " + esc(t("built_ref_mods")) : "") +
-        ` <span class="hash">MAIN OS ${esc(st.fw.sha.slice(0, 8))}</span>`]);
+        ` <span class="hash">MAIN OS ${esc(st.fw.sha.slice(0, 8))}</span>` +
+        (st.fw.machine ? " " + esc(t(st.fw.machine === "smp" ? "built_smp" : "built_cos")) : "")]);
     else if (st.fw && st.fw.kind === "stock") rows.push(["is-ok", esc(t("stock_ready"))]);
     else if (st.fw && st.fw.kind === "samples") rows.push(["is-ok", esc(t("samples_ready")) + " " + esc(t("built_ref"))]);
     else if (st.fw && st.fw.kind === "cos") rows.push(["is-ok", esc(t("cos_ready")) + " " + esc(t("built_ref"))]);
@@ -2997,7 +3097,8 @@ function render() {
   }
 
   // step badges
-  const choseOk = st.mode === "restore" || (st.mode === "samples" ? samplesAcked() : chosenTweaks().length > 0);
+  const choseOk = st.mode === "restore" || (st.mode === "samples" ? samplesAcked()
+    : chosenTweaks().length > 0 && (!onSamples() || $("mach-ack").checked));
   $("step-choose").classList.toggle("done", choseOk);
   $("step-file").classList.toggle("done", !!st.fw && !st.building);
   $("step-connect").classList.toggle("done", st.midiState === "ready" && !!currentPort() && (st.method !== "fast" || !devProblem()));
@@ -3006,7 +3107,7 @@ function render() {
   // summary
   const sum = $("summary");
   if (st.fw) {
-    const what = st.fw.kind === "built" ? st.fw.mods.join(" + ")
+    const what = st.fw.kind === "built" ? st.fw.mods.join(" + ") + (st.fw.machine ? ` (${t("for_samples")})` : "")
       : st.fw.kind === "stock" ? t("mods_list_restore")
       : st.fw.kind === "samples" ? t("mods_list_samples")
       : st.fw.kind === "cos" ? t("mods_list_cos")
@@ -3030,9 +3131,9 @@ function render() {
 }
 
 // Fast method, once the firmware is sent: confirm on the machine, then it restarts.
-// The machine the firmware goes to: a Model:Samples for the Cycles OS and its way back, else a Model:Cycles.
+// The machine the firmware goes to: a Model:Samples for the Cycles OS (with or without mods) and its way back, else a Model:Cycles.
 function hardware() {
-  return st.fw && (st.fw.kind === "cos" || st.fw.kind === "sback") ? "Model:Samples" : "Model:Cycles";
+  return st.fw && (st.fw.kind === "cos" || st.fw.kind === "sback" || st.fw.machine) ? "Model:Samples" : "Model:Cycles";
 }
 
 function renderAfter() {
@@ -3144,6 +3245,7 @@ async function flash() {
       (fw.sdv ? `<p>${t(/^syntakt-tg-/.test(fw.sdv) ? "done_syn_tg" : "done_syn", { list: fw.engines.map((e) => `<b>${esc(e.name)}</b> (${esc(e.label)})`).join(", ") })}</p>` : "") +
       (fw.kind === "samples" ? `<p>${t("done_samples")}</p>` : "") +
       (fw.kind === "cos" ? `<p>${t("done_cos")}</p>` : "") +
+      (fw.machine ? `<p>${t("done_mach")}</p>` : "") +
       (fw.kind === "sback" ? `<p>${t("done_sback")}</p>` : "");
     log(fast ? `Firmware sent in ${Math.round(res.seconds)} s (${res.blocks} blocks): waiting for the confirmation on the machine.`
       : `Transfer complete in ${Math.round(res.seconds)} s.`, "is-ok");
@@ -3201,6 +3303,7 @@ function init() {
   if (!lang) lang = /^fr\b/i.test(navigator.language || "") ? "fr" : "en";
   st.lang = lang;
   try { st.method = localStorage.getItem("mc-method") === "slow" ? "slow" : "fast"; } catch (e) { /* private mode */ }
+  try { const m = localStorage.getItem("mc-machine"); if (["cyc", "smp", "cos"].includes(m)) st.machine = m; } catch (e) { /* private mode */ }
 
   document.querySelectorAll(".lang button").forEach((b) => b.addEventListener("click", () => applyLang(b.dataset.lang)));
   $("tab-mods").addEventListener("click", () => setMode("mods"));
@@ -3209,6 +3312,8 @@ function init() {
   $("samples-ack").addEventListener("change", render);
   $("cos-ack").addEventListener("change", render);
   for (const d of ["cyc", "smp", "back"]) $("smp-dir-" + d).addEventListener("click", () => setSmpDir(d));
+  for (const m of ["cyc", "smp", "cos"]) $("mach-" + m).addEventListener("click", () => setMachine(m));
+  $("mach-ack").addEventListener("change", render);
 
   const drop = $("drop"), file = $("file");
   file.addEventListener("change", (e) => { if (e.target.files[0]) readFile(e.target.files[0]); e.target.value = ""; });
@@ -3268,7 +3373,7 @@ function init() {
 
 // test hooks (tools/webflash_smoke.js)
 window.MCFlasherApp = { state: st, REF_MAINOS, REF_MODS, REF_SAMPLES_ON_CYCLES, REF_CYCLES_ON_SAMPLES, REF_SAMPLES_BACK, loadOs,
-  loadSamples, loadSyntakt, setMode, setSmpDir, setMethod, applyLang, render,
+  loadSamples, loadSyntakt, setMode, setSmpDir, setMachine, setMethod, applyLang, render,
   chosenTweaks, chosenLabels, CATS };
 
 if (document.readyState === "loading") document.addEventListener("DOMContentLoaded", init);

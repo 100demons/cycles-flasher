@@ -1,32 +1,27 @@
-# 56 — Ajouts de DavidCaruso en mods séparés : machines VA, générateur de trigs, LFO 2, 3, 4
+# 56 — Ajouts de DavidCaruso : LFO 2, 3, 4
 
 DavidCaruso a envoyé sur Discord un firmware complet, `Model-TG-VA-DR-v1.syx` : le Model-TG v1.1.0 de TinyGregAudio
 avec trois ajouts de sa main, sans source ni licence publiées. Maxime l'a transmis sur le fil du projet le 10/10/2026 :
-« Intègre ses ajouts en mods décomposés (n'ajoute que ce qui n'existe pas déjà dans le projet) ». Model-TG est déjà
-dans le flasher : seuls les trois ajouts deviennent des mods, chacun avec sa carte, son générateur et sa preuve. Le code
-est **réécrit** à partir de l'analyse de son binaire (comportement, algorithmes, accès à l'OS) : aucun de ses octets ni
-aucune de ses instructions n'est dans le dépôt, et son fichier n'y est pas. Adresses : VA de l'OS 1.13 ; « chez David »
-renvoie à la section 3 de son `.syx`, dépaquetée et exécutée pour l'analyse.
+« Intègre ses ajouts en mods décomposés (n'ajoute que ce qui n'existe pas déjà dans le projet) ». Les trois ajouts ont
+été réécrits en mods séparés ; le 11/10/2026, Maxime a gardé les LFO et fait retirer le générateur de trigs et les
+machines VA (§2). Le code est **réécrit** à partir de l'analyse de son binaire (comportement, algorithmes, accès à
+l'OS) : aucun de ses octets ni aucune de ses instructions n'est dans le dépôt, et son fichier n'y est pas. Adresses :
+VA de l'OS 1.13 ; « chez David » renvoie à la section 3 de son `.syx`, dépaquetée et exécutée pour l'analyse.
 
-| Mod | Tweaks | Générateur, code | Preuve | Section |
+| Mod | Tweak | Générateur, code | Preuve | Section |
 |---|---|---|---|---|
-| Générateur de trigs (SETTINGS + TRACK) | `49-generate.json` (sur `model-tg`), `49-generate-st.json` (sur `model-tg-st`) | `tools/gen_generate.py`, `tools/machines/generate/` | `tools/emu/test_generate.py` | §2 |
 | LFO 2, 3, 4 | `60-lfo-plus.json` (avec ou sans Model-TG) | `tools/gen_lfo_plus.py`, `tools/machines/lfo_plus/` | `tools/emu/test_lfo_plus.py` | §3 |
-| Machines VA, VA KICK, VA SNARE, VA HIHAT | `27-va.json` (seul), `36-va-tg.json` (sur `model-tg-st`) | `tools/gen_va.py`, `tools/machines/va/` | `tools/emu/test_va.py`, `tools/emu/va_ref.py` | §4 |
 
 ## En bref
 
-- **Trois mods expérimentaux, à cocher séparément.** Le générateur demande Model-TG (il se sert de ses listes) ; les
-  LFO vont partout, avec ou sans Model-TG ; les machines VA vont seules ou avec Model-TG, pas encore avec MACRO ni les
-  moteurs du Syntakt (mêmes places de machines ajoutées).
-- **Même comportement que chez David**, prouvé en émulation contre l'OS d'origine et, pour le son des machines VA,
-  contre ses propres fonctions exécutées dans son firmware : mêmes échantillons, sauf l'aigu du VA HIHAT où deux
-  calculs débordaient chez lui (§4.3.5).
-- **Écarts voulus** : les accroches sont déplacées pour que les trois mods s'installent avec tous les nôtres sans
-  écrire un octet qu'un autre écrit ; les machines VA ne sont plus des Samplers déguisés mais des machines ajoutées
-  comme MACRO, donc aussi sans Model-TG ; les projets de David se rouvrent sur les mêmes machines avec Model-TG.
-- **Place** : 7 masques 48×22 (générateur), 7 masques 34×34 et 1 180 o de mémoire au-dessus du BSS (LFO), une charge
-  utile après l'image (VA). `tweaks/model-cycles_OS1.13/REGISTRY.md` est régénéré avec ces tweaks.
+- **Un mod expérimental**, LFO 2, 3, 4 : trois LFO de plus par piste, avec ou sans Model-TG, avec tous les autres mods
+  sauf le filtre par piste, qui range ses réglages aux mêmes endroits du son (§3.6).
+- **Même comportement que chez David**, prouvé en émulation contre l'OS d'origine ; LFO 2 est rangé dans le son au
+  même format que chez lui, ses sons se rechargent.
+- **Écarts voulus** : les accroches sont déplacées pour que le mod s'installe avec tous les nôtres sans écrire un
+  octet qu'un autre écrit (§3.4).
+- **Place** : 7 masques 34×34 et 1 180 o de mémoire au-dessus du BSS. `tweaks/model-cycles_OS1.13/REGISTRY.md` est
+  régénéré avec ce tweak.
 - **Pas encore testé sur la machine.** **Licence** : il faut l'accord de David (MIT, comme le reste du projet) avant
   de fusionner (§1.3).
 
@@ -46,282 +41,31 @@ dans des fonctions de Model-TG, onze nouvelles accroches dans l'OS et la borne d
 | Ajout de David | Déjà dans le projet ? | Ici |
 |---|---|---|
 | Model-TG v1.1.0 | oui (`30-model-tg`, `30-model-tg-st`, note 31) | rien |
-| Menu Generate sur SETTINGS + TRACK | non | §2, demande Model-TG comme chez David |
+| Menu Generate sur SETTINGS + TRACK | non | fait puis retiré (§2) |
 | LFO 2, 3, 4 | non | §3, réécrit sans dépendre de Model-TG |
-| Machines VA, VA KICK, VA SNARE, VA HIHAT | non | §4, machines ajoutées comme MACRO, seules ou avec Model-TG |
+| Machines VA, VA KICK, VA SNARE, VA HIHAT | non | faites puis retirées (§2) |
 
 ### 1.3 Provenance et licence
 
 DavidCaruso n'a publié ni source ni licence. Le code d'ici est réécrit (aucun octet repris) ; pour LFO 2, le format de
-rangement dans le son (octets +88..+91) est gardé pour que ses sons se rechargent. Le crédit est sur les cartes du
-flasher (« based on a mod by DavidCaruso »), dans le guide, `PROVENANCE.md` et les descriptions des tweaks. Le
+rangement dans le son (octets +88..+91) est gardé pour que ses sons se rechargent. Le crédit est sur la carte du
+flasher (« based on a mod by DavidCaruso »), dans le guide, `PROVENANCE.md` et la description du tweak. Le
 10/10/2026, le fil a demandé à Maxime d'obtenir l'accord de David (licence MIT) et, s'il veut bien, ses sources. Rien
 n'a été envoyé à David de notre côté. `[À FAIRE]` Accord de David avant la fusion.
 
-## 2. Générateur de trigs euclidien / aléatoire sur SETTINGS + TRACK (Model-TG)
+## 2. Générateur de trigs et machines VA : faits, puis retirés
 
-Tweaks `49-generate.json` (sur `model-tg`) et `49-generate-st.json` (sur `model-tg-st`), mêmes écritures. Générateur `tools/gen_generate.py`, source `tools/machines/generate/generate.S` et `generate.ld`, preuve `tools/emu/test_generate.py`. Symboles de Model-TG v1.1.0 (mêmes adresses dans les deux tweaks Model-TG).
-
-### En bref
-
-- Tenir **SETTINGS**, appuyer sur **TRACK** : une liste « Generate » de 13 lignes s'ouvre, comme les menus
-  d'options de Model-TG. La ligne **GEN** réécrit la piste sélectionnée : trigs euclidiens ou aléatoires, avec en
-  option des notes tirées dans une gamme et des vélocités aléatoires, puis affiche « Trigs: N ».
-- Il faut Model-TG (`requires`) : l'accord (SETTINGS tenu, relâchement avalé), la liste et sa gestion de LEVEL/DATA,
-  le message, tout vient de Model-TG. Les deux versions de Model-TG ont leur tweak.
-- 1 214 o de code et de données dans 7 masques de sprites 48×22 libérés ; une seule accroche, le `jmp key_hook` que
-  Model-TG pose en `0x4007240c`, réécrit vers notre code qui y retourne.
-- Prouvé en émulation (`TOUT OK`, les deux Model-TG, seul et avec d'autres mods). Pas encore essayé sur la machine.
-
-### 2.1 Ce que voit le musicien
-
-- **Ouvrir** : tenir SETTINGS, appuyer sur TRACK (SETTINGS d'abord). La liste porte sur la **piste sélectionnée à
-  l'ouverture** (1 à 6, n'importe quelle machine).
-- **Naviguer** : tourner LEVEL/DATA pour choisir une ligne, appuyer pour l'éditer, tourner pour changer la valeur,
-  rappuyer pour sortir de l'édition. SETTINGS (ou RETURN) ferme, comme les listes de Model-TG.
-- **13 lignes**, valeurs bornées (pas de rebouclage) :
-
-| Ligne | Sens | Valeurs | Défaut |
-|---|---|---|---|
-| MOD | mode | RND (aléatoire) / EUC (euclidien) | RND |
-| DNS | densité du mode RND, en % | 0 à 100 | 50 |
-| HIT | coups du mode EUC | 1 à 64 | 4 |
-| ROT | rotation du mode EUC, vers la droite, en pas | 0 à 63 | 0 |
-| NOT | notes aléatoires dans la gamme | OFF / ON | OFF |
-| KEY | tonique | C C# D D# E F F# G G# A A# B | C |
-| SCL | gamme | MAJ MIN DOR PHR LYD MIX LOC HMI MMI PMA PMI BLU CHR | MAJ |
-| OCT | octave de départ (note de départ 12 × (OCT + 1) + KEY : OCT 4 = do 60) | 0 à 8 | 4 |
-| RNG | étendue en octaves | 1 à 4 | 1 |
-| VEL | vélocité aléatoire | OFF / ON | OFF |
-| VMN | vélocité mini | 1 à 127 | 64 |
-| VMX | vélocité maxi (VMN > VMX : échangées) | 1 à 127 | 127 |
-| GEN | appuyer génère | GO | — |
-
-- **GEN** réécrit tous les pas de la piste, de 1 à sa longueur (64 au plus, toutes les pages), puis affiche
-  « Trigs: N ». On peut rappuyer pour un autre tirage ; la liste reste ouverte.
-
-### 2.2 Le code de l'OS et de Model-TG utilisé
-
-#### 2.2.1 L'accord [FAIT]
-
-| Adresse | Rôle |
-|---|---|
-| `0x4007240c` | accesseur du code d'un événement de touche (`moveal 4(sp),a0 ; movel 12(a0),d0 ; rts`), appelé par toutes les vues ; Model-TG y écrit `jmp key_hook` (`0x401ae968`) |
-| événement `+12`, `+16` | code de la touche (TRACK = 2, SETTINGS = 13) ; drapeaux (bit 0 appui, bit 3 répétition, bit 4 clic, bit 5 appui long) |
-| `key_hook` | teste `rtg_on` (`0x401b6d8c`, page Retrig) et `sle_on` (`0x401bcaec`, éditeur de tranches), puis SETTINGS (`kh_mod`), Preset, les touches de pas, et `set_held` → `kh_other` (code 6) → `kh_rs` (4, 9, 12) ; tout le reste rendu tel quel |
-| `set_held` `0x401b235c` | SETTINGS tenu (posé et levé par `kh_mod`) |
-| `mod_used` `0x401b2360` | un accord a servi : le relâchement de SETTINGS est avalé (pas de Config Menu) |
-| `mm_opened` `0x401b20b4` | « la liste s'est ouverte », posé par `gm_opened` (`0x401b0b7e`) |
-
-SETTINGS + TRACK ne sert ni à l'OS ni à Model-TG v1.1.0 : chez Model-TG, TRACK avec SETTINGS tenu traverse `kh_other`
-et `kh_rs` et revient à l'OS [FAIT, source `vendor/Model-TG/src/model_tg.s`, et émulé : l'origine rend 2].
-
-#### 2.2.2 La liste [FAIT]
-
-| Adresse | Rôle |
-|---|---|
-| `gran_menu_open` `0x401b08ba` | ouverture d'une liste de Model-TG : cadre `link.w fp,#-80 ; lea -28(sp),sp ; movem.l d2-d4/a2-a5,(sp)`, puis `lm_build` ; sorties `gm_opened` (pose `mm_opened`, tombe dans `gm_done`) et `gm_done` (`0x401b0b86`, `movem` + `unlk` + `rts`) |
-| `gm_live` `0x401b0c82` | une liste de Model-TG est déjà ouverte |
-| `gm_track` `0x401b1218`, `gm_cur` `0x401b121c` | piste visée ; descripteur `{titre, nom de vue, nombre de lignes, lignes}`, lignes de 16 o `{libellé, valeur, rotation, appui}` |
-| `lm_build` `0x401b095c` | construit la liste (classe de base des menus de réglages `0x400422a8`), un élément de menu de l'OS par ligne (`0x400734b0`, vtable `0x40103470`), l'ajoute par `0x40072ce6` → `0x4007320a`, qui écrit le **numéro de ligne en `+8`** de l'élément (seul appelant) ; présente la vue (`0x400d0974`, `0x400060d8`, `0x4007700e`) |
-| élément `+24`, `+40`, `+56`, `+72` | invocateurs libellé, appui, valeur, rotation (fermeture copiée en `+12`, `+28`, `+44`, `+60`) ; `+0x50` = édition |
-| `0x40073236`, `0x40073274`, `0x400732b6`, `0x4007329c` | méthodes de l'élément : libellé (`a0` = String), dessin (élément, contexte, rectangle, drapeau), rotation (élément, écart), appui (élément) ; chaque fermeture reçoit l'élément en second argument |
-| `gm_lab` `0x401b0d56` | libellé : `a0` = String, `a1` = texte |
-| `gm_val` `0x401b1096` | valeur : `a0` = &index, `a1` = table de textes ; dessin `0x400f85bc`, `0x40072260`, `0x40071a04`, `0x40072080` |
-| `new_slot2_invoker` `0x401bb3a8` | appui d'une ligne : bascule l'édition |
-| `show_popup` `0x401b2284` | message (teste l'interface prête `0x40fe4178`) |
-| `gm_live`, `gm_top`, `gm_enc_gate` | reconnaissent une liste de Model-TG par `gm_obj` et sa table `gm_evt` (posées par `lm_build`), pas par son nom : notre liste reçoit LEVEL/DATA comme les siennes [FAIT, lecture de la source] |
-
-#### 2.2.3 La grille [FAIT]
-
-| Adresse | Rôle |
-|---|---|
-| `0x400cf866` | projet (`*0x40fe4228`) |
-| `0x4000eb90` → `0x40012412` | piste sélectionnée |
-| `0x4000f208` | pattern en cours = projet + 5 192 + 732 × pattern |
-| `0x4000cfcc` | objet « piste » = pattern + 112 + 88 × piste (piste bornée à 0..5) |
-| objet `vtable[40]` | données de la piste (722 o) : drapeaux des pas `+0` (mots ; bit 0 trig), vélocités `+128`, notes `+580` (octets signés, -1 = aucune), longueur `+713` (mot) |
-| objet `vtable[16]` | signal de modification `(piste, {0x400ff59c, pas})` |
-| `0x40016402` | longueur effective de la piste |
-| `0x40017b48` | pose (1) ou efface (0) le trig de note d'un pas ; effacer remet le pas à zéro (`0x400169f0`, accroché par Model-TG pour ses slides, puis `0x400164f2`, `0x400165d6`) |
-| `0x40016642`, `0x400166c2` | note, vélocité d'un pas (une valeur négative écrit -1) |
-| `0x400005cc` | `vsprintf(tampon, format, va_list)` |
-| `0x8000184c` | heure musicale (graine du tirage) |
-
-Ce sont les mêmes appels, dans le même ordre, que l'enregistrement en direct de l'OS (`0x40012158`) : le résultat est
-un pattern ordinaire, sauvé avec le projet [FAIT pour les appels ; HYP pour la propagation au séquenceur, par le
-signal `vtable[16]` comme à la main].
-
-### 2.3 Conception
-
-#### 2.3.1 L'accord : `gen_key` devant `key_hook`
-
-David a inséré son test devant `kh_rs`, en décalant le code de Model-TG : impossible en tweak, car Model-TG est une
-charge utile ajoutée au bout de l'image (les écritures d'un tweak portent sur l'OS d'origine). Le `jmp key_hook` en
-`0x4007240c` est, lui, une écriture ordinaire de Model-TG : notre tweak la réécrit en `jmp gen_key`, avec comme octets
-d'origine ceux de Model-TG (`requires`). `gen_key` (`0x4018b9c8`) :
-
-- code ≠ TRACK, ou `rtg_on` / `sle_on` (les mêmes tests que la tête de `key_hook`) → `jmp key_hook`, la pile
-  intacte ;
-- appui frais (bit 0, pas de bit 3) : `gen_ev = 0` ; si `set_held`, `gen_open` ; si `mm_opened` s'est levé : `gen_ev
-  = 1`, `mod_used = 1`, bit 3 levé dans l'événement, `d0 = 0` (avalé), comme les accords de Model-TG ;
-- relecture ou répétition d'un appui avalé (`gen_ev = 1`) → avalée ; sinon → `key_hook` ;
-- relâchement : si `gen_ev = 1`, l'adresse de l'événement est notée dans `gen_ev` et il est avalé, ses relectures
-  aussi (même adresse) ; sinon → `key_hook`.
-
-Différence avec David : le relâchement de TRACK est avalé même si SETTINGS a été relâché avant (chez David, il passe
-alors à l'OS sans l'appui qui va avec).
-
-#### 2.3.2 La liste
-
-- `gen_open` pousse sur la pile les 13 lignes, toutes identiques `{gen_lab, gen_val, gen_turn, gen_press}` (208 o
-  sur la pile de la tâche de l'interface, 160 Ko, notes/44), les accroche à `gen_desc` et appelle `gen_build`, qui
-  reprend le cadre de `gran_menu_open` pour que `lm_build` sorte par `gm_opened` / `gm_done`. Refus (TRACK rendu à
-  l'OS) : en interruption, interface pas prête, piste sélectionnée ≥ 6. Une liste de Model-TG déjà ouverte
-  (`gm_live`) : `gm_opened`, l'accord est avalé sans seconde liste. Sinon `gm_track` = piste, `gm_cur` = `gen_desc`,
-  `jmp lm_build`. `lm_build` recopie chaque fermeture dans son élément : les lignes sur la pile ne servent plus
-  après.
-- **Une fermeture par sorte**, qui lit le numéro de ligne en `+8` de l'élément : 4 fermetures au lieu de 52.
-- Libellés : `gm_lab` sur une table de 13 textes de 4 o. Valeurs : MOD, NOT, KEY, SCL, VEL, GEN par `gm_val` sur leur
-  table de noms ; les nombres par `vsprintf("%d")` puis `gm_val` sur une table d'un texte (`gen_ptr`, index
-  `gen_zero`).
-- Rotation : réglage + écart, borné à [min, max] (un octet par réglage, `gen_set`). Appui : lignes 1 à 12 →
-  `new_slot2_invoker` (édition) ; GEN → la génération, sans passer en édition.
-- Titre « Generate » ; nom de vue = celui des listes de Model-TG (« GranularMenuView », sans effet : voir §2.2.2).
-
-#### 2.3.3 La génération
-
-```
-piste = 0x4000cfcc(0x4000f208(0x400cf866()), gm_track)
-n = min(0x40016402(piste), 64) ; si n <= 0 : fin
-rng = rng + heure musicale + 0x9e3779b9 (0 -> 1)            ; xorshift32 (13, 17, 5) ; rndn(m) = ((x >> 16) × m) >> 16
-si NOT : table = { 12 × (OCT+1) + KEY + d | d = 0 .. 12 × RNG inclus, d mod 12 dans la gamme, <= 127 }  (49 au plus)
-k = min(HIT, n) ; r = ROT mod n
-pour pas = 0 .. n-1 :
-    on = RND ? rndn(100) < DNS : ((pas - r) mod n) × k mod n < k
-    0x40017b48(piste, pas, on)
-    0x40016642(piste, pas, on && NOT ? table[rndn(taille)] : -1)
-    0x400166c2(piste, pas, on && VEL ? rndn(hi - lo + 1) + lo : -1)      ; lo, hi = VMN, VMX rangés
-show_popup(vsprintf("Trigs: %d", nombre de trigs))
-```
-
-Mêmes algorithmes, même graine, même ordre des tirages et mêmes accesseurs que chez David (d'après l'analyse de son
-binaire) [HYP : mêmes tirages que chez David à graine égale, non comparé à son binaire]. L'euclidien est calculé par
-un accumulateur (avancé de n − r pas avant le premier) ; la preuve le compare à la forme fermée. Gammes en masques de
-12 bits : MAJ `0xab5`, MIN `0x5ad`, DOR `0x6ad`, PHR `0x5ab`, LYD `0xad5`, MIX `0x6b5`, LOC `0x56b`, HMI `0x9ad`
-(mineur harmonique), MMI `0xaad` (mineur mélodique), PMA `0x295`, PMI `0x4a9` (pentatoniques), BLU `0x4e9`, CHR
-`0xfff`.
-
-#### 2.3.4 L'état
-
-Dans le premier masque, à la suite de `gen_key` : réglages (13 o), état du xorshift (`0x2545f491` au départ),
-`gen_ev`, le texte d'un nombre, le descripteur. L'image est rechargée en mémoire à chaque démarrage : tout revient aux
-valeurs par défaut, rien n'est sauvé dans le projet. Réglages communs aux 6 pistes.
-
-### 2.4 Place utilisée
-
-Sept des douze masques attribués (registre, notes/52), chacun redirigé vers la copie gardée `0x4014b364`
-(`sprites.redirect_write`, même tweak) :
-
-| Masque | Constante redirigée | Contenu | Octets |
-|---|---|---|---|
-| `0x4018b9c8` | `0x400ad048` | `gen_key`, l'état | 180 |
-| `0x4018bb48` | `0x400ad028` | `gen_open`, `gen_build`, `gen_press`, `gen_put` | 184 |
-| `0x4018cbc8` | `0x400acdce` | fermetures libellé / valeur / rotation, gammes, titre, format | 191 |
-| `0x4018d038` | `0x400acd92` | `gen_go` (début de la génération) | 152 |
-| `0x4018d798` | `0x400acd3a` | la boucle des pas, le message | 186 |
-| `0x4018f80c` | `0x400ac894` | bornes, noms des valeurs | 159 |
-| `0x40190184` | `0x400ac7e0` | table des notes, tirage, libellés | 162 |
-
-Total 1 214 o. Six masques ne suffisent pas (1 152 o). Restent libres : `0x4019089c`, `0x40192a24`, `0x40190334`,
-`0x4018a608`, `0x40188f98`. Gains possibles si la place manque : reprendre les noms OFF/ON de Model-TG (`gm_n_frz`)
-et fusionner les tables de bornes (une quarantaine d'octets).
-
-### 2.5 Conflits
-
-- `requires` `model-tg` / `model-tg-st` : seule l'écriture de Model-TG en `0x4007240c` est recouverte, et c'est voulu
-  [FAIT, `check_overlaps.py`]. Refusé seul et avec l'autre Model-TG [FAIT en émulation].
-- `chord-keys` est déjà incompatible avec Model-TG.
-- `sample-preview` (aussi sur Model-TG) : aucune écriture commune, accroches différentes ; prouvé ensemble [FAIT].
-- Un futur mod qui voudrait aussi `0x4007240c` par-dessus Model-TG devra s'enchaîner derrière `gen_key` (le registre
-  liste l'accroche).
-
-### 2.6 Le tweak
-
-15 écritures : l'accroche (6 o), 7 constantes de sprites (4 o), 7 masques. `gen_generate.py` compile `generate.S`
-(`m68k-linux-gnu-gcc -mcpu=54418`, adresses de Model-TG en `-D`), vérifie que chaque masque est encore une copie du
-masque gardé et le contrat avec Model-TG (têtes de `key_hook`, `gran_menu_open`, `gm_live`, `gm_opened`, `gm_done`,
-`lm_build`, `gm_lab`, `gm_val`, `new_slot2_invoker`, `show_popup` ; `rtg_on`/`sle_on` testés en tête de `key_hook` ;
-`gm_opened` pose `mm_opened` ; `lm_build` lit `gm_cur` ; variables à zéro ; nom de vue ; `jmp key_hook` en
-`0x4007240c`), et refuse un écart. Pour qu'il lise les adresses dans les tweaks, `gen_model_tg.py` exporte 18
-symboles de plus (`GEN_SYMBOLS`) ; seule la clé `symbols` de `30-model-tg*.json` a changé.
-
-### 2.7 Preuve en émulation
-
-```sh
-python3 tools/gen_generate.py --cycles firmware/model-cycles_OS1.13.syx --check
-python3 tools/emu/test_generate.py --cycles firmware/model-cycles_OS1.13.syx --syntakt firmware/Syntakt_OS1.42.syx
-python3 tools/emu/test_generate.py --cycles firmware/model-cycles_OS1.13.syx \
-    --with 6ch-usbup,model-tg-st,syntakt-tg-sd-cp-toy-bits-swarm,arp,trig-hold,tempo-max --syntakt firmware/Syntakt_OS1.42.syx
-python3 tools/emu/test_generate.py --cycles firmware/model-cycles_OS1.13.syx \
-    --with model-tg,sample-preview,6ch-usbup,arp,trig-hold,tempo-max
-```
-
-Le vrai code de l'OS, de Model-TG et du tweak (Unicorn), sur deux images construites depuis le .syx officiel :
-l'origine (les mêmes tweaks sans Generate) et l'image modifiée. Résultat : `TOUT OK` dans les quatre jeux
-(27 vérifications par version de Model-TG).
-
-| | Origine (Model-TG) | Avec Generate |
-|---|---|---|
-| SETTINGS, TRACK (appui, relecture, répétition, relâchement, relecture), SETTINGS relâché | 13, 2, 2, 2, 2, 2, 13 (Config Menu) | 13, 0, 0, 0, 0, 0, 0 : liste ouverte une fois, `gm_track` = 2, `mod_used`, pas de Config Menu |
-| TRACK seul ensuite | 2 | 2 |
-| 409 autres cas (codes 0 à 40, drapeaux, SETTINGS tenu ou pas, page Retrig, éditeur de tranches) | `key_hook` | `key_hook` avec la même pile, aucune écriture en mémoire |
-| Interface pas prête, en interruption, piste 6 | TRACK rendu | TRACK rendu, pas de liste |
-| Liste de Model-TG déjà ouverte | — | accord avalé, pas de seconde liste |
-| Vrai `lm_build` | — | 13 éléments de l'OS, numéro de ligne en `+8`, titre « Generate » ; libellés et valeurs par les méthodes de l'OS ; rotations bornées ; appui = édition (lignes 1 à 12) ; GEN génère |
-| GEN, vrais accesseurs de la grille | — | 313 générations identiques pas à pas à une référence Python (euclidien longueurs 1 à 64, coups 1 à 64, rotations ; DNS 0 à 100 ; 13 gammes, toniques, octaves, étendues ; vélocités bornées et échangées) ; état du xorshift ; « Trigs: N » ; pas au-delà de la longueur et autres pistes intacts ; registres rendus |
-| Motifs | — | 4/16 `x...x...x...x...`, 3/8 `x..x..x.`, 5/16 rot 2 `..x...x..x..x..x`, 5/12 rot 13 `.x..x.x..x.x` |
-| Pas déjà remplis (EUC 4/16) | — | trigs effacés hors motif, trig de lock devenu trig de note, slide de Model-TG gardé sur un pas qui reste un trig, notes et vélocités à -1 (NOT, VEL sur OFF) |
-
-Coût d'un GEN de 64 pas : 160 000 à 190 000 instructions (dont 4 800 dans notre code), 1 550 à 1 800 signaux de
-modification (bouchés en émulation), une fois par appui, dans la tâche de l'interface ; rien dans l'audio.
-
-### 2.8 Limites
-
-- Réglages communs aux pistes, perdus à l'extinction, pas sauvés avec le projet.
-- GEN réécrit toute la piste, sans annulation : les trigs hors motif sont effacés avec leurs p-locks ; un trig de
-  lock du motif devient un trig de note.
-- NOT sur OFF remet les notes des pas à « aucune », VEL sur OFF les vélocités, sur tous les pas (choix de David,
-  gardé).
-- La piste visée est celle de l'ouverture, même si l'on change de piste liste ouverte.
-- Pas sur la page Retrig ni dans l'éditeur de tranches (TRACK y garde son rôle) ; pas d'ouverture si une autre liste
-  de Model-TG est déjà ouverte.
-
-### 2.9 À essayer sur la machine [À FAIRE]
-
-Flasher Model-TG + Generate (puis Model-TG avec les moteurs du Syntakt + Generate) :
-
-1. Tenir SETTINGS, appuyer sur TRACK : la liste « Generate » s'ouvre ; relâcher : pas de Config Menu. SETTINGS seul
-   ouvre toujours le Config Menu ; les accords de Model-TG marchent toujours.
-2. Tourner LEVEL/DATA : la sélection descend les 13 lignes ; appuyer, tourner, rappuyer : les valeurs changent et
-   s'arrêtent aux bornes.
-3. Sur GEN, appuyer : « Trigs: N », les touches de pas montrent le motif (dire s'il faut fermer la liste pour le
-   voir) ; essayer EUC 4 coups sur 16 pas, puis RND avec NOT et VEL, écouter.
-4. Dire si GEN part à l'appui ou au relâchement de DATA, et s'il y a un à-coup audible pendant la génération
-   (64 pas, séquenceur en marche).
-5. Sauver le projet, le recharger : le motif généré est là.
-
-### 2.10 Questions ouvertes
-
-- GEN au clic ou à l'appui de DATA ; affichage du motif sur les touches tout de suite après GEN.
-- Coût réel des ~1 800 signaux de modification, séquenceur en marche [HYP : sans conséquence, autant que 64 saisies].
-- Garder « NOT / VEL sur OFF efface », ou ne rien toucher quand c'est OFF ?
-- Sauver les réglages par piste avec le pattern ?
-- Variante sans Model-TG : non faite (il faudrait refaire l'accord et la liste, environ 3 Ko).
+Les deux autres ajouts de David ont été réécrits et prouvés en émulation dans la même PR (#79) : un générateur de
+trigs euclidien ou aléatoire sur SETTINGS + TRACK (tweaks `49-generate`, `49-generate-st`, sur Model-TG) et quatre
+machines ajoutées, VA, VA KICK, VA SNARE, VA HIHAT (tweaks `27-va`, `36-va-tg`, comme MACRO). Le 11/10/2026, Maxime :
+« J'aime pas trop le générateur euclidien et les machine VA. Par contre le LFO c'est supper. Retire completement le
+générateur de trigs et les machines VA mais laisse l'ajout des 4 lfo ». Générateurs, sources, preuves et tweaks sont
+retirés du dépôt ; ils restent dans l'historique de la branche (commit `d7b0341`) si l'idée revient. Les numéros 27, 36
+et 49 sont libérés.
 
 ## 3. LFO 2, 3, 4 : trois LFO de plus par piste
 
-Tweak `60-lfo-plus.json`, id `lfo-plus`, seul, avec ou sans Model-TG, et avec tous les autres mods. Générateur `tools/gen_lfo_plus.py`, code `tools/machines/lfo_plus/lfo_plus.S` (assembleur ColdFire), preuve `tools/emu/test_lfo_plus.py`.
+Tweak `60-lfo-plus.json`, id `lfo-plus`, seul, avec ou sans Model-TG, et avec tous les autres mods sauf `track-filter` (§3.6). Générateur `tools/gen_lfo_plus.py`, code `tools/machines/lfo_plus/lfo_plus.S` (assembleur ColdFire), preuve `tools/emu/test_lfo_plus.py`.
 
 ### En bref
 
@@ -630,7 +374,21 @@ Les masques `0x40185f48`, `0x40186238` et `0x40189618`, réservés à ce mod, re
 
 ### 3.6 Conflits
 
-**Aucun.** `tools/check_overlaps.py` passe sans `conflicts` : aucun autre tweak n'écrit ces octets (155 tweaks).
+**Le filtre par piste (`track-filter`, notes/47) : incompatible** `[FAIT en émulation]`. `tools/check_overlaps.py` ne
+voit aucune écriture partagée (154 tweaks après la fusion de main du 11/10/2026), mais les deux mods rangent leurs
+réglages aux mêmes endroits :
+
+- dans le tableau des paramètres de la piste : LFO 2 en k 28..32, le filtre en k 28..31 (Cutoff, Reso, Env, Decay) ;
+- dans l'enregistrement du son : LFO 2 en +88..+91 (format de David), le filtre Cutoff en +88 et Reso en +90 ;
+- dans les p-locks : les deux renumérotent les rangées k ≥ 23, chacun à sa façon.
+
+`test_lfo_plus.py --with macro,track-filter` le montre : 5 vérifications de la sauvegarde et des p-locks échouent. Le
+tweak déclare donc `conflicts: ["track-filter"]` (`build.py` refuse les deux ensemble) et la carte du flasher
+`excludes: ["track-filter"]`, avec sa raison propre (`clash_track-filter` dans `FEAT` ; `clashWhy` de `app.js` lit
+d'abord ce texte par paire). `[À DÉCIDER]` Pour les réunir, il faudrait ranger LFO 2 ailleurs (il n'y a plus de k
+libre : 0..22 l'OS, 23..27 Model-TG, 28..31 le filtre), par exemple en mémoire comme LFO 3 et 4, sans sauvegarde ni
+p-lock quand le filtre est coché, ou dans d'autres octets du son au prix de la compatibilité avec les sons de David.
+
 Les accroches évitent tout ce que réécrivent :
 
 - Model-TG (entrées des fonctions du son, `fine_hook`) ;
@@ -670,8 +428,7 @@ Combinaisons passées (« TOUT OK » à chaque fois, environ 40 s par passage) :
 - `6ch-usbup,model-tg-st,macro-tg,arp,trig-hold,tempo-max,boot-anim,multiline-browser,level-pan-values,trigless-dim,sample-preview-st` ;
 - `chord-keys,arp,trig-hold,tempo-max,sdvintage-7th,6ch-multiout,level-pan-values` ;
 - `model-tg,sample-preview,arp,tempo-max` ;
-- `va` ;
-- `model-tg-st,va-tg,generate-st` (tweaks VA et Generate en cours).
+- `va` et `model-tg-st,va-tg,generate-st` (avant le retrait de ces deux mods, §2).
 
 ```sh
 python3 tools/gen_lfo_plus.py --cycles firmware/model-cycles_OS1.13.syx --check
@@ -749,366 +506,3 @@ Flasher `lfo-plus` seul, puis avec `model-tg` (et MACRO ou arp, au choix).
 
 *Pour l'intégrateur* — ligne proposée pour `notes/README.md` :
 `| 53 | **LFO 2, 3, 4 : trois LFO de plus par piste** (idée de DavidCaruso) | [LFO] répété → pages 2/3/4 ; vraie fonction des LFO de l'OS avec son état ; LFO 2 sauvé dans le son (+88..+91) et p-lockable, LFO 3/4 en mémoire ; corrige les p-locks Attack/Filtre/Résonance de Model-TG ; 1 844 o dans 7 masques, 1 180 o en 0x4233f000 ; +0,13 % sans LFO de plus, +3,5 % avec les trois | expérimental, prouvé en émulation |`
-
-## 4. Machines VA : le synthé VA et les batteries VA KICK, VA SNARE, VA HIHAT de DavidCaruso, en machines ajoutées
-
-
-Demande de Maxime (fil du projet, 10/10/2026) : « Intègre ses ajouts en mods décomposés (n'ajoute que ce qui
-n'existe pas déjà dans le projet) ». Il s'agit du firmware « Model-TG-VA-DR-v1 » publié par DavidCaruso : Model-TG
-v1.1.0 modifié, avec 4 LFO de plus, un générateur de trigs, et 4 machines « Virtual Analog » : VA (synthé léger à
-2 oscillateurs, basses et leads), VA KICK, VA SNARE, VA HIHAT. Cette section traite des **4 machines**. Le générateur de
-trigs est au §2, les LFO au §3.
-
-Tweaks `27-va.json` (seul, machines 7 à 10) et `36-va-tg.json` (avec Model-TG, par-dessus `30-model-tg-st.json`,
-machines 8 à 11). Générateur `tools/gen_va.py`, code `tools/machines/va/va.c`, référence `tools/emu/va_ref.py`, preuve
-`tools/emu/test_va.py`. Adresses : VA de l'OS 1.13. Les adresses « chez David » sont celles de la section 3 de son
-`.syx`, lu et exécuté pour l'analyse (rien de son fichier n'est dans le dépôt).
-
-### Réponse courte
-
-- **Chez David, les 4 machines sont des Samplers déguisés** `[FAIT]`. La voix reçoit la machine 6 (le Sampler de
-  Model-TG), et une insertion au milieu de `sampler_render` remplace la lecture d'échantillon par son rendu. Elles ne
-  marchent donc qu'avec Model-TG. Le calcul du son, lui, est autonome : il ne lit que les 4 potards, la hauteur de
-  TONE et le front de trig.
-- **Ici, ce sont des machines ajoutées, comme MACRO** (notes/43) : 4 machines après CHORD, seules ou avec Model-TG,
-  même mécanique (`gs.detours_asm` pour N = 4, charge utile, crochet de démarrage PACK). Avec Model-TG, elles portent
-  les numéros de David (8 à 11) : ses projets se rouvrent sur les mêmes machines.
-- **Le son est celui de David, échantillon par échantillon** `[FAIT en émulation]`. Ses algorithmes sont réécrits en
-  C (`va.c`), sans aucun de ses octets. Ses fonctions, exécutées à ses adresses dans son firmware, donnent les mêmes
-  échantillons que notre code compilé. Dans la boucle des voix, son firmware et le nôtre (avec Model-TG) donnent la
-  même sortie de piste. **Une exception** : l'aigu du VA HIHAT, où deux calculs 32 bits débordaient chez lui (§4.3.5).
-- **Charge** : une voix VA coûte à peu près une voix TONE, de 0,8 à 1,1 fois. VA KICK et VA SNARE coûtent 1,4 fois,
-  VA HIHAT 1,8 fois (§4.8). Une voix muette n'est pas calculée.
-- **Deux défauts trouvés et corrigés** :
-  - le 1er trig après un changement de machine (§4.3.2) ;
-  - un appel terminal du compilateur qui privait les batteries de l'Attack et du Filtre de Model-TG (§4.3.7).
-- **À trancher** : David n'a publié ni source ni licence (§4.5).
-
-### 4.1 Le firmware de David `[FAIT]`
-
-#### 4.1.1 Branchement
-
-Analyse complète : `va-integration.md`, `va-synth.md`, `va-drums.md`, dans le dossier d'analyse. En bref :
-
-- **Numéros.** Machines 7 (VA), 8 (VA KICK), 9 (VA SNARE) et 10 (VA HIHAT), après le Sampler (6) de Model-TG. Le
-  numéro réel est l'octet machine du son (trackData+18), relu à chaque bloc par `sampler_pre`. La voix, elle, reçoit
-  `voix@0 = 6`.
-- **Chemin audio.**
-  1. Le dispatch (0x401bf2fa chez David) lit les potards.
-  2. Il détecte le front de trig (`*a5 ≠ 0` et `*a3 = 0`, c'est-à-dire v+0x34 posé et v+0x38 nul).
-  3. Il force la machine 6 et reprend le chemin du Sampler.
-  4. Ce chemin appelle l'update de TONE 0x400aa7b8, puis `sampler_render`.
-  5. `sampler_render` saute au rendu VA, qui écrit 64 échantillons à 96 kHz dans `sampler_buf+32`.
-  6. La suite est la queue du Sampler : décimation 0x400a9f58, enveloppe 0x400a9252, VCA 0x400a9430, puis
-     `amp_hook`. Celui-ci fait PUNCH 0x400a967a, la rampe d'Attack, le gain de sortie des batteries (`ah_mid`), le
-     Filtre/Résonance (`gflt_run`) et le rééchantillonnage.
-- **Hauteur.** `pas = ((v232 >> 4) · 93 957) >> 12` (0 → 1,0), la formule du Sampler de Model-TG. v+232 est
-  l'incrément de l'opérateur 1 de TONE, calculé par son update d'après la note, PITCH et FINE.
-- **Interface.**
-  - Libellés : `apply_names` change le nom des 4 potards dans la table d'origine, un jeu par machine.
-  - Descripteurs : ceux du Sampler (Pitch, Amp Decay).
-  - Défauts : écrits par `mc_commit_hook`. Amp Decay à 64, celui du Sampler, pour les quatre.
-
-#### 4.1.2 Les algorithmes
-
-Entiers 32 bits, 64 échantillons par bloc à 96 kHz, sortie `échantillon << 15`. Ils sont décrits au bit près dans
-`tools/emu/va_ref.py`, leur référence exécutable, et dans les commentaires de `tools/machines/va/va.c`.
-
-| Machine | Potards (COLOR, SHAPE, SWEEP, CONTOUR), défauts de David | Son |
-|---|---|---|
-| VA | Osc1 Wave 0, Osc2 Wave 0, Osc2 Tune 68, Osc Mix 64 | 2 oscillateurs scie / carré / triangle (seuils 0..42, 43..85, 86..127), PolyBLEP à 2 points sur scie et carré. Osc2 Tune : rapport 2^(0,1u + 0,9u³), d'une octave en dessous à une au-dessus, fin au centre (68 : +7,9 cents). Osc Mix 0..252 puis 256. Dérive lente ±1 cent par oscillateur, un générateur pour toutes les pistes. Phases remises au trig (oscillateur 2 un peu au hasard). |
-| VA KICK | Sweep Depth 48, Sweep Time 40, Drive 24, Click 40 | Sinus parabolique, 55 Hz à la note 60. Balayage de hauteur jusqu'à ×5 à l'attaque, constante de temps 2 à 150 ms. Click : bruit de 1,33 ms à l'attaque. Drive : gain puis saturation douce. |
-| VA SNARE | Noise Mix 64, Pitch Drop 32, Noise Tone 88, Drive 16 | Corps : sinus à 180 Hz à la note 60, chute de hauteur jusqu'à ×3 en 15 ms, enveloppe de 85 ms. Bruit : passe-bas 300 Hz..16 kHz puis passe-haut fixe ≈ 480 Hz. Drive. |
-| VA HIHAT | Tone 80, Spread 64, Noise 16, Drive 0 | 6 carrés aux rapports du TR-808 (205,3 à 800 Hz à la note 60), Spread autour de leur moyenne (64 = 808), plus du bruit. Deux passe-haut d'un pôle (2,9 à 11,7 kHz). Drive. Oscillateurs libres, pas de remise en phase au trig. |
-
-Batteries, après PUNCH : gain fixe ×4/3, ×5/3, ×8/3, puis saturation douce, même Drive à 0. Les deux générateurs
-(dérive du VA et bruit des batteries) sont communs à toutes les pistes, dans l'ordre de rendu.
-
-#### 4.1.3 Défauts relevés chez David
-
-1. **VA HIHAT, Spread.** `incₖ = muls((incₖ − moyenne) >> 2, 2·Spread) >> 5` prend les 32 bits bas d'un produit qui
-   dépasse 2³¹ dans l'aigu : à partir de la note 90 environ à Spread 64, de la note 78 à Spread 100 ou 127. Les
-   fréquences sont alors fausses.
-2. **VA HIHAT, moyenne.** La somme des 6 incréments est prise modulo 2³² avant la division par 6 : elle est fausse à
-   partir de la note 105 environ.
-3. **Hauteur au-delà de la note 107** (avec PITCH au milieu). `(v232 >> 4) · 93 957` déborde 32 bits à partir de
-   +48 demi-tons : la hauteur retombe dans le grave. C'est la formule du Sampler de Model-TG, gardée ici telle
-   quelle (§4.9).
-4. **1re note après un changement de machine.** Pas de défaut chez David : son chemin applique la machine dès le bloc
-   du trig, et le front y est vu. Chez nous, il faut une règle de plus (§4.3.2).
-
-### 4.2 La mécanique : celle de MACRO, pour 4 machines
-
-`tools/gen_va.py` est `gen_macro.build_tweak` généralisé à N = 4. La sortie de `gen_macro.py` est inchangée.
-Il reprend :
-
-- **Les détours** `gs.detours_asm(4, images, firsts, tg)`, avec 5 descripteurs par machine (76..95) sur le modèle de
-  ceux de SNARE. Ils couvrent les rangées des LFO, les enregistrements, les recherches, la molette, les repères sur
-  2 lignes et les icônes.
-- **Les tables déplacées dans la charge utile** : descripteurs, rangées, noms, update/render, machine → enregistrement.
-- **Les bornes** : 76/75 → 96/95 et 5 → 9 (seules) ou 10 (avec Model-TG).
-- **Le crochet de démarrage** `stub.S` PACK.
-- **Avec Model-TG** :
-  - le détour du dispatch de MACRO (`gen_macro.dispatch_tg_asm`) : update, render, puis `ah_noenv` ;
-  - le chaînage de `descr_hook`, `descr_b_hook`, `sampler_lfo_gate`, `sampler_amp_gate` et du crochet de
-    démarrage de Model-TG.
-
-| | Seules (`va`) | Avec Model-TG (`va-tg`) |
-|---|---|---|
-| Machines | 7 à 10 (index 6..9) | 8 à 11 (index 7..10) |
-| Écritures dans l'OS | 122 | 114 |
-| Ajout à l'image | 13 668 o, à 0x401aa140 | 14 004 o, à 0x401bf8c0 (après Model-TG) |
-| Charge utile en mémoire | 0x43000000 (221 688 o, BSS compris) | 0x46700000 (idem) |
-| Code et tables de `va.c` | 6 976 o | 6 976 o |
-| Détours | 934 o | 1 256 o |
-| Variables (6 pistes × 84 o) | 504 o à +0x36000 | idem |
-| Crochet de démarrage | 104 o, masque 0x4016cae8 (sprite 0x400b1106 redirigé) | 96 o, même masque |
-| Envoi USB à heure fixe, boucle des voix | notes/35, notes/36, comme MACRO (masque 0x4015c044) | ceux de model-tg-st |
-
-La charge utile ne s'exécute qu'après l'invalidation du cache d'instructions par l'OS (0x40000548, `movec cacr`) :
-il n'y a rien à vider, comme pour MACRO, testée sur la machine.
-
-### 4.3 Conception
-
-#### 4.3.1 La passerelle (`va.c`)
-
-Contrat de la boucle des voix : `update(pmod, v, p)` puis `render(out, v)` (notes/14, notes/43).
-
-- **`va_update`** (le même pour les 4 machines). Il appelle l'update de TONE 0x400aa7b8, comme le chemin du Sampler
-  chez David. Elle calcule la hauteur en v+232, l'enveloppe d'ampli (DECAY, GATE) et PUNCH. Ensuite il lit les 4
-  potards (mot 8.8 → 0..127, `dial`) et le front de trig.
-- **`va_render_va`, `_kick`, `_snare`, `_hihat`** :
-  1. le pas est calculé d'après v+232, par la formule de Model-TG ;
-  2. 64 échantillons à 96 kHz vont dans le tampon de TONE (0x8000c05c + 8 mots, en SRAM) ;
-  3. puis viennent la queue du render de TONE : 0x400a9f58 (décimation 2:1, avec l'historique propre à la voix),
-     0x400a9252, 0x400a9430, 0x400a967a ;
-  4. pour les batteries seulement, le gain et la saturation (`va_post`).
-- **État** : `struct trk` de 84 o par piste (phases, dérives, enveloppes, filtres, 6 phases du hihat, potards,
-  trig) et les deux générateurs. Ils ont les valeurs de départ de David (0x6d2b79f5, 0x1f123bb5).
-
-#### 4.3.2 Front de trig et 1er bloc sur la machine `[FAIT en émulation]`
-
-Le front est la règle de David : v+0x34 posé et v+0x38 nul. Mais l'OS ne change de machine qu'au bloc qui **suit**
-le trig, quand v+0x38 ≠ 0 (0x400a7dac). À ce moment, la remise à zéro de la voix (0x400a7ab8) efface 0x00..0x3c, puis
-pose v+0x38 = 1. Le 1er bloc sur une machine VA ne voit donc jamais de front. Le KICK perdrait son balayage et son
-click, et le VA ses phases de départ.
-
-Règle ajoutée : un repère `'VAM1'` est posé en **v+0x24**.
-
-- Ce champ est effacé par la remise à zéro.
-- Ni la chaîne de TONE ni Model-TG ne le lisent ni ne l'écrivent. Seul 0x400a9a74..0x400a9adc, une autre machine,
-  s'en sert. Ce relevé est fait en émulation, champ par champ.
-- MACRO met le sien en v+0x2c, mais l'update de TONE réécrit ce champ à chaque bloc.
-
-Quand le repère manque, l'état de la piste repart de zéro et la note est jouée. Machine lock d'une machine VA à une
-autre : l'index change, la voix est remise à zéro, l'état aussi.
-
-#### 4.3.3 Voix muette
-
-Une voix est muette sans trig (v+0x34, v+0x38) et avec une enveloppe d'ampli sous 2¹⁴ (v+0x230, v+0x234), comme pour
-MACRO. Elle n'a ni update de TONE ni rendu, et sa sortie est nulle. Au trig, v+0x34 ou v+0x38 est posé, donc la voix
-repart.
-
-Chez David, le critère est `voice_quiet` de Model-TG : seuil, gains du mixeur, compteur de silence. Seule la toute fin
-de note diffère, bien sous −100 dB.
-
-#### 4.3.4 Arithmétique
-
-Le C ne s'autorise aucun comportement indéfini. Les produits passent par des `u32` (`mulsl`) et les décalages à
-gauche par `shl`. Il n'y a pas de 64 bits ni de bibliothèque (`-nostdlib`), et pas d'EMAC : `gen_va.py` refuse le code
-qui en contiendrait, car la boucle des voix laisse MACSR en fractionnaire.
-
-Les tables (Osc2 Tune, Sweep Time, filtres) sont **calculées par formule** (`va_ref.c_header`). Elles sont identiques
-aux 128 valeurs de David : `--david` les compare. Les rapports du 808 et les gains sont des constantes.
-
-#### 4.3.5 Les deux corrections du VA HIHAT `[FAIT en émulation]`
-
-- **Spread** : `(d >> 4)·P + ((d & 15)·P) >> 4` avec `d = (inc − moyenne) >> 2`. C'est exactement ⌊d·P/16⌋, donc
-  le calcul de David chaque fois que son produit ne déborde pas.
-- **Moyenne** : `a = Σ(inc >> 3)`, `b = Σ(inc & 7)`, `moyenne = 4·(a/3) + (8·(a mod 3) + b)/6`. C'est la partie
-  entière exacte de la somme complète divisée par 6.
-
-En dehors des débordements, le son est celui de David au bit près. `va_ref.Dsp(…, david=True)` refait ses deux
-débordements. `--david` vérifie que c'est exactement son code, et que les écarts entre lui et nous tombent
-exactement sur ces blocs.
-
-#### 4.3.6 Avec Model-TG
-
-- **Le chemin.** Le détour de MACRO envoie les machines ≥ 7 à nos update/render, puis à `ah_noenv`, la fin de
-  `amp_hook` : rampe d'Attack, Filtre/Résonance, rééchantillonnage, gain de piste. Le temps de calcul est compté sur
-  la page System (`prof_trk`).
-- **L'ordre du gain des batteries.** Chez David, il vient après la rampe d'Attack (`ah_mid`). Ici, il est dans le
-  render, donc avant. Avec Attack à 0, c'est identique : `atk_step = 0`, pas de rampe, et c'est le cas comparé à son
-  firmware. Avec une Attack, la saturation douce s'applique ici avant la rampe : l'attaque est un peu moins écrasée
-  que chez David. `[HYP]` inaudible en pratique ; pas mesuré.
-- **Attack, Filtre, Résonance.** Ils sont sous MACHINES tenue (`mod_held`), comme pour toutes les machines ajoutées.
-  `tms.interface` le vérifie.
-
-#### 4.3.7 Défaut trouvé par la preuve : l'appel terminal `[FAIT en émulation]`
-
-Avec `-O2`, GCC compilait `va_post(out, kind)` en fin de render comme un `jmp`. Il réécrivait alors les arguments
-reçus sur la pile (out, v) en (out, kind). Or notre détour avec Model-TG réutilise justement les arguments du render
-pour appeler `ah_noenv(sortie, voix)`. `ah_noenv` recevait donc « voix = 1, 2 ou 3 », ne trouvait pas la piste
-(`ah_find`), et sortait sans rien faire. VA KICK, VA SNARE et VA HIHAT perdaient Attack, Filtre, Résonance et le
-rééchantillonnage.
-
-Corrigé par `-fno-optimize-sibling-calls` (`gen_va.py`, `CFLAGS`). La preuve compte maintenant un appel de
-`ah_noenv` par bloc de piste VA, avec la sortie attendue. Elle vérifie aussi qu'Attack 64 et Filtre 30 changent le
-son des 4 machines.
-
-MACRO n'est pas touchée : son render ne finit pas par un appel terminal. `[HYP]` à revérifier si son code change.
-
-#### 4.3.8 Interface
-
-- **Noms** : « VA », « VA KICK », « VA SNARE », « VA HIHAT », ceux de David. Le nom est centré à x = 32 dans la moitié
-  gauche de l'écran MACHINES (police 5x9, 6 points par caractère). 8 caractères font 47 points, de x = 9 à 55, et les
-  repères commencent à x = 76. Model-TG s'en tient à 7 caractères pour le nom défilant du Sampler, mais 8 tiennent.
-  La preuve le vérifie, ainsi que les noms entiers en mémoire.
-- **Potards** : les noms longs et courts de David (OSC1, OSC2, DTUN, MIX ; SWP, STM, SAT, CLK ; NOIS, PENV, TONE, SAT ;
-  TONE, SPRD, NOIS, SAT), plage 0..127. Les seuils des formes d'onde restent 0..42 / 43..85 / 86..127, pour que ses
-  projets sonnent pareil.
-- **Amp Decay par défaut** (choix fait ici) :
-  - VA : 64, comme chez David ;
-  - batteries : celui de la machine d'origine dont elles prennent l'image, KICK 28, SNARE 40, METAL 20.
-
-  David laisse 64, le défaut du Sampler, aux quatre. Or DECAY règle l'enveloppe d'ampli de TONE, que nos quatre
-  machines suivent : mesurée en émulation sur TONE, elle passe sous le seuil de silence de la passerelle (2¹⁴) en
-  15 ms à DECAY 5, 0,09 s à 12, 0,28 s à 20, 0,63 s à 28, 1,5 s à 40 et 4,7 s à 64 (22, 130, 422, 941, 2233 et
-  7068 blocs de 0,67 ms). Un charleston qui s'entend plusieurs secondes ne ressemble plus à un charleston. Seul le défaut
-  change : un projet de David garde ses valeurs.
-- **Images** : VA → TONE, VA KICK → KICK, VA SNARE → SNARE, VA HIHAT → METAL. L'OS n'en a que 6. David en dessinait
-  de nouvelles, qui ne sont pas reprises ici.
-
-### 4.4 Place
-
-Les écritures dans l'OS sont celles de MACRO pour N = 4. Le code tient dans la charge utile après l'image. Le seul
-masque de sprite pris est celui du crochet de démarrage (0x4016cae8, partagé avec MACRO, d'où l'incompatibilité),
-plus le masque 0x4015c044 de notes/35 et notes/36 (seules), mêmes octets que MACRO et Model-TG. Le registre
-(`tools/registry.py --check`) l'accepte : 157 tweaks, 164 masques libérables, 125 libres.
-
-### 4.5 Provenance et licence
-
-- **Ce qui vient de David** :
-  - les algorithmes, relus dans son firmware et réécrits ;
-  - les noms des machines et des potards ;
-  - les défauts des potards ;
-  - les constantes (rapports du 808, gains, graines) ;
-  - les formules des tables, retrouvées et vérifiées.
-- **Ce qui ne vient pas de lui** : aucun de ses octets, aucune image.
-- **Licence** : David n'a publié ni source ni licence. Le code est une réécriture, mais le son, les noms et le choix
-  des paramètres sont les siens. **À demander à David** : son accord, et le crédit qu'il souhaite. Carte du flasher
-  et `PROVENANCE.md` : « VA machines by DavidCaruso (from Model-TG-VA-DR-v1), rewritten for this project ».
-
-### 4.6 Incompatibilités
-
-`27-va.json` exclut 136 tweaks : MACRO, MACRO-TG, Model-TG (les deux ; il y a `va-tg` pour cela), SD VINTAGE 7th /
-exact / snare, `va-tg`, et toutes les combinaisons des moteurs du Syntakt (128), seuls ou avec MACRO. `36-va-tg.json`
-exclut 135 tweaks et demande `model-tg-st`. Ces mods ajoutent tous des machines au même endroit (le même bloc après
-l'image, les mêmes tables). Une version combinée VA + moteurs du Syntakt ou VA + MACRO serait possible (même
-mécanique, `gen_macro_syntakt.py`), mais n'est pas faite.
-
-Elles s'installent avec tout le reste, notamment le générateur de trigs (§2, `generate-st` avec `va-tg`) et les
-LFO 2 à 4 (§3, `lfo-plus`), l'arpégiateur, trig-hold, tempo-max et le 6 canaux : la preuve les joue ensemble (§4.7).
-
-`tools/check_overlaps.py` : ok (157 tweaks, 16 575 écritures, aucune écriture partagée hors cas prévus).
-
-### 4.7 Preuve en émulation `[FAIT en émulation]`
-
-```sh
-python3 tools/gen_va.py --cycles firmware/model-cycles_OS1.13.syx --check
-python3 tools/emu/test_va.py --cycles firmware/model-cycles_OS1.13.syx \
-    [--quick] [--david firmware/david/Model-TG-VA-DR-v1.syx] \
-    [--with model-tg-st,generate-st,arp,tempo-max,lfo-plus | --with 6ch-usbup,arp,trig-hold,tempo-max,lfo-plus]
-```
-
-MAIN OS patché (`tools/build.py`, SHA-256) :
-
-| `-t` | MAIN OS |
-|---|---|
-| `va` | `5e7ec9e18a2ad9ec0dfc5804c17be46706264cd30b31ecd54f551a81166259cc` |
-| `model-tg-st,va-tg` | `af009dd2da9e70e95bb749b7363d8d21d8eeb558c839bbae387301a00d827359` |
-| `6ch-usbup,va` | `cbc45da6ae0ce2accb6b7adf6143f851d89e84975f422a0e461da1171d444953` |
-| `model-tg-st,va-tg,arp` | `f2de4469b70d13159857bb2756b11aab46cc8b85e10c4acfd22df5b318854ae2` |
-
-| Vérification | Résultat |
-|---|---|
-| Démarrage (seules / avec Model-TG) | charge utile reconstituée octet pour octet, SRAM intacte, BSS de l'OS remis à zéro ou `boot_extra_hook` de Model-TG atteint, registres et pile intacts ; décompresseur du bootstrap sur l'OS agrandi |
-| Interface | les vérifications de `test_syntakt_machines.py` (seules) et `test_model_tg_syntakt.py` (avec Model-TG) pour 4 machines : rangées, descripteurs 76..95 (noms, plages, défauts), recherches, CC 16..19, écran MACHINES (10 ou 11 repères sur 2 lignes), molette, enregistrements, changement de machine réel (défauts posés), potards, icônes, machine hors limites ; noms entiers et largeur |
-| Code seul | `va_fill` et `va_post` compilés = `va_ref` au bit près, état et générateurs compris (2 040 blocs avec `--quick`, 8 000 et plus sans) |
-| Boucle des voix, à chaque bloc | tampon à 96 kHz donné au décimateur = `va_ref` nourri de ce que voit la passerelle ; état identique ; potards lus = réglés ; voix muette ni mise à jour ni calculée ; 1er bloc sur la machine ; `va_post` ; sortie de piste |
-| Chaîne d'ampli | mêmes lectures de la voix que TONE (DECAY, GATE, PUNCH) ; les 4 machines se taisent au bloc où TONE passe sous le seuil : DECAY 5, 12, 20, 28 → blocs 22, 130, 422, 941 |
-| Hauteur | VA, KICK, SNARE : la note et PITCH (notes 36 à 96, PITCH 52 à 76), écart mesuré 0,04 % au plus (tolérance 0,4 %) ; VA note 60 = 261,5 Hz, KICK 55,0 Hz, SNARE 179,9 Hz |
-| Potards | chacun des 16 change le son ; formes d'onde 0 = 42, 43 = 85, 86 = 127, 42 ≠ 43, 85 ≠ 86 |
-| Machines d'origine | identiques à l'OS d'origine (ou à Model-TG seul), sans une instruction de `va.c` ; machine locks ; 6 pistes VA ; pistes mêlées (et Sampler) |
-| Avec Model-TG | `ah_noenv` une fois par bloc de piste VA, avec la sortie attendue ; VA avec Model-TG = VA seule (Attack 0, filtre ouvert) ; Attack et Filtre agissent |
-| `--david` | ses fonctions à ses adresses = `va_ref` « david » au bit près (état à ses adresses) ; notre code = le sien hors débordements ; dans la boucle des voix, même tampon et même sortie de piste, bloc par bloc, tant que les deux voix sont calculées ; HIHAT note 96 Spread 127 : différent dès le 1er bloc |
-| Coût | §4.8 |
-
-### 4.8 Charge `[FAIT en émulation]`
-
-Instructions par bloc de 32 trames pour une voix : la boucle des voix entière, moins la même boucle sans voix
-(`test_va.py`, section coût, seules). Les décalages de MACRO et de TONE sont mesurés de la même façon.
-
-| Voix | En jeu | 1er bloc | Rapport à TONE |
-|---|---|---|---|
-| VA scie + scie (défauts) | 5 403 | 5 954 | 1,02 |
-| VA carré + carré | 6 011 | 6 707 | 1,14 |
-| VA triangle + triangle | 5 633 | 5 965 | 1,06 |
-| VA un oscillateur (Osc Mix 0) | 4 091 | 4 642 | 0,77 |
-| VA KICK | 7 358 | 7 793 | 1,39 |
-| VA SNARE | 7 566 | 7 938 | 1,43 |
-| VA HIHAT | 9 567 | 10 113 | 1,81 |
-| TONE | 5 291 | | 1 |
-| MACRO CSAW / WAVETABLES | 7 775 / 11 014 | | 1,47 / 2,08 |
-| Voix VA muette | 214 | | |
-
-Pile : 464 o au plus sous la boucle des voix. Avec Model-TG (`va-tg`), chaque voix coûte 59 instructions de plus
-(VA scie + scie 5 462, VA KICK 7 417, VA SNARE 7 625, VA HIHAT 9 626), TONE 5 671.
-
-Avec Model-TG, la boucle des 6 voix complète, une piste jouée, instructions par bloc (`--david`, David / nous) :
-
-| Machine | David | Nous |
-|---|---|---|
-| VA | 7 807 | 6 988 |
-| VA KICK | 10 239 | 8 943 |
-| VA SNARE | 10 347 | 9 151 |
-| VA HIHAT | 10 062 | 11 152 |
-
-Nous sommes plus légers que David, sauf sur le HIHAT. Les corrections n'y coûtent que quelques dizaines
-d'instructions par bloc. `[HYP]` L'écart vient de la boucle des 6 oscillateurs (64 × 6 par bloc), compilée par GCC,
-moins serrée que l'assembleur de David. Le chemin de David passe en plus par 0x400a9120 (enveloppes des opérateurs de
-TONE, inutiles ici) et par la plomberie du Sampler.
-
-`[HYP]` Sur la machine, les accès à la SDRAM (code et tables hors du cache) peuvent alourdir ces chiffres, comme pour
-MACRO.
-
-### 4.9 Limites connues
-
-- **Notes au-delà de 107** (note + PITCH − 64) : la hauteur repart du grave. C'est la formule de Model-TG, gardée pour
-  être identique à David. Une correction est facile (produit en deux morceaux), mais elle s'écarterait de son
-  firmware : à décider (§4.11).
-- **Générateurs communs aux pistes.** Comme chez David, deux pistes VA ou batterie jouées ensemble ne sonnent pas
-  exactement comme chacune seule : la dérive et le bruit sont pris dans l'ordre des pistes. C'est inaudible, mais la
-  preuve compare donc au modèle et non à « la piste seule ».
-- **Gain des batteries avant l'Attack de Model-TG** (§4.3.6).
-- **Pas de régulateur de charge** (comme MACRO seule). Les voix sont légères.
-
-### 4.10 À vérifier sur la machine
-
-1. Seules (27-va) : MACHINES → les 4 machines après Chord, noms entiers, icônes. Chaque machine joue, suit les notes
-   du clavier et PITCH, DECAY règle la durée, chaque potard agit.
-2. Changement de machine par p-lock (machine lock) de CHORD à VA KICK : le 1er coup a bien son balayage et son click.
-3. 6 pistes VA en même temps : pas de craquement.
-4. Avec Model-TG (model-tg-st + va-tg) : les mêmes, puis MACHINES tenu + DECAY / SWEEP / CONTOUR (Attack, Filtre,
-   Résonance) sur VA et sur VA KICK.
-5. Un projet fait avec le firmware de David (machines 8 à 11) rouvert avec Model-TG + VA.
-6. Avec les autres ajouts de David cochés (générateur de trigs §2, LFO 2 à 4 §3) : les machines VA jouent pareil,
-   et un LFO réglé sur un de leurs potards le fait bouger.
-7. CONFIG › UPGRADE par USB toujours possible (le crochet de démarrage ne change rien au chargeur).
-
-### 4.11 Questions ouvertes
-
-- L'accord et le crédit de David (§4.5).
-- Corriger le repli de hauteur au-delà de la note 107 (§4.9) ?
-- Versions combinées avec MACRO ou les moteurs du Syntakt ?
-- Ordre des tweaks (27, 36) à confirmer.

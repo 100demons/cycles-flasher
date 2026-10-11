@@ -16,6 +16,9 @@ checksum de paquet SysEx (via mtlib). Refuse d'envoyer un fichier douteux.
     python3 tools/flash.py --list
     python3 tools/flash.py mon.syx --verify
     python3 tools/flash.py mon.syx --port "USB MIDI" --send
+
+Adapté du tools/flash.py de ms-multi-output (https://github.com/scottmetoyer/ms-multi-output),
+Copyright (c) 2026 Scott Metoyer, licence MIT : tweaks/model-cycles_OS1.13/LICENSE-ms-multi-output.
 """
 import argparse
 import pathlib

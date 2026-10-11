@@ -41,6 +41,8 @@ OUT = ROOT / "docs" / "flasher" / "tweaks.js"
 # status : "tested" (flashe sur un vrai Model:Cycles) ou "experimental".
 # credit : auteur du travail d'origine, affiche sur la carte (voir aussi les credits de la page) ; sans « repo »
 # (un mod recu sans depot public), la carte dit « d'apres un mod de … », sans lien.
+# license : fichier de licence (dans tweaks/model-cycles_OS1.13/) du code tiers que la carte embarque ; servi a cote
+# de la page (docs/flasher/<license>.txt) et lie depuis la carte.
 # cat : rubrique du flasher, une de CATS (meme liste que CATS dans docs/flasher/app.js, plus « other »). Sans cat,
 # la carte s'affiche a la fin, dans « Autres mods » (avertissement ici). L'ordre de FEATURES reste l'ordre du build
 # (cles de REF_MAINOS), quel que soit l'ordre d'affichage par rubriques.
@@ -58,6 +60,7 @@ FEATURES = [
                 "n'est plus envoye en USB : tu melanges les 6 pistes dans ton logiciel.",
         "status": "tested",
         "credit": {"kind": "based", "who": "scottmetoyer", "repo": "scottmetoyer/ms-multi-output"},
+        "license": "LICENSE-ms-multi-output",
         "variants": [
             {"file": "11-6ch-usbup", "label": None},
         ],
@@ -79,7 +82,7 @@ FEATURES = [
         # avec les moteurs du Syntakt : la base de la version combinee (notes/31), et pour chaque combinaison de
         # moteurs son tweak syntakt-tg-<moteurs> (« tg » des combinaisons de la carte des moteurs) ; de meme avec
         # la machine MACRO (notes/43), qui prend alors macro-tg
-        "with": {"syntakt": "30-model-tg-st", "macro": "30-model-tg-st", "va": "30-model-tg-st"},
+        "with": {"syntakt": "30-model-tg-st", "macro": "30-model-tg-st"},
     },
     {
         "id": "sample-preview",
@@ -90,12 +93,13 @@ FEATURES = [
                 "se charge au premier appui. Demande Model-TG.",
         "status": "tested",
         "credit": {"kind": "based", "who": "TinyGregAudio", "repo": "TinyGregAudio/Model-TG"},
+        "license": "LICENSE-Model-TG",          # pv_parse reprend un passage de son pool_store_hook
         "requires": "model-tg",
         "variants": [
             {"file": "33-sample-preview", "label": None},
         ],
         # avec les moteurs du Syntakt, Model-TG devient model-tg-st : l'ecoute prend la version faite pour lui
-        "with": {"syntakt": "33-sample-preview-st", "macro": "33-sample-preview-st", "va": "33-sample-preview-st"},
+        "with": {"syntakt": "33-sample-preview-st", "macro": "33-sample-preview-st"},
     },
     {
         "id": "latching-mute",
@@ -105,6 +109,7 @@ FEATURES = [
                 "Un appui court sur FUNC en sort.",
         "status": "tested",
         "credit": {"kind": "by", "who": "drumkilla", "repo": "drumkilla/elektron-model-tweaks"},
+        "license": "LICENSE-elektron-model-tweaks",
         "variants": [
             {"file": "01-latching-mute", "label": None},
         ],
@@ -117,6 +122,7 @@ FEATURES = [
                 "sa longueur et ses p-locks.",
         "status": "tested",
         "credit": {"kind": "by", "who": "drumkilla", "repo": "drumkilla/elektron-model-tweaks"},
+        "license": "LICENSE-elektron-model-tweaks",
         "variants": [
             {"file": "02-trig-preview", "label": None},
         ],
@@ -128,6 +134,7 @@ FEATURES = [
         "desc": "Dans le navigateur de sons, un nom trop long pour l'ecran defile.",
         "status": "tested",
         "credit": {"kind": "by", "who": "drumkilla", "repo": "drumkilla/elektron-model-tweaks"},
+        "license": "LICENSE-elektron-model-tweaks",
         "variants": [
             {"file": "03-browser-scroll", "label": None},
         ],
@@ -250,7 +257,8 @@ FEATURES = [
         "desc": "Une machine ajoutee apres Chord (apres le Sampler avec Model-TG, apres les moteurs du Syntakt s'ils "
                 "sont coches aussi) : les 47 modeles du code libre "
                 "de Braids d'Emilie Gillet. SHAPE choisit le modele, COLOR et SWEEP le reglent, CONTOUR ouvre le "
-                "timbre avec l'enveloppe.",
+                "timbre avec l'enveloppe, FUNC + PITCH donne le lo-fi (RATE a gauche, BITS a droite).",
+        # 13 modeles a 48 kHz et le lo-fi (notes/55) : testes sur la machine le 11/10/2026
         "status": "tested",
         "credit": {"kind": "based", "who": "Émilie Gillet", "repo": "pichenettes/eurorack"},
         "license": "LICENSE-Braids",
@@ -261,23 +269,6 @@ FEATURES = [
         ],
         # avec Model-TG : la version qui s'ajoute apres model-tg-st (Model-TG prend cette base, « with » ci-dessus)
         "with": {"model-tg": "32-macro-tg"},
-    },
-    {
-        "id": "va",
-        "cat": "sound",
-        "label": "Machines VA de DavidCaruso",
-        "desc": "Quatre machines ajoutees apres Chord (apres le Sampler avec Model-TG) : VA, synthe a deux oscillateurs "
-                "(scie, carre, triangle), et trois batteries analogiques, VA KICK, VA SNARE et VA HIHAT (six carres "
-                "comme la TR-808). Pas avec MACRO ni les moteurs du Syntakt.",
-        "status": "experimental",
-        "credit": {"kind": "based", "who": "DavidCaruso"},
-        # MACRO et les moteurs du Syntakt s'ajoutent au meme endroit (machines 7 et suivantes) : pas encore combines
-        "excludes": ["macro", "syntakt"],
-        "variants": [
-            {"file": "27-va", "label": None},
-        ],
-        # avec Model-TG : la version qui s'ajoute apres model-tg-st (Model-TG prend cette base, « with » ci-dessus)
-        "with": {"model-tg": "36-va-tg"},
     },
     {
         "id": "chord-keys",
@@ -292,20 +283,18 @@ FEATURES = [
         "variants": [{"file": "45-chord-keys", "label": None}],
     },
     {
-        "id": "generate",
-        "cat": "seq",
-        "label": "Generateur de trigs (SETTINGS + TRACK)",
-        "desc": "Tenir SETTINGS et appuyer sur TRACK ouvre la liste Generate : rythme euclidien (coups, rotation) ou "
-                "trigs aleatoires (densite), notes dans une gamme et velocites aleatoires si on veut ; GEN reecrit "
-                "toute la piste selectionnee. Reglages perdus a l'extinction, pas d'annulation. Demande Model-TG.",
-        "status": "experimental",
-        "credit": {"kind": "based", "who": "DavidCaruso"},
-        "requires": "model-tg",
+        "id": "track-filter",
+        "cat": "sound",
+        "label": "Filtre par piste (LP / OFF / HP)",
+        "desc": "MACHINES tenu + SWEEP : un filtre par piste, passe-bas a gauche, rien au centre, passe-haut a droite. "
+                "CONTOUR : resonance ; COLOR et SHAPE : enveloppe du filtre (quantite, decay). P-locks, LFO, CC 74 / 71.",
+        "status": "tested",
+        "credit": None,
+        # meme geste que le filtre de Model-TG (MACHINES + SWEEP / CONTOUR) : pas ensemble pour l'instant (notes/47 §7, §11)
+        "excludes": ["model-tg"],
         "variants": [
-            {"file": "49-generate", "label": None},
+            {"file": "48-track-filter", "label": None},
         ],
-        # avec les moteurs du Syntakt, MACRO ou les machines VA, Model-TG devient model-tg-st : la version faite pour lui
-        "with": {"syntakt": "49-generate-st", "macro": "49-generate-st", "va": "49-generate-st"},
     },
     {
         "id": "lfo-plus",
@@ -317,6 +306,7 @@ FEATURES = [
                 "Model-TG.",
         "status": "experimental",
         "credit": {"kind": "based", "who": "DavidCaruso"},
+        "excludes": ["track-filter"],   # memes k 28..31 et octets +88..+91 du son (notes/56 §3.6)
         "variants": [
             {"file": "60-lfo-plus", "label": None},
         ],
@@ -526,10 +516,20 @@ def render():
     return text
 
 
+# Licences du code tiers que la page embarque hors des cartes : builder.js est un portage de mtlib (drumkilla),
+# lui-meme fonde sur elektron-firmware-tool (Marcel Bierling). Voir THIRD-PARTY-NOTICES.md.
+PAGE_LICENSES = {
+    "LICENSE-elektron-model-tweaks": DEV_DIR / "LICENSE-elektron-model-tweaks",
+    "LICENSE-elektron-firmware-tool": ROOT / "tools" / "mtlib" / "LICENSE-elektron-firmware-tool",
+}
+
+
 def licenses():
-    """Licences a publier avec la page (code tiers embarque dans tweaks.js) : {fichier servi : texte}."""
-    return {OUT.parent / (f["license"] + ".txt"): (DEV_DIR / f["license"]).read_text(encoding="utf-8")
-            for f in FEATURES if f.get("license")}
+    """Licences a publier avec la page (code tiers embarque dans tweaks.js et builder.js) : {fichier servi : texte}."""
+    out = {OUT.parent / (f["license"] + ".txt"): (DEV_DIR / f["license"]).read_text(encoding="utf-8")
+           for f in FEATURES if f.get("license")}
+    out.update({OUT.parent / (name + ".txt"): src.read_text(encoding="utf-8") for name, src in PAGE_LICENSES.items()})
+    return out
 
 
 def main():

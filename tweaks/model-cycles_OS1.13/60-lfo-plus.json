@@ -9,11 +9,15 @@
   "Un LFO de plus réglé sur la destination de LFO 1 ne fait rien ; la molette DEST saute les destinations déjà prises par un autre LFO de la piste. LFO 2 non calculé quand aucune piste n'a de destination.",
   "Corrige au passage les p-locks d'Attack, Filtre et Résonance de Model-TG dans le pattern (relus en None, LFO Speed, Multiplier).",
   "D'après le Model-TG-VA-DR-v1 de DavidCaruso (octobre 2026), réécrit ; s'installe avec ou sans Model-TG.",
-  "Code et données : 1844 o dans 7 masques de sprites 34x34 libérés (0x4016f8c8, 0x40173848, 0x401780a8, 0x401784e8, 0x401835b8, 0x40184df8, 0x40185308) ; mémoire de travail 0x4233f000..0x4233f49c (au-dessus du BSS). Généré par tools/gen_lfo_plus.py, notes/56 §3."
+  "Code et données : 1844 o dans 7 masques de sprites 34x34 libérés (0x4016f8c8, 0x40173848, 0x401780a8, 0x401784e8, 0x401835b8, 0x40184df8, 0x40185308) ; mémoire de travail 0x4233f000..0x4233f49c (au-dessus du BSS). Généré par tools/gen_lfo_plus.py, notes/56 §3.",
+  "Pas avec le filtre par piste : les deux rangent leurs réglages en k 28..31 et en +88..+91 du son (notes/56 §3.6)."
  ],
  "device": "Model:Cycles",
  "os": "1.13",
  "section": 3,
+ "conflicts": [
+  "track-filter"
+ ],
  "symbols": {
   "lfo_audio": "0x40183646",
   "lfo_id2k": "0x4016f988",

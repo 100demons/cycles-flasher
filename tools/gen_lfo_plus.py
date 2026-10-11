@@ -92,6 +92,8 @@ SYMBOLS = ("lfo_audio", "lfo_id2k", "lfo_get", "lfo_set", "lfo_key", "lfo_draw",
            "lfo34")
 
 
+CONFLICTS = ["track-filter"]   # mêmes k 28..31 et mêmes octets +88..+91 du son (notes/56 §3.6, notes/47 §4)
+
 def sections(path):
     """[(nom, taille, adresse, alignement)] des sections non vides."""
     found = []
@@ -193,10 +195,12 @@ def build_tweak(stock):
             f"Code et données : {used} o dans {len(placed)} masques de sprites 34x34 libérés ({masks}) ; "
             f"mémoire de travail {SCR:#x}..{SCR + SCR_SIZE:#x} (au-dessus du BSS). "
             "Généré par tools/gen_lfo_plus.py, notes/56 §3.",
+            "Pas avec le filtre par piste : les deux rangent leurs réglages en k 28..31 et en +88..+91 du son (notes/56 §3.6).",
         ],
         "device": "Model:Cycles",
         "os": "1.13",
         "section": 3,
+        "conflicts": CONFLICTS,
         "symbols": {n: f"{syms[n]:#x}" for n in SYMBOLS},
         "writes": writes,
     }

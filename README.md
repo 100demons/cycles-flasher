@@ -41,14 +41,13 @@ Going back to the official firmware is one click away.
 | **6-channel USB audio** | Each track gets its own USB channel (48 kHz / 32-bit): record six separate stems in your DAW. OS updates over USB keep working. | ✅ Tested |
 | **Syntakt engines** | Up to five real Syntakt machines added next to the original six: **SD VINTAGE**, **CP VINTAGE**, **SY TOY**, **SY BITS** and **SY SWARM**, with the Syntakt's knob names and defaults. They are read from your own Syntakt OS file. | ✅ Tested |
 | **Model-TG** | A full Sampler machine with seven playback modes, resampling, a beat-repeat page with master FX, slide trigs, Scale Lock and more, by [TinyGregAudio](https://github.com/TinyGregAudio/Model-TG). Works with the 6-channel mod and the Syntakt engines. | 🧪 Experimental |
-| **Sample preview** | An add-on to Model-TG: on a Sampler track, press FUNC + MACHINES (preset menu) and the track's pad plays the sample under the cursor, the way presets can be heard before you pick them. A sample not yet in memory loads on the first press; if there isn't enough free memory, or while Model-TG is resampling, the press plays nothing. The track keeps its own sample. Requires Model-TG (ticking it ticks Model-TG). | ✅ Tested |
-| **MACRO machine** | One extra machine with the 47 synthesis models of Braids, Émilie Gillet's open-source macro-oscillator, from [her own code](https://github.com/pichenettes/eurorack): analog-style waves, FM, vowels, physical models, drums, wavetables and noises. `SHAPE` picks the model, `COLOR` and `SWEEP` shape it. Works with Model-TG and the Syntakt engines (with the engines: tested with Model-TG and all five, other combinations experimental). | ✅ Tested |
-| **VA machines** | Four extra machines by DavidCaruso, from his Model-TG-VA-DR-v1 firmware: **VA**, a light two-oscillator synth, and **VA KICK**, **VA SNARE** and **VA HIHAT**, analog-style drums with named knobs. Works with Model-TG; not yet with MACRO or the Syntakt engines. | 🧪 Experimental |
-| **LFO 2, 3, 4** | Three more LFOs per track: on the LFO page, press `LFO` again for LFO 2, 3 and 4. LFO 2 is saved with the sound and can be p-locked; LFO 3 and 4 are for live play. With or without Model-TG. After DavidCaruso. | 🧪 Experimental |
+| **Sample preview** | An add-on to Model-TG: on a Sampler track, press FUNC + MACHINES (preset menu) and the track's pad plays the sample under the cursor, the way presets can be heard before you pick them. A sample not yet in memory loads on the first press; if there isn't enough free memory, or while Model-TG is resampling, the press plays nothing. The track keeps its own sample. Requires Model-TG (ticking it ticks Model-TG); reuses a short piece of [Model-TG's code](tweaks/model-cycles_OS1.13/LICENSE-Model-TG) (MIT). | ✅ Tested |
+| **MACRO machine** | One extra machine with the 47 synthesis models of Braids, Émilie Gillet's open-source macro-oscillator, from [her own code](https://github.com/pichenettes/eurorack): analog-style waves, FM, vowels, physical models, drums, wavetables and noises. `SHAPE` picks the model, `COLOR` and `SWEEP` shape it, `FUNC` + `PITCH` gives lo-fi (sample rate down to 4 kHz on the left, bit depth down to 2 bits on the right). Thirteen of the models are computed at 48 kHz for half the processor time. Works with Model-TG and the Syntakt engines. | ✅ Tested |
 | **Arpeggiator** | Hold several notes with RETRIG and they play as an arpeggio. `FUNC` + `RETRIG` adds direction (up, down, up/down, random, or in the order played) and range (1 to 4 octaves), saved with the pattern. | ✅ Tested |
 | **Chord Keys** | Play the selected CHORD track with the lower `TRIG 1–16` buttons: I–VII on 1–7, the same degrees one octave higher on 8–14, then I–II two octaves higher on 15–16. T1–T6 keep their normal controls. Choose a triad, 7th, 9th, 11th or 13th for each degree in `FUNC` + `RETRIG`, saved per track and pattern. SHAPE arranges the notes (BASE, close or open voicings); COLOR blends their levels. Does not combine with Model-TG. By Nico Heuser. | ✅ Tested |
-| **Trig generator** | Hold `SETTINGS` and press `TRACK` to fill the selected track with a Euclidean or random rhythm, with optional scale notes and random velocities. Requires Model-TG. After DavidCaruso. | 🧪 Experimental |
 | **Tempo up to 546 BPM** | The TEMPO knob, tap tempo, MIDI clock and saved projects go past 300 BPM. Tempo-synced LFOs stay in time. | ✅ Tested |
+| **Per-track filter** | Hold `MACHINES` and turn `SWEEP`: low-pass to the left, off in the centre, high-pass to the right, like a DJ mixer, with the Model:Samples' range. `CONTOUR` sets the resonance, `COLOR` and `SHAPE` a filter envelope. Real parameters: p-locks, LFO, velocity, MIDI CC 74/71. Not with Model-TG yet. | ✅ Tested |
+| **LFO 2, 3, 4** | Three more LFOs per track: on the LFO page, press `LFO` again for LFO 2, 3 and 4. LFO 2 is saved with the sound and can be p-locked; LFO 3 and 4 are for live play. With or without Model-TG, not with the per-track filter. After DavidCaruso. | 🧪 Experimental |
 | **Startup animation** | When the Model:Cycles starts, the four squares of the modded-cycles logo pop in and “modded-cycles” types itself underneath, instead of the original tile animation. Same duration. | ✅ Tested |
 | **Multi-line browser** | The preset browser shows three names at once in a small font instead of one in big letters, with a `>` on the name under the cursor. From an idea by a community member. | ✅ Tested |
 | **Volume and pan as numbers** | On the main screen, turning `LEVEL/DATA` shows the track's volume (0 to 127) as a number; with `FUNC` held, its pan (-64 to 63). `LEVEL/DATA` then moves in steps of 1 instead of 2 there. Based on a mod by djd_oz. | ✅ Tested |
@@ -61,8 +60,9 @@ Going back to the official firmware is one click away.
 | **Scrolling names** | Sound names too long for the screen scroll in the sound browser. By drumkilla. | ✅ Tested |
 | **Samples OS** | Turns the Model:Cycles into a Model:Samples, built from both official OS files. Coming back needs a MIDI interface. | ✅ Tested |
 | **Cycles OS for Model:Samples** | The other way round: turns a Model:Samples into a Model:Cycles, over USB, from both official OS files. Going back to the Model:Samples OS works over USB too, from the same tab. | 🧪 Experimental |
+| **Mods on a Model:Samples** | Pick your machine in the Mods tab: a Model:Samples gets the Model:Cycles OS with the mods you tick (Model-TG's Sampler plays your samples), over USB, and can change mods later. The flasher always installs the Model:Cycles OS, whatever the machine. Original flasher by RDS (AIM), integrated into Modded Cycles by DaftMaple. | ✅ Tested |
 
-The mods can be combined freely (the two MIDI THRU mods are alternatives; Samples OS and Cycles OS for Model:Samples are separate installs; Chord Keys and Model-TG not together; the VA machines not with MACRO or the Syntakt engines). Each one is explained step by step, with the buttons to press, in the
+The mods can be combined freely (the two MIDI THRU mods are alternatives; Samples OS and Cycles OS for Model:Samples are separate installs; Chord Keys and Model-TG not together; LFO 2, 3, 4 and the per-track filter not together). Each one is explained step by step, with the buttons to press, in the
 **[guide](https://18nelli18.github.io/Modded-Cycles/guide/)**.
 
 <p align="center">
@@ -137,14 +137,22 @@ The research behind it (firmware analysis, hardware architecture, engine ports, 
 
 ## Credits
 
-This project stands on the work of others, all MIT licensed:
+This project stands on the work of others:
 
-- **[scottmetoyer/ms-multi-output](https://github.com/scottmetoyer/ms-multi-output)**: the original 6-channel USB mod.
-- **[drumkilla/elektron-model-tweaks](https://github.com/drumkilla/elektron-model-tweaks)**: latching mute, trig preview, scrolling names, and the `mtlib` toolkit and tweak format used by the build.
-- **[TinyGregAudio/Model-TG](https://github.com/TinyGregAudio/Model-TG)**: the Sampler machine and everything that comes with it ([license](tweaks/model-cycles_OS1.13/LICENSE-Model-TG)).
-- **[pichenettes/eurorack](https://github.com/pichenettes/eurorack)**: Émilie Gillet's Braids code, compiled as is for the synthesis models of the MACRO machine ([license](tweaks/model-cycles_OS1.13/LICENSE-Braids)).
-- **[dagargo/elektroid](https://github.com/dagargo/elektroid)**: the Elektron Transfer update protocol behind fast USB flashing.
-- **[mischa85/elektron-firmware-tool](https://github.com/mischa85/elektron-firmware-tool)** and **[mxldyn/octamax](https://github.com/mxldyn/octamax)**: firmware tooling and reverse-engineering methods.
+- **[scottmetoyer/ms-multi-output](https://github.com/scottmetoyer/ms-multi-output)** (MIT): the original 6-channel USB mod.
+- **[drumkilla/elektron-model-tweaks](https://github.com/drumkilla/elektron-model-tweaks)** (MIT): latching mute, trig preview, scrolling names, and the `mtlib` toolkit and tweak format used by the build.
+- **[TinyGregAudio/Model-TG](https://github.com/TinyGregAudio/Model-TG)** (MIT): the Sampler machine and everything that comes with it ([license](tweaks/model-cycles_OS1.13/LICENSE-Model-TG)).
+- **[pichenettes/eurorack](https://github.com/pichenettes/eurorack)** (MIT): Émilie Gillet's Braids code, compiled as is for the synthesis models of the MACRO machine ([license](tweaks/model-cycles_OS1.13/LICENSE-Braids)).
+- **[dagargo/elektroid](https://github.com/dagargo/elektroid)** (GPL-3.0): the Elektron Transfer update protocol behind fast USB flashing.
+- **[mischa85/elektron-firmware-tool](https://github.com/mischa85/elektron-firmware-tool)** (MIT): the firmware container format and its signature, on which `mtlib` is based.
+- **[mxldyn/octamax](https://github.com/mxldyn/octamax)** and **[bryantysinger/octa-bt-pt](https://github.com/bryantysinger/octa-bt-pt)**: reverse-engineering and patching methods (ideas only, no code).
+
+## License
+
+Modded-Cycles' own code, tweak files, website and notes are released under the [MIT License](LICENSE). Third-party
+code keeps its own license: see [THIRD-PARTY-NOTICES.md](THIRD-PARTY-NOTICES.md). No Elektron firmware is included or
+licensed here; Elektron, Model:Cycles, Model:Samples and Syntakt are trademarks of Elektron Music Machines MAV AB. To
+contribute, see [CONTRIBUTING.md](CONTRIBUTING.md).
 
 If these mods are useful to you, you can support the project on **[Ko-fi](https://ko-fi.com/18nelli)**.
 Questions, feedback and feature requests are welcome on the **[Discord](https://discord.gg/hWegtJZcmm)**; bug reports also fit in the [issues](https://github.com/18nelli18/Modded-Cycles/issues).

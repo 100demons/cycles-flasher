@@ -24,11 +24,12 @@ Write for musicians: what changes on the machine, which buttons to press, the li
 
 ## Adding a mod to the flasher
 
-1. Add it to `FEATURES` in `tools/gen_flasher_tweaks.py` (`"status": "experimental"`, `cat`, `credit`, `excludes`,
-   `includes`, `needs` or `requires` if any), then `python3 tools/gen_flasher_tweaks.py` to regenerate
-   `flasher/tweaks.js`. `cat` is the flasher section the mod shows in, one of `CATS` (`pack`, `sound`, `seq`, `live`,
-   `screen`, `io`); without it the mod lands at the end, in « Other mods ». The order of `FEATURES` is the build order
-   (the `REF_MAINOS` keys); the page shows the mods by section, in `FEATURES` order inside a section.
+1. Add it to `FEATURES` in `tools/gen_flasher_tweaks.py` (`"status": "experimental"`, `cat`, `credit`, `license` when
+   the mod carries outside code, `excludes`, `includes`, `needs` or `requires` if any), then
+   `python3 tools/gen_flasher_tweaks.py` to regenerate `flasher/tweaks.js`. `cat` is the flasher section the mod shows
+   in, one of `CATS` (`pack`, `sound`, `seq`, `live`, `screen`, `io`); without it the mod lands at the end, in « Other
+   mods ». The order of `FEATURES` is the build order (the `REF_MAINOS` keys); the page shows the mods by section, in
+   `FEATURES` order inside a section.
    `"requires": "<card id>"` is for an add-on that only works with another card (sample preview needs Model-TG):
    ticking it ticks that card too (with that card's own exclusions), unticking that card unticks it, its Details say
    "Works with …", and `ref_mainos.py` only lists combinations that hold both. Give the add-on the same `with` as the

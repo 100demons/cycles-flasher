@@ -10,7 +10,9 @@
  * désigné. Trois accroches :
  *   - pv_parse (navigateur, tâche de l'interface) : sur une piste Sampler, un fichier qui n'est pas un preset est
  *     écouté comme un sample : une copie du son de la piste, nommée « SMP » + 8 chiffres hexadécimaux de son
- *     empreinte, comme les sample locks de Model-TG (pool_store_hook). L'OS la désigne ensuite comme un preset ;
+ *     empreinte, comme les sample locks de Model-TG ; cette copie et ce nom reprennent, instruction pour
+ *     instruction, ceux de son pool_store_hook (TinyGregAudio, licence MIT, texte dans
+ *     tweaks/model-cycles_OS1.13/LICENSE-Model-TG). L'OS la désigne ensuite comme un preset ;
  *   - pv_note (note jouée sur le pad, tâche de l'interface) : si le son désigné nomme un sample qui n'est pas en
  *     mémoire, il est chargé avant la note, comme le préchargement de Model-TG (pd_mode 1 : seulement dans la place
  *     libre, en ne chassant que des samples que le projet n'utilise pas). S'il ne se charge pas (ou si le chargeur
@@ -69,7 +71,7 @@ pv_parse:
 	bcs.s	.Lnone			/* moins que l'en-tête de 64 o et un échantillon */
 	tst.l	%d3
 	beq.s	.Lnone
-	lea	pv_src, %a0		/* le son de la piste… */
+	lea	pv_src, %a0		/* le son de la piste… (d'après pool_store_hook de Model-TG, MIT) */
 	movea.l	%a3, %a1
 	moveq	#24, %d0
 1:	move.l	(%a1)+, (%a0)+
