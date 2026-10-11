@@ -28,6 +28,12 @@
  * premiere note apres un changement de machine (marque en v+0x2c, effacee par la remise a zero de la voix,
  * 0x400a7ab8) et quand la voix s'est tue. Une voix muette (enveloppe d'ampli fermee, pas de trig) n'est pas
  * calculee.
+ *
+ * GOV_SKIP (avec les moteurs du Syntakt, notes/54 par. 11) : leur regulateur de charge cesse d'appeler update et
+ * render d'une voix restee faible, ou eteinte par un fondu sous la surcharge, jusqu'a son prochain trig. ACID ne
+ * voit alors ni la fin de la note, ni que la voix s'est tue : sans ce test, ce trig glisserait depuis une note
+ * eteinte. Un ecart de plus de 3 blocs entre deux appels (minuteur DMA 0, 90 112 ticks par bloc) vaut une voix tue :
+ * le trig rejoue la note, comme apres un silence.
  */
 #include "acid_dsp.h"
 
@@ -49,6 +55,10 @@
 #define P16(o)      (*(const s16 *)(p + (o)))
 
 #define IDLE_LEVEL  (1 << 14)                        /* enveloppe d'ampli sous -102 dB : voix muette */
+#ifdef GOV_SKIP
+#define TIMER       (*(volatile u32 *)0xfc07000c)     /* minuteur DMA 0, 135,168 MHz */
+#define SKIP_TICKS  (3 * 90112)                      /* 3 blocs de 32 trames */
+#endif
 
 struct track {
 	acid_t s;
@@ -59,6 +69,9 @@ struct track {
 	s32 mach;                                        /* MACHINE (p+0x12) qui a choisi ACID sur cette voix */
 	s32 gain;                                        /* gain de velocite vise apres un slide ; ramp : en route */
 	s32 ramp;
+#ifdef GOV_SKIP
+	u32 seen;                                        /* minuteur au dernier appel */
+#endif
 };
 
 static struct track trk[6];
@@ -87,6 +100,14 @@ void acid_update(s32 pmod, char *v, const char *p)
 		tr->mach = (s8)p[0x12];
 		V32(MARK_OFF) = MARK;
 	}
+#ifdef GOV_SKIP
+	{
+		u32 now = TIMER;
+		if (now - tr->seen > SKIP_TICKS)             /* pas appelee depuis plus de 3 blocs : la voix s'est tue */
+			tr->idle = 1;
+		tr->seen = now;
+	}
+#endif
 	/* chaine d'ampli d'origine, reglee comme TONE (0x400aa7b8), sans PUNCH (il choisit la forme d'onde) */
 	dec = (s8)p[0x24];
 	dec = dec < 0 ? 0 : (dec > 127 ? 127 : dec);

@@ -112,25 +112,47 @@ def bridge_of(tw, codes, tg, lay):
     return dict(bridge=bytes.fromhex(parts[gs.DST_BRIDGE]["hex"]), hot=hot, syms=syms, gov=tw["gov"], extra=extra)
 
 
-def build_tweak(img, st_img, repo, codes, tg=None):
-    """Tweak des moteurs codes avec MACRO après eux. tg : Model-TG (gs.tg_context), avec set_base(PAY_TG)."""
+_MACRO = {}
+
+
+def compile_macro(repo, pay):
+    """MACRO lié à pay + MACRO_AT (variables à pay + MACRO_BSS) : (octets, symboles, fin du BSS), compilé une fois."""
+    if (repo, pay) not in _MACRO:
+        with tempfile.TemporaryDirectory() as d:
+            _MACRO[repo, pay] = gm.compile_machine(pathlib.Path(d), repo, pay + MACRO_AT, pay + MACRO_BSS,
+                                                   pay + MACRO_BSS)
+    return _MACRO[repo, pay]
+
+
+def build_tweak(img, st_img, repo, codes, tg=None, macro=True, acid=None):
+    """Tweak des moteurs codes avec MACRO après eux. tg : Model-TG (gs.tg_context), avec set_base(PAY_TG).
+    acid : la machine ACID en plus, après MACRO (ou sans MACRO, macro=False), déjà liée à sa place
+    (gen_acid_combos.py : dict(machine, at, blob, end), notes/54 §11)."""
     pay = gs.PAY_TG if tg else gs.PAY_ALONE
     gs.set_base(pay)
     tw = versioned(codes, bool(tg))
     an = gs.analyse(st_img, gs.generation(codes))
     lay = an["lay"]
-    if lay["end"] > pay + MACRO_AT:
-        raise SystemExit(f"!! moteurs jusqu'à {lay['end']:#x} : MACRO_AT trop bas")
+    low = pay + MACRO_AT if macro else acid["at"]          # le plus bas de nos machines
+    if lay["end"] > low:
+        raise SystemExit(f"!! moteurs jusqu'à {lay['end']:#x} : nos machines commencent à {low:#x}")
     br = bridge_of(tw, codes, tg, lay)
-    with tempfile.TemporaryDirectory() as d:
-        blob, syms, bss_end = gm.compile_machine(pathlib.Path(d), repo, pay + MACRO_AT, pay + MACRO_BSS,
-                                                 pay + MACRO_BSS)
+    machines, parts, end = [], list(br["extra"]), 0
+    if macro:
+        blob, syms, end = compile_macro(repo, pay)
+        machines.append(dict(gm.MACHINE, label="MACRO", update=syms["macro_update"], render=syms["macro_render"]))
+        parts.append({"dest": f"{pay + MACRO_AT:#x}", "hex": blob.hex()})
+    if acid:
+        if end > acid["at"]:
+            raise SystemExit(f"!! MACRO jusqu'à {end:#x} : ACID commence à {acid['at']:#x}")
+        machines.append(acid["machine"])
+        parts.append({"dest": f"{acid['at']:#x}", "hex": acid["blob"].hex()})
+        end = acid["end"]
+    bss_end = end
     if tg and bss_end > pay + TG_ROOM:
         raise SystemExit(f"!! charge utile jusqu'à {bss_end:#x} : au-delà de la place laissée par Model-TG")
-    macro = dict(gm.MACHINE, label="MACRO", update=syms["macro_update"], render=syms["macro_render"])
-    # 2e étage du crochet de démarrage (stub.S, BOOT2) : entre la fin des moteurs et MACRO
-    own = dict(machines=[macro], bridge=br, end=bss_end, boot2=((lay["end"] + 15) & ~15, pay + MACRO_AT),
-               parts=br["extra"] + [{"dest": f"{pay + MACRO_AT:#x}", "hex": blob.hex()}])
+    # 2e étage du crochet de démarrage (stub.S, BOOT2) : entre la fin des moteurs et nos machines
+    own = dict(machines=machines, bridge=br, end=bss_end, boot2=((lay["end"] + 15) & ~15, low), parts=parts)
     out, ndesc = gs.build_tweak(img, st_img, codes, tg=tg, own=own)
 
     first = gs.TG_FIRST if tg else 6
@@ -166,7 +188,7 @@ def build_tweak(img, st_img, repo, codes, tg=None):
     out.update(rest)
     out["description"] += [d for d in tw["description"] if d == gov_asm.NOTE]
     out["symbols"] = {k: f"{syms[n]:#x}" for k, n in (("macro_update", "macro_update"), ("macro_render", "macro_render"),
-                                                       ("braids_render", gm.BRAIDS_RENDER))}
+                                                       ("braids_render", gm.BRAIDS_RENDER))} if macro else {}
     # taille rangée : la charge utile telle qu'au démarrage, compressée comme par build.py et le flasher
     rt = build.payload_runtime(out, img, st_img)
     packed = len(aplib_grow.pack(rt))
@@ -176,7 +198,7 @@ def build_tweak(img, st_img, repo, codes, tg=None):
     # place dans l'image, pour tools/check_overlaps.py (sans fichier d'Elektron) : mesurée avec le Syntakt OS du
     # générateur (1.42) ; build.py et le flasher revérifient la limite sur le vrai build
     out["append"]["stored"] = packed
-    return out, dict(ndesc=ndesc, size=len(rt), packed=packed, end=at + packed, macro=len(blob))
+    return out, dict(ndesc=ndesc, size=len(rt), packed=packed, end=at + packed, macro=len(blob) if macro else 0)
 
 
 def main():

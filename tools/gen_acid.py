@@ -199,15 +199,17 @@ THE SOFTWARE.
 """.format(repo=OPEN303, commit=OPEN303_COMMIT[:7])
 
 
-def compile_machine(tmp, pay, tables_h):
-    """La passerelle et le cœur d'ACID liés à pay (code, tables) et pay + BSS_OFF (variables). Renvoie (octets,
-    symboles, fin du BSS)."""
+def compile_machine(tmp, pay, tables_h, bss_at=None, code_end=None, defs=()):
+    """La passerelle et le cœur d'ACID liés à pay (code, tables) et bss_at (variables ; pay + BSS_OFF par défaut).
+    Le code et les tables doivent finir avant code_end (gs.STUBS par défaut). defs : options -D du compilateur
+    (GOV_SKIP avec les moteurs du Syntakt, gen_acid_combos.py). Renvoie (octets, symboles, fin du BSS)."""
     (tmp / "acid_tables.h").write_text(tables_h)          # les tables de ce générateur, pas celles du dépôt
     for f in ("acid.c", "acid_dsp.h"):
         (tmp / f).write_bytes((SRC / f).read_bytes())
-    bss_at = pay + BSS_OFF
+    bss_at = pay + BSS_OFF if bss_at is None else bss_at
+    code_end = gs.STUBS if code_end is None else code_end
     o = tmp / "acid.o"
-    gx.run([gx.CROSS + "gcc", *CFLAGS, f"-I{tmp}", "-c", str(tmp / "acid.c"), "-o", str(o)])
+    gx.run([gx.CROSS + "gcc", *CFLAGS, *(f"-D{d}" for d in defs), f"-I{tmp}", "-c", str(tmp / "acid.c"), "-o", str(o)])
     ld, elf, out = tmp / "link.ld", tmp / "acid.elf", tmp / "acid.bin"
     ld.write_text(LINK.format(code=pay, bss=bss_at))
     gx.run([gx.CROSS + "ld", "-T", str(ld), "--gc-sections", "--no-warn-rwx-segments", "-e", "acid_update",
@@ -225,7 +227,7 @@ def compile_machine(tmp, pay, tables_h):
     blob = out.read_bytes()
     syms = {p[2]: int(p[0], 16) for p in (l.split() for l in gx.run([gx.CROSS + "nm", str(elf)]).splitlines())
             if len(p) == 3}
-    if pay + len(blob) > gs.STUBS:
+    if pay + len(blob) > code_end:
         raise SystemExit(f"!! code trop grand : {len(blob)} o")
     bss = secs.get(".bss", (bss_at, 0))
     if bss[0] != bss_at:
@@ -248,8 +250,8 @@ def build_tweak(img, tg=None):
     with tempfile.TemporaryDirectory() as d:
         tmp = pathlib.Path(d)
         blob, syms, bss_end = compile_machine(tmp, pay, tables_header())
-        writes, append = gm.added_machine(img, tg, MACHINE, tmp, blob, syms["acid_update"], syms["acid_render"],
-                                          bss_end)
+        writes, append = gm.added_machine(img, tg, [dict(MACHINE, update=syms["acid_update"],
+                                                         render=syms["acid_render"])], tmp, [(pay, blob)], bss_end)
     tid = "acid-tg" if tg else "acid"
     ids = other_ids() | {"acid", "acid-tg", "model-tg"} | (set() if tg else {"model-tg-st"})
     out = {

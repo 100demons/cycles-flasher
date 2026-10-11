@@ -48,20 +48,25 @@ async function pickEngines(doc, codes) {
 // or the Syntakt engines of a combination, alone or with Model-TG), including the tweak a card takes with another one ("with").
 function cardsOf(w, key) {
   const own = {}, feats = w.MC_TWEAKS.features;
+  const cardsOfKey = (k) => k.split("+").map((id) => feats.find((x) => x.id === id));
   for (const f of feats) {
     if (f.engines) for (const c of f.combos) {
       own[c.id] = own[c.tg] = { f, engines: c.engines };
-      for (const g of feats.filter((x) => x.joins === f.id && c[x.id]))   // MACRO with the engines (notes/50): both cards
-        own[c[g.id].id] = own[c[g.id].tg] = { f, engines: c.engines, also: g };
+      for (const k of f.joined || [])          // MACRO, ACID with the engines (notes/50, notes/54 §11): all the cards
+        own[c[k].id] = own[c[k].tg] = { f, engines: c.engines, also: cardsOfKey(k) };
     }
-    else for (const v of f.variants) own[v.id] = { f, variant: v.id };
+    else {
+      for (const v of f.variants) own[v.id] = { f, variant: v.id };
+      for (const [k, v] of Object.entries(f.versions || {}))     // MACRO with ACID: both cards
+        own[v.id] = own[v.tg] = { f, variant: f.variants[0].id, also: cardsOfKey(k) };
+    }
   }
   for (const f of feats)
     for (const alt of Object.values(f.with || {})) if (!own[alt]) own[alt] = f.engines ? { f } : { f, variant: f.variants[0].id };
   const sel = new Map();
   for (const id of key.split("+")) {
     sel.set(own[id].f.id, own[id]);
-    if (own[id].also) sel.set(own[id].also.id, { f: own[id].also, variant: own[id].also.variants[0].id });
+    for (const g of own[id].also || []) sel.set(g.id, { f: g, variant: g.variants[0].id });
   }
   return sel;
 }
@@ -213,11 +218,12 @@ async function main() {
     check(typeof w.MCBuilder === "object" && typeof w.MCFlasher === "object", "MCBuilder + MCFlasher present");
     const ids = w.MC_TWEAKS.tweaks.map((x) => x.id);
     const nEng = w.MC_TWEAKS.features.find((f) => f.engines).engines.length;
-    check(ids.slice(0, 25).join() === "6ch-usbup,model-tg,model-tg-st,sample-preview,sample-preview-st,latching-mute,trig-preview,browser-scroll,trig-hold,arp,tempo-max,boot-anim,multiline-browser,level-pan-values,trigless-dim,midi-both,midi-live-both,macro,macro-tg,acid,acid-tg,chord-keys,track-filter,lfo-plus,syntakt-sd"
-      && ids.length === 24 + 4 * ((1 << nEng) - 1) && ids.includes("syntakt-sd-cp") && ids.includes("syntakt-tg-sd-cp-toy-bits")
+    check(ids.slice(0, 27).join() === "6ch-usbup,model-tg,model-tg-st,sample-preview,sample-preview-st,latching-mute,trig-preview,browser-scroll,trig-hold,arp,tempo-max,boot-anim,multiline-browser,level-pan-values,trigless-dim,midi-both,midi-live-both,macro,macro-tg,macro-acid,macro-acid-tg,acid,acid-tg,chord-keys,track-filter,lfo-plus,syntakt-sd"
+      && ids.length === 26 + 8 * ((1 << nEng) - 1) && ids.includes("syntakt-sd-cp") && ids.includes("syntakt-tg-sd-cp-toy-bits")
+      && ids.includes("syntakt-sd-acid") && ids.includes("syntakt-tg-sd-cp-toy-bits-swarm-macro-acid")
       && ids.includes("syntakt-sd-macro") && ids.includes("syntakt-tg-sd-cp-toy-bits-swarm-macro")
       && ids.includes("arp") && !ids.some((x) => /exact|snare|multiout/.test(x)) && w.MC_TWEAKS.features.length === 21,
-      `MC_TWEAKS: only USB-friendly tweaks, one tweak per choice of the ${nEng} Syntakt engines (no SNARE replacement), alone and with Model-TG, with and without MACRO: ${ids.length} tweaks`);
+      `MC_TWEAKS: only USB-friendly tweaks, one tweak per choice of the ${nEng} Syntakt engines (no SNARE replacement), alone and with Model-TG, with and without MACRO and ACID: ${ids.length} tweaks`);
     check(/build \d{4}-/.test(text(doc, "build-stamp")), "version stamp shown");
     const srcs = [...doc.querySelectorAll("script[src]")].map((x) => x.getAttribute("src"));
     check(["builder.js", "tweaks.js", "flasher.js", "app.js"].every((f) => srcs.some((x) => x.startsWith(f + "?")))
@@ -293,7 +299,7 @@ async function main() {
     box("feat-syntakt").click(); await wait(5);
     const allThree = chosen();
     const saidTg = /SDVtg \+ MACRO with Model-TG\./.test(textOf(doc, "#mod-syntakt .combo"))
-      && /With the MACRO machine: it comes last/.test(textOf(doc, "#mod-syntakt"));
+      && /With the MACRO machine: it comes right after these engines/.test(textOf(doc, "#mod-syntakt"));
     box("feat-model-tg").click(); await wait(5);
     const withEng = chosen();
     const bothOn = box("feat-macro").checked && box("feat-syntakt").checked && /SDVtg \+ MACRO\./.test(textOf(doc, "#mod-syntakt .combo"))
@@ -303,27 +309,39 @@ async function main() {
     check(macroAlone === "macro" && macroTg === "model-tg-st,macro-tg" && macroNote && allThree === "model-tg-st,syntakt-tg-sd-macro"
       && saidTg && withEng === "syntakt-sd-macro" && bothOn && !chosen().length && doc.querySelector('#features a[href$="#macro"]'),
       `MACRO: alone ${macroAlone}, with Model-TG ${macroTg}, its note shown; with the Syntakt engines ${withEng}, and with Model-TG too ${allThree}`);
-    // ACID (notes/54): like MACRO, alone or after Model-TG's base; it can't go with MACRO or the Syntakt engines (same
-    // place in the firmware): ticking one of them unticks it, and the other way round
+    // ACID (notes/54): like MACRO, alone or after Model-TG's base. With MACRO both stay ticked and MACRO takes its
+    // version with ACID; with the Syntakt engines, they take their version with ACID (and MACRO), ACID always last
+    // (notes/54 §11). Those versions are new: Experimental until tried on the machine
+    const tagAt = (id) => doc.querySelector(`label[for=feat-${id}] .tag`).textContent;
     box("feat-acid").click(); await wait(5);
-    const acidAlone = chosen();
+    const acidAlone = chosen(), acidTag = tagAt("acid");
     box("feat-model-tg").click(); await wait(5);
     const acidTg = chosen();
     const acidNote = /needs a firmware with ACID at the same place/.test(text(doc, "features"));
     box("feat-macro").click(); await wait(5);
-    const macroWins = box("feat-macro").checked && !box("feat-acid").checked && chosen() === "model-tg-st,macro-tg";
-    box("feat-acid").click(); await wait(5);
-    const acidWins = box("feat-acid").checked && !box("feat-macro").checked && chosen() === "model-tg-st,acid-tg";
-    const acidSays = /Doesn't go with the mod/.test(textOf(doc, "#mod-macro")) && /both add a machine at the same place/.test(textOf(doc, "#det-acid"));
-    box("feat-model-tg").click(); await wait(5);
+    const macroAcidTg = chosen(), keptBoth = box("feat-macro").checked && box("feat-acid").checked;
+    const newTags = tagAt("acid") === "Experimental" && tagAt("macro") === "Experimental";
     box("feat-syntakt").click(); await wait(5);
-    const engWin = box("feat-syntakt").checked && !box("feat-acid").checked && chosen() === "syntakt-sd";
+    const allFour = chosen(), fourTags = tagAt("acid") === "Experimental" && tagAt("syntakt") === "Experimental";
+    const saidAll = /SDVtg \+ MACRO \+ ACID with Model-TG\./.test(textOf(doc, "#mod-syntakt .combo"))
+      && /With the ACID machine: it comes last/.test(textOf(doc, "#mod-syntakt"));
+    box("feat-model-tg").click(); await wait(5);
+    const engMacroAcid = chosen();
+    box("feat-macro").click(); await wait(5);
+    const engAcid = chosen(), engSaid = /SDVtg \+ ACID\./.test(textOf(doc, "#mod-syntakt .combo"));
+    const det = /With Real Syntakt engines: checked in the emulator/.test(textOf(doc, "#det-acid"))
+      && /With MACRO machine: checked in the emulator/.test(textOf(doc, "#det-acid"))
+      && /With ACID machine: checked in the emulator/.test(textOf(doc, "#det-macro"));
+    box("feat-syntakt").click(); await wait(5);
+    const acidBack = chosen();
     box("feat-acid").click(); await wait(5);
-    const acidBack = box("feat-acid").checked && !box("feat-syntakt").checked && chosen() === "acid";
-    box("feat-acid").click(); await wait(5);
-    check(acidAlone === "acid" && acidTg === "model-tg-st,acid-tg" && acidNote && macroWins && acidWins && acidSays && engWin && acidBack
+    check(acidAlone === "acid" && acidTag === "Tested" && acidTg === "model-tg-st,acid-tg" && acidNote
+      && macroAcidTg === "model-tg-st,macro-acid-tg" && keptBoth && newTags
+      && allFour === "model-tg-st,syntakt-tg-sd-macro-acid" && fourTags && saidAll
+      && engMacroAcid === "syntakt-sd-macro-acid" && engAcid === "syntakt-sd-acid" && engSaid && det && acidBack === "acid"
       && !chosen().length && doc.querySelector('#features a[href$="#acid"]'),
-      `ACID: alone ${acidAlone}, with Model-TG ${acidTg}, its note shown; ticking MACRO or the Syntakt engines unticks it, and the other way round`);
+      `ACID: alone ${acidAlone}, with Model-TG ${acidTg}; with MACRO ${macroAcidTg}; with the Syntakt engines ${allFour}, `
+      + `${engMacroAcid}, ${engAcid}; Experimental together, its note and details shown`);
     // Model-TG holds drumkilla's tweaks: ticked, it shows them ticked and locked, "(included with Model-TG)", and
     // builds without them; unticked, they are free again. With the Syntakt engines it makes the combined version
     // (notes/31): its base, then the engines' tweak built on top of it
@@ -1248,6 +1266,20 @@ async function main() {
     check(sent.length - n2 === w.MCFlasher.splitMessages(fm.raw).length
       && /after Chord come CPVtg \(CP VINTAGE\), MACRO \(47 models from Braids\)\./.test(text(doc, "result")),
       "full transfer + message for CPVtg + MACRO: " + text(doc, "result").slice(0, 110));
+    // ACID ticked too (notes/54 §11): the engines' version with MACRO and ACID, ACID named last
+    doc.getElementById("feat-acid").click();
+    await settle(w);
+    const fa = app.state.fw;
+    check(fa && (fa.ref || fa.modsRef) && fa.sdv === "syntakt-cp-macro-acid" && fa.name.endsWith("syntakt-cp-macro-acid.syx"),
+      `CPVtg + MACRO + ACID -> checked build ${fa ? fa.name : ""}`);
+    const n3 = sent.length;
+    doc.getElementById("flash").click();
+    for (let i = 0; i < 200 && app.state.sending; i++) await wait(50);
+    check(sent.length - n3 === w.MCFlasher.splitMessages(fa.raw).length
+      && /after Chord come CPVtg \(CP VINTAGE\), MACRO \(47 models from Braids\), ACID \(acid bass in the style of the TB-303\)\./.test(text(doc, "result")),
+      "full transfer + message for CPVtg + MACRO + ACID: " + text(doc, "result").slice(0, 140));
+    doc.getElementById("feat-acid").click();
+    await settle(w);
     doc.getElementById("feat-macro").click();
     await settle(w);
     doc.getElementById("eng-cp").click();
