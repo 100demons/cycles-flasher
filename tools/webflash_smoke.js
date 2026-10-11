@@ -212,10 +212,10 @@ async function main() {
     check(typeof w.MCBuilder === "object" && typeof w.MCFlasher === "object", "MCBuilder + MCFlasher present");
     const ids = w.MC_TWEAKS.tweaks.map((x) => x.id);
     const nEng = w.MC_TWEAKS.features.find((f) => f.engines).engines.length;
-    check(ids.slice(0, 21).join() === "6ch-usbup,model-tg,model-tg-st,sample-preview,sample-preview-st,latching-mute,trig-preview,browser-scroll,trig-hold,arp,tempo-max,boot-anim,multiline-browser,level-pan-values,trigless-dim,midi-both,midi-live-both,macro,macro-tg,chord-keys,syntakt-sd"
-      && ids.length === 20 + 4 * ((1 << nEng) - 1) && ids.includes("syntakt-sd-cp") && ids.includes("syntakt-tg-sd-cp-toy-bits")
+    check(ids.slice(0, 22).join() === "6ch-usbup,model-tg,model-tg-st,sample-preview,sample-preview-st,latching-mute,trig-preview,browser-scroll,trig-hold,arp,tempo-max,boot-anim,multiline-browser,level-pan-values,trigless-dim,midi-both,midi-live-both,macro,macro-tg,chord-keys,track-filter,syntakt-sd"
+      && ids.length === 21 + 4 * ((1 << nEng) - 1) && ids.includes("syntakt-sd-cp") && ids.includes("syntakt-tg-sd-cp-toy-bits")
       && ids.includes("syntakt-sd-macro") && ids.includes("syntakt-tg-sd-cp-toy-bits-swarm-macro")
-      && ids.includes("arp") && !ids.some((x) => /exact|snare|multiout/.test(x)) && w.MC_TWEAKS.features.length === 18,
+      && ids.includes("arp") && !ids.some((x) => /exact|snare|multiout/.test(x)) && w.MC_TWEAKS.features.length === 19,
       `MC_TWEAKS: only USB-friendly tweaks, one tweak per choice of the ${nEng} Syntakt engines (no SNARE replacement), alone and with Model-TG, with and without MACRO: ${ids.length} tweaks`);
     check(/build \d{4}-/.test(text(doc, "build-stamp")), "version stamp shown");
     const srcs = [...doc.querySelectorAll("script[src]")].map((x) => x.getAttribute("src"));
@@ -225,8 +225,8 @@ async function main() {
     // display order: by section (Packs, Sounds & machines, Sequencer, Live playing, Screen & browsing, USB & MIDI),
     // FEATURES order inside a section; the build keeps FEATURES order (checked in 1b)
     const feats = [...doc.querySelectorAll("#features input[type=checkbox]")].map((c) => c.id);
-    check(feats.join() === "feat-model-tg,feat-macro,feat-syntakt,feat-trig-preview,feat-trig-hold,feat-arp,feat-tempo-max,feat-trigless-dim,feat-latching-mute,feat-chord-keys,feat-sample-preview,feat-browser-scroll,feat-boot-anim,feat-multiline-browser,feat-level-pan-values,feat-usb6,feat-midi-both,feat-midi-live-both",
-      "18 feature rows, by section: " + JSON.stringify(feats));
+    check(feats.join() === "feat-model-tg,feat-macro,feat-track-filter,feat-syntakt,feat-trig-preview,feat-trig-hold,feat-arp,feat-tempo-max,feat-trigless-dim,feat-latching-mute,feat-chord-keys,feat-sample-preview,feat-browser-scroll,feat-boot-anim,feat-multiline-browser,feat-level-pan-values,feat-usb6,feat-midi-both,feat-midi-live-both",
+      "19 feature rows, by section: " + JSON.stringify(feats));
     check(w.MC_TWEAKS.features.every((f) => doc.querySelector(`#cat-${f.cat || "other"} #mod-${f.id} #feat-${f.id}`)),
       "every feature has a row in its section (cat)");
     const tagOfFeat = (f) => (f.status === "tested" ? "Tested" : "Experimental");
@@ -424,6 +424,15 @@ async function main() {
     check(/Chord Keys/.test(text(doc, "features"))
       && doc.querySelector('#features a[href$="#chord-keys"]'),
       "FR: chord keyboard translated, with its guide link");
+    check(/Filtre par piste \(LP \/ OFF \/ HP\)/.test(text(doc, "features")) && doc.querySelector('#features a[href$="#track-filter"]'),
+      "FR: per-track filter card translated, with its guide link");
+    doc.getElementById("feat-model-tg").click(); await wait(5);
+    doc.getElementById("feat-track-filter").click(); await wait(5);
+    const tfOn = doc.getElementById("feat-track-filter").checked, tgOff = !doc.getElementById("feat-model-tg").checked;
+    doc.getElementById("feat-model-tg").click(); await wait(5);
+    check(tfOn && tgOff && doc.getElementById("feat-model-tg").checked && !doc.getElementById("feat-track-filter").checked,
+      "per-track filter and Model-TG can't be ticked together: ticking one unticks the other");
+    doc.getElementById("feat-model-tg").click(); await wait(5);
     doc.getElementById("feat-chord-keys").click(); await wait(5);
     check(doc.getElementById("feat-chord-keys").checked && !doc.getElementById("feat-model-tg").checked,
       "Chord Keys selection excludes Model-TG");
