@@ -263,6 +263,34 @@ python3 tools/emu/test_crossflash_samples.py --cycles model-cycles_OS1.13.syx --
 | `model-cycles_OS1.13_for-model-samples.syx` | `c06c23f31e50fac6ad40cd0f633acd4a7da4f63c929dff563dae887b93105dd4` |
 | son MAIN OS | `b6fbc48f7d7d07cecae3859e07270fa2298f393e8afa2643144bdb4efc317aad` |
 | `model-samples_OS1.13_back-from-cycles-os.syx` | `d63ce13dd1a5039d11b60d3f69d4e88e9d0f56fb2e7350c105ec641d32083680` |
+
+### OS Cycles avec mods pour Model:Samples
+
+Le firmware est **toujours l'OS du Model:Cycles**, avec les mods choisis, quelle que soit la machine
+([note 57](notes/57-os-cycles-quelle-que-soit-la-machine.md)) : sur un Model:Samples, le sampling vient de Model-TG. On
+construit les mods comme pour un Model:Cycles, puis `tools/mods_for_samples.py` met ce MAIN OS dans le conteneur officiel
+du Samples avec le même correctif de 32 octets que `crossflash.py --to samples` (toujours appliqué), et écrit deux
+fichiers : `_smp-os` pour un Model:Samples sous son OS (transport `0x0F`), `_cyc-os` pour un Model:Samples déjà sous un
+OS Cycles de la page ou de ce script (transport `0x11`, pour changer de mods). La page fait la même chose
+(`MCBuilder.modsForSamples`, choix de la machine dans l'onglet Mods).
+```sh
+python3 tools/build.py -i model-cycles_OS1.13.syx -t model-tg,arp -o mods.syx
+python3 tools/mods_for_samples.py --cycles model-cycles_OS1.13.syx --samples model-samples_OS1.13.syx --mods mods.syx
+python3 tools/emu/test_mods_for_samples.py --cycles model-cycles_OS1.13.syx --samples model-samples_OS1.13.syx \
+    --syntakt Syntakt_OS1.42.syx
+```
+
+Sans mods (l'OS Cycles officiel en `--mods`), le fichier `_smp-os` est octet pour octet celui de
+`crossflash.py --to samples`. Empreintes de la preuve (le MAIN OS installé est celui de `REF_MAINOS` sauf les 32 octets
+de la clé) :
+
+| Combinaison | `_smp-os` (SHA-256) | `_cyc-os` (SHA-256) |
+|---|---|---|
+| `model-tg` | `1985e8e703092b768d32aa2c9b446cb0f95c1f944dc3e206f75973337469f686` | `1317199fbc625c38700344b69ce00496cdee0c8be6fae305843e6373e6394d19` |
+| `6ch-usbup,model-tg` | `fdbf4621e291618a98de64c561a39de59852d5a4dfdb58c927e312467557a839` | `a5a21ac6dfe5697b9e39fa80518a53989af4be8edac3cf9cbe6f1ebddb00ce79` |
+| `model-tg-st,sample-preview-st,macro-tg` | `4b069c69c47c6ef55ab6e50d067b2a8ced067fe3ed1b883419f5731db4044f5f` | `156ef6c22544de9873ed2119b30d4619354848cd27ca429e79bd1d628c586ffd` |
+| `6ch-usbup,model-tg-st,sample-preview-st,trig-hold,arp,tempo-max,boot-anim,syntakt-tg-sd-cp-toy-bits-swarm` | `f030b1a210c3ed9e5e2026dd0ac00daa99ca2a99cb963133f27d7e160f36fbcc` | `62d70e2bac0b22af70a56f71dc24791c52f79bda105c6375b9a3561a7e6b8a96` |
+
 ### Animation de démarrage modded-cycles
 
 `tweaks/model-cycles_OS1.13/43-boot-anim.json` est produit par `tools/gen_boot_anim.py` : le corps de la tâche d'animation de

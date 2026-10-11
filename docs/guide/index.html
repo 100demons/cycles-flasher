@@ -11,8 +11,8 @@
 <link rel="preconnect" href="https://fonts.googleapis.com">
 <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
 <link rel="stylesheet" href="https://fonts.googleapis.com/css2?family=Familjen+Grotesk:wght@400..700&family=Tiny5&display=swap">
-<link rel="stylesheet" href="../assets/site.css?v=2026-10-11-09">
-<link rel="stylesheet" href="../assets/guide.css?v=2026-10-11-09">
+<link rel="stylesheet" href="../assets/site.css?v=2026-10-12-01">
+<link rel="stylesheet" href="../assets/guide.css?v=2026-10-12-01">
 <script>try{var l=localStorage.getItem("mc-lang"),t=localStorage.getItem("mc-theme")}catch(e){}document.documentElement.lang=l||(/^fr\b/i.test(navigator.language||"")?"fr":"en");if(t)document.documentElement.setAttribute("data-theme",t)</script>
 </head>
 <body data-page="guide">
@@ -59,6 +59,7 @@
         <li><a href="#midi-both"><span data-l="en">MIDI OUT while in THRU</span><span data-l="fr">MIDI OUT pendant THRU</span></a></li>
         <li><a href="#midi-live-both"><span data-l="en">Live MIDI OUT + THRU toggle</span><span data-l="fr">Basculer MIDI OUT + THRU en direct</span></a></li>
         <li><a href="#track-filter"><span data-l="en">Per-track filter</span><span data-l="fr">Filtre par piste</span></a></li>
+        <li><a href="#mods-on-samples"><span data-l="en">Mods on a Model:Samples</span><span data-l="fr">Des mods sur un Model:Samples</span></a></li>
         <li><a href="#samples"><span data-l="en">Samples OS</span><span data-l="fr">OS Samples</span></a></li>
         <li><a href="#stock"><span data-l="en">Back to stock</span><span data-l="fr">Revenir à l'origine</span></a></li>
         <li><a href="#recovery"><span data-l="en">Recovery</span><span data-l="fr">Secours</span></a></li>
@@ -704,8 +705,32 @@
         </dl>
       </section>
 
+      <section id="mods-on-samples">
+        <h2><span class="n">21</span><span data-l="en">Mods on a Model:Samples</span><span data-l="fr">Des mods sur un Model:Samples</span></h2>
+        <p class="lede"><span data-l="en">A Model:Samples can run the Model:Cycles OS with the same mods as a Model:Cycles. Whatever the machine, the flasher always installs the Model:Cycles OS; on a Model:Samples, <a href="#model-tg">Model-TG</a>'s Sampler plays your samples.</span><span data-l="fr">Un Model:Samples peut tourner sous l'OS du Model:Cycles avec les mêmes mods qu'un Model:Cycles. Quelle que soit la machine, le flasher installe toujours l'OS du Model:Cycles ; sur un Model:Samples, le Sampler de <a href="#model-tg">Model-TG</a> joue vos samples.</span></p>
+        <ol>
+          <li><span data-l="en">Back up your samples and projects with Elektron Transfer, then close Transfer.</span><span data-l="fr">Sauvegardez vos samples et vos projets avec Elektron Transfer, puis fermez Transfer.</span></li>
+          <li><span data-l="en">In the flasher's <b>Mods</b> tab, under <b>Your machine</b>, choose <b>Model:Samples, on its own OS</b> the first time (the machine starts as a Model:Samples), or <b>Model:Samples, already on the Cycles OS</b> to change mods later. Tick the box about your backup.</span><span data-l="fr">Dans l'onglet <b>Mods</b> du flasher, sous <b>Votre machine</b>, choisissez <b>Model:Samples, sous son OS</b> la première fois (la machine démarre en Model:Samples), ou <b>Model:Samples, déjà sous l'OS Cycles</b> pour changer de mods plus tard. Cochez la case de la sauvegarde.</span></li>
+          <li><span data-l="en">Tick your mods as usual. Model-TG brings the Sampler, so you keep playing samples.</span><span data-l="fr">Cochez vos mods comme d'habitude. Model-TG apporte le Sampler : vous continuez à jouer des samples.</span></li>
+          <li><span data-l="en">In step 2, load both official OS files: <code>model-cycles_OS1.13.syx</code>, then <code>model-samples_OS1.13.syx</code> (and the Syntakt OS file if you ticked its engines).</span><span data-l="fr">À l'étape 2, déposez les deux fichiers d'OS officiels : <code>model-cycles_OS1.13.syx</code>, puis <code>model-samples_OS1.13.syx</code> (et celui de l'OS Syntakt si vous avez coché ses moteurs).</span></li>
+          <li><span data-l="en">Turn the Model:Samples on normally, choose <b>Fast (USB)</b>, flash, then press <b>YES</b> on its screen. It restarts as a Model:Cycles with your mods.</span><span data-l="fr">Allumez le Model:Samples normalement, choisissez <b>Rapide (USB)</b>, flashez, puis appuyez sur <b>YES</b> sur son écran. Il redémarre en Model:Cycles avec vos mods.</span></li>
+        </ol>
+        <dl class="layers fig">
+          <div><dt><span data-l="en">Startup menu</span><span data-l="fr">Menu de démarrage</span></dt><dd>Model:Samples</dd></div>
+          <div><dt>Updater</dt><dd>Model:Samples</dd></div>
+          <div><dt>Signature</dt><dd>Model:Samples</dd></div>
+          <div class="swap"><dt><span data-l="en">Main OS</span><span data-l="fr">OS principal</span></dt><dd><span data-l="en">Model:Cycles with your mods, which accepts the Model:Samples signature</span><span data-l="fr">Model:Cycles avec vos mods, qui accepte la signature du Model:Samples</span></dd></div>
+        </dl>
+        <dl class="facts">
+          <div><dt><span data-l="en">Which choice</span><span data-l="fr">Quel choix</span></dt><dd><span data-l="en">the page asks the machine who it is and only sends the right file: <b>on its own OS</b> goes to a machine that answers Model:Samples, <b>already on the Cycles OS</b> to one that answers Model:Cycles. With Model-TG's Transfer identity on SMP, set it back to CYC (or restart) before changing mods.</span><span data-l="fr">la page demande à la machine qui elle est et n'envoie que le bon fichier : <b>sous son OS</b> va à une machine qui répond Model:Samples, <b>déjà sous l'OS Cycles</b> à une machine qui répond Model:Cycles. Avec l'identité Transfer de Model-TG sur SMP, remettez-la sur CYC (ou redémarrez) avant de changer de mods.</span></dd></div>
+          <div><dt><span data-l="en">Coming back</span><span data-l="fr">Revenir</span></dt><dd><span data-l="en">over USB, in the <b>Samples OS</b> tab: <b>Model:Samples: back to its OS</b> (see <a href="#cycles-on-samples">below</a>). The startup menu of the Model:Samples is never touched: through the MIDI IN, it stays the safety net (<a href="#recovery">Recovery</a>).</span><span data-l="fr">par USB, dans l'onglet <b>OS Samples</b> : <b>Model:Samples : retour à son OS</b> (voir <a href="#cycles-on-samples">plus bas</a>). Le menu de démarrage du Model:Samples n'est jamais touché : par le MIDI IN, il reste le filet de sécurité (<a href="#recovery">Secours</a>).</span></dd></div>
+          <div><dt><span data-l="en">Limits</span><span data-l="fr">Limites</span></dt><dd><span data-l="en">only for a real Model:Samples (a Model:Cycles running the Samples OS answers as a Model:Samples too). Once on the Cycles OS, the machine refuses firmwares built for a Model:Cycles: nothing is written. A Model:Cycles OS installed with another tool refuses these files: first bring the Model:Samples OS back with <b>Model:Cycles → Samples OS</b>. If it starts badly, switch it off and on; if it still hangs, <b>FUNC</b> at power-on then <b>TRIG 2</b> (EMPTY RESET clears the active project).</span><span data-l="fr">seulement pour un vrai Model:Samples (un Model:Cycles sous l'OS Samples répond lui aussi Model:Samples). Une fois sous l'OS Cycles, la machine refuse les firmwares construits pour un Model:Cycles : rien n'est écrit. Un OS Model:Cycles installé avec un autre outil refuse ces fichiers : rendez d'abord l'OS du Model:Samples avec <b>Model:Cycles → OS Samples</b>. Si elle démarre mal, éteignez-la et rallumez-la ; si elle bloque encore, <b>FUNC</b> à l'allumage puis <b>TRIG 2</b> (EMPTY RESET vide le projet actif).</span></dd></div>
+          <div><dt><span data-l="en">Tested</span><span data-l="fr">Testé</span></dt><dd><span data-l="en">on a Model:Samples, both choices: on its own OS, and already on the Cycles OS to change mods; and in the emulator, on both OSes' own update checks and on the Model:Samples startup code, with the largest set of mods. Each mod keeps the status it has on a Model:Cycles. Thanks to RDS (AIM) for the original flasher, and DaftMaple for integrating it into Modded Cycles.</span><span data-l="fr">sur un Model:Samples, les deux choix : sous son OS, et déjà sous l'OS Cycles pour changer de mods ; et en émulation, sur les contrôles de mise à jour des deux OS et sur le code de démarrage du Model:Samples, avec le plus gros ensemble de mods. Chaque mod garde le statut qu'il a sur un Model:Cycles. Merci à RDS (AIM) pour le flasher d'origine, et à DaftMaple pour son intégration à Modded Cycles.</span></dd></div>
+        </dl>
+      </section>
+
       <section id="samples">
-        <h2><span class="n">21</span><span data-l="en">Samples OS</span><span data-l="fr">OS Samples</span></h2>
+        <h2><span class="n">22</span><span data-l="en">Samples OS</span><span data-l="fr">OS Samples</span></h2>
         <p class="lede"><span data-l="en">The Model:Cycles starts as a Model:Samples: you load and play your own samples, managed with Elektron Transfer.</span><span data-l="fr">Le Model:Cycles démarre en Model:Samples : vous chargez et jouez vos propres samples, gérés avec Elektron Transfer.</span></p>
         <p><span data-l="en">The flasher puts the official Model:Samples OS inside your Model:Cycles firmware file:</span><span data-l="fr">Le flasher place l'OS officiel du Model:Samples dans le fichier firmware de votre Model:Cycles :</span></p>
         <dl class="layers fig">
@@ -731,7 +756,7 @@
           <li><span data-l="en">Back up your samples and projects with Elektron Transfer first: both OSes use the same storage.</span><span data-l="fr">Sauvegardez d'abord vos samples et vos projets avec Elektron Transfer : les deux OS utilisent le même stockage.</span></li>
           <li><span data-l="en">Only on a real Model:Samples. A Model:Cycles running the Samples OS answers as a Model:Samples too: it would take this firmware, then refuse Model:Cycles firmwares over USB until its startup menu reinstalls its OS through the MIDI IN.</span><span data-l="fr">Seulement sur un vrai Model:Samples. Un Model:Cycles sous l'OS Samples répond lui aussi Model:Samples : il prendrait ce firmware, puis refuserait les firmwares Model:Cycles par USB jusqu'à ce que son menu de démarrage réinstalle son OS par le MIDI IN.</span></li>
           <li><span data-l="en">If the machine does not start properly after the update, either way, switch it off and on again. If it still hangs, hold <b>FUNC</b> while switching it on, then press <b>TRIG 2</b> (EMPTY RESET): it clears the active project, hence the backup.</span><span data-l="fr">Si la machine démarre mal après la mise à jour, dans un sens ou dans l'autre, éteignez-la et rallumez-la. Si elle bloque encore, maintenez <b>FUNC</b> à l'allumage puis appuyez sur <b>TRIG 2</b> (EMPTY RESET) : il vide le projet actif, d'où la sauvegarde.</span></li>
-          <li><span data-l="en">Under the Cycles OS, the machine refuses Model:Cycles firmwares (official or with mods), even when Elektron Transfer offers one: nothing is written. Leave through “back to its OS”.</span><span data-l="fr">Sous l'OS Cycles, la machine refuse les firmwares Model:Cycles (officiels ou avec mods), même quand Elektron Transfer en propose un : rien n'est écrit. Revenez par « retour à son OS ».</span></li>
+          <li><span data-l="en">Under the Cycles OS, the machine refuses Model:Cycles firmwares (official or with mods), even when Elektron Transfer offers one: nothing is written. Leave through “back to its OS”. To add mods, use the Mods tab with <b>Model:Samples, already on the Cycles OS</b> (see <a href="#mods-on-samples">Mods on a Model:Samples</a>).</span><span data-l="fr">Sous l'OS Cycles, la machine refuse les firmwares Model:Cycles (officiels ou avec mods), même quand Elektron Transfer en propose un : rien n'est écrit. Revenez par « retour à son OS ». Pour ajouter des mods, utilisez l'onglet Mods avec <b>Model:Samples, déjà sous l'OS Cycles</b> (voir <a href="#mods-on-samples">Des mods sur un Model:Samples</a>).</span></li>
           <li><span data-l="en">A Model:Cycles OS installed another way (another tool, or a Model:Cycles build with mods) refuses “back to its OS”: the machine says the update failed and nothing changes. Such an OS accepts the first choice of the tab, <b>Model:Cycles → Samples OS</b>, which brings the Model:Samples OS back.</span><span data-l="fr">Un OS Model:Cycles installé autrement (avec un autre outil, ou un build Model:Cycles avec mods) refuse « retour à son OS » : la machine dit que la mise à jour a échoué et rien ne change. Un tel OS accepte le premier choix de l'onglet, <b>Model:Cycles → OS Samples</b>, qui rend l'OS du Model:Samples.</span></li>
           <li><span data-l="en">Safety net: the startup menu of the Model:Samples is never touched. If anything went wrong, it takes the official Model:Samples OS through the MIDI IN, as in <a href="#recovery">Recovery</a>.</span><span data-l="fr">Filet de sécurité : le menu de démarrage du Model:Samples n'est jamais touché. En cas de problème, il accepte l'OS officiel du Model:Samples par le MIDI IN, comme dans <a href="#recovery">Secours</a>.</span></li>
           <li><span data-l="en">Experimental: checked in the emulator on both OSes' own update checks and on the Model:Samples startup code that loads the new OS, not yet tried on a real Model:Samples.</span><span data-l="fr">Expérimental : vérifié en émulation sur les contrôles de mise à jour des deux OS et sur le code de démarrage du Model:Samples qui charge le nouvel OS, pas encore essayé sur un vrai Model:Samples.</span></li>
@@ -739,13 +764,13 @@
       </section>
 
       <section id="stock">
-        <h2><span class="n">22</span><span data-l="en">Back to stock</span><span data-l="fr">Revenir à l'origine</span></h2>
+        <h2><span class="n">23</span><span data-l="en">Back to stock</span><span data-l="fr">Revenir à l'origine</span></h2>
         <p><span data-l="en">The <b>Official firmware</b> tab of the flasher sends your OS file unchanged, over USB, like a normal update. It is also a good rehearsal before a first mod: it checks the cable and the setup without changing anything.</span><span data-l="fr">L'onglet <b>Firmware officiel</b> du flasher renvoie votre fichier d'OS sans le modifier, par USB, comme une mise à jour normale. C'est aussi une bonne répétition avant un premier mod : elle vérifie le câble et l'installation sans rien changer.</span></p>
         <p><span data-l="en">With Syntakt engines, the MACRO machine or Model-TG's Sampler, first set your tracks back to an original machine.</span><span data-l="fr">Avec des moteurs du Syntakt, la machine MACRO ou le Sampler de Model-TG, remettez d'abord vos pistes sur une machine d'origine.</span></p>
       </section>
 
       <section id="recovery">
-        <h2><span class="n">23</span><span data-l="en">Recovery</span><span data-l="fr">Secours</span></h2>
+        <h2><span class="n">24</span><span data-l="en">Recovery</span><span data-l="fr">Secours</span></h2>
         <p class="lede"><span data-l="en">If the Model:Cycles no longer starts, its startup menu can always reinstall the OS: it lives in an area that updates never write.</span><span data-l="fr">Si le Model:Cycles ne démarre plus, son menu de démarrage peut toujours réinstaller l'OS : il vit dans une zone que les mises à jour n'écrivent jamais.</span></p>
         <figure class="fig">
           <div data-device data-scenes="func @logo | func,mainvol | s4 @READY TO/>RECEIVE" data-ms="1300"></div>
@@ -759,7 +784,7 @@
       </section>
 
       <section id="trouble">
-        <h2><span class="n">24</span><span data-l="en">Troubleshooting</span><span data-l="fr">Dépannage</span></h2>
+        <h2><span class="n">25</span><span data-l="en">Troubleshooting</span><span data-l="fr">Dépannage</span></h2>
         <div class="faq">
           <details>
             <summary><span data-l="en">Nothing happens on the Model:Cycles screen</span><span data-l="fr">Rien ne se passe sur l'écran du Model:Cycles</span></summary>
@@ -825,8 +850,8 @@
   </div>
 </footer>
 
-<script src="../assets/release.js?v=2026-10-11-09"></script>
-<script src="../assets/cycles.js?v=2026-10-11-09"></script>
-<script src="../assets/site.js?v=2026-10-11-09"></script>
+<script src="../assets/release.js?v=2026-10-12-01"></script>
+<script src="../assets/cycles.js?v=2026-10-12-01"></script>
+<script src="../assets/site.js?v=2026-10-12-01"></script>
 </body>
 </html>

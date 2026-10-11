@@ -1071,7 +1071,7 @@ const DISCORD = "https://discord.gg/hWegtJZcmm";
 const T = {
   en: {
     title: "Model:Cycles Flasher",
-    tagline: "Install mods on your Elektron Model:Cycles, right from your browser.",
+    tagline: "Install mods on your Elektron Model:Cycles or Model:Samples, right from your browser.",
     s1: "What do you want to install?",
     tab_mods: "Mods",
     tab_restore: "Official firmware",
@@ -1161,30 +1161,30 @@ const T = {
     drop3_sub: "the official Syntakt OS, for its engines, or click to choose it",
     get_os_syntakt: `Don't have it? <a href="${ELEKTRON_ST_DL}" target="_blank" rel="noopener">Download Syntakt OS 1.42 from elektron.se</a>, then unzip it. The page reads the engines from it, on your computer: no Syntakt needed.`,
     s3: "Connect your Model:Cycles over USB",
-    hu1: "Connect the Model:Cycles to the computer with a USB cable and turn it on normally.",
-    hu2: "On the Model:Cycles, press <b>SETTINGS</b>, open <b>CONFIG › UPGRADE</b> and confirm with <b>YES</b>. It now waits for the firmware.",
-    hu3: "Allow MIDI access below: the port named “Model:Cycles” is selected automatically.",
+    hu1: "Connect the {dev} to the computer with a USB cable and turn it on normally.",
+    hu2: "On the {dev}, press <b>SETTINGS</b>, open <b>CONFIG › UPGRADE</b> and confirm with <b>YES</b>. It now waits for the firmware.",
+    hu3: "Allow MIDI access below: the port named “{port}” is selected automatically.",
     m_fast: "Fast (USB)",
     m_slow: "Classic (CONFIG › UPGRADE)",
     method_fast: "The update protocol of Elektron Transfer, straight from this page: about 30 seconds. At the end, the Model:Cycles asks you to confirm (YES or NO).",
     method_slow: "The firmware is sent at MIDI speed while CONFIG › UPGRADE waits for it: 5 to 10 minutes. The fallback if the fast method doesn't work.",
-    hf1: "Connect the Model:Cycles to the computer with a USB cable and turn it on normally. Stay on its usual screen: no menu to open.",
-    hf2: "Close <b>Elektron Transfer</b> and any music software that uses the Model:Cycles: they hold its USB port.",
-    hf3: "Allow MIDI access below: the page finds the Model:Cycles and shows its OS version.",
+    hf1: "Connect the {dev} to the computer with a USB cable and turn it on normally. Stay on its usual screen: no menu to open.",
+    hf2: "Close <b>Elektron Transfer</b> and any music software that uses the {dev}: they hold its USB port.",
+    hf3: "Allow MIDI access below: the page finds the {dev} and shows its OS version.",
     allow: "Allow MIDI access",
     refresh: "Refresh",
     s4: "Flash",
     ack: "I've backed up my projects (Elektron Transfer) and I understand that flashing is at my own risk.",
-    flash_btn: "Flash the Model:Cycles",
+    flash_btn: "Flash the {dev}",
     flashing: "Flashing…",
     stop: "Stop",
     trouble: "Something went wrong?",
-    t1q: "Nothing happens on the Model:Cycles screen",
-    t1a: "Fast method: step 3 must say that the Model:Cycles was found. Classic method: check that <b>CONFIG › UPGRADE</b> is open and waiting. Either way, pick the port named “Model:Cycles” in step 3 and close Elektron Transfer, Overbridge and your music software (on Windows they lock the port), then try again.",
+    t1q: "Nothing happens on the {dev} screen",
+    t1a: "Fast method: step 3 must say that the {dev} was found. Classic method: check that <b>CONFIG › UPGRADE</b> is open and waiting. Either way, pick the port named “{port}” in step 3 and close Elektron Transfer, Overbridge and your music software (on Windows they lock the port), then try again.",
     t2q: "The transfer stops, or the Model:Cycles shows an error",
     t2a: "Turn the Model:Cycles off and on and flash again. With the classic method, open <b>CONFIG › UPGRADE</b> again and set <b>Advanced › Send speed margin</b> to 2.0 first.",
     t3q: "No MIDI port in the list",
-    t3a: "Connect the Model:Cycles with a USB cable that carries data (some cables only charge), turn it on, then click <b>Refresh</b>. Some systems only show a new device after the browser is restarted.",
+    t3a: "Connect the {dev} with a USB cable that carries data (some cables only charge), turn it on, then click <b>Refresh</b>. Some systems only show a new device after the browser is restarted.",
     t5q: "The fast method doesn't find the Model:Cycles, or stops",
     t5a: "Turn the Model:Cycles on normally (not in CONFIG › UPGRADE), close Elektron Transfer, then click <b>Refresh</b> in step 3. If it still fails, choose <b>Classic</b> in step 3: slower, but it doesn't need answers from the machine. Elektron Transfer works too: download the .syx (step 4) and drop it onto Transfer's window.",
     t4q: "The update over USB is refused, or the Model:Cycles doesn't start any more",
@@ -1265,15 +1265,39 @@ const T = {
     done_sback: "It restarts as a <b>Model:Samples</b>, with its own OS.",
     dev_fwd_on_cycles: "This machine answers as a Model:Cycles: it would refuse this firmware. If it is a Model:Samples already running the Cycles OS, there is nothing to install; to go back, choose “Model:Samples: back to its OS” if that Cycles OS came from this page, or “Model:Cycles → Samples OS” if it was installed another way.",
     dev_back_on_samples: "This machine answers as a Model:Samples OS: there is nothing to bring back. If it actually runs the Cycles OS with Model-TG, set Model-TG's Transfer identity back to CYC (or restart the machine), then try again.",
+    // Mods tab, machine picker (notes/57): always the Model:Cycles OS, packed for the machine
+    mach_q: "Your machine",
+    mach_cyc: "Model:Cycles",
+    mach_smp: "Model:Samples, on its own OS",
+    mach_cos: "Model:Samples, already on the Cycles OS",
+    mach_title: "Mods on a Model:Samples",
+    mach_text: "Whatever the machine, the page installs the Model:Cycles OS with the mods you tick; on a Model:Samples, Model-TG's Sampler plays your samples. The firmware is packed inside your Model:Samples' own firmware (its startup menu, updater and signature stay in place), so step 2 also asks for the official Model:Samples OS file.",
+    mach_w_smp: "Choose this when the machine runs its Model:Samples OS (it starts as a Model:Samples).",
+    mach_w_cos: "Choose this when it already runs the Model:Cycles OS installed from this page (here, or from the Samples OS tab): this is how you change mods later. That OS refuses firmwares built for a Model:Cycles: nothing is written.",
+    mach_w1: "Tested on a real Model:Samples, both choices: on its own OS, and already on the Cycles OS to change mods.",
+    mach_w2: "Back up your samples and projects with Elektron Transfer first: the Model:Cycles OS uses the same storage.",
+    mach_w3: `The way back to the Model:Samples OS stays in the Samples OS tab, “Model:Samples: back to its OS” (<a href="${GUIDE}#mods-on-samples">guide</a>).`,
+    mach_w4: "Only for a real Model:Samples. A Model:Cycles running the Samples OS also answers as a Model:Samples and would take this firmware, then refuse Model:Cycles firmwares over USB until its startup menu reinstalls its OS through the MIDI IN.",
+    mach_w5: "A Model:Cycles OS installed with another tool refuses these firmwares (nothing is written): first bring the Model:Samples OS back with the Samples OS tab's first choice, “Model:Cycles → Samples OS”, then choose “Model:Samples, on its own OS” here.",
+    mach_credit: "Original flasher by RDS (AIM), integrated into Modded Cycles by DaftMaple.",
+    sel_samples: "+ your Model:Samples OS file, to load in step 2.",
+    needs_samples_file: "Load the official Model:Samples OS below: the mods go inside its firmware.",
+    built_smp: "Packed for your Model:Samples (on its own OS).",
+    built_cos: "Packed for your Model:Samples (on the Cycles OS).",
+    for_samples: "for Model:Samples",
+    done_mach: "It restarts as a <b>Model:Cycles</b> with your mods (Elektron Transfer sees a “Model:Samples” if Model-TG's Transfer identity is on SMP). To change mods later, choose “Model:Samples, already on the Cycles OS”; to go back, the Samples OS tab.",
+    dev_mach_smp_on_cycles: "This machine answers as a Model:Cycles. If it is a Model:Samples already running the Cycles OS from this page, choose “Model:Samples, already on the Cycles OS” in step 1; if it is a Model:Cycles, choose “Model:Cycles”.",
+    dev_mach_cos_on_samples: "This machine answers as a Model:Samples. If it runs its Model:Samples OS, choose “Model:Samples, on its own OS” in step 1. If it runs the Cycles OS with Model-TG, set Device Config › Transfer back to CYC (or restart it), then Refresh.",
+    cos_mods: "To add mods, use the Mods tab and choose your Model:Samples as the machine: it installs the same Model:Cycles OS, with the mods you tick.",
     done_samples: "It restarts as a <b>Model:Samples</b>: Elektron Transfer and your computer see a “Model:Samples”. Load your samples with Transfer.",
     pick_one: "Select at least one mod, or switch to “Official firmware”.",
     midi_asking: "Asking for MIDI access…",
     midi_wait: "Waiting for your permission: Chrome shows a prompt near the address bar. Click “Allow”. If you blocked it before, click the icon left of the address and allow MIDI.",
     midi_denied: "MIDI access was refused. Click the icon left of the address, allow MIDI, reload the page and try again.",
-    midi_none: "No MIDI output found. Connect the Model:Cycles over USB, turn it on, then click Refresh.",
-    midi_pick_dev: "The Model:Cycles USB port is selected.",
-    midi_no_dev: "The Model:Cycles doesn't appear over USB. Connect it, turn it on and click Refresh.",
-    warn_not_dev: "This doesn't look like the Model:Cycles: pick the port named “Model:Cycles”.",
+    midi_none: "No MIDI output found. Connect the {dev} over USB, turn it on, then click Refresh.",
+    midi_pick_dev: "The {dev} USB port is selected.",
+    midi_no_dev: "The {dev} doesn't appear over USB. Connect it, turn it on and click Refresh.",
+    warn_not_dev: "This doesn't look like the {dev}: pick the port named “{port}”.",
     choose_port: "Choose a MIDI output",
     via: "via",
     minutes: "about {m} min",
@@ -1291,12 +1315,12 @@ const T = {
     miss_probe: "Waiting for the Model:Cycles to answer (step 3).",
     miss_dev: "The Model:Cycles must answer first (step 3).",
     miss_dev_mismatch: "This machine can't take this firmware (step 3).",
-    dev_probing: "Looking for the Model:Cycles…",
+    dev_probing: "Looking for the {dev}…",
     dev_ok: "{device} found: OS {v}.",
-    dev_none: "The Model:Cycles doesn't answer. If CONFIG › UPGRADE is open, leave it (NO); close Elektron Transfer, then click Refresh. Or choose the classic method.",
+    dev_none: "The {dev} doesn't answer. If CONFIG › UPGRADE is open, leave it (NO); close Elektron Transfer, then click Refresh. Or choose the classic method.",
     dev_busy: "Its USB port is in use by another program: close Elektron Transfer, Overbridge and your music software, then click Refresh.",
-    dev_noinput: "The page sees no MIDI input from the Model:Cycles, and the fast method needs both directions. Click Refresh, or choose the classic method.",
-    dev_samples: `This machine answers as a Model:Samples, so it would refuse this firmware. With Model-TG, set Device Config › Transfer back to CYC (or turn it off and on). Under the Samples OS, the way back is in the <a href="${GUIDE}#recovery">guide</a>.`,
+    dev_noinput: "The page sees no MIDI input from the {dev}, and the fast method needs both directions. Click Refresh, or choose the classic method.",
+    dev_samples: `This machine answers as a Model:Samples, so it would refuse this firmware. With Model-TG, set Device Config › Transfer back to CYC (or turn it off and on). Under the Samples OS, the way back is in the <a href="${GUIDE}#recovery">guide</a>. A real Model:Samples: choose it in step 1.`,
     dev_other: "This Elektron machine ({name}) is not a Model:Cycles: nothing will be sent.",
     dev_wrong_file: "This firmware is for a Model:Samples, and this machine is a Model:Cycles: nothing will be sent.",
     watch_fast: "The Model:Cycles checks every block as it arrives. At the end it asks you to confirm the update on its screen.",
@@ -1307,7 +1331,7 @@ const T = {
     after_back_plain: "The {m} is back.",
     fast_timeout: "The Model:Cycles stopped answering. Turn it off and on, then flash again. If it happens again, choose the classic method in step 3.",
     fast_refused: "The Model:Cycles refused the update{why}. Turn it off and on and try again, or choose the classic method in step 3.",
-    fast_write: "The Model:Cycles reported an error while receiving{why}. Turn it off and on and try again, or choose the classic method in step 3.",
+    fast_write: "The {dev} reported an error while receiving{why}. Turn it off and on and try again, or choose the classic method in step 3.",
     stopped_fast: "Stopped before the end: the Model:Cycles hasn't received the whole firmware. Turn it off and on, then flash again.",
     log_start_fast: "Fast upgrade: {kb} KB in {n} blocks to “{port}” ({device} OS {v}).",
     watch: "Watch the Model:Cycles screen: it should show that it is receiving. If nothing happens within a few seconds, press <b>Stop</b>.",
@@ -1324,7 +1348,7 @@ const T = {
   },
   fr: {
     title: "Flasher Model:Cycles",
-    tagline: "Installez des mods sur votre Elektron Model:Cycles, depuis votre navigateur.",
+    tagline: "Installez des mods sur votre Elektron Model:Cycles ou Model:Samples, depuis votre navigateur.",
     s1: "Que voulez-vous installer ?",
     tab_mods: "Mods",
     tab_restore: "Firmware officiel",
@@ -1414,30 +1438,30 @@ const T = {
     drop3_sub: "l'OS officiel du Syntakt, pour ses moteurs, ou cliquez pour le choisir",
     get_os_syntakt: `Vous ne l'avez pas ? <a href="${ELEKTRON_ST_DL}" target="_blank" rel="noopener">Téléchargez l'OS Syntakt 1.42 sur elektron.se</a>, puis dézippez-le. La page y lit les moteurs, sur votre ordinateur : pas besoin d'avoir un Syntakt.`,
     s3: "Branchez le Model:Cycles en USB",
-    hu1: "Reliez le Model:Cycles à l'ordinateur avec un câble USB et allumez-le normalement.",
-    hu2: "Sur le Model:Cycles, appuyez sur <b>SETTINGS</b>, ouvrez <b>CONFIG › UPGRADE</b> et confirmez avec <b>YES</b>. Il attend alors le firmware.",
-    hu3: "Autorisez le MIDI ci-dessous : le port nommé « Model:Cycles » est choisi automatiquement.",
+    hu1: "Reliez le {dev} à l'ordinateur avec un câble USB et allumez-le normalement.",
+    hu2: "Sur le {dev}, appuyez sur <b>SETTINGS</b>, ouvrez <b>CONFIG › UPGRADE</b> et confirmez avec <b>YES</b>. Il attend alors le firmware.",
+    hu3: "Autorisez le MIDI ci-dessous : le port nommé « {port} » est choisi automatiquement.",
     m_fast: "Rapide (USB)",
     m_slow: "Classique (CONFIG › UPGRADE)",
     method_fast: "Le protocole de mise à jour d'Elektron Transfer, directement depuis cette page : une trentaine de secondes. À la fin, le Model:Cycles demande de confirmer (YES ou NO).",
     method_slow: "Le firmware est envoyé à la vitesse du MIDI pendant que CONFIG › UPGRADE l'attend : 5 à 10 minutes. La solution de secours si la méthode rapide ne marche pas.",
-    hf1: "Reliez le Model:Cycles à l'ordinateur avec un câble USB et allumez-le normalement. Restez sur son écran habituel : aucun menu à ouvrir.",
-    hf2: "Fermez <b>Elektron Transfer</b> et tout logiciel de musique qui utilise le Model:Cycles : ils occupent son port USB.",
-    hf3: "Autorisez le MIDI ci-dessous : la page trouve le Model:Cycles et affiche sa version d'OS.",
+    hf1: "Reliez le {dev} à l'ordinateur avec un câble USB et allumez-le normalement. Restez sur son écran habituel : aucun menu à ouvrir.",
+    hf2: "Fermez <b>Elektron Transfer</b> et tout logiciel de musique qui utilise le {dev} : ils occupent son port USB.",
+    hf3: "Autorisez le MIDI ci-dessous : la page trouve le {dev} et affiche sa version d'OS.",
     allow: "Autoriser le MIDI",
     refresh: "Rafraîchir",
     s4: "Flasher",
     ack: "J'ai sauvegardé mes projets (Elektron Transfer) et je comprends que je flashe à mes risques.",
-    flash_btn: "Flasher le Model:Cycles",
+    flash_btn: "Flasher le {dev}",
     flashing: "Flash en cours…",
     stop: "Arrêter",
     trouble: "Un problème ?",
-    t1q: "Rien ne se passe sur l'écran du Model:Cycles",
-    t1a: "Méthode rapide : l'étape 3 doit indiquer que le Model:Cycles a été trouvé. Méthode classique : vérifiez que <b>CONFIG › UPGRADE</b> est ouvert et en attente. Dans les deux cas, choisissez le port nommé « Model:Cycles » à l'étape 3 et fermez Elektron Transfer, Overbridge et votre logiciel de musique (sous Windows, ils bloquent le port), puis réessayez.",
+    t1q: "Rien ne se passe sur l'écran du {dev}",
+    t1a: "Méthode rapide : l'étape 3 doit indiquer que le {dev} a été trouvé. Méthode classique : vérifiez que <b>CONFIG › UPGRADE</b> est ouvert et en attente. Dans les deux cas, choisissez le port nommé « {port} » à l'étape 3 et fermez Elektron Transfer, Overbridge et votre logiciel de musique (sous Windows, ils bloquent le port), puis réessayez.",
     t2q: "Le transfert s'arrête, ou le Model:Cycles affiche une erreur",
     t2a: "Éteignez puis rallumez le Model:Cycles et relancez. Avec la méthode classique, rouvrez d'abord <b>CONFIG › UPGRADE</b> et réglez <b>Options avancées › Marge de vitesse</b> sur 2.0.",
     t3q: "Aucun port MIDI dans la liste",
-    t3a: "Branchez le Model:Cycles avec un câble USB qui transporte les données (certains câbles ne font que charger), allumez-le, puis cliquez sur <b>Rafraîchir</b>. Certains systèmes n'affichent un nouvel appareil qu'après un redémarrage du navigateur.",
+    t3a: "Branchez le {dev} avec un câble USB qui transporte les données (certains câbles ne font que charger), allumez-le, puis cliquez sur <b>Rafraîchir</b>. Certains systèmes n'affichent un nouvel appareil qu'après un redémarrage du navigateur.",
     t5q: "La méthode rapide ne trouve pas le Model:Cycles, ou s'arrête",
     t5a: "Allumez le Model:Cycles normalement (pas dans CONFIG › UPGRADE), fermez Elektron Transfer, puis cliquez sur <b>Rafraîchir</b> à l'étape 3. Si ça échoue encore, choisissez <b>Classique</b> à l'étape 3 : plus lent, mais sans besoin de réponse de la machine. Elektron Transfer marche aussi : téléchargez le .syx (étape 4) et déposez-le sur la fenêtre de Transfer.",
     t4q: "La mise à jour par USB est refusée, ou le Model:Cycles ne démarre plus",
@@ -1517,15 +1541,38 @@ const T = {
     done_sback: "Il redémarre en <b>Model:Samples</b>, avec son propre OS.",
     dev_fwd_on_cycles: "Cette machine répond comme un Model:Cycles : elle refuserait ce firmware. Si c'est un Model:Samples déjà sous l'OS Cycles, il n'y a rien à installer ; pour revenir, choisissez « Model:Samples : retour à son OS » si cet OS Cycles vient de cette page, ou « Model:Cycles → OS Samples » s'il a été installé autrement.",
     dev_back_on_samples: "Cette machine répond comme l'OS du Model:Samples : il n'y a rien à rendre. Si elle tourne en fait sous l'OS Cycles avec Model-TG, remettez l'identité Transfer de Model-TG sur CYC (ou redémarrez la machine), puis réessayez.",
+    mach_q: "Votre machine",
+    mach_cyc: "Model:Cycles",
+    mach_smp: "Model:Samples, sous son OS",
+    mach_cos: "Model:Samples, déjà sous l'OS Cycles",
+    mach_title: "Des mods sur un Model:Samples",
+    mach_text: "Quelle que soit la machine, la page installe l'OS du Model:Cycles avec les mods cochés ; sur un Model:Samples, le Sampler de Model-TG joue vos samples. Le firmware est emballé dans le firmware de votre Model:Samples (son menu de démarrage, son updater et sa signature restent en place) : l'étape 2 demande donc aussi le fichier officiel de l'OS Model:Samples.",
+    mach_w_smp: "Choisissez ceci quand la machine tourne sous son OS Model:Samples (elle démarre en Model:Samples).",
+    mach_w_cos: "Choisissez ceci quand elle tourne déjà sous l'OS du Model:Cycles installé depuis cette page (ici, ou depuis l'onglet OS Samples) : c'est ainsi qu'on change de mods plus tard. Cet OS refuse les firmwares construits pour un Model:Cycles : rien n'est écrit.",
+    mach_w1: "Testé sur un vrai Model:Samples, les deux choix : sous son OS, et déjà sous l'OS Cycles pour changer de mods.",
+    mach_w2: "Sauvegardez d'abord vos samples et vos projets avec Elektron Transfer : l'OS du Model:Cycles utilise le même stockage.",
+    mach_w3: `Le retour à l'OS du Model:Samples reste dans l'onglet OS Samples, « Model:Samples : retour à son OS » (<a href="${GUIDE}#mods-on-samples">guide</a>).`,
+    mach_w4: "Seulement pour un vrai Model:Samples. Un Model:Cycles sous l'OS Samples répond lui aussi Model:Samples et prendrait ce firmware, puis refuserait les firmwares Model:Cycles par USB jusqu'à ce que son menu de démarrage réinstalle son OS par le MIDI IN.",
+    mach_w5: "Un OS Model:Cycles installé avec un autre outil refuse ces firmwares (rien n'est écrit) : rendez d'abord l'OS du Model:Samples avec le premier choix de l'onglet OS Samples, « Model:Cycles → OS Samples », puis choisissez ici « Model:Samples, sous son OS ».",
+    mach_credit: "Flasher d'origine de RDS (AIM), intégré à Modded Cycles par DaftMaple.",
+    sel_samples: "+ votre fichier d'OS Model:Samples, à charger à l'étape 2.",
+    needs_samples_file: "Déposez l'OS officiel du Model:Samples ci-dessous : les mods vont dans son firmware.",
+    built_smp: "Emballé pour votre Model:Samples (sous son OS).",
+    built_cos: "Emballé pour votre Model:Samples (sous l'OS Cycles).",
+    for_samples: "pour Model:Samples",
+    done_mach: "Il redémarre en <b>Model:Cycles</b> avec vos mods (Elektron Transfer voit un « Model:Samples » si l'identité Transfer de Model-TG est sur SMP). Pour changer de mods plus tard, choisissez « Model:Samples, déjà sous l'OS Cycles » ; pour revenir, l'onglet OS Samples.",
+    dev_mach_smp_on_cycles: "Cette machine répond comme un Model:Cycles. Si c'est un Model:Samples déjà sous l'OS Cycles de cette page, choisissez « Model:Samples, déjà sous l'OS Cycles » à l'étape 1 ; si c'est un Model:Cycles, choisissez « Model:Cycles ».",
+    dev_mach_cos_on_samples: "Cette machine répond comme un Model:Samples. Si elle tourne sous son OS Model:Samples, choisissez « Model:Samples, sous son OS » à l'étape 1. Si elle tourne sous l'OS Cycles avec Model-TG, remettez Device Config › Transfer sur CYC (ou redémarrez-la), puis Rafraîchir.",
+    cos_mods: "Pour ajouter des mods, utilisez l'onglet Mods et choisissez votre Model:Samples comme machine : il installe le même OS du Model:Cycles, avec les mods cochés.",
     done_samples: "Il redémarre en <b>Model:Samples</b> : Elektron Transfer et votre ordinateur voient un « Model:Samples ». Chargez vos samples avec Transfer.",
     pick_one: "Cochez au moins un mod, ou passez sur « Firmware officiel ».",
     midi_asking: "Demande d'accès MIDI…",
     midi_wait: "En attente de votre autorisation : Chrome affiche une demande près de la barre d'adresse. Cliquez sur « Autoriser ». Si vous l'avez bloquée, cliquez sur l'icône à gauche de l'adresse et autorisez le MIDI.",
     midi_denied: "Accès MIDI refusé. Cliquez sur l'icône à gauche de l'adresse, autorisez le MIDI, rechargez la page et réessayez.",
-    midi_none: "Aucune sortie MIDI. Branchez le Model:Cycles en USB, allumez-le, puis cliquez sur Rafraîchir.",
-    midi_pick_dev: "Le port USB du Model:Cycles est sélectionné.",
-    midi_no_dev: "Le Model:Cycles n'apparaît pas en USB. Branchez-le, allumez-le et cliquez sur Rafraîchir.",
-    warn_not_dev: "Ce port ne semble pas être le Model:Cycles : choisissez le port nommé « Model:Cycles ».",
+    midi_none: "Aucune sortie MIDI. Branchez le {dev} en USB, allumez-le, puis cliquez sur Rafraîchir.",
+    midi_pick_dev: "Le port USB du {dev} est sélectionné.",
+    midi_no_dev: "Le {dev} n'apparaît pas en USB. Branchez-le, allumez-le et cliquez sur Rafraîchir.",
+    warn_not_dev: "Ce port ne semble pas être le {dev} : choisissez le port nommé « {port} ».",
     choose_port: "Choisissez une sortie MIDI",
     via: "via",
     minutes: "environ {m} min",
@@ -1543,12 +1590,12 @@ const T = {
     miss_probe: "En attente d'une réponse du Model:Cycles (étape 3).",
     miss_dev: "Le Model:Cycles doit d'abord répondre (étape 3).",
     miss_dev_mismatch: "Cette machine ne peut pas recevoir ce firmware (étape 3).",
-    dev_probing: "Recherche du Model:Cycles…",
+    dev_probing: "Recherche du {dev}…",
     dev_ok: "{device} trouvé : OS {v}.",
-    dev_none: "Le Model:Cycles ne répond pas. Si CONFIG › UPGRADE est ouvert, quittez-le (NO) ; fermez Elektron Transfer, puis cliquez sur Rafraîchir. Ou choisissez la méthode classique.",
+    dev_none: "Le {dev} ne répond pas. Si CONFIG › UPGRADE est ouvert, quittez-le (NO) ; fermez Elektron Transfer, puis cliquez sur Rafraîchir. Ou choisissez la méthode classique.",
     dev_busy: "Son port USB est occupé par un autre programme : fermez Elektron Transfer, Overbridge et votre logiciel de musique, puis cliquez sur Rafraîchir.",
-    dev_noinput: "La page ne voit pas d'entrée MIDI venant du Model:Cycles, or la méthode rapide a besoin des deux sens. Cliquez sur Rafraîchir, ou choisissez la méthode classique.",
-    dev_samples: `Cette machine répond comme un Model:Samples : elle refuserait ce firmware. Avec Model-TG, remettez Device Config › Transfer sur CYC (ou éteignez-la et rallumez-la). Sous l'OS Samples, le retour est expliqué dans le <a href="${GUIDE}#recovery">guide</a>.`,
+    dev_noinput: "La page ne voit pas d'entrée MIDI venant du {dev}, or la méthode rapide a besoin des deux sens. Cliquez sur Rafraîchir, ou choisissez la méthode classique.",
+    dev_samples: `Cette machine répond comme un Model:Samples : elle refuserait ce firmware. Avec Model-TG, remettez Device Config › Transfer sur CYC (ou éteignez-la et rallumez-la). Sous l'OS Samples, le retour est expliqué dans le <a href="${GUIDE}#recovery">guide</a>. Un vrai Model:Samples : choisissez-le à l'étape 1.`,
     dev_other: "Cette machine Elektron ({name}) n'est pas un Model:Cycles : rien ne sera envoyé.",
     dev_wrong_file: "Ce firmware est pour un Model:Samples, et cette machine est un Model:Cycles : rien ne sera envoyé.",
     watch_fast: "Le Model:Cycles vérifie chaque bloc à son arrivée. À la fin, il demande de confirmer la mise à jour sur son écran.",
@@ -1559,7 +1606,7 @@ const T = {
     after_back_plain: "Le {m} est de retour.",
     fast_timeout: "Le Model:Cycles ne répond plus. Éteignez-le puis rallumez-le, et relancez. Si ça recommence, choisissez la méthode classique à l'étape 3.",
     fast_refused: "Le Model:Cycles a refusé la mise à jour{why}. Éteignez-le puis rallumez-le et réessayez, ou choisissez la méthode classique à l'étape 3.",
-    fast_write: "Le Model:Cycles a signalé une erreur pendant la réception{why}. Éteignez-le puis rallumez-le et réessayez, ou choisissez la méthode classique à l'étape 3.",
+    fast_write: "Le {dev} a signalé une erreur pendant la réception{why}. Éteignez-le puis rallumez-le et réessayez, ou choisissez la méthode classique à l'étape 3.",
     stopped_fast: "Arrêté avant la fin : le Model:Cycles n'a pas reçu tout le firmware. Éteignez-le puis rallumez-le, et relancez.",
     log_start_fast: "Mise à jour rapide : {kb} Ko en {n} blocs vers « {port} » ({device} OS {v}).",
     watch: "Regardez l'écran du Model:Cycles : il doit indiquer qu'il reçoit. S'il ne se passe rien en quelques secondes, cliquez sur <b>Arrêter</b>.",
@@ -1744,6 +1791,8 @@ const st = {
   mode: "mods",            // "mods" | "restore" | "samples"
   samplesOs: null,         // official Model:Samples OS { raw, name, sha } ("samples" mode)
   smpDir: "cyc",           // "samples" mode: "cyc" Samples OS for a Model:Cycles | "smp" Cycles OS for a Model:Samples | "back" its way back
+  machine: "cyc",          // "mods" mode, the machine that receives the (always Model:Cycles) OS: "cyc" a Model:Cycles |
+                           // "smp" a Model:Samples on its own OS | "cos" a Model:Samples already on the Cycles OS (notes/57)
   samplesError: null,
   syntakt: null,           // official Syntakt OS { raw, name, sha } (source of the Syntakt engines)
   syntaktError: null,
@@ -1773,7 +1822,27 @@ const st = {
 function t(key, vars) {
   let s = (T[st.lang] && T[st.lang][key]) || T.en[key] || key;
   if (vars) for (const k in vars) s = s.split("{" + k + "}").join(vars[k]);
-  return s;
+  return s.split("{dev}").join(deviceName()).split("{port}").join(portName());
+}
+
+// The machine being flashed, as the connection messages name it: a Model:Samples for the Mods tab's two Model:Samples
+// choices and for the Samples OS tab's last two (notes/57); otherwise the Model:Cycles.
+function deviceName() {
+  const smp = st.mode === "mods" ? st.machine !== "cyc" : st.mode === "samples" && st.smpDir !== "cyc";
+  return smp ? "Model:Samples" : "Model:Cycles";
+}
+// Its USB port is named after the OS it runs: Model:Samples only while it still runs its own OS.
+function portName() {
+  const smp = st.mode === "mods" ? st.machine === "smp" : st.mode === "samples" && st.smpDir === "smp";
+  return smp ? "Model:Samples" : "Model:Cycles";
+}
+// Step 3 texts that name the machine follow the tab and the machine chosen.
+function refreshDevTexts() {
+  document.querySelectorAll("[data-i18n],[data-i18n-html]").forEach((el) => {
+    const key = el.dataset.i18n || el.dataset.i18nHtml;
+    if (!/\{(dev|port)\}/.test(T.en[key] || "")) return;
+    if (el.dataset.i18n) el.textContent = t(key); else el.innerHTML = t(key);
+  });
 }
 function esc(s) {
   return String(s).replace(/[&<>"]/g, (c) => ({ "&": "&amp;", "<": "&lt;", ">": "&gt;", '"': "&quot;" }[c]));
@@ -2239,7 +2308,8 @@ function renderSelection() {
       `</div>` +
     `</div>` +
     `<div class="sel-body" id="sel-body">` +
-      `<ul class="chips">${on.map(chip).join("")}${choiceNeedsSyntakt() ? `<li class="sel-need">${esc(t("sel_syntakt"))}</li>` : ""}</ul>` +
+      `<ul class="chips">${on.map(chip).join("")}${choiceNeedsSyntakt() ? `<li class="sel-need">${esc(t("sel_syntakt"))}</li>` : ""}` +
+        `${st.machine !== "cyc" ? `<li class="sel-need">${esc(t("sel_samples"))}</li>` : ""}</ul>` +
       (sw ? `<p class="sel-msg">${esc(swapText(sw))} <button type="button" class="lnk" data-undo>${esc(t("undo"))}</button></p>` : "") +
       `<p class="sel-foot"><button type="button" class="lnk soft" data-clear>${esc(t("sel_clear"))}</button></p>` +
     `</div>`;
@@ -2405,9 +2475,27 @@ function setMode(mode) {
     $("tab-" + m).setAttribute("aria-selected", String(mode === m));
     $("panel-" + m).hidden = mode !== m;
   }
-  $("drop2-wrap").hidden = mode !== "samples";
   if (st.os) describeOs();
   update();
+}
+
+// Mods tab: which machine receives the Model:Cycles OS. On a Model:Samples the build goes inside the official Model:Samples
+// firmware (MCBuilder.modsForSamples = tools/mods_for_samples.py), in the packing of the OS the machine runs.
+function setMachine(m) {
+  if (!["cyc", "smp", "cos"].includes(m)) return;
+  st.machine = m;
+  try { localStorage.setItem("mc-machine", m); } catch (e) { /* private mode */ }
+  st.finished = null;
+  renderSelection();                               // its "+ your Model:Samples OS file" line
+  update();
+}
+
+// The Model:Samples OS file is needed: the Samples OS tab, or mods for a Model:Samples.
+function needsSamplesFile() {
+  return st.mode === "samples" || onSamples();
+}
+function onSamples() {
+  return st.mode === "mods" && st.machine !== "cyc";
 }
 
 // "Samples OS" tab: which machine, which way.
@@ -2555,7 +2643,7 @@ function prepareFirmware() {
   const key = tweaks.map((x) => x.id).join("+");
   const labels = chosenLabels();
   const syntakt = sdv ? st.syntakt.raw : null;     // only official files, all with the same section 7: same bytes for every key
-  buildCached(key, (raw) => {
+  const makeCycles = (raw) => {
     const opts = {};
     if (REF_MAINOS[key]) opts.expectMainOsSha = REF_MAINOS[key];
     opts.refMods = REF_MODS;                       // every mod, on every build (notes/49)
@@ -2565,6 +2653,21 @@ function prepareFirmware() {
     return { raw: r.raw, name: `model-cycles_OS1.13_${key}.syx`, kind: "built", mods: labels, sha: r.mainOsSha,
       ref: !!REF_MAINOS[key], modsRef: r.modsChecked, sixch: tweaks.some((x) => x.id.startsWith("6ch")),
       sdv: sdv && (tweaks.find((x) => x.append && x.append.syntakt) || {}).id, engines: sdv ? chosenEngines() : [] };
+  };
+  if (!onSamples()) { buildCached(key, makeCycles); return; }
+  // A Model:Samples: the same Model:Cycles build (checked as above), then inside the official Model:Samples firmware
+  // with the 32-byte key change, in the packing of the OS it runs (notes/57).
+  const smp = st.samplesOs;
+  if (!smp) { st.fw = null; st.fwError = "needs_samples_file"; return; }
+  const into = st.machine === "smp" ? "samples" : "cycles";
+  buildCached(`${key}@${st.machine}:${smp.sha}`, (raw) => {
+    const base = (st.cache[key] && st.cache[key].fw) || makeCycles(raw);
+    const r = window.MCBuilder.modsForSamples(base.raw, raw, smp.raw, into);
+    if (r.modsSha !== base.sha) throw new Error("packed MAIN OS differs from the Model:Cycles build");
+    log(`Packed ${key} for a Model:Samples (${into === "samples" ? "Samples OS" : "Cycles OS"} running): ` +
+      `MAIN OS ${r.mainOsSha.slice(0, 12)}…, ${r.raw.length} bytes.`, "is-ok");
+    return Object.assign({}, base, { raw: r.raw, machine: st.machine,
+      name: `model-cycles_OS1.13_${key}_for-samples_${st.machine === "smp" ? "smp-os" : "cyc-os"}.syx` });
   });
 }
 
@@ -2756,6 +2859,8 @@ function devProblem() {
   if (st.fw && st.fw.raw[4] !== d.product) {
     if (st.fw.kind === "sback" && d.id === 25) return "dev_back_on_samples";
     if (st.fw.kind === "cos" && d.id === 27) return "dev_fwd_on_cycles";
+    if (st.fw.machine === "smp" && d.id === 27) return "dev_mach_smp_on_cycles";
+    if (st.fw.machine === "cos" && d.id === 25) return "dev_mach_cos_on_samples";
     if (d.id === 25) return "dev_samples";
     if (d.id === 27) return "dev_wrong_file";
     return "dev_other";
@@ -2816,7 +2921,7 @@ function renderMidi() {
     if (!outs.length) rows.push(["is-warn", esc(t("midi_none"))]);
     else if (port && !isDevicePort(port.name) && !(fast && st.dev && st.dev.state === "ok")) rows.push(["is-warn", esc(t("warn_not_dev"))]);
     else if (port && fast) rows.push(devRow());
-    else if (port && /samples/i.test(port.name)) rows.push(["is-warn", esc(t("warn_samples_port"))]);
+    else if (port && /samples/i.test(port.name) && !(st.fw && st.fw.raw[4] === 0x0f)) rows.push(["is-warn", esc(t("warn_samples_port"))]);
     else if (port) rows.push(["is-ok", esc(t("midi_pick_dev"))]);
     else if (!outs.some((o) => isDevicePort(o.name))) rows.push(["is-warn", esc(t("midi_no_dev"))]);
   }
@@ -2846,6 +2951,10 @@ function missingReason() {
     if (!samplesAcked()) return st.smpDir === "smp" ? "miss_cos_ack" : "miss_samples_ack";
   }
   if (st.fwError === "pick_one") return "miss_mod";
+  if (onSamples()) {
+    if (!$("mach-ack").checked) return "miss_cos_ack";
+    if (!st.samplesOs && st.os.stock) return "miss_samples_file";
+  }
   if (needsSyntakt() && !st.syntakt) return "miss_syntakt";
   if (st.building) return "miss_build";
   if (!st.fw) return "miss_fw";
@@ -2854,7 +2963,8 @@ function missingReason() {
   if (st.method === "fast") {
     const why = devProblem();
     if (why === "probing") return "miss_probe";
-    if (["dev_samples", "dev_wrong_file", "dev_other", "dev_back_on_samples", "dev_fwd_on_cycles"].includes(why))
+    if (["dev_samples", "dev_wrong_file", "dev_other", "dev_back_on_samples", "dev_fwd_on_cycles", "dev_mach_smp_on_cycles",
+      "dev_mach_cos_on_samples"].includes(why))
       return "miss_dev_mismatch";
     if (why) return "miss_dev";
   }
@@ -2863,8 +2973,15 @@ function missingReason() {
 }
 
 function render() {
+  refreshDevTexts();
   // step 2 status
-  $("h2s").textContent = t(st.mode === "samples" ? "s2_samples" : "s2");
+  $("h2s").textContent = t(needsSamplesFile() ? "s2_samples" : "s2");
+  $("drop2-wrap").hidden = !needsSamplesFile();
+  $("mach-pane").hidden = st.machine === "cyc";
+  $("mach-w-smp").hidden = st.machine !== "smp";
+  $("mach-w-cos").hidden = st.machine !== "cos";
+  $("mach-w-only").hidden = st.machine !== "smp";
+  for (const m of ["cyc", "smp", "cos"]) $("mach-" + m).setAttribute("aria-checked", String(st.machine === m));
   if (st.os && st.mode === "samples" && !st.os.stock)
     setStatus("file-status", [["is-bad", t(st.smpDir === "cyc" ? "samples_needs_cycles" : "cos_needs_cycles")]]);
   else if (st.os) {
@@ -2877,11 +2994,13 @@ function render() {
     if (st.fwError === "restore_needs") rows.push(["is-bad", t("os_restore_needs")]);
     else if (st.fwError === "pick_one") rows.push(["", esc(t("pick_one"))]);
     else if (st.fwError === "needs_syntakt") rows.push(["", esc(t("needs_syntakt"))]);
+    else if (st.fwError === "needs_samples_file") rows.push(["", esc(t("needs_samples_file"))]);
     else if (st.building) rows.push(["is-busy", esc(t("building"))]);
     else if (st.fwError) rows.push(["is-bad", esc(t("build_failed", { err: st.fwError }))]);
     else if (st.fw && st.fw.kind === "built")
       rows.push(["is-ok", esc(t("built", { mods: st.fw.mods.join(" + ") })) + (st.fw.ref ? " " + esc(t("built_ref")) : st.fw.modsRef ? " " + esc(t("built_ref_mods")) : "") +
-        ` <span class="hash">MAIN OS ${esc(st.fw.sha.slice(0, 8))}</span>`]);
+        ` <span class="hash">MAIN OS ${esc(st.fw.sha.slice(0, 8))}</span>` +
+        (st.fw.machine ? " " + esc(t(st.fw.machine === "smp" ? "built_smp" : "built_cos")) : "")]);
     else if (st.fw && st.fw.kind === "stock") rows.push(["is-ok", esc(t("stock_ready"))]);
     else if (st.fw && st.fw.kind === "samples") rows.push(["is-ok", esc(t("samples_ready")) + " " + esc(t("built_ref"))]);
     else if (st.fw && st.fw.kind === "cos") rows.push(["is-ok", esc(t("cos_ready")) + " " + esc(t("built_ref"))]);
@@ -2911,7 +3030,8 @@ function render() {
   }
 
   // step badges
-  const choseOk = st.mode === "restore" || (st.mode === "samples" ? samplesAcked() : chosenTweaks().length > 0);
+  const choseOk = st.mode === "restore" || (st.mode === "samples" ? samplesAcked()
+    : chosenTweaks().length > 0 && (!onSamples() || $("mach-ack").checked));
   $("step-choose").classList.toggle("done", choseOk);
   $("step-file").classList.toggle("done", !!st.fw && !st.building);
   $("step-connect").classList.toggle("done", st.midiState === "ready" && !!currentPort() && (st.method !== "fast" || !devProblem()));
@@ -2920,7 +3040,7 @@ function render() {
   // summary
   const sum = $("summary");
   if (st.fw) {
-    const what = st.fw.kind === "built" ? st.fw.mods.join(" + ")
+    const what = st.fw.kind === "built" ? st.fw.mods.join(" + ") + (st.fw.machine ? ` (${t("for_samples")})` : "")
       : st.fw.kind === "stock" ? t("mods_list_restore")
       : st.fw.kind === "samples" ? t("mods_list_samples")
       : st.fw.kind === "cos" ? t("mods_list_cos")
@@ -2944,9 +3064,9 @@ function render() {
 }
 
 // Fast method, once the firmware is sent: confirm on the machine, then it restarts.
-// The machine the firmware goes to: a Model:Samples for the Cycles OS and its way back, else a Model:Cycles.
+// The machine the firmware goes to: a Model:Samples for the Cycles OS (with or without mods) and its way back, else a Model:Cycles.
 function hardware() {
-  return st.fw && (st.fw.kind === "cos" || st.fw.kind === "sback") ? "Model:Samples" : "Model:Cycles";
+  return st.fw && (st.fw.kind === "cos" || st.fw.kind === "sback" || st.fw.machine) ? "Model:Samples" : "Model:Cycles";
 }
 
 function renderAfter() {
@@ -3058,6 +3178,7 @@ async function flash() {
       (fw.sdv ? `<p>${t(/^syntakt-tg-/.test(fw.sdv) ? "done_syn_tg" : "done_syn", { list: fw.engines.map((e) => `<b>${esc(e.name)}</b> (${esc(e.label)})`).join(", ") })}</p>` : "") +
       (fw.kind === "samples" ? `<p>${t("done_samples")}</p>` : "") +
       (fw.kind === "cos" ? `<p>${t("done_cos")}</p>` : "") +
+      (fw.machine ? `<p>${t("done_mach")}</p>` : "") +
       (fw.kind === "sback" ? `<p>${t("done_sback")}</p>` : "");
     log(fast ? `Firmware sent in ${Math.round(res.seconds)} s (${res.blocks} blocks): waiting for the confirmation on the machine.`
       : `Transfer complete in ${Math.round(res.seconds)} s.`, "is-ok");
@@ -3115,6 +3236,7 @@ function init() {
   if (!lang) lang = /^fr\b/i.test(navigator.language || "") ? "fr" : "en";
   st.lang = lang;
   try { st.method = localStorage.getItem("mc-method") === "slow" ? "slow" : "fast"; } catch (e) { /* private mode */ }
+  try { const m = localStorage.getItem("mc-machine"); if (["cyc", "smp", "cos"].includes(m)) st.machine = m; } catch (e) { /* private mode */ }
 
   document.querySelectorAll(".lang button").forEach((b) => b.addEventListener("click", () => applyLang(b.dataset.lang)));
   $("tab-mods").addEventListener("click", () => setMode("mods"));
@@ -3123,6 +3245,8 @@ function init() {
   $("samples-ack").addEventListener("change", render);
   $("cos-ack").addEventListener("change", render);
   for (const d of ["cyc", "smp", "back"]) $("smp-dir-" + d).addEventListener("click", () => setSmpDir(d));
+  for (const m of ["cyc", "smp", "cos"]) $("mach-" + m).addEventListener("click", () => setMachine(m));
+  $("mach-ack").addEventListener("change", render);
 
   const drop = $("drop"), file = $("file");
   file.addEventListener("change", (e) => { if (e.target.files[0]) readFile(e.target.files[0]); e.target.value = ""; });
@@ -3182,7 +3306,7 @@ function init() {
 
 // test hooks (tools/webflash_smoke.js)
 window.MCFlasherApp = { state: st, REF_MAINOS, REF_MODS, REF_SAMPLES_ON_CYCLES, REF_CYCLES_ON_SAMPLES, REF_SAMPLES_BACK, loadOs,
-  loadSamples, loadSyntakt, setMode, setSmpDir, setMethod, applyLang, render,
+  loadSamples, loadSyntakt, setMode, setSmpDir, setMachine, setMethod, applyLang, render,
   chosenTweaks, chosenLabels, CATS };
 
 if (document.readyState === "loading") document.addEventListener("DOMContentLoaded", init);

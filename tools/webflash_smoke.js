@@ -7,7 +7,8 @@
  * The optional official files are told apart by their names. The Model:Cycles OS checks each
  * combination of the REF_MAINOS sample against its reference hash, and each mod against REF_MODS
  * (app.js, notes/49; the real Syntakt engines need the Syntakt OS too); with the Model:Samples OS,
- * the "Samples OS" tab is checked end to end (REF_SAMPLES_ON_CYCLES); with the Syntakt OS, the
+ * the "Samples OS" tab and the Mods tab on a Model:Samples are checked end to end (REF_SAMPLES_ON_CYCLES,
+ * tools/mods_for_samples.py); with the Syntakt OS, the
  * Syntakt engines flow is. */
 const fs = require("fs");
 const path = require("path");
@@ -1032,6 +1033,123 @@ async function main() {
     await wait(150);
     check(/nothing to bring back/.test(text(doc, "midi-status")), "way back vs a machine already on the Samples OS: nothing sent");
     check(errors.length === 0, "no JS error in the Model:Samples flow " + (errors.length ? JSON.stringify(errors) : ""));
+  }
+
+  // 7b-bis. Step 3 names the machine being flashed (the tab and machine chosen), and the port after the OS it runs
+  {
+    const { w, doc, errors } = await load({ devName: "Acme Synth" });
+    const app = w.MCFlasherApp;
+    noRest(w);
+    doc.getElementById("allow").click();
+    await wait(150);
+    const seen = () => [text(doc, "flash"), text(doc, "midi-status"), doc.querySelector('[data-i18n-html="hf1"]').textContent,
+      doc.querySelector('[data-i18n-html="hu3"]').textContent].join(" | ");
+    check(/Flash the Model:Cycles/.test(seen()) && /Connect the Model:Cycles/.test(seen()) && /port named “Model:Cycles”/.test(seen())
+      && !/Model:Samples/.test(seen()), "Mods tab, Model:Cycles: step 3 names the Model:Cycles: " + text(doc, "midi-status"));
+    for (const [m, port] of [["smp", "Model:Samples"], ["cos", "Model:Cycles"]]) {
+      doc.getElementById("mach-" + m).click();
+      await wait(20);
+      check(/Flash the Model:Samples/.test(seen()) && /Connect the Model:Samples/.test(seen()) && /the Model:Samples/i.test(text(doc, "midi-status"))
+        && !/the Model:Cycles/i.test(text(doc, "midi-status")) && new RegExp("port named “" + port + "”").test(seen()),
+        `Mods tab, ${m}: step 3 names the Model:Samples, port “${port}”: ` + seen());
+    }
+    app.setMode("samples");
+    for (const [d, dev, port] of [["cyc", "Model:Cycles", "Model:Cycles"], ["smp", "Model:Samples", "Model:Samples"], ["back", "Model:Samples", "Model:Cycles"]]) {
+      doc.getElementById("smp-dir-" + d).click();
+      await wait(20);
+      check(new RegExp("Flash the " + dev).test(seen()) && new RegExp("the " + dev, "i").test(text(doc, "midi-status"))
+        && new RegExp("port named “" + port + "”").test(seen()), `Samples OS tab, ${d}: names the ${dev}, port “${port}”`);
+    }
+    app.applyLang("fr");
+    await wait(20);
+    check(/Flasher le Model:Samples/.test(text(doc, "flash")) && /le Model:Samples/i.test(text(doc, "midi-status")), "in French too: " + text(doc, "midi-status"));
+    app.applyLang("en");
+    app.setMode("mods");
+    doc.getElementById("mach-cyc").click();
+    await wait(20);
+    check(/Flash the Model:Cycles/.test(seen()) && !errors.length, "back to the Model:Cycles, no JS error " + errors.join(" "));
+  }
+
+  // 7c. Mods tab on a Model:Samples (notes/57): always the Model:Cycles OS, packed for the machine. The two files must be
+  // byte for byte those of tools/mods_for_samples.py for the same Model-TG build (SHA-256 below, printed by
+  // tools/emu/test_mods_for_samples.py).
+  if (REAL_OS && REAL_SMP && MAIN) {
+    const MFS = { smp: "1985e8e703092b768d32aa2c9b446cb0f95c1f944dc3e206f75973337469f686",
+                  cos: "1317199fbc625c38700344b69ce00496cdee0c8be6fae305843e6373e6394d19" };
+    const env = await load({ devName: "Elektron Model:Samples", device: { id: 25, name: "Model Samples" } });
+    const { w, doc, errors } = env;
+    const app = w.MCFlasherApp;
+    noRest(w);
+    const cyc = new Uint8Array(fs.readFileSync(REAL_OS)), smp = new Uint8Array(fs.readFileSync(REAL_SMP));
+    check(app.state.machine === "cyc" && doc.getElementById("mach-pane").hidden && doc.getElementById("drop2-wrap").hidden
+      && doc.getElementById("mach-cyc").getAttribute("aria-checked") === "true", "Mods tab: Model:Cycles by default, no Samples pane");
+    doc.getElementById("mach-smp").click();
+    await wait(20);
+    check(!doc.getElementById("mach-pane").hidden && /Tested/.test(text(doc, "mach-pane")) && !doc.getElementById("drop2-wrap").hidden
+      && /Load both official OS files/.test(text(doc, "h2s")) && !doc.getElementById("mach-w-smp").hidden
+      && doc.getElementById("mach-w-cos").hidden, "Model:Samples on its OS: pane tagged tested, second drop zone");
+    app.loadOs(cyc, "model-cycles_OS1.13.syx");
+    doc.getElementById("feat-model-tg").click();
+    await settle(w);
+    check(!app.state.fw && /official Model:Samples OS below/.test(text(doc, "file-status"))
+      && /Model:Samples OS file, to load/.test(text(doc, "mod-sel")), "Model-TG ticked, no Samples file yet: asked for it");
+    app.loadSamples(smp, "model-samples_OS1.13.syx");
+    await settle(w);
+    let f = app.state.fw, sha = f && w.MCBuilder.hex(w.MCBuilder.sha256(f.raw));
+    check(f && f.kind === "built" && f.machine === "smp" && f.raw[4] === 0x0f && f.ref && f.sha === app.REF_MAINOS["model-tg"]
+      && sha === MFS.smp && /_for-samples_smp-os\.syx$/.test(f.name),
+      "Model-TG for a Model:Samples on its OS = tools/mods_for_samples.py _smp-os (" + (sha || "").slice(0, 16) + ")");
+    check(/Packed for your Model:Samples \(on its own OS\)/.test(text(doc, "file-status")), "status line: " + text(doc, "file-status").slice(-60));
+    doc.getElementById("allow").click();
+    await wait(150);
+    doc.getElementById("ack").click();
+    await wait(20);
+    check(/backup/.test(text(doc, "missing")) && doc.getElementById("flash").disabled, "flash blocked until the backup box is ticked");
+    doc.getElementById("mach-ack").click();
+    await wait(20);
+    check(!doc.getElementById("flash").disabled && /\(for Model:Samples\)/.test(text(doc, "summary")) && /Model:Samples asks/.test(text(doc, "missing")),
+      "then ready: " + text(doc, "summary"));
+    doc.getElementById("flash").click();
+    await untilSent(w);
+    check(app.state.finished === "ok" && same(env.dev.received, f.raw) && /with your mods/.test(text(doc, "result")),
+      "fast: the modded Cycles OS reaches the Model:Samples byte for byte");
+
+    // now it answers as a Model:Cycles: the Samples-OS packing is refused, the Cycles-OS packing (change mods) is sent
+    env.dev.id = 27;
+    doc.getElementById("refresh").click();
+    await wait(150);
+    check(/already on the Cycles OS/.test(text(doc, "midi-status")) && doc.getElementById("flash").disabled,
+      "Samples-OS packing vs a machine answering Model:Cycles: nothing sent");
+    doc.getElementById("mach-cos").click();
+    await settle(w);
+    f = app.state.fw; sha = f && w.MCBuilder.hex(w.MCBuilder.sha256(f.raw));
+    check(f && f.machine === "cos" && f.raw[4] === 0x11 && f.raw[8] === 0x0c && sha === MFS.cos && !doc.getElementById("mach-w-cos").hidden,
+      "Model:Samples on the Cycles OS = tools/mods_for_samples.py _cyc-os (" + (sha || "").slice(0, 16) + ")");
+    await wait(150);
+    check(!doc.getElementById("flash").disabled, "ready for a machine answering Model:Cycles: " + text(doc, "missing"));
+    doc.getElementById("flash").click();
+    await untilSent(w);
+    check(app.state.finished === "ok" && same(env.dev.received, f.raw), "fast: the change of mods reaches the machine byte for byte");
+    env.dev.id = 25;
+    doc.getElementById("refresh").click();
+    await wait(150);
+    check(/on its own OS/.test(text(doc, "midi-status")) && doc.getElementById("flash").disabled,
+      "Cycles-OS packing vs a machine answering Model:Samples: nothing sent");
+
+    // back to Model:Cycles: the usual build, and a machine answering Model:Samples is pointed to step 1
+    doc.getElementById("mach-cyc").click();
+    await settle(w);
+    f = app.state.fw;
+    check(f && !f.machine && f.raw[4] === 0x11 && f.sha === app.REF_MAINOS["model-tg"] && doc.getElementById("mach-pane").hidden
+      && doc.getElementById("drop2-wrap").hidden && /choose it in step 1/.test(text(doc, "midi-status")),
+      "Model:Cycles again: plain build; a Model:Samples answering is told to pick it in step 1");
+    doc.querySelector('.lang button[data-lang="fr"]').click();
+    doc.getElementById("mach-smp").click();
+    await settle(w);
+    check(/sous son OS/.test(text(doc, "mach-smp")) && /Des mods sur un Model:Samples/.test(text(doc, "mach-pane"))
+      && /Emballé pour votre Model:Samples/.test(text(doc, "file-status")), "FR: machine picker and status translated");
+    app.setMachine("cyc");                                         // remembered by the page: leave the default for the next sections
+    check(errors.length === 0, "no JS error in the mods-on-Model:Samples flow " + (errors.length ? JSON.stringify(errors) : ""));
   }
 
   // 8. Syntakt engines with the official Model:Cycles and Syntakt files, up to the transfer

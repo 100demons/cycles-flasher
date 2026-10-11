@@ -33,6 +33,12 @@ ff53eb5def759c1fe3654522309b45b939e190e15a3e3e037eb39a8ae85665a8  02-trig-previe
 fbfa29a8873e18831d860ae489440e89c308612437379589d5ed7fc670d5d234  03-browser-scroll.json
 ```
 
+Hors tweaks, l'OS Cycles avec mods pour Model:Samples (`tools/mods_for_samples.py`, `MCBuilder.modsForSamples`,
+[note 57](../../notes/57-os-cycles-quelle-que-soit-la-machine.md)) : flasher d'origine de **RDS (AIM)** (Discord,
+10/10/2026) ; intégration à Modded Cycles par **DaftMaple**. Repris en gardant sa sortie octet pour octet (commentaires
+en français, sans l'option `--no-keyfix` : le correctif de clé est toujours appliqué). Aucun octet d'Elektron : la clé du
+Samples est tirée du fichier officiel de l'utilisateur.
+
 Autre ajout de notre côté : l'entrée `cave_refs_ok` de `device.json`, qui explique pourquoi l'écriture de `browser-scroll`
 dans la table de glyphes de la police de chiffres est sans danger ([note 15 §2](../../notes/15-demandes-reddit.md#point-technique--une-exception-au-contrôle-des-caves)).
 

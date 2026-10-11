@@ -18,6 +18,12 @@ for some mods, code compiled or assembled into free space. Users pick mods in a 
 (`docs/flasher/`, served by GitHub Pages at <https://18nelli18.github.io/Modded-Cycles/>), which builds the firmware in
 the browser and sends it over USB. A pure-Python toolchain (`tools/build.py`) does the same build on the command line.
 
+**Always the Model:Cycles OS, whatever the machine** (decision of 10/10/2026, notes/57). The Mods tab also flashes a
+Model:Samples, but what it installs is still the Model:Cycles OS with the mods (sampling comes from Model-TG): the machine
+picker only changes the packing (official Model:Samples container and signature, the 32-byte key change of notes/41,
+transport `0x0F` or `0x11`; `tools/mods_for_samples.py`, `MCBuilder.modsForSamples`). Build, prove and reference a mod
+once, on the Model:Cycles OS; never add a mod built on the Samples OS.
+
 Owner: Maxime (GitHub `18nelli18`). He tests every firmware change on his own Model:Cycles.
 
 ## Hard rules
@@ -70,6 +76,8 @@ tools/gen_*.py                one generator per mod: writes its tweak JSON, --ch
 tools/machines/<mod>/         C and assembly sources compiled into the firmware
 tools/emu/                    Unicorn emulation of the OS: test_<mod>.py proofs, mcengine.py, emac.py, syntakt.py
 tools/gen_flasher_tweaks.py   FEATURES list -> docs/flasher/tweaks.js (generated)
+tools/crossflash.py, tools/mods_for_samples.py   one OS in the other machine's container (notes/41, 57): Samples OS tab,
+                              and the mods for a Model:Samples
 tools/check_overlaps.py       no firmware needed: mods that can be ticked together never write the same bytes, except
                               the same whole write or a mod applied on top of another (`requires`) (notes/49)
 tools/registry.py             no firmware needed: builds tweaks/model-cycles_OS1.13/REGISTRY.md from the tweaks, the
@@ -90,7 +98,7 @@ CONTRIBUTING.md               terms for outside contributions
 
 Follow the shape of the last ones (tempo-max: commits `5997b4a`, `14fb9fa`, `6e592bc`; trig-hold, arp). In order:
 
-1. **Investigate and write the note.** New file `notes/NN-<slug>.md` (next free number; 53 is the last) with the
+1. **Investigate and write the note.** New file `notes/NN-<slug>.md` (next free number; 57 is the last) with the
    user's request and its source, the OS code involved (addresses, `[FAIT]`/`[HYP]`), the design, free space used and
    conflicts with other tweaks. Add a row to `notes/README.md`. See `notes/AGENTS.md`.
 2. **Write the generator** `tools/gen_<mod>.py` (and sources under `tools/machines/<mod>/` if it has code). It reads

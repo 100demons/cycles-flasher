@@ -231,3 +231,10 @@ charge des samples en identité SMP.
   référence) ; la plus grosse finit en `0x401fae10` (< `0x40200000`) et son conteneur (948 928 o) s'arrête en
   `0x107ac0`, loin de `0x1e0000`. `cyclesForSamples` accepte déjà un `.syx` modifié. À prévoir : changer de mods plus
   tard demande un nouveau type de fichier (conteneur signé Samples dans le transport Cycles), et créditer akrism.
+
+## 9. Suite : l'OS Cycles avec mods pour Model:Samples (10/10/2026)
+
+La piste du §8 est faite en [57](57-os-cycles-quelle-que-soit-la-machine.md) : le choix de la machine dans l'onglet Mods,
+`tools/mods_for_samples.py` (flasher d'origine de RDS (AIM), intégré par DaftMaple) et le nouveau type de fichier (conteneur signé
+Samples dans le transport Cycles) pour changer de mods. Décision prise à cette occasion : le flasher installe toujours
+l'OS du Model:Cycles, quelle que soit la machine.
