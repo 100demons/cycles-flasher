@@ -477,9 +477,10 @@ def gov_skip(fw, alone, tw, ref, label):
     why_f, _ = pf.verify(ref)
     skipped = [b for b in range(20, 100) if not called[b]]
     reset = [r["block"] for r in pt.recs[0] if r.get("reset")]
+    trigs = [r["block"] for r in pt.recs[0] if r["trig"]]          # l'OS livre le trig au bloc suivant
     ok = (pa.kinds() == "TS" and pt.kinds() == "TT" and pf.kinds() == "TS" and not why_t and not why_f
-          and st_t and st_f and len(skipped) > 30 and reset == [1, 100] and not x[skipped].any()
-          and np.abs(x[102:]).max() > 1e7 and not (unm_a or unm_t or unm_f))
+          and st_t and st_f and len(skipped) > 30 and reset == trigs and trigs[-1] in (100, 101)
+          and not x[skipped].any() and np.abs(x[102:]).max() > 1e7 and not (unm_a or unm_t or unm_f))
     check(ok, f"{label} : GOV_SKIP : note tenue éteinte par le régulateur (dès le bloc {st_t[:1]}, pas calculée "
               f"pendant {len(skipped)} blocs), trig suivant rejoué ({pt.kinds()}, cœur remis à zéro aux blocs "
               f"{reset}) ; ACID seule glisse ({pa.kinds()}) ; minuteur figé, la version combinée glisserait "
