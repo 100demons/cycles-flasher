@@ -279,7 +279,7 @@ FEATURES = [
                 "TB-303, d'apres le modele libre d'Open303. COLOR = cutoff, SHAPE = resonance, SWEEP = env mod, "
                 "CONTOUR = saturation (drive), PUNCH = scie ou carre ; une LEN plus longue que l'ecart au trig "
                 "suivant fait glisser la note.",
-        "status": "experimental",
+        "status": "tested",
         "credit": {"kind": "based", "who": "Robin Schmidt", "repo": "RobinSchmidt/Open303"},
         "license": "LICENSE-Open303",
         # meme place et meme mecanique que MACRO et les moteurs du Syntakt (notes/54 §7)

@@ -27,8 +27,8 @@ l'OS 1.13.
   celle du même cœur compilé pour l'ordinateur, y compris quand le vrai séquenceur de l'OS joue (slide, LEN,
   vélocité, verrous, jeu live) ; les machines d'origine ne changent pas.
 - **Charge** : une voix ACID coûte un peu moins qu'une voix TONE (§8). Une voix muette n'est pas calculée.
-- **Expérimental** : la première version (avec l'accent) a bien joué sur la machine le 11/10/2026 ; DRIVE pas encore
-  (§10).
+- **Testé sur la machine (11/10/2026)** : la première version (avec l'accent), puis la version avec DRIVE, « ça marche
+  nickel » (§10).
 
 ## 1. Le modèle : Open303
 
@@ -298,6 +298,11 @@ Model:Samples sans erreur.
 
 ## 10. Sur la machine
 
+**Testé sur la machine (11/10/2026), version avec DRIVE**, fichiers ci-dessous : « ça marche nickel » (Maxime, fil
+du projet, 19:11 UTC ; il n'a pas dit lequel des deux fichiers il a flashé). ACID passe en « testé » dans le flasher.
+Il a demandé dans le même message si ACID marche en même temps que MACRO et les moteurs du Syntakt : pas encore, même
+place (§7).
+
 **Testé sur la machine (11/10/2026), première version (CONTOUR = accent)**, fichiers ci-dessous : « ça marche bien ».
 L'accent semblait ne rien changer, et Maxime ne le trouvait pas utile ici : remplacé par DRIVE (§3.2). Fichiers de cette
 première version, construits par `tools/build.py` : `6ch-usbup,acid,trig-hold,arp,tempo-max,boot-anim,
@@ -311,7 +316,7 @@ trig-hold,arp,tempo-max,boot-anim,multiline-browser,level-pan-values,trigless-di
 MAIN OS `d5449543…`). `demo-acid-drive.wav` : une ligne jouée par le vrai séquenceur en émulation, DRIVE à 0, 40, 80
 puis 127 toutes les deux mesures.
 
-À vérifier sur la version avec DRIVE :
+Ce qu'il fallait vérifier sur la version avec DRIVE :
 
 - CONTOUR (Drive) de 0 à 127 sur une ligne qui joue : à 0, le son de la première version ; de la chaleur au premier
   quart, du grain vers le milieu, un fuzz en haut ; le volume reste à peu près le même, sans saut ni craquement.
