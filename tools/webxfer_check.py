@@ -1,4 +1,8 @@
 #!/usr/bin/env python3
+# SPDX-License-Identifier: GPL-3.0-or-later
+# The functions transcribed from Elektroid (src/connectors/elektron.c) are
+# Copyright (C) 2019 David García Goñi, GPL-3.0-or-later; translated to Python for Modded-Cycles in 2026.
+# Unlike the rest of the repository (MIT), this file is under the GPL-3.0-or-later: LICENSES/GPL-3.0-or-later.txt.
 """Checks the fast USB path of the web flasher (docs/flasher/flasher.js) against a line by line
 transcription of Elektroid's C (src/connectors/elektron.c, https://github.com/dagargo/elektroid):
 7-bit packing both ways, the CRC of a block, and the bytes of the OS upgrade messages.

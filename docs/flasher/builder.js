@@ -9,6 +9,9 @@
  * tools/webbuild_check.sh le verifie contre tools/build.py sur des images
  * synthetiques (pipeline complet, HMAC compris).
  *
+ * Licence : MIT (LICENSE du depot). mtlib est de drumkilla, MIT (LICENSE-elektron-model-tweaks.txt),
+ * d'apres elektron-firmware-tool de Marcel Bierling, MIT (LICENSE-elektron-firmware-tool.txt).
+ *
  * Enveloppe dans une IIFE : en <script> classique, les declarations de premier
  * niveau sont globales et entreraient en collision avec flasher.js.
  */

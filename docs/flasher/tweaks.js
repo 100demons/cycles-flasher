@@ -98355,7 +98355,8 @@ window.MC_TWEAKS = {
      "id": "6ch-usbup",
      "label": null
     }
-   ]
+   ],
+   "license": "LICENSE-ms-multi-output.txt"
   },
   {
    "id": "model-tg",
@@ -98406,7 +98407,8 @@ window.MC_TWEAKS = {
    "with": {
     "syntakt": "sample-preview-st",
     "macro": "sample-preview-st"
-   }
+   },
+   "license": "LICENSE-Model-TG.txt"
   },
   {
    "id": "latching-mute",
@@ -98424,7 +98426,8 @@ window.MC_TWEAKS = {
      "id": "latching-mute",
      "label": null
     }
-   ]
+   ],
+   "license": "LICENSE-elektron-model-tweaks.txt"
   },
   {
    "id": "trig-preview",
@@ -98442,7 +98445,8 @@ window.MC_TWEAKS = {
      "id": "trig-preview",
      "label": null
     }
-   ]
+   ],
+   "license": "LICENSE-elektron-model-tweaks.txt"
   },
   {
    "id": "browser-scroll",
@@ -98460,7 +98464,8 @@ window.MC_TWEAKS = {
      "id": "browser-scroll",
      "label": null
     }
-   ]
+   ],
+   "license": "LICENSE-elektron-model-tweaks.txt"
   },
   {
    "id": "trig-hold",

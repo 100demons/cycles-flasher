@@ -137,8 +137,9 @@ morceaux : les 100 Ko de variables ne prennent pas de place dans l'image. `stub.
 - `32-macro-tg.json` : 114 écritures, `requires` `model-tg-st`.
 - Le code de Braids est compilé **sans modification** (`braids/macro_oscillator`, `analog_oscillator`,
   `digital_oscillator`, `resources`, `stmlib/utils/random`), avec `m68k-linux-gnu-g++` 13.3 (Ubuntu 24.04) ; un autre
-  GCC donne d'autres octets (`--check` le dit). Aucun octet Elektron dans les JSON : la table des descripteurs est
-  recopiée au build depuis le fichier de l'utilisateur (recette `cycles`).
+  GCC donne d'autres octets (`--check` le dit). Aucun code Elektron dans les JSON, seulement les octets `old` qui
+  vérifient le fichier de l'utilisateur et quelques valeurs lues dans l'OS (`THIRD-PARTY-NOTICES.md`) : la table des
+  descripteurs est recopiée au build depuis ce fichier (recette `cycles`).
 - Licence MIT : `tweaks/model-cycles_OS1.13/LICENSE-Braids` (copiée en `docs/flasher/LICENSE-Braids.txt`), écrite par le
   générateur depuis l'en-tête des sources. La carte du flasher, le guide et le README créditent Émilie Gillet et
   disent d'où vient le code ; la machine s'appelle MACRO.

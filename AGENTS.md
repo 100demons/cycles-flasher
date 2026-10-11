@@ -28,10 +28,11 @@ Owner: Maxime (GitHub `18nelli18`). He tests every firmware change on his own Mo
 
 ## Hard rules
 
-1. **Never commit an Elektron firmware image**, original or modified, or any bytes copied from one (no `.syx`, `.zip`,
-   extracted sections, dumps). `.gitignore` covers `firmware/`, `*.syx`, `*.zip`, `build/`, `vendor/`, `*.wav`. A tweak
-   carries only its own writes; code taken from the Syntakt OS is extracted **at build time** from the user's file
-   (recipes and relocation tables only, see notes/17).
+1. **Never commit an Elektron firmware image**, original or modified, or anything extracted from one (no `.syx`,
+   `.zip`, extracted sections, dumps, copied routines). `.gitignore` covers `firmware/`, `*.syx`, `*.zip`, `build/`,
+   `vendor/`, `*.wav`. A tweak carries only its own writes and the short `old` bytes that check the user's file; code
+   taken from the Syntakt OS is extracted **at build time** from the user's file (recipes and relocation tables only,
+   see notes/17). Never write that a file holds "no Elektron bytes" when it carries `old` bytes.
 2. **Build from the official image only**, never on top of a previous build. Every write carries its `old` bytes and
    the build refuses a mismatch. Stock hashes are in `tweaks/model-cycles_OS1.13/device.json`.
 3. **Hardware testing is Maxime's.** A new mod ships as `"status": "experimental"`. Only after he reports that it works
@@ -44,9 +45,16 @@ Owner: Maxime (GitHub `18nelli18`). He tests every firmware change on his own Mo
 6. **Recovery must stay possible.** Only section 3 is touched; the bootloader and updater stay identical, so the
    STARTUP MENU (MIDI IN) can always bring back the official OS. The web flasher only offers tweaks that keep
    `CONFIG › UPGRADE` over USB working.
-7. **Respect the licenses and credit authors.** drumkilla's tweaks and `tools/mtlib/` (MIT), Model-TG by
-   TinyGregAudio (MIT, `LICENSE-Model-TG`), ms-multi-output by scottmetoyer (MIT). Record the origin of every tweak in
-   `tweaks/model-cycles_OS1.13/PROVENANCE.md` and set `credit` on its flasher card.
+7. **Respect the licenses and credit authors.** The project is MIT (`LICENSE`); the scope and every third-party
+   license are in `THIRD-PARTY-NOTICES.md`: drumkilla's tweaks and `tools/mtlib/` (MIT), elektron-firmware-tool by
+   Marcel Bierling (MIT), Model-TG by TinyGregAudio (MIT, `LICENSE-Model-TG`), ms-multi-output by scottmetoyer (MIT,
+   `LICENSE-ms-multi-output`), Braids by Émilie Gillet (MIT, `LICENSE-Braids`, compiled unchanged for MACRO), and `tools/webxfer_check.py`, transcribed from Elektroid (GPL-3.0-or-later). Never
+   transcribe or closely paraphrase code whose license does not allow it into the repo (GPL code into MIT files, code
+   with no license); check an upstream's license before porting from it, and keep its notice next to the copy. Record
+   the origin and license of every tweak in `tweaks/model-cycles_OS1.13/PROVENANCE.md` (and outside code in
+   `THIRD-PARTY-NOTICES.md`), set `credit` on its flasher card, and serve its MIT text with the page (`license` in
+   `FEATURES`). Outside contributions are merged only under the terms of `CONTRIBUTING.md`: work sent privately needs
+   its author's written OK.
 
 ## Languages
 
@@ -82,6 +90,8 @@ notes/                        numbered technical notes (French), index in notes/
 BUILD.md, FLASH.md            command-line build and flashing (French)
 .github/                      discord.yml + scripts/discord.mjs: new versions, mod status changes and merged PRs -> Discord
 README.md                     English overview for Model:Cycles owners (mod table)
+LICENSE, THIRD-PARTY-NOTICES.md   MIT for the project; what it does not cover; every third-party license
+CONTRIBUTING.md               terms for outside contributions
 ```
 
 ## Adding a feature for users (the usual PR)
