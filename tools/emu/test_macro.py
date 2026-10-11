@@ -76,6 +76,14 @@ AMP = ((0x400a9252, 0x400a9302), (0x400a9430, 0x400a9498), (0x400a967a, 0x400a97
 TONE = 4
 OFF = 9                             # machine hors limites : la voix n'est pas calculée
 NAMES = gm.MODELS
+# modèles allégés et lo-fi (notes/55) : rendus à 48 kHz une octave plus haut, s'ils restent sous le plafond des
+# oscillateurs de Braids avec ce qu'ils ajoutent à leur note (désaccords des TRIPLE, accords de WAVE PARAPHONIC)
+LITE = dict(CSAW=0, SAW_SQUARE=0, SQUARE_SUB=0, SAW_SUB=0, TRIPLE_SAW=24 * 128, TRIPLE_SQUARE=24 * 128,
+            TRIPLE_TRIANGLE=24 * 128, TRIPLE_SINE=24 * 128, WAVETABLES=0, WAVE_MAP=0, WAVE_LINE=0,
+            WAVE_PARAPHONIC=19 * 128 + 5, DIGITAL_MODULATION=0)
+ONE = 1 << 24                       # RATE : un échantillon (Q24)
+OCTAVE, TOP_NOTE, RATE_SHIFT = 12 * 128, 16383, 86
+RATE_STEP = [round(ONE * 2 ** (-RATE_SHIFT * d / OCTAVE)) for d in range(65)]   # FINE 64 - d : 48 kHz x 2^(-86 d/1536)
 BASE_KW = dict(note=60, pitch=64, color=64, shape=0, sweep=64, contour=0, punch=0, gate=0, finetune=64, decay=50)
 
 
@@ -207,11 +215,11 @@ class Ref:
         subprocess.run(["g++", "-O2", "-I", str(repo), str(HERE / "braids_ref.cc"),
                         *[str(repo / s) for s in gm.SOURCES], "-o", str(self.exe)], check=True)
 
-    def run(self, recs):
-        lines = "".join(f"{r['render']} {r['shape']} {r['pitch']} {r['timbre']} {r['color']} {r['strike']}\n"
-                        for r in recs)
-        out = subprocess.run([str(self.exe)], input=lines.encode(), capture_output=True, check=True).stdout
-        return np.frombuffer(out, dtype="<i2").reshape(-1, 64).astype(np.int64)
+    def run(self, lines):
+        """lines : (rendu, modèle, hauteur, timbre, color, frappe, mode, k, taille) par bloc ; les int16 rendus."""
+        text = "".join(" ".join(str(int(v)) for v in ln) + "\n" for ln in lines)
+        out = subprocess.run([str(self.exe)], input=text.encode(), capture_output=True, check=True).stdout
+        return np.frombuffer(out, dtype="<i2").astype(np.int64)
 
 
 def knob(x):
@@ -220,31 +228,103 @@ def knob(x):
 
 
 def spec(pmod, vb, pb):
-    """Les réglages que la passerelle doit donner à Braids (notes/43 §3), d'après la voix et les paramètres de la
-    piste à l'entrée de macro_update."""
+    """Les réglages que la passerelle doit donner à Braids (notes/43 §3, notes/55), d'après la voix et les paramètres de
+    la piste à l'entrée de macro_update : la note (sans FINE), FINE arrondi (RATE / BITS), TIMBRE, COLOR, frappe."""
     s16 = lambda o: struct.unpack_from(">h", pb, o)[0]
     s32 = lambda o: struct.unpack_from(">i", vb, o)[0]
     trig = s32(0x38) != 0
-    n = (s16(0x14) << 8) + ((s16(0x22) - 0x4000) << 3) - (64 << 16) + pmod
+    n = (s16(0x14) << 8) - (64 << 16) + pmod
     n = min(max(n, 0), 127 << 16)
     env = 32767 if trig else min(abs(s32(0x230)) >> 16, 32767)
-    return dict(shape=min(max(s16(0x18) >> 8, 0), len(NAMES) - 1), pitch=n >> 9,
+    return dict(shape=min(max(s16(0x18) >> 8, 0), len(NAMES) - 1), note=n >> 9,
+                fine=min(max((s16(0x22) + 0x80) >> 8, 0), 127),
                 timbre=min(knob(s16(0x16)) + ((env * knob(s16(0x1c))) >> 15), 32767), color=knob(s16(0x1a)),
                 strike=int(trig), render=0, init=s32(0x2c) != MARK)
 
 
-def decimate(x64):
-    """Le filtre demi-bande de la passerelle, en entiers : 64 échantillons à 96 kHz par bloc -> 32 à 48 kHz."""
-    hist, out = np.zeros(HIST, np.int64), []
+def settings(r):
+    """Le rendu demandé (notes/55) : mode (1 : 48 kHz ou moins, 0 : 96 kHz), hauteur donnée à Braids, pas du rendu
+    (src : un échantillon rendu par sortie, Q24), échantillonneur-bloqueur après le rendu (hold), taille d'un rendu,
+    BITS (0 : rien)."""
+    fine = r["fine"]
+    rate = 64 - fine if fine < 64 else 0
+    bits = 12 - (fine - 65) * 10 // 62 if fine > 64 else 0
+    head, n = LITE.get(NAMES[r["shape"]]), r["note"]
+    # la fréquence de RATE, ou la plus basse dont la hauteur tient sous le plafond (puis échantillonné-bloqué)
+    fits = [d for d in range(rate + 1) if head is not None and n + OCTAVE + RATE_SHIFT * d + head <= TOP_NOTE]
+    if fits:
+        d = fits[-1]
+        mode, pitch, src = 1, n + OCTAVE + RATE_SHIFT * d, RATE_STEP[d]
+    else:
+        mode, pitch, src, d = 0, n, ONE, 0
+    size = max(2, 2 * int(6 * src / ONE + 0.5))            # environ 4 000 rendus par seconde, pair
+    return dict(mode=mode, pitch=pitch, src=src, hold=ONE if d == rate else RATE_STEP[rate], size=size, bits=bits)
+
+
+def dec1(hist, blk):
+    """Le filtre demi-bande de la passerelle, en entiers : 64 échantillons à 96 kHz -> 32 à 48 kHz."""
+    x = np.concatenate([hist, blk])
     c = HIST // 2 + 2 * np.arange(32)
-    for blk in x64:
-        x = np.concatenate([hist, blk])
-        acc = x[c] << 14
-        for k, h in enumerate(HB):
-            acc = acc + h * (x[c - 2 * k - 1] + x[c + 2 * k + 1])
-        out.append(acc)
-        hist = x[64:64 + HIST]
-    return np.array(out, np.int64).reshape(-1, 32)
+    acc = x[c] << 14
+    for k, h in enumerate(HB):
+        acc = acc + h * (x[c - 2 * k - 1] + x[c + 2 * k + 1])
+    return acc, x[64:64 + HIST]
+
+
+def simulate(recs, x=None):
+    """La passerelle telle que notes/43 et notes/55 la décrivent, bloc par bloc. Sans x : les lignes de la référence.
+    Avec x (sa sortie) : les 32 échantillons attendus avant la chaîne d'ampli et le nombre d'appels de Render de
+    chaque bloc rendu."""
+    lines, outs, calls, pos = [], [], [], 0
+    mode = ph = hph = cur = fill = avail = 0
+    hist = np.zeros(HIST, np.int64)
+    for r in recs:
+        if r["init"]:
+            mode, ph, hph, cur, fill, avail, hist = -1, ONE - 1, ONE - 1, 0, 0, 0, np.zeros(HIST, np.int64)
+        st = settings(r)
+        line = [r["render"], r["shape"], st["pitch"], r["timbre"], r["color"], r["strike"], st["mode"], 0, st["size"]]
+        lines.append(line)
+        if not r["render"]:
+            continue
+        if st["mode"] != mode:                          # changement de rendu : on repart de zéro
+            mode, fill, avail, hist = st["mode"], 0, 0, np.zeros(HIST, np.int64)
+        out, n_calls = [0] * 32, 0
+        if mode:
+            for i in range(32):
+                if st["src"] != ONE:
+                    ph += st["src"]
+                    if ph < ONE:
+                        out[i] = cur
+                        continue
+                    ph -= ONE
+                if not avail:
+                    n_calls, avail = n_calls + 1, st["size"]
+                avail -= 1
+                line[7] += 1
+                if x is not None:
+                    cur, pos = int(x[pos]) << 15, pos + 1
+                out[i] = cur
+        else:
+            while fill < 64:
+                fill, n_calls = fill + 24, n_calls + 1
+            fill -= 64
+            if x is not None:
+                acc, hist = dec1(hist, x[pos:pos + 64])
+                out, pos = [int(a) for a in acc], pos + 64
+        if st["hold"] != ONE:                           # sa propre phase
+            for i in range(32):
+                hph += st["hold"]
+                if hph >= ONE:
+                    hph, cur = hph - ONE, out[i]
+                out[i] = cur
+        if st["bits"]:
+            m, h = -(1 << (31 - st["bits"])), 1 << (30 - st["bits"])
+            out = [(o + h) & m for o in out]
+        outs.append(out)
+        calls.append(n_calls)
+    if x is not None and pos != len(x):
+        raise SystemExit(f"!! référence : {len(x)} échantillons, {pos} lus")
+    return lines if x is None else (np.array(outs, np.int64).reshape(-1, 32), calls)
 
 
 class Probe:
@@ -323,9 +403,35 @@ def cases(quick):
             (f"{n} SWEEP 0", dict(BASE_KW, shape=m, sweep=0), (1,), None, 60),
             (f"{n} SWEEP 127", dict(BASE_KW, shape=m, sweep=127), (1,), None, 60),
             (f"{n} CONTOUR 127, DECAY 25", dict(BASE_KW, shape=m, color=10, contour=127, decay=25), (1, 90), None, 180),
-            (f"{n} note 24, FINE 0", dict(BASE_KW, shape=m, note=24, finetune=0), (1,), None, 60),
-            (f"{n} note 96, FINE 127", dict(BASE_KW, shape=m, note=96, finetune=127), (1,), None, 60),
+            (f"{n} note 24, FINE 0 (RATE 4 kHz)", dict(BASE_KW, shape=m, note=24, finetune=0), (1,), None, 60),
+            (f"{n} note 96, FINE 127 (BITS 2)", dict(BASE_KW, shape=m, note=96, finetune=127), (1,), None, 60),
         ]
+    # RATE et BITS (notes/55) : modèles allégés (rendus plus lentement) et autres (échantillonnés-bloqués)
+    lofi = (0, 9, 37, 38, 40, 46, 25, 28) if not quick else (38, 25)
+    for m in lofi:
+        for fine in ((0, 21, 48, 63, 65, 90, 127) if not quick else (0, 48, 90)):
+            out.append((f"{NAMES[m]} FINE {fine}", dict(BASE_KW, shape=m, finetune=fine), (1, 60), None, 90))
+    out += [
+        ("FINE qui balaie 0..127 pendant la note, WAVE MAP", dict(BASE_KW, shape=38, decay=110), (1,),
+         {b: {"finetune": (3 * b) % 128} for b in range(120)}, 120),
+        ("FINE qui balaie 127..0 pendant la note, FM", dict(BASE_KW, shape=25, decay=110), (1,),
+         {b: {"finetune": 127 - (3 * b) % 128} for b in range(120)}, 120),
+        ("FINE 37,4 et 64,6 (arrondis), TRIPLE SQUARE", dict(BASE_KW, shape=10, finetune=37.4, decay=100), (1,),
+         {60: {"finetune": 64.6}}, 100),
+        ("plafond : TRIPLE SAW note 80, FINE 0 (rendu plus rapide, puis bloqué)", dict(BASE_KW, shape=9, note=80,
+                                                                                         finetune=0), (1,), None, 60),
+        ("plafond : TRIPLE SAW note 91,5, FINE 0 (48 kHz, puis bloqué)", dict(BASE_KW, shape=9, note=91.5, finetune=0),
+         (1,), None, 60),
+        ("plafond : TRIPLE SAW note 100, FINE 0 (96 kHz puis bloqué)", dict(BASE_KW, shape=9, note=100, finetune=0),
+         (1,), None, 60),
+        ("plafond : CSAW note 120 (96 kHz)", dict(BASE_KW, shape=0, note=120), (1,), None, 60),
+        ("plafond : WAVE PARAPHONIC note 105, FINE 20", dict(BASE_KW, shape=40, note=105, finetune=20), (1,), None,
+         60),
+        ("note qui monte au-delà du plafond, WAVE LINE FINE 10", dict(BASE_KW, shape=39, finetune=10, decay=110),
+         (1, 30, 60, 90), {30: {"note": 90}, 60: {"note": 118}, 90: {"note": 50}}, 120),
+        ("modèle allégé <-> non allégé pendant la note, FINE 30", dict(BASE_KW, shape=37, finetune=30, decay=110),
+         (1,), {30: {"shape": 25}, 60: {"shape": 12}, 90: {"shape": 0}}, 120),
+    ]
     out += [
         ("PITCH 0, note 0 : borné en bas", dict(BASE_KW, shape=0, pitch=0, note=0), (1,), None, 40),
         ("PITCH 127, note 127 : borné en haut", dict(BASE_KW, shape=0, pitch=127, note=127), (1,), None, 40),
@@ -348,31 +454,30 @@ def cases(quick):
 
 # --- 3. son : les vérifications --------------------------------------------------------------------------------
 def exact(fw, ref, todo, label):
-    """Avant la chaîne d'ampli : identique à Braids (référence), et une voix muette n'est pas calculée."""
-    bad, idle_seen, peaks, gate_bad, calls_bad, blocks_seen = [], 0, [], [], [], 0
+    """Avant la chaîne d'ampli : identique à Braids (référence) rendu comme notes/43 et notes/55 le décrivent, et une
+    voix muette n'est pas calculée."""
+    bad, idle_seen, peaks, gate_bad, calls_bad, blocks_seen, lite_seen = [], 0, [], [], [], 0, [0, 0, 0, 0]
     for name, kw, trigs, changes, blocks in todo:
         out, pr, unm = play(fw, fw.index, kw, blocks, trigs, changes)
-        x = ref.run(pr.recs)
-        want, got = decimate(x), np.array(pr.outs, np.int64).reshape(-1, 32)
+        want, want_calls = simulate(pr.recs, ref.run(simulate(pr.recs)))
+        got = np.array(pr.outs, np.int64).reshape(-1, 32)
         idle = [r["block"] for r in pr.recs if not r["render"]]
         silent = not out[idle].any() if idle else True
         idle_seen += len(idle)
         blocks_seen += len(pr.recs)
+        for r in pr.recs:
+            if r["render"]:
+                st = settings(r)
+                lite_seen[0] += st["mode"] == 1
+                lite_seen[1] += st["mode"] == 1 and st["src"] != ONE
+                lite_seen[2] += st["hold"] != ONE
+                lite_seen[3] += st["bits"] != 0
         if any(r.get("expected") != r["render"] for r in pr.recs):
             gate_bad.append(name)
-        # des blocs de 24 : à chaque bloc calculé, juste assez d'appels pour 64 échantillons ; aucun sinon
-        fill = 0
-        for r in pr.recs:
-            want_calls = 0
-            if r["init"]:
-                fill = 0
-            if r["render"]:
-                while fill < 64:
-                    fill, want_calls = fill + 24, want_calls + 1
-                fill -= 64
-            if r["calls"] != want_calls:
-                calls_bad.append(name)
-                break
+        # des blocs de 24 à 96 kHz, de 12 (ou de la taille de RATE) à 48 kHz : juste assez d'appels ; aucun muette
+        if [r["calls"] for r in pr.recs if r["render"]] != want_calls or any(r["calls"] for r in pr.recs
+                                                                            if not r["render"]):
+            calls_bad.append(name)
         inits = sum(r["init"] for r in pr.recs)
         peak = int(np.abs(got).max()) if len(got) else 0
         peaks.append(peak)
@@ -384,13 +489,16 @@ def exact(fw, ref, todo, label):
             print(f"        ECART {name} : {len(got)} blocs rendus / {len(want)} attendus, 1er bloc différent {first},"
                   f" crête {peak:.3g}, init {inits}, muets non nuls {not silent}, hors mémoire {unm[:2]}")
     check(not bad, f"{label} : avant la chaîne d'ampli, identique échantillon par échantillon à Braids compilé pour "
-                   f"l'ordinateur, puis filtre demi-bande ({len(todo)} cas : les modèles et des variantes, crêtes "
-                   f"{min(peaks):.2g} à {max(peaks):.2g} sur 2^31) {bad[:5]}")
+                   f"l'ordinateur, rendu à 96 kHz puis filtre demi-bande, ou à 48 kHz pour les modèles allégés, puis "
+                   f"RATE et BITS ({len(todo)} cas : les modèles et des variantes, crêtes {min(peaks):.2g} à "
+                   f"{max(peaks):.2g} sur 2^31 ; blocs rendus à 48 kHz {lite_seen[0]}, dont plus lents (RATE) "
+                   f"{lite_seen[1]} ; échantillonnés-bloqués {lite_seen[2]} ; BITS {lite_seen[3]}) {bad[:5]}")
     check(idle_seen > 0 and not gate_bad, f"{label} : voix calculée exactement quand l'OS l'impose (trig, ou enveloppe "
           f"d'ampli au-dessus de 2^14), sur {blocks_seen} blocs ; {idle_seen} blocs de voix muette, sortie nulle "
           f"{gate_bad[:5]}")
     check(not calls_bad, f"{label} : Braids rend par blocs de 24 échantillons comme sur le module (3, 3 puis 2 appels "
-                         f"de Render par bloc calculé, aucun pour une voix muette) {calls_bad[:5]}")
+                         f"de Render par bloc), par blocs de 12 à 48 kHz (toujours 4 000 rendus par seconde), aucun "
+                         f"pour une voix muette {calls_bad[:5]}")
 
 
 def amp_like_tone(fw):
@@ -550,6 +658,50 @@ def halfband():
           "au-delà de 29 kHz (ce qui se replierait sous 19 kHz)")
 
 
+def lite_spectrum(ref, names=None):
+    """Les modèles allégés (notes/55) : rendus à 48 kHz une octave plus haut, même spectre qu'à 96 kHz puis filtre
+    demi-bande (Braids seul, sur l'ordinateur) : bandes d'un tiers d'octave de 50 Hz à 16 kHz, sur des fenêtres de
+    85 ms, à 30 dB du maximum ; niveau global. names : d'autres modèles, mesurés sans vérification (--spectres)."""
+    n, w = 4096, np.hanning(4096)
+    f = np.fft.rfftfreq(n, 1 / 48000)
+    edges = 50 * 2 ** (np.arange(28) / 3)
+    idx = [(f >= lo) & (f < hi) for lo, hi in zip(edges[:-1], edges[1:])]
+
+    def bands(x):
+        return np.array([10 * np.log10(np.array([P[k].sum() for k in idx]) + 1e-3)
+                         for P in (np.abs(np.fft.rfft(x[i:i + n] * w)) ** 2 for i in range(0, len(x) - n, n // 2))])
+    rows, worst = [], (0, 0, 0)
+    for name in names or LITE:
+        m, ds, lv = NAMES.index(name), [], 0
+        for note in (36, 60, 84):
+            for t, c in ((16384, 16384), (4000, 28000), (28000, 4000)):
+                blocks = [(1, m, note * 128, t, c, int(b % 300 == 0)) for b in range(600)]
+                x96 = ref.run([b + (0, 0, 24) for b in blocks]).reshape(-1, 64)
+                hist, a = np.zeros(HIST, np.int64), []
+                for blk in x96:
+                    acc, hist = dec1(hist, blk)
+                    a.append(acc)
+                a = np.concatenate(a).astype(float) / 32768
+                lines = [(r, m, p + OCTAVE, t, c, s, 1, 32, 12) for r, m, p, t, c, s in blocks]
+                b_ = ref.run(lines).astype(float)
+                A, B = bands(a), bands(b_)
+                for FA, FB in zip(A, B):
+                    if FA.max() > 60:
+                        sel = FA > FA.max() - 30
+                        ds.append(np.sqrt(np.mean((FA[sel] - FB[sel]) ** 2)))
+                ra, rb = np.sqrt(np.mean(a ** 2)), np.sqrt(np.mean(b_ ** 2))
+                lv = max(lv, abs(20 * np.log10((rb + 1e-9) / (ra + 1e-9))))
+        p50, p95 = np.median(ds), np.percentile(ds, 95)
+        rows.append(f"{name} {p50:.1f}/{p95:.1f}/{lv:.1f}")
+        worst = tuple(max(u, v) for u, v in zip(worst, (p50, p95, lv)))
+    print("        " + ("\n        " if names else " ; ").join(rows) + " (dB : bandes médiane / 95 %, niveau)")
+    if names:
+        return
+    check(worst[0] < 1.5 and worst[1] < 4 and worst[2] < 2,
+          f"modèles allégés ({len(LITE)}) : à 48 kHz, même spectre qu'à 96 kHz puis filtre demi-bande à {worst[0]:.1f} dB "
+          f"près en médiane par tiers d'octave ({worst[1]:.1f} dB à 95 %), niveau à {worst[2]:.1f} dB près")
+
+
 # --- 4. coût ---------------------------------------------------------------------------------------------------
 def cost(fw, label, quick):
     """Instructions par bloc d'une voix (boucle des voix entière, moins la même boucle sans voix), pile."""
@@ -605,6 +757,7 @@ def main():
     ap.add_argument("--eurorack", required=True, help="clone de pichenettes/eurorack (tools/gen_macro.py)")
     ap.add_argument("--quick", action="store_true", help="quelques modèles seulement")
     ap.add_argument("--with", dest="others", default="", help="ids d'autres tweaks : MACRO avec eux (section 5)")
+    ap.add_argument("--spectres", action="store_true", help="seulement : chaque modèle à 48 kHz contre 96 kHz (notes/55)")
     args = ap.parse_args()
     repo = pathlib.Path(args.eurorack).resolve()
     gm.check_sources(repo)
@@ -614,6 +767,9 @@ def main():
     alone = Fw(stock, [macro])
     with tempfile.TemporaryDirectory() as d:
         ref = Ref(pathlib.Path(d), repo)
+        if args.spectres:
+            lite_spectrum(ref, NAMES)
+            return 0
         todo = cases(args.quick)
 
         print(f"== {macro['id']} : MACRO en machine {alone.index + 1}")
@@ -624,6 +780,7 @@ def main():
         interface_alone(stock, alone)
         print("son")
         halfband()
+        lite_spectrum(ref)
         exact(alone, ref, todo, "MACRO seule")
         amp_like_tone(alone)
         stock_unchanged(off, alone, "l'OS d'origine")
@@ -645,8 +802,10 @@ def main():
         print("interface")
         tms.interface(ref_tg, fw, ["macro"], tg)
         print("son")
-        # la passerelle est la même : avec Model-TG, chaque modèle, la voix qui se tait, le modèle qui change
-        tg_todo = [c for c in todo if c[0][:2].strip().isdigit() or c[0].startswith(("DECAY 10", "modèle qui"))]
+        # la passerelle est la même : avec Model-TG, chaque modèle, la voix qui se tait, le modèle qui change, et le
+        # lo-fi (notes/55) de WAVE MAP et de FM, les plafonds, l'allégé <-> non allégé (ses tables relogées autrement)
+        tg_todo = [c for c in todo if c[0][:2].strip().isdigit()
+                   or c[0].startswith(("DECAY 10", "modèle qui", "WAVE_MAP FINE", "FM FINE", "plafond", "modèle allégé"))]
         exact(fw, ref, tg_todo if not args.quick else tg_todo[:1] + tg_todo[-3:], "MACRO avec Model-TG")
         stock_unchanged(ref_tg, fw, "Model-TG seul")
         like(alone, fw, "MACRO avec Model-TG = MACRO seule")

@@ -11,6 +11,10 @@
  *
  * NO firmware image is included: the user drops their own .syx.
  *
+ * License: MIT (the repository's LICENSE). The .syx checks follow drumkilla's mtlib (MIT,
+ * LICENSE-elektron-model-tweaks.txt); the classic sending follows ms-multi-output's flash.py by
+ * Scott Metoyer (MIT, LICENSE-ms-multi-output.txt).
+ *
  * Wrapped in an IIFE: top-level declarations of classic <script>s are global and
  * would collide with builder.js.
  */
