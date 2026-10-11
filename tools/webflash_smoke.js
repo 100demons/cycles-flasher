@@ -589,24 +589,29 @@ async function main() {
     await click(arp);
     check(box("feat-arp") !== arp && doc.activeElement && doc.activeElement.id === "feat-arp", "focus kept on the ticked box after the rebuild");
     await clearAll();
-    // search: hidden under 20 mods; from 20, by words in both languages, accents ignored
-    check(box("mod-find").hidden, `no search field with ${feats.length} mods`);
-    const usb = feats.find((f) => f.id === "usb6");
-    for (let k = 0, n = 21 - feats.length; k < n; k++) feats.push(Object.assign({}, usb, { id: "usb6-copy-" + k, credit: null }));
-    app.applyLang("en");
+    // search: hidden under 20 mods; from 20 (the flasher has more now), by words in both languages, accents ignored
+    check(feats.length >= 20 && !box("mod-find").hidden, `search field with ${feats.length} mods`);
     const q = box("mod-q");
     q.value = "ÉCOUTE";
     q.dispatchEvent(new w.Event("input"));
     await wait(5);
     const found = !box("mod-find").hidden && !box("mod-trig-preview").hidden && !box("mod-sample-preview").hidden
-      && box("mod-usb6").hidden && box("cat-io").hidden && /2 of 21 mods/.test(text(doc, "mod-found"));
+      && box("mod-usb6").hidden && box("cat-io").hidden && new RegExp(`2 of ${feats.length} mods`).test(text(doc, "mod-found"));
     box("mod-q").dispatchEvent(new w.KeyboardEvent("keydown", { key: "Escape" }));
     await wait(5);
     check(found && !box("mod-usb6").hidden && box("mod-found").hidden && box("mod-q").value === "",
-      "search from 20 mods: « ÉCOUTE » finds Trig preview and Sample preview (French names, any case or accent); Esc shows all again");
-    feats.splice(feats.findIndex((f) => f.id === "usb6-copy-0"));
+      "search: « ÉCOUTE » finds Trig preview and Sample preview (French names, any case or accent); Esc shows all again");
+    // with fewer than 20 mods, no search field: take cards out of the list, then put them back
+    // (from the end, never the engines' card nor a card another one requires)
+    const n = feats.length, out = [], needed = new Set(feats.map((f) => f.requires).filter(Boolean));
+    for (let i = n - 1; i >= 0 && feats.length > 19; i--)
+      if (!feats[i].engines && !needed.has(feats[i].id)) out.unshift([i, feats.splice(i, 1)[0]]);
     app.applyLang("en");
-    check(box("mod-find").hidden && !box("mod-usb6-copy-0"), "back to " + feats.length + " mods");
+    check(feats.length === 19 && box("mod-find").hidden && out.every(([, f]) => !box("mod-" + f.id)),
+      `no search field with ${feats.length} mods (${out.map(([, f]) => f.id).join(", ")} taken out)`);
+    for (const [i, f] of out) feats.splice(i, 0, f);
+    app.applyLang("en");
+    check(!box("mod-find").hidden && feats.length === n && out.every(([, f]) => box("mod-" + f.id)), "back to " + feats.length + " mods");
     // French
     app.applyLang("fr");
     await click(box("feat-model-tg"));
