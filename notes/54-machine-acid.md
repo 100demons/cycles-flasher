@@ -220,7 +220,8 @@ partagent la mécanique ; les octets de MACRO n'ont pas changé (`gen_macro.py -
   des voix de [36](36-regulateur-sans-coupures-inutiles.md), comme MACRO seule.
 - `35-acid-tg.json` : 114 écritures, `requires` `model-tg-st`.
 - Compilé avec `m68k-linux-gnu-gcc` 13.3 (Ubuntu 24.04) ; un autre GCC donne d'autres octets (`--check` le dit).
-  Aucun octet Elektron dans les JSON (table des descripteurs recopiée au build, recette `cycles`).
+  De l'OS, les JSON ne portent que les courts octets d'origine (`old`) qui vérifient le fichier officiel ; la table
+  des descripteurs est recopiée au build depuis le fichier de l'utilisateur (recette `cycles`).
 - Licence MIT d'Open303 : `tweaks/model-cycles_OS1.13/LICENSE-Open303` (copiée en `docs/flasher/LICENSE-Open303.txt`).
   Le code d'ACID est le nôtre ; le modèle et ses constantes viennent d'Open303 : crédit à Robin Schmidt sur la carte,
   dans le guide et le README. La machine s'appelle ACID (ni « TB-303 » ni Roland sur la machine).

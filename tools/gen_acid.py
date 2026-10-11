@@ -8,9 +8,9 @@ Model:Cycles (notes/54).
 Le son est notre code (tools/machines/acid/ : acid_dsp.h, le cœur, et acid.c, la passerelle), écrit en virgule
 fixe d'après le modèle d'Open303 de Robin Schmidt (licence MIT : LICENSE-Open303, recopiée à côté du flasher) :
 filtre « TB_303 », enveloppe du filtre, slide ; puis une saturation (DRIVE) qui est la nôtre. Ses tables
-(acid_tables.h) sont calculées ici. Aucun octet
-Elektron : le MAIN OS officiel sert à vérifier les octets d'origine, et la table des descripteurs est recopiée au
-build depuis TON fichier (recette « cycles », comme pour MACRO).
+(acid_tables.h) sont calculées ici. Le tweak ne porte, de l'OS, que les courts octets d'origine (« old ») qui
+vérifient le fichier officiel ; la table des descripteurs est recopiée au build depuis TON fichier (recette
+« cycles », comme pour MACRO).
 
 La mécanique est celle de MACRO (gen_macro.added_machine, notes/43) : mêmes détours, mêmes tables déplacées, même
 place dans la charge utile. ACID exclut donc MACRO et les moteurs du Syntakt.
@@ -265,7 +265,8 @@ def build_tweak(img, tg=None):
             "COLOR = CUTOFF, SHAPE = RESONANCE, SWEEP = ENV MOD, CONTOUR = DRIVE (saturation), DECAY = décroissance",
             "du filtre (et de l'ampli), PUNCH = forme d'onde (scie / carré). Filtre « TB_303 », enveloppe et slide",
             "d'Open303 (Robin Schmidt, MIT : LICENSE-Open303), réécrits en virgule fixe (tools/machines/acid/).",
-            "Une voix muette n'est pas calculée. Généré par tools/gen_acid.py. Aucun octet Elektron dans ce fichier.",
+            "Une voix muette n'est pas calculée. Généré par tools/gen_acid.py. De l'OS, seuls les octets d'origine (old)",
+            "qui vérifient le fichier officiel ; la table des descripteurs est recopiée au build (recette cycles).",
         ],
         "device": "Model:Cycles",
         "os": "1.13",

@@ -2800,7 +2800,8 @@ window.MC_TWEAKS = {
     "COLOR = CUTOFF, SHAPE = RESONANCE, SWEEP = ENV MOD, CONTOUR = DRIVE (saturation), DECAY = décroissance",
     "du filtre (et de l'ampli), PUNCH = forme d'onde (scie / carré). Filtre « TB_303 », enveloppe et slide",
     "d'Open303 (Robin Schmidt, MIT : LICENSE-Open303), réécrits en virgule fixe (tools/machines/acid/).",
-    "Une voix muette n'est pas calculée. Généré par tools/gen_acid.py. Aucun octet Elektron dans ce fichier.",
+    "Une voix muette n'est pas calculée. Généré par tools/gen_acid.py. De l'OS, seuls les octets d'origine (old)",
+    "qui vérifient le fichier officiel ; la table des descripteurs est recopiée au build (recette cycles).",
     "Envoi à l'USB à heure fixe (tools/usb_steady.py, notes/35) : la charge varie avec l'arrêt des voix muettes.",
     "Boucle des voix : division des pistes par 2 plus courte (tools/voice_loop.py, notes/36), mêmes valeurs."
    ],
@@ -3628,7 +3629,8 @@ window.MC_TWEAKS = {
     "COLOR = CUTOFF, SHAPE = RESONANCE, SWEEP = ENV MOD, CONTOUR = DRIVE (saturation), DECAY = décroissance",
     "du filtre (et de l'ampli), PUNCH = forme d'onde (scie / carré). Filtre « TB_303 », enveloppe et slide",
     "d'Open303 (Robin Schmidt, MIT : LICENSE-Open303), réécrits en virgule fixe (tools/machines/acid/).",
-    "Une voix muette n'est pas calculée. Généré par tools/gen_acid.py. Aucun octet Elektron dans ce fichier."
+    "Une voix muette n'est pas calculée. Généré par tools/gen_acid.py. De l'OS, seuls les octets d'origine (old)",
+    "qui vérifient le fichier officiel ; la table des descripteurs est recopiée au build (recette cycles)."
    ],
    "device": "Model:Cycles",
    "os": "1.13",
