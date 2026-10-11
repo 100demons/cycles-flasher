@@ -479,6 +479,28 @@ python3 tools/emu/test_midi_thru.py --cycles model-cycles_OS1.13.syx \
 | `6ch-usbup,model-tg-st,syntakt-tg-sd-cp-toy-bits-swarm,trig-hold,arp,tempo-max,boot-anim,multiline-browser,midi-both` | `705302a9ddf03d02dc2dae40422796b476d1583261e2971560a195dd033d18a8` |
 | `6ch-usbup,model-tg-st,syntakt-tg-sd-cp-toy-bits-swarm,trig-hold,arp,tempo-max,boot-anim,multiline-browser,midi-live-both` | `a00ac9d50ce7e11a92737ee54ddf782ac94ce29bdd9f40caf29cb4be434319ad` |
 
+### Filtre par piste
+
+`tweaks/model-cycles_OS1.13/48-track-filter.json` est produit par `tools/gen_track_filter.py` : le filtre (`track_filter.S`), les
+potards, l'affichage et la sauvegarde (`tf_ui.S`) sont assemblés depuis `tools/machines/track_filter/` et liés par
+`track_filter.ld` dans quinze masques de sprites 35×35 libérés (3 001 o) ; les tables sont calculées par le générateur. Quatre
+paramètres de toutes les machines sur les descripteurs « Error » 1 à 4, accroche après Volume + Dist ([note 47](notes/47-filtre-piste.md)).
+Incompatible avec Model-TG pour l'instant. La preuve fait tourner la vraie boucle des voix et le vrai site de l'accroche, l'OS sans
+le filtre à côté, puis l'interface et la sauvegarde fonction par fonction :
+```sh
+python3 tools/gen_track_filter.py --cycles model-cycles_OS1.13.syx [--check]
+python3 tools/emu/test_track_filter.py --cycles model-cycles_OS1.13.syx [--quick] \
+    [--with 6ch-usbup,syntakt-sd-cp-toy-bits-swarm,arp,trig-hold,tempo-max,boot-anim --syntakt Syntakt_OS1.42.syx]
+    [--with syntakt-sd-cp-toy-bits-swarm-macro,6ch-usbup,chord-keys,level-pan-values,trigless-dim,multiline-browser,… --syntakt Syntakt_OS1.42.syx]
+```
+
+| `-t` | MAIN OS patché (SHA-256) |
+|---|---|
+| `track-filter` | `f5db01334779499fc0932cfdc4a23c899319d333fed98fc5169972080b662967` |
+| `6ch-usbup,track-filter` | `340fb353bacb25fc2923f836b7d685a704c710e43988258cdc2d21f42b997016` |
+| `6ch-usbup,syntakt-sd-cp-toy-bits-swarm,trig-hold,arp,tempo-max,boot-anim,track-filter` | `5493f878652f5050a75ed0aab4aba9b19671764455943c5dd525484465c3f5ac` |
+| `macro,track-filter` | `fd3cb1440d5123d7b8a227024064fdce09e1a70ac12d3587ff6a0930dd87a19c` |
+
 ### Écoute d'un pas en pause
 
 `trig-preview` (et sa copie dans Model-TG) accepte le séquenceur en pause, où le met un Stop MIDI reçu même à l'arrêt : 3 octets

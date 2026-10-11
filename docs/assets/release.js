@@ -3,6 +3,14 @@
  *   { version: "1.1", date: "2026-10-15", changes: [{ en: "…", fr: "…" }] }
  */
 window.MC_RELEASES = [
+  { version: "1.45", date: "2026-10-11", changes: [
+    { en: "New mod, Per-track filter: hold MACHINES and turn SWEEP for a filter on the track, low-pass to the left, off in the centre, high-pass to the right, like a DJ mixer, with the Model:Samples' range (5 Hz to 20 kHz). CONTOUR sets the resonance, COLOR and SHAPE a filter envelope (amount up or down, decay) restarted by each note",
+      fr: "Nouveau mod, Filtre par piste : maintenez MACHINES et tournez SWEEP pour un filtre sur la piste, passe-bas à gauche, rien au centre, passe-haut à droite, comme sur une table de mixage DJ, avec la plage du Model:Samples (5 Hz à 20 kHz). CONTOUR règle la résonance, COLOR et SHAPE une enveloppe du filtre (quantité vers le haut ou le bas, decay) relancée à chaque note" },
+    { en: "Four real parameters on every machine, Syntakt engines included: p-locks, LFO and velocity, MIDI CC 74 and 71, saved with the sound and the pattern. At OFF the track is exactly as before, and old projects open with the filter OFF",
+      fr: "Quatre vrais paramètres de toutes les machines, moteurs du Syntakt compris : p-locks, LFO et vélocité, CC MIDI 74 et 71, enregistrés avec le son et le pattern. Sur OFF la piste est exactement comme avant, et les anciens projets s'ouvrent filtre sur OFF" },
+    { en: "Tested on a Model:Cycles, and checked in the emulator on the OS's own code. It can't be ticked together with Model-TG for now, as both use MACHINES + SWEEP / CONTOUR: Model-TG's filter will make way for this one. It goes with every other mod",
+      fr: "Testé sur un Model:Cycles, et vérifié en émulation sur le code même de l'OS. Il ne se coche pas avec Model-TG pour l'instant, les deux utilisant MACHINES + SWEEP / CONTOUR : le filtre de Model-TG laissera la place à celui-ci. Il se combine avec tous les autres mods" },
+  ] },
   { version: "1.41", date: "2026-10-11", changes: [
     { en: "Two new MIDI mods by AveyCole, under USB & MIDI. With THR selected (SETTINGS, CONFIG › MIDI › PORTS › OUT/THRU), the Model:Cycles forwards what arrives on its MIDI IN and also sends its own clock, notes and parameter changes. MIDI OUT while in THRU does it all the time; Live MIDI OUT + THRU toggle switches it on and off with FUNC + a press on the LEVEL/DATA knob, the screen staying on THR",
       fr: "Deux nouveaux mods MIDI d'AveyCole, dans USB et MIDI. Avec THR choisi (SETTINGS, CONFIG › MIDI › PORTS › OUT/THRU), le Model:Cycles relaie ce qui arrive sur son MIDI IN et envoie aussi son horloge, ses notes et ses changements de paramètres. MIDI OUT pendant THRU le fait tout le temps ; Basculer MIDI OUT + THRU en direct l'active et le coupe avec FUNC + un appui sur le potard LEVEL/DATA, l'écran restant sur THR" },
