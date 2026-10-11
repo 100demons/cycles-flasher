@@ -122,7 +122,8 @@ reste le même à l'oreille.
 En virgule fixe : par bloc, `m = G × 2^28 / (1,5 × 2^18)` (table de 17 points, interpolée), `m3 = 8m/3`,
 `xl = 0x0fffffff / m` ; par échantillon, `|x| ≥ xl` donne `u = ±2/3` directement (pas de débordement), sinon `u = x m`
 (Q28, 1,0 = le seuil) et `y = u (1 − u²/3)` en deux `mac.l` (`u²/3 = u × x m3 / 8`) ; la sortie `z × 12 × niveau`
-passe par `qmac2`, saturée par l'EMAC. Environ 300 instructions de plus par bloc que l'accent (§8).
+passe par `qmac2`, saturée par l'EMAC. Environ 400 à 520 instructions de plus par bloc que la première version, quel que
+soit le réglage de DRIVE (§8).
 
 Mesuré sur le cœur (`acid_ref`, une note de 150 blocs à partir du trig, avant la chaîne d'ampli) : niveau efficace par
 rapport à DRIVE 0 et facteur de crête (crête / efficace) :
@@ -135,7 +136,8 @@ rapport à DRIVE 0 et facteur de crête (crête / efficace) :
 | défaut, carré | 0, 3,4 | +0,1, 3,1 | −0,1, 2,3 | −2,6, 0,5 | −3,5, 0,2 | −3,4, 0,2 |
 | défaut, scie, note 60 | 0, 8,6 | +0,3, 8,4 | +0,8, 7,7 | +1,8, 3,2 | +2,5, 1,4 | +2,9, 1,0 |
 
-Le volume reste entre −3,5 et +2,9 dB sur toute la course ; le facteur de crête tombe de 7 dB à moins de 1 dB (une
+Le volume reste entre −3,5 et +2,9 dB sur toute la course (jusqu'à +3,9 dB filtre grand ouvert, mesuré par la preuve,
+§9.1) ; le facteur de crête tombe de 7 dB à moins de 1 dB (une
 onde presque carrée au maximum). Le carré, déjà riche, perd un peu de niveau en saturant : au maximum, scie et carré
 se rejoignent. Limite : sans suréchantillonnage, une note aiguë (au-dessus de C4) avec DRIVE au maximum replie un
 peu d'harmoniques (grain plus dur), comme une distorsion numérique simple.
@@ -201,11 +203,11 @@ finie : il n'y a rien à entendre alors.
 | | Seul (`acid`) | Avec Model-TG (`acid-tg`) |
 |---|---|---|
 | Charge utile au démarrage | `0x43000000`, comme MACRO | `0x46700000` |
-| Code et tables d'ACID et de la passerelle | 6 304 o à `+0` | idem |
+| Code et tables d'ACID et de la passerelle | 5 996 o à `+0` | idem |
 | Détours, données, descripteurs, rangées, enregistrements | `+0x33000..0x36000` (`gs.LAYOUT`) | idem |
-| Variables (6 voix) | 792 o à `+0x36000` | idem |
-| Ajouté à l'image (morceaux tassés) | 11 616 o | 12 028 o |
-| Fin de l'image décompressée (limite `0x40200000`) | `0x401acea0` | `0x401c27bc` |
+| Variables (6 voix) | 744 o à `+0x36000` | idem |
+| Ajouté à l'image (morceaux tassés) | 11 308 o | 11 720 o |
+| Fin de l'image décompressée (limite `0x40200000`) | `0x401acd6c` | `0x401c2688` |
 | Crochet de démarrage | masque `0x4016cae8` (104 o), comme MACRO | 96 o, chaîné à `boot_extra_hook` |
 
 Aucun masque libre de plus : `REGISTRY.md` (notes/52) range ACID avec MACRO dans le masque `0x4016cae8` et, seul,
@@ -238,15 +240,18 @@ même sans voix, `cost()` de la preuve) `[FAIT en émulation]` :
 
 | Voix | Instructions par bloc |
 |---|---|
-| ACID, scie | 4 559 |
-| ACID, carré (PUNCH) | 4 837 |
-| ACID, bloc du trig (remise à zéro comprise) | 5 002 |
-| ACID, bloc d'un slide | 4 763 |
-| ACID muette (pas calculée) | 261 |
+| ACID, scie | 5 080 |
+| ACID, carré (PUNCH) | 5 223 |
+| ACID, scie, DRIVE 64 | 5 080 |
+| ACID, bloc du trig (remise à zéro comprise) | 5 539 |
+| ACID, bloc d'un slide | 5 110 |
+| ACID muette (pas calculée) | 270 |
 | TONE, pour comparer | 5 291 |
 
-ACID coûte donc à peu près une voix de TONE (0,86 à 0,91 en instructions ; les cycles réels dépendent des `mac.l` et
-des accès mémoire, `[HYP]` du même ordre). Pile : 216 o sous la boucle des voix. Pas de régulateur de charge, comme
+Avec Model-TG (machine 8) : 5 139 en scie, 5 282 en carré, TONE 5 669. La saturation tourne à chaque échantillon,
+même à DRIVE 0 : son coût ne dépend pas du réglage. ACID coûte donc à peu près une voix de TONE (0,96 à 0,99 en
+instructions ; les cycles réels dépendent des `mac.l` et des accès mémoire, `[HYP]` du même ordre). Pile : 244 o sous
+la boucle des voix. Pas de régulateur de charge, comme
 pour les machines d'origine : six pistes ACID coûtent à peu près six pistes TONE.
 
 ## 9. Preuve en émulation `[FAIT en émulation]`
@@ -256,26 +261,33 @@ La référence est le même cœur compilé pour l'ordinateur (`acid_ref.c`), pil
 passerelle doit lui donner, calculés par le test d'après cette note (classe `Bridge`) ; le test vérifie aussi ce que
 la passerelle écrit dans l'OS (`voix + 0x34`, `0x40fe4cd0`).
 
-### 9.1 Résultats (11/10/2026, `test_acid.py` complet : 64 vérifications, TOUT OK)
+### 9.1 Résultats (11/10/2026, version avec DRIVE, `test_acid.py` complet : 65 vérifications, TOUT OK)
 
 | Vérification | Seule (machine 7) | Avec Model-TG (machine 8) |
 |---|---|---|
-| Démarrage : décompresseur, crochet, charge utile reconstituée, SRAM intacte, fin d'image sous `0x40200000` | ok (`0x401acea0`) | ok (`0x401c27bc`) |
+| Démarrage : décompresseur, crochet, charge utile reconstituée, SRAM intacte, fin d'image sous `0x40200000` | ok (`0x401acd6c`) | ok (`0x401c2688`) |
 | Interface : écran MACHINES, molette, enregistrements, potards, descripteurs, CC 16..19, machine hors limites | ok | ok |
-| Avant la chaîne d'ampli, identique échantillon par échantillon au cœur compilé pour l'ordinateur | 30 cas, crêtes 0,01 à 1,00 | 30 cas |
-| Voix muette non calculée, sortie nulle | 3 310 blocs, 169 muets | idem |
+| Avant la chaîne d'ampli, identique échantillon par échantillon au cœur compilé pour l'ordinateur | 33 cas, crêtes 0,01 à 0,82 | 33 cas |
+| Voix muette non calculée, sortie nulle | 3 604 blocs, 169 muets | idem |
 | Chaîne d'ampli : mêmes lectures de la voix que TONE (24 champs) jusqu'au silence | ok | — |
 | 6 machines d'origine identiques, sans une instruction d'ACID | ok (OS d'origine) | ok (Model-TG seul) |
-| Sortie finale de la piste identique à ACID seule | — | ok (scie, carré, GATE, accent) |
+| Sortie finale de la piste identique à ACID seule | — | ok (scie, carré, GATE, DRIVE) |
 | Machine locks SNARE → ACID → TONE → ACID (carré) → KICK | ok | ok |
 | 6 pistes ACID ensemble ; pistes mélangées avec les machines d'origine (et le Sampler) | ok | ok |
-| Vrai séquenceur (`seqrig.py`) : LEN, VEL, verrous, trigless, jeu live, sans fondu, gain en rampe | 28 séquences, 9 281 blocs (120, 300, 546 BPM, trig à 0,05 / 0,5 / 0,95 bloc) | 12 séquences, 3 583 blocs (300 BPM) |
-| Coût (§8) | 4 559 / 4 837 instructions par bloc ; TONE 5 291 | 4 618 / 4 896 ; TONE 5 669 |
+| DRIVE 0, 16, 32, 48, 64, 96, 127 : crête / efficace de plus en plus bas, niveau presque constant | scie 7,8 → 1,9 dB (niveau +0,0 à +3,1 dB) ; carré 5,1 → 1,6 dB (−1,4 à +0,5) ; filtre grand ouvert 8,6 → 1,7 dB (+0,0 à +3,9) | — |
+| Vrai séquenceur (`seqrig.py`) : LEN, VEL (le volume seulement), verrous (DRIVE par pas compris), trigless, jeu live, sans fondu, gain en rampe | 29 séquences, 9 699 blocs (120, 300, 546 BPM, trig à 0,05 / 0,5 / 0,95 bloc) | 13 séquences, 4 001 blocs (300 BPM) |
+| Coût (§8) | 5 080 / 5 223 instructions par bloc ; TONE 5 291 | 5 139 / 5 282 ; TONE 5 669 |
 
 Avec d'autres mods (`with_others`, même jour, TOUT OK) : `6ch-usbup,trig-hold,arp,tempo-max,boot-anim,multiline-browser,
 level-pan-values,trigless-dim` ; les mêmes avec `model-tg-st,sample-preview-st` (ACID en machine 8) ; `chord-keys,
 6ch-usbup,arp,trig-hold`. Chaque fois : démarrage, machines d'origine identiques à ces mods sans ACID, ACID identique
 à ACID seule (ou avec Model-TG seul), machine locks, pistes mélangées.
+
+Filtre par piste avec ACID (`test_track_filter.py --with acid --quick`) : 61 vérifications, TOUT OK. Sur un Model:Samples
+(OS Cycles avec mods emballé par `tools/mods_for_samples.py`, [57](57-os-cycles-quelle-que-soit-la-machine.md)) : les
+vérifications de `test_mods_for_samples.py` sur `model-tg-st,acid-tg` et les deux plus grosses combinaisons avec ACID
+(seule et avec Model-TG) passent toutes (aller, refus du Cycles, démarrage par le bootstrap Samples sous `0x40200000`,
+changer de mods, transport).
 
 Flasher : `webflash_smoke.sh` avec les deux OS officiels, les 688 combinaisons de `REF_MAINOS` (chaque mod vérifié),
 ALL PARTS OK ; la carte ACID seule, avec Model-TG, et son exclusion de MACRO et des moteurs dans les deux sens.
@@ -287,6 +299,13 @@ L'accent semblait ne rien changer, et Maxime ne le trouvait pas utile ici : remp
 première version, construits par `tools/build.py` : `6ch-usbup,acid,trig-hold,arp,tempo-max,boot-anim,
 multiline-browser,level-pan-values,trigless-dim` (MAIN OS `fba63d4f…`) et `6ch-usbup,model-tg-st,sample-preview-st,
 acid-tg,trig-hold,arp,tempo-max,boot-anim,multiline-browser,level-pan-values,trigless-dim` (MAIN OS `640b2fd3…`).
+
+Version avec DRIVE, fichiers de test construits par `tools/build.py` (dossier du projet `machine-acid/`, jamais dans le
+dépôt) : `6ch-usbup,acid,track-filter,trig-hold,arp,tempo-max,boot-anim,multiline-browser,level-pan-values,
+trigless-dim` (`model-cycles_acid-drive.syx`, MAIN OS `9ebda722…`) et `6ch-usbup,model-tg-st,sample-preview-st,acid-tg,
+trig-hold,arp,tempo-max,boot-anim,multiline-browser,level-pan-values,trigless-dim` (`model-cycles_acid-drive_model-tg.syx`,
+MAIN OS `d5449543…`). `demo-acid-drive.wav` : une ligne jouée par le vrai séquenceur en émulation, DRIVE à 0, 40, 80
+puis 127 toutes les deux mesures.
 
 À vérifier sur la version avec DRIVE :
 

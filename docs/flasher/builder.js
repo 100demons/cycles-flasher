@@ -781,13 +781,11 @@ function keyOf(c) {
   return key;
 }
 
-function cyclesForSamples(cycRaw, smpRaw) {
-  const cy = unwrap(cycRaw), sm = unwrap(smpRaw);
-  if (cy.product !== 0x11 || sm.product !== 0x0f) throw new Error("il faut l'OS Model:Cycles puis l'OS Model:Samples");
-  const cc = parseContainer(cy.stream), sc = parseContainer(sm.stream);
-  const cKey = keyOf(cc), sKey = keyOf(sc);
-  const c3 = cc.sections.find((s) => s.id === 3);
-  const { data: main, ops } = aplibDepack(cc.blob.subarray(c3.off, c3.off + c3.size));
+/* Le MAIN OS Cycles de la section 3 `c3` (officiel ou avec mods), sa constante de cle recalculee pour la cle du Samples,
+ * dans le conteneur officiel du Samples `sc`, signe avec sKey. Renvoie { blob, main, mods, co } : main = l'OS installe,
+ * mods = l'OS avant les 32 octets, co = leur offset. */
+function cyclesOsInSamples(c3, cKey, sc, sKey) {
+  const { data: main, ops } = aplibDepack(c3);
   for (const [va, want] of CYC_KEY_CODE)
     if (hex(main.subarray(va - BASE, va - BASE + 6)) !== want) throw new Error("code de verification inattendu");
   const text = main.subarray(CYC_KEY_STR - BASE, CYC_KEY_STR - BASE + 12);
@@ -797,14 +795,22 @@ function cyclesForSamples(cycRaw, smpRaw) {
   if (!eq(old.map((b, i) => b ^ h[i] ^ hr[i]), cKey)) throw new Error("la cle du MAIN OS Cycles differe de celle du bootstrap");
   const patched = Uint8Array.from(main), dirty = new Uint8Array(main.length);
   for (let i = 0; i < 32; i++) { patched[co + i] = sKey[i] ^ h[i] ^ hr[i]; dirty[co + i] = 1; }
+  if (BASE + patched.length > END_LIMIT) throw new Error("OS agrandi au-delà de 0x40200000");
   const newS3 = aplibRepack(patched, ops, dirty);
   if (!eq(aplibDepack(newS3).data, patched)) throw new Error("recompression du MAIN OS : relecture differente");
   const blob = rebuildContainer(sc, { 3: newS3 }, sKey);
-  const raw = wrap(buildStream(blob, BYTES_PER_MSG), sm.product, sm.start_seq);
+  if (blob.length > SMP_CONTAINER_MAX) throw new Error("conteneur trop grand pour la flash du Samples");
+  return { blob, main: patched, mods: main, co };
+}
+const SMP_CONTAINER_MAX = 0x1c0000;      // ecrit en flash 0x20000, doit finir avant 0x1e0000 (notes/41 §8)
 
-  // relecture complete
+/* Relecture d'un OS Cycles emballe pour le Samples : produit et octet appareil du transport, en-tete et sections 2/4/5
+ * du Samples officiel, section 3 = main, ecart avec mods limite aux 32 octets de la cle, HMAC Samples (pas Cycles). */
+function checkForSamples(raw, product, sc, sKey, cKey, r) {
   const back = unwrap(raw), bc = parseContainer(back.stream);
-  if (back.product !== 0x0f || !eq(bc.blob.subarray(0, 0x20), sc.blob.subarray(0, 0x20))) throw new Error("relecture : en-tete");
+  if (back.product !== product || raw[8] !== PRODUCTS[product][1]) throw new Error("relecture : transport");
+  if (!eq(bc.blob.subarray(0, 0x20), sc.blob.subarray(0, 0x20))) throw new Error("relecture : en-tete");
+  if (be32(back.stream, 4) !== contentChecksum(bc.blob)) throw new Error("relecture : checksum de contenu");
   for (const x of sc.sections) {
     const b = bc.sections.find((y) => y.id === x.id);
     if (!b) throw new Error(`relecture : section ${x.id} absente`);
@@ -813,10 +819,54 @@ function cyclesForSamples(cycRaw, smpRaw) {
   }
   const b3 = bc.sections.find((y) => y.id === 3);
   const m = aplibDepack(bc.blob.subarray(b3.off, b3.off + b3.size)).data;
-  if (!eq(m, patched)) throw new Error("relecture : MAIN OS different");
-  if (!eq(hmacSha256(sKey, bc.blob.subarray(0, bc.blob.length - DIGEST_LEN)), bc.blob.subarray(bc.blob.length - DIGEST_LEN)))
-    throw new Error("relecture : HMAC invalide avec la cle Samples");
+  if (!eq(m, r.main) || m.length !== r.mods.length) throw new Error("relecture : MAIN OS different");
+  for (let i = 0; i < m.length; i++)
+    if (m[i] !== r.mods[i] && !(i >= r.co && i < r.co + 32)) throw new Error("relecture : MAIN OS modifie hors de la cle");
+  const body = bc.blob.subarray(0, bc.blob.length - DIGEST_LEN), dig = bc.blob.subarray(bc.blob.length - DIGEST_LEN);
+  if (!eq(hmacSha256(sKey, body), dig)) throw new Error("relecture : HMAC invalide avec la cle Samples");
+  if (eq(hmacSha256(cKey, body), dig)) throw new Error("relecture : HMAC valide aussi avec la cle Cycles");
+  return m;
+}
+
+function cyclesForSamples(cycRaw, smpRaw) {
+  const cy = unwrap(cycRaw), sm = unwrap(smpRaw);
+  if (cy.product !== 0x11 || sm.product !== 0x0f) throw new Error("il faut l'OS Model:Cycles puis l'OS Model:Samples");
+  const cc = parseContainer(cy.stream), sc = parseContainer(sm.stream);
+  const cKey = keyOf(cc), sKey = keyOf(sc);
+  const c3 = cc.sections.find((s) => s.id === 3);
+  const r = cyclesOsInSamples(cc.blob.subarray(c3.off, c3.off + c3.size), cKey, sc, sKey);
+  const raw = wrap(buildStream(r.blob, BYTES_PER_MSG), sm.product, sm.start_seq);
+  const m = checkForSamples(raw, 0x0f, sc, sKey, cKey, r);         // relecture complete
   return { raw, mainOsSha: hex(sha256(m)) };
+}
+
+/* OS Cycles AVEC MODS pour Model:Samples (tools/mods_for_samples.py, notes/57) : builtRaw = le .syx Model:Cycles construit
+ * par build() depuis cycRaw (officiel), dont seule la section 3 differe. Toujours l'OS Cycles, quelle que soit la machine ;
+ * le correctif de cle de cyclesForSamples est toujours applique. into = l'OS qui tourne sur le Model:Samples :
+ * "samples" (OS Samples officiel : transport 0x0F, octet appareil 0x0A) ou "cycles" (un OS Cycles de la page, cle
+ * Samples : transport 0x11, octet appareil 0x0C). Relu en entier. Renvoie { raw, mainOsSha } (l'OS installe). */
+function modsForSamples(builtRaw, cycRaw, smpRaw, into) {
+  if (into !== "samples" && into !== "cycles") throw new Error("transport inconnu : " + into);
+  const bu = unwrap(builtRaw), cy = unwrap(cycRaw), sm = unwrap(smpRaw);
+  if (bu.product !== 0x11 || cy.product !== 0x11 || sm.product !== 0x0f)
+    throw new Error("il faut un build Model:Cycles, l'OS Model:Cycles et l'OS Model:Samples");
+  const bc = parseContainer(bu.stream), cc = parseContainer(cy.stream), sc = parseContainer(sm.stream);
+  if (bc.sections.length !== cc.sections.length) throw new Error("build : sections differentes de l'OS Cycles officiel");
+  for (const x of cc.sections) {
+    const b = bc.sections.find((y) => y.id === x.id);
+    if (!b) throw new Error(`build : section ${x.id} absente`);
+    if (x.id !== 3 && !eq(bc.blob.subarray(b.off, b.off + b.size), cc.blob.subarray(x.off, x.off + x.size)))
+      throw new Error(`build : section ${x.id} differente de l'OS Cycles officiel`);
+  }
+  const cKey = keyOf(cc), sKey = keyOf(sc);
+  if (!eq(hmacSha256(cKey, bc.blob.subarray(0, bc.blob.length - DIGEST_LEN)), bc.blob.subarray(bc.blob.length - DIGEST_LEN)))
+    throw new Error("build : HMAC invalide avec la cle Cycles");
+  const b3 = bc.sections.find((s) => s.id === 3);
+  const r = cyclesOsInSamples(bc.blob.subarray(b3.off, b3.off + b3.size), cKey, sc, sKey);
+  const host = into === "samples" ? sm : cy;
+  const raw = wrap(buildStream(r.blob, BYTES_PER_MSG), host.product, host.start_seq);
+  const m = checkForSamples(raw, host.product, sc, sKey, cKey, r);
+  return { raw, mainOsSha: hex(sha256(m)), modsSha: hex(sha256(r.mods)) };
 }
 
 /* Retour (tools/crossflash.py --back-samples) : l'OS Samples officiel, meme contenu et meme signature, dans le
@@ -833,7 +883,7 @@ function samplesBack(cycRaw, smpRaw) {
 // ---- Export node / navigateur ---------------------------------------------
 const API = { sha256, hmacSha256, writesBytes, unwrap, wrap, aplibDepack, aplibRepack, aplibPack, parseContainer, findKey,
               rebuildContainer, buildStream, contentChecksum, applyWrites, checkConflicts, checkCaves,
-              build, crossflash, cyclesForSamples, samplesBack, syntaktSection, syntaktVersion, buildPayload,
+              build, crossflash, cyclesForSamples, modsForSamples, samplesBack, syntaktSection, syntaktVersion, buildPayload,
               hex, fromHex, PRODUCTS, BASE };
 if (typeof module !== "undefined" && module.exports) module.exports = API;
 if (typeof window !== "undefined") window.MCBuilder = API;
