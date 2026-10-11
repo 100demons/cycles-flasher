@@ -531,6 +531,27 @@ python3 tools/emu/test_track_filter.py --cycles model-cycles_OS1.13.syx [--quick
 | `6ch-usbup,syntakt-sd-cp-toy-bits-swarm,trig-hold,arp,tempo-max,boot-anim,track-filter` | `5493f878652f5050a75ed0aab4aba9b19671764455943c5dd525484465c3f5ac` |
 | `macro,track-filter` | `cdbbe9725eec0ca135e4ae17bdb653b864553beb452c9eb72224e8219391a7d1` |
 
+### LFO 2, 3, 4 (d'après DavidCaruso)
+
+LFO 2, 3, 4 du firmware `Model-TG-VA-DR-v1` de DavidCaruso, réécrits sans ses octets ([note 56](notes/56-ajouts-davidcaruso.md)).
+`60-lfo-plus.json` (`lfo-plus`, avec ou sans Model-TG) : `tools/machines/lfo_plus/lfo_plus.S` (1 844 o) dans sept
+masques 34×34 libérés, mémoire de travail `0x4233f000..0x4233f49b` (§3). Son fichier n'est jamais nécessaire : la
+preuve accepte `--david Model-TG-VA-DR-v1.syx` pour comparer à son binaire, sans l'exiger. Incompatible avec
+`track-filter` (mêmes emplacements du son, §3.6) : `build.py` refuse les deux ensemble.
+
+```sh
+python3 tools/gen_lfo_plus.py --cycles model-cycles_OS1.13.syx [--check]
+python3 tools/emu/test_lfo_plus.py --cycles model-cycles_OS1.13.syx [--with model-tg,arp] [--david Model-TG-VA-DR-v1.syx]
+```
+
+| `-t` | MAIN OS patché (SHA-256) |
+|---|---|
+| `lfo-plus` | `61c48e85f74bca0387871df4bd82cd8bfa770759fbfab9dc629ec62e4b9dd26c` |
+| `model-tg,lfo-plus` | `32a8bbfe233fb0440f9ef622b9ee5ede0eaf7e8258d63c10aa5fcc70aad07a61` |
+| `model-tg-st,syntakt-tg-sd-cp-toy-bits-swarm,lfo-plus` | `b9d7de91dfa89e973359556098dd6d94eac1e8a60517d8d7a7cfd4135971d881` |
+| `macro,lfo-plus` | `213c8d74850a611f342da8fb414b142415ec0645ec86a3e80f5627b3e8c3d908` |
+| `6ch-usbup,model-tg-st,syntakt-tg-sd-cp-toy-bits-swarm,trig-hold,arp,tempo-max,boot-anim,multiline-browser,lfo-plus` | `7717f596492bf1eb375e9800f7901e1769e9d1d51b0036cd8a5f28c57f5de975` |
+
 ### Écoute d'un pas en pause
 
 `trig-preview` (et sa copie dans Model-TG) accepte le séquenceur en pause, où le met un Stop MIDI reçu même à l'arrêt : 3 octets

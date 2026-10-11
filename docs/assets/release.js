@@ -3,6 +3,14 @@
  *   { version: "1.1", date: "2026-10-15", changes: [{ en: "…", fr: "…" }] }
  */
 window.MC_RELEASES = [
+  { version: "1.48", date: "2026-10-12", changes: [
+    { en: "New mod, LFO 2, 3, 4: three more LFOs on every track, under Sounds & machines. On the LFO page, press [LFO] again: a big 2, then 3, then 4 shows in the left box, and the fifth press closes the page. Each extra LFO has its own speed, multiplier, waveform, destination and depth; fade, start phase and mode stay shared with LFO 1",
+      fr: "Nouveau mod, LFO 2, 3, 4 : trois LFO de plus sur chaque piste, dans Sons et machines. Sur la page LFO, appuyez encore sur [LFO] : un grand 2, puis 3, puis 4 s'affiche dans le cadre de gauche, et le cinquième appui ferme la page. Chaque LFO de plus a sa vitesse, son multiplicateur, sa forme, sa destination et sa profondeur ; le fondu, la phase de départ et le mode restent communs avec LFO 1" },
+    { en: "LFO 2 is saved with the sound and can be p-locked; LFO 3 and 4 are for live play (one setting per track, not saved). Works with or without Model-TG, and with Model-TG it also fixes the Attack, Filter and Resonance p-locks that came back on other parameters after reloading a pattern",
+      fr: "LFO 2 est sauvé avec le son et se p-locke ; LFO 3 et 4 servent au live (un réglage par piste, pas sauvé). Marche avec ou sans Model-TG, et avec Model-TG corrige aussi les p-locks d'Attack, Filtre et Résonance qui revenaient sur d'autres paramètres au rechargement d'un pattern" },
+    { en: "Based on a mod by DavidCaruso (his Model-TG-VA-DR-v1), rewritten for this project. Tested on a Model:Cycles, and checked in the emulator on the OS's own code, alone and with the other mods. It goes with every other mod except the Per-track filter for now, as both keep their settings in the same place of the sound",
+      fr: "D'après un mod de DavidCaruso (son Model-TG-VA-DR-v1), réécrit pour ce projet. Testé sur un Model:Cycles, et vérifié en émulation sur le code même de l'OS, seul et avec les autres mods. Il se combine avec tous les autres mods, sauf le Filtre par piste pour l'instant, les deux rangeant leurs réglages au même endroit du son" },
+  ] },
   { version: "1.47", date: "2026-10-12", changes: [
     { en: "Mods on a Model:Samples: the Mods tab now asks which machine you are flashing. Choose “Model:Samples, on its own OS” and the page installs the Model:Cycles OS with the mods you tick, packed inside your Model:Samples firmware; Model-TG's Sampler keeps your samples playing. Step 2 asks for the official Model:Samples OS file too",
       fr: "Des mods sur un Model:Samples : l'onglet Mods demande maintenant quelle machine vous flashez. Choisissez « Model:Samples, sous son OS » et la page installe l'OS du Model:Cycles avec les mods cochés, emballé dans le firmware de votre Model:Samples ; le Sampler de Model-TG continue de jouer vos samples. L'étape 2 demande aussi le fichier officiel de l'OS Model:Samples" },
