@@ -820,6 +820,9 @@ const CREDITS = [
   { who: "Émilie Gillet", repo: "pichenettes/eurorack",
     en: "the synthesis models of the MACRO machine: her Braids code (MIT license), compiled as is",
     fr: "les modèles de synthèse de la machine MACRO : son code de Braids (licence MIT), compilé tel quel" },
+  { who: "Robin Schmidt", repo: "RobinSchmidt/Open303",
+    en: "the sound model of the ACID machine: Open303's TB-303 filter, envelopes, accent and slide (MIT license), rewritten here in fixed point",
+    fr: "le modèle de son de la machine ACID : le filtre, les enveloppes, l'accent et le slide de la TB-303 d'Open303 (licence MIT), réécrits ici en virgule fixe" },
   { who: "TinyGregAudio", repo: "TinyGregAudio/Model-TG",
     en: "Model-TG (MIT license), built here by its own build, with two changes: in mute mode, each track key mutes at once; with 6-channel audio, a muted track's stem is no longer cut off",
     fr: "Model-TG (licence MIT), construit ici par son propre build, avec deux retouches : en mode mute, chaque touche de piste mute tout de suite ; avec l'audio 6 canaux, la piste USB d'une piste mutée n'est plus coupée net" },
@@ -848,6 +851,7 @@ const GUIDE_OF = {
   "level-pan-values": "level-pan",
   "trigless-dim": "trigless",
   macro: "macro",
+  acid: "acid",
 };
 
 // Step 1's sections, in display order: the `cat` of each feature (tools/gen_flasher_tweaks.py, same list there
@@ -1435,6 +1439,11 @@ const FEAT = {
       short: "One extra machine with 47 synthesis models, from Braids' open-source code.",
       desc: "An extra machine after Chord (after the Sampler with Model-TG, after the Syntakt engines if you tick them too) with the 47 synthesis models of Braids, Émilie Gillet's open-source macro-oscillator, from her own code: analog-style waves, FM, vowels and speech, physical models, drums, wavetables and noises. SHAPE picks the model, COLOR and SWEEP shape it, CONTOUR lets the amp envelope open the timbre. DECAY, GATE and PUNCH work as on Tone.",
       note: "About twice as heavy on the processor as an original machine. On its own it has no load governor: several MACRO tracks playing at once can make the sound crackle, so start with one or two. With the Syntakt engines, their load governor looks after MACRO tracks too. A project using MACRO needs a firmware with MACRO at the same place: it is the last machine, so its number depends on Model-TG and on the ticked Syntakt engines." },
+    acid: { label: "ACID machine",
+      short: "One extra machine: an acid bass in the style of the TB-303, with accent and slide from your trigs.",
+      desc: "An extra machine after Chord (after the Sampler with Model-TG): an acid bass in the style of the TB-303, from the open-source Open303 model by Robin Schmidt. COLOR is the cutoff, SHAPE the resonance, SWEEP the env mod, CONTOUR the accent and DECAY the decay; PUNCH switches the wave from saw to square. A trig with a velocity above 100 (VEL in the trig menu, or a hard pad hit) is accented, 127 fully. A trig whose length (LEN) runs past the next trig slides into the next note instead of playing it again; a pad played while another is held slides too.",
+      note: "Lighter on the processor than Tone. Turn GATE on for notes that hold their whole length, as on the original. It can't be ticked with MACRO or the Syntakt engines: they are extra machines at the same place. A project using ACID needs a firmware with ACID at the same place: it is the last machine, so its number depends on Model-TG.",
+      clash: "both add a machine at the same place in the firmware" },
   },
   fr: {
     usb6: { label: "Audio USB 6 canaux",
@@ -1494,6 +1503,11 @@ const FEAT = {
       short: "Une machine en plus avec 47 modèles de synthèse, tirés du code libre de Braids.",
       desc: "Une machine ajoutée après Chord (après le Sampler avec Model-TG, après les moteurs du Syntakt si vous les cochez aussi) avec les 47 modèles de synthèse de Braids, le macro-oscillateur libre d'Émilie Gillet, à partir de son propre code : ondes façon analogique, FM, voyelles et voix, modèles physiques, percussions, tables d'ondes et bruits. SHAPE choisit le modèle, COLOR et SWEEP le façonnent, CONTOUR laisse l'enveloppe d'ampli ouvrir le timbre. DECAY, GATE et PUNCH marchent comme sur Tone.",
       note: "Environ deux fois plus gourmande en calcul qu'une machine d'origine. Seule, elle n'a pas de régulateur de charge : plusieurs pistes MACRO qui jouent en même temps peuvent faire craquer le son ; commencez avec une ou deux. Avec les moteurs du Syntakt, leur régulateur de charge veille aussi sur les pistes MACRO. Un projet qui utilise MACRO demande un firmware où MACRO est à la même place : c'est la dernière machine, son numéro dépend donc de Model-TG et des moteurs du Syntakt cochés." },
+    acid: { label: "Machine ACID",
+      short: "Une machine en plus : une basse acide à la manière de la TB-303, avec accent et slide tirés de vos trigs.",
+      desc: "Une machine ajoutée après Chord (après le Sampler avec Model-TG) : une basse acide à la manière de la TB-303, d'après le modèle libre Open303 de Robin Schmidt. COLOR règle le cutoff, SHAPE la résonance, SWEEP l'env mod, CONTOUR l'accent et DECAY la décroissance ; PUNCH passe l'onde de scie à carré. Un trig de vélocité au-dessus de 100 (VEL dans le menu du trig, ou un pad frappé fort) est accentué, à 127 complètement. Un trig dont la longueur (LEN) dépasse le trig suivant glisse vers la note suivante au lieu de la rejouer ; un pad joué pendant qu'un autre est tenu glisse aussi.",
+      note: "Moins gourmande en calcul que Tone. Allumez GATE pour que les notes tiennent toute leur longueur, comme sur l'original. Ne se coche pas avec MACRO ni avec les moteurs du Syntakt : ce sont des machines ajoutées à la même place. Un projet qui utilise ACID demande un firmware où ACID est à la même place : c'est la dernière machine, son numéro dépend donc de Model-TG.",
+      clash: "les deux ajoutent une machine au même endroit du firmware" },
   },
 };
 

@@ -79,7 +79,7 @@ FEATURES = [
         # avec les moteurs du Syntakt : la base de la version combinee (notes/31), et pour chaque combinaison de
         # moteurs son tweak syntakt-tg-<moteurs> (« tg » des combinaisons de la carte des moteurs) ; de meme avec
         # la machine MACRO (notes/43), qui prend alors macro-tg
-        "with": {"syntakt": "30-model-tg-st", "macro": "30-model-tg-st"},
+        "with": {"syntakt": "30-model-tg-st", "macro": "30-model-tg-st", "acid": "30-model-tg-st"},
     },
     {
         "id": "sample-preview",
@@ -95,7 +95,8 @@ FEATURES = [
             {"file": "33-sample-preview", "label": None},
         ],
         # avec les moteurs du Syntakt, Model-TG devient model-tg-st : l'ecoute prend la version faite pour lui
-        "with": {"syntakt": "33-sample-preview-st", "macro": "33-sample-preview-st"},
+        "with": {"syntakt": "33-sample-preview-st", "macro": "33-sample-preview-st",
+                 "acid": "33-sample-preview-st"},
     },
     {
         "id": "latching-mute",
@@ -235,6 +236,25 @@ FEATURES = [
         ],
         # avec Model-TG : la version qui s'ajoute apres model-tg-st (Model-TG prend cette base, « with » ci-dessus)
         "with": {"model-tg": "32-macro-tg"},
+    },
+    {
+        "id": "acid",
+        "cat": "sound",
+        "label": "Machine ACID",
+        "desc": "Une machine ajoutee apres Chord (apres le Sampler avec Model-TG) : une basse acide a la maniere de la "
+                "TB-303, d'apres le modele libre d'Open303. COLOR = cutoff, SHAPE = resonance, SWEEP = env mod, "
+                "CONTOUR = accent, PUNCH = scie ou carre ; une VEL au-dessus de 100 accentue la note, une LEN plus "
+                "longue que l'ecart au trig suivant la fait glisser.",
+        "status": "experimental",
+        "credit": {"kind": "based", "who": "Robin Schmidt", "repo": "RobinSchmidt/Open303"},
+        "license": "LICENSE-Open303",
+        # meme place et meme mecanique que MACRO et les moteurs du Syntakt (notes/54 §7)
+        "excludes": ["macro", "syntakt"],
+        "variants": [
+            {"file": "26-acid", "label": None},
+        ],
+        # avec Model-TG : la version qui s'ajoute apres model-tg-st (Model-TG prend cette base, « with » ci-dessus)
+        "with": {"model-tg": "35-acid-tg"},
     },
     {
         "id": "syntakt",
