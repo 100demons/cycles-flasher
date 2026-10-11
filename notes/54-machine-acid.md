@@ -11,23 +11,24 @@ l'OS 1.13.
 - **Une machine ajoutée, ACID**, après Chord (après le Sampler avec Model-TG), avec la mécanique de MACRO
   ([43](43-machine-macro.md)) : même place, mêmes détours. Elle exclut donc MACRO et les moteurs du Syntakt.
 - **Les réglages d'une 303, sur les potards du Cycles** : COLOR = CUTOFF, SHAPE = RESO, SWEEP = ENV MOD, CONTOUR =
-  ACCENT, DECAY = DECAY (enveloppe du filtre, et la décroissance de l'ampli), PUNCH = forme d'onde (éteint : scie,
-  allumé : carré). PITCH, FINE, GATE, les touches et le clavier comme sur les autres machines.
-- **L'accent et le slide viennent du séquenceur, sans le modifier** :
-  - accent = la vélocité du trig (VEL dans le menu du trig) : 100 (le défaut) et moins, pas
-    d'accent ; 127, tout l'ACCENT ; entre les deux, une part ;
-  - slide = la longueur du trig (LEN) : un trig plus long que l'écart au trig suivant (1.06, 1/8… ou INF) glisse
-    vers la note suivante au lieu de la rejouer ; avec LEN 1/16 sur des pas voisins (le défaut), chaque note est
-    rejouée. En jeu live, une touche jouée pendant qu'une autre est tenue glisse. Un trig sans note (trigless) avec
-    un verrou NOTE glisse aussi.
+  DRIVE (saturation, §3.2), DECAY = DECAY (enveloppe du filtre, et la décroissance de l'ampli), PUNCH = forme d'onde
+  (éteint : scie, allumé : carré). PITCH, FINE, GATE, les touches et le clavier comme sur les autres machines.
+- **Le slide vient du séquenceur, sans le modifier** : un trig plus long (LEN) que l'écart au trig suivant (1.06,
+  1/8… ou INF) glisse vers la note suivante au lieu de la rejouer ; avec LEN 1/16 sur des pas voisins (le défaut),
+  chaque note est rejouée. En jeu live, une touche jouée pendant qu'une autre est tenue glisse. Un trig sans note
+  (trigless) avec un verrou NOTE glisse aussi.
 - **Le son est un modèle de la TB-303 : celui d'Open303** (Robin Schmidt, licence MIT) : filtre « TB_303 » à 4 pôles
-  et ses approximations mesurées, enveloppe du filtre, accent (intégrateur, +4 × l'enveloppe sur l'amplitude),
-  slide de 50 ms. Réécrit en virgule fixe pour le ColdFire (pas de FPU), à 48 kHz, oscillateur à bords adoucis.
+  et ses approximations mesurées, enveloppe du filtre, slide de 50 ms. Réécrit en virgule fixe pour le ColdFire (pas
+  de FPU), à 48 kHz, oscillateur à bords adoucis. Puis une saturation, la nôtre (§3.2).
+- **Pas d'accent** : la première version avait celui d'Open303 (CONTOUR = sa force, la vélocité au-dessus de 100 =
+  les notes accentuées) ; Maxime ne l'entendait pas et ne le trouvait pas utile ici (§10) : remplacé par DRIVE. La
+  vélocité règle le volume, par l'OS, comme sur les machines d'origine.
 - **Prouvé en émulation** `[FAIT en émulation]` : la sortie avant la chaîne d'ampli est, échantillon par échantillon,
-  celle du même cœur compilé pour l'ordinateur, y compris quand le vrai séquenceur de l'OS joue (accent, slide,
-  LEN, jeu live, verrous) ; les machines d'origine ne changent pas.
+  celle du même cœur compilé pour l'ordinateur, y compris quand le vrai séquenceur de l'OS joue (slide, LEN,
+  vélocité, verrous, jeu live) ; les machines d'origine ne changent pas.
 - **Charge** : une voix ACID coûte un peu moins qu'une voix TONE (§8). Une voix muette n'est pas calculée.
-- **Expérimental** : pas encore joué sur la machine (§10).
+- **Expérimental** : la première version (avec l'accent) a bien joué sur la machine le 11/10/2026 ; DRIVE pas encore
+  (§10).
 
 ## 1. Le modèle : Open303
 
@@ -42,13 +43,13 @@ reprend le modèle, pas le code (il calcule en double et suréchantillonne) :
 | CUTOFF | 313,8 à 2 394 Hz, exponentiel | idem |
 | RESO | courbe « skewée » `(1 − e^(−3x)) / (1 − e^(−3))` | idem, table de 17 points |
 | ENV MOD | échelle et décalage de l'enveloppe du filtre qui dépendent de CUTOFF (droites mesurées) | idem |
-| DECAY | enveloppe du filtre de 200 ms à 2 s ; 200 ms pour une note accentuée | idem, multiplicateur par bloc |
-| ACCENT | intégrateur de 15 ms de l'enveloppe (`rc2`), qui monte le cutoff, et amplitude × (1 + 0,45 env + 4 × accent × env) | idem |
+| DECAY | enveloppe du filtre de 200 ms à 2 s ; 200 ms pour une note accentuée | idem, multiplicateur par bloc (pas d'accent) |
+| ACCENT | intégrateur de 15 ms de l'enveloppe (`rc2`), qui monte le cutoff, et amplitude × (1 + 0,45 env + 4 × accent × env) | retiré (§3.2) : amplitude × (1 + 0,45 env) |
 | Slide | la hauteur suit la note avec une constante de 21,7 ms (90 % en 50 ms), sans relancer l'enveloppe | idem ; la note ne glisse que vers celle du trig, PITCH et FINE agissent tout de suite |
 | Ampli | enveloppe propre (1,23 s) | la chaîne d'ampli de l'OS, comme TONE : DECAY et GATE (§3.1) |
 
 À 48 kHz sans suréchantillonnage, le filtre reste stable jusqu'à 16,6 kHz (le haut de la table, vérifié sur toute la
-course des potards) ; un CUTOFF au maximum avec ENV MOD et accent au maximum y plafonne.
+course des potards) ; un CUTOFF au maximum avec ENV MOD au maximum y plafonne.
 
 ## 2. Ce que l'OS donne à une machine `[FAIT en émulation]`
 
@@ -84,7 +85,7 @@ et ils font glisser les paramètres, pas la note.
 | COLOR | Cutoff (CUT), défaut 40 | CUTOFF |
 | SHAPE | Reso (RES), défaut 90 | RESONANCE |
 | SWEEP | Env Mod (ENV), défaut 80 | ENV MOD |
-| CONTOUR | Accent (ACC), défaut 80 | ACCENT : sa force, la vélocité dit quelles notes |
+| CONTOUR | Drive (DRV), défaut 0 | DRIVE : la saturation (§3.2) |
 | DECAY | (commun), défaut 50 | DECAY de l'enveloppe du filtre, et décroissance de l'ampli (la table de TONE `0x4011d84c`) |
 | PUNCH | (commun) | forme d'onde : éteint scie, allumé carré ; le PUNCH de l'OS est réglé éteint |
 | GATE | (commun) | la chaîne d'ampli d'origine : la note tient tant que le trig dure, puis décroît avec DECAY |
@@ -93,12 +94,51 @@ Un potard 8.8 de 0..127 devient 0..32 766 (`x + (x >> 7)`). L'image de la machin
 défaut (CUTOFF bas, beaucoup de résonance et d'ENV MOD) donnent tout de suite le « wow » acide ; GATE allumé donne la
 tenue d'une 303 (la note sonne toute sa longueur).
 
-### 3.2 Accent
+### 3.2 DRIVE (la saturation), à la place de l'accent
 
-À chaque trig, la passerelle lit la vélocité (`0x40fe4cdc`) : `accent = ACCENT × (vel − 100) / 27`, 0 sous 100.
-Au premier trig sur la machine (l'OS appelle encore l'ancienne au bloc du trig, ACID ne voit que le bloc suivant),
-elle la lit au bloc suivant : la vélocité est toujours là. Le gain de vélocité de l'OS reste appliqué : une note à
-127 sonne aussi 2 dB plus fort qu'une note à 100, ce qui va dans le sens de l'accent.
+La première version avait l'accent d'Open303 sur CONTOUR : à chaque trig, `accent = ACCENT × (vel − 100) / 27`, 0 sous
+100. Maxime, sur la machine (11/10/2026) : « ça marche bien. Par contre j'ai l'impression que accent ne change rien du
+tout, et il est pas vraiment utile dans notre cas même s'il marchait donc remplace le par autre chose d'utile ». Cause
+probable `[HYP]` : un pas a une VEL de 100 par défaut, donc sans monter la VEL pas par pas, aucune note n'était
+accentuée et CONTOUR ne faisait rien. Remplacé par **DRIVE** : il agit sur tout le son sans réglage de pas, le Cycles
+n'a pas d'autre distorsion, et une ligne acide passe presque toujours par une pédale de distorsion. La vélocité ne
+touche plus au son de la machine : seul le gain de vélocité de l'OS (le volume) reste, comme sur les autres machines.
+
+La saturation est dans le cœur, après le filtre, avant la chaîne d'ampli de l'OS (l'enveloppe d'ampli et la vélocité
+agissent après elle). `x` est la sortie du filtre à l'échelle de sortie (pleine échelle = 2^18), `d` le potard (0..1) :
+
+| Étape | Formule | Pourquoi |
+|---|---|---|
+| Gain | `G = 10^(30 × (1 − (1 − d)^1,25) / 20)` : 0 dB à 0, 9 dB au quart, 17,5 dB à la moitié, 30 dB au maximum | le son change dès le début de la course (une loi linéaire en dB laissait le premier quart presque propre) |
+| Courbe | `u = G x / (1,5 × pleine échelle)`, `y = u − u³/3` (pente 1 à l'origine, 2/3 et pente nulle à `u = 1`), `y = ±2/3` au-delà | écrêtage doux, sans cassure |
+| Passe-bas | un pôle, coefficient `1 − d × e^(−2π × 6000 / 48000)` : rien à 0, 6 kHz au maximum | adoucit les harmoniques aiguës de l'écrêtage, qui se replient (pas de suréchantillonnage) |
+| Niveau | `sqrt(1 + (G/c)²) / G × 10^(1,5d/20)`, `c` = 15 dB ; sortie `y × 1,5 × niveau` | compense le gain que le son reçoit vraiment (tout le gain sous le seuil, plus rien au-dessus ; une note typique a ~15 dB de marge à DRIVE 0) et laisse monter une scie de 1,5 dB d'un bout à l'autre |
+
+À DRIVE 0 (`G = 1`), la courbe remplace le coude de la première version (`acid_out` : linéaire jusqu'à la moitié de la
+pleine échelle, puis un coude jusqu'à la pleine échelle à 1,5) : les deux sorties diffèrent d'au plus 0,002 de la
+pleine échelle en scie, 0,007 en carré (−43 dB), sur les réglages ci-dessous : à DRIVE 0, le son testé par Maxime
+reste le même à l'oreille.
+
+En virgule fixe : par bloc, `m = G × 2^28 / (1,5 × 2^18)` (table de 17 points, interpolée), `m3 = 8m/3`,
+`xl = 0x0fffffff / m` ; par échantillon, `|x| ≥ xl` donne `u = ±2/3` directement (pas de débordement), sinon `u = x m`
+(Q28, 1,0 = le seuil) et `y = u (1 − u²/3)` en deux `mac.l` (`u²/3 = u × x m3 / 8`) ; la sortie `z × 12 × niveau`
+passe par `qmac2`, saturée par l'EMAC. Environ 300 instructions de plus par bloc que l'accent (§8).
+
+Mesuré sur le cœur (`acid_ref`, une note de 150 blocs à partir du trig, avant la chaîne d'ampli) : niveau efficace par
+rapport à DRIVE 0 et facteur de crête (crête / efficace) :
+
+| Réglages (CUT / RES / ENV / DECAY) | DRIVE 0 | 16 | 32 | 64 | 96 | 127 |
+|---|---|---|---|---|---|---|
+| défaut 40 / 90 / 80 / 50, scie, note 36 | 0 dB, 6,7 dB | +0,3, 6,5 | +0,7, 5,8 | +1,2, 1,8 | +1,3, 0,6 | +1,6, 0,4 |
+| 70 / 127 / 127 / 80, scie | 0, 6,5 | +0,2, 6,3 | +0,6, 5,6 | +0,6, 1,9 | +0,6, 0,8 | +0,8, 0,6 |
+| 110 / 20 / 30 / 60, scie, note 48 | 0, 7,1 | +0,3, 6,9 | +0,8, 6,4 | +1,8, 2,3 | +2,3, 0,7 | +2,7, 0,4 |
+| défaut, carré | 0, 3,4 | +0,1, 3,1 | −0,1, 2,3 | −2,6, 0,5 | −3,5, 0,2 | −3,4, 0,2 |
+| défaut, scie, note 60 | 0, 8,6 | +0,3, 8,4 | +0,8, 7,7 | +1,8, 3,2 | +2,5, 1,4 | +2,9, 1,0 |
+
+Le volume reste entre −3,5 et +2,9 dB sur toute la course ; le facteur de crête tombe de 7 dB à moins de 1 dB (une
+onde presque carrée au maximum). Le carré, déjà riche, perd un peu de niveau en saturant : au maximum, scie et carré
+se rejoignent. Limite : sans suréchantillonnage, une note aiguë (au-dessus de C4) avec DRIVE au maximum replie un
+peu d'harmoniques (grain plus dur), comme une distorsion numérique simple.
 
 ### 3.3 Slide
 
@@ -118,10 +158,10 @@ held && voix pas muette && (left == 0 || left > 2 × 0x40149310) && MACHINE inch
 
 Un trig lié est caché à l'OS : la passerelle efface `voix + 0x34` dans `update`. Le VCA ne fond pas la voix (il le
 fait au bloc d'un trig), le bloc suivant n'a pas `+0x38` : l'enveloppe d'ampli continue (tenue avec GATE, sa
-décroissance sinon), pas de remise à zéro par `0x400a7d16`. Le cœur reçoit ce même bloc la nouvelle note (qui glisse)
-et l'accent de la note, sans relancer l'enveloppe du filtre (comme `slideToNote` d'Open303).
+décroissance sinon), pas de remise à zéro par `0x400a7d16`. Le cœur reçoit ce même bloc la nouvelle note (qui
+glisse), sans relancer l'enveloppe du filtre (comme `slideToNote` d'Open303).
 
-Le gain de vélocité sauterait au bloc suivant (de 100 à 127 vers une note accentuée : une marche de 2 dB au milieu
+Le gain de vélocité sauterait au bloc suivant (de 100 à 127 vers une note plus forte : une marche de 2 dB au milieu
 d'une onde, un clic) : la passerelle remet dans `0x40fe4cd0` le gain en cours, puis le rapproche de celui de la
 nouvelle note de 1/127 par bloc (0,07 dB, 18 ms pour 100 → 127). Un trig rejoué arrête cette rampe (l'OS a écrit son
 gain).
@@ -133,10 +173,10 @@ finie : il n'y a rien à entendre alors.
 
 ### 3.4 État, voix muette
 
-- Une voix d'ACID par piste (`acid_t`, 68 o) et l'état de la passerelle (132 o en tout par piste), dans le BSS de la
+- Une voix d'ACID par piste (`acid_t`, 64 o) et l'état de la passerelle (124 o en tout par piste), dans le BSS de la
   charge utile, mis à zéro au démarrage.
 - Repère `'ACD1'` en `voix + 0x2c`, effacé par la remise à zéro de la voix à chaque changement de machine : la
-  première note y lit le paramètre MACHINE, la vélocité, et marque la voix muette (remise à zéro au premier trig).
+  première note y lit le paramètre MACHINE et marque la voix muette (remise à zéro au premier trig).
 - **Voix muette non calculée** : sans trig ni slide et avec l'enveloppe d'ampli sous 2^14 (−102 dB), sortie nulle ;
   au trig suivant, phase et filtres à zéro (comme Open303 quand la voix s'est tue). Sinon le filtre continue d'une
   note à l'autre, comme sur la 303.
@@ -146,15 +186,15 @@ finie : il n'y a rien à entendre alors.
 - Signaux : 1,0 = 2^28 (l'oscillateur fait ±2^25) ; coefficients Q31 ; hauteurs en demi-tons `<< 16` ; tout passe par
   l'EMAC en mode fractionnaire signé saturé (`MACSR = 0xa0` pendant la boucle des voix) : `mac.l` + `movclr.l`, ACC0
   rendu vide.
-- Par bloc : enveloppe du filtre, accent, hauteur (slide), coupure en 1/16 d'octave, `b0`, `k`, gain (avec
-  l'amplitude d'Open303). Par échantillon : coefficients interpolés de la fin du bloc précédent à la fin de celui-ci,
-  oscillateur, passe-haut d'entrée, contre-réaction et son passe-haut, 4 étages.
-- Sortie : 1,0 du modèle = 4 × la pleine échelle, linéaire jusqu'à la moitié de la pleine échelle puis un coude qui
-  l'atteint en douceur (`acid_out`) : les accents les plus forts saturent un peu au lieu d'écrêter. Avec les réglages
-  par défaut, une note sans accent sort à ~0,4 de la pleine échelle avant la chaîne d'ampli, comme TONE après elle.
+- Par bloc : enveloppe du filtre, hauteur (slide), coupure en 1/16 d'octave, `b0`, `k`, gain (avec l'amplitude
+  d'Open303), réglages de la saturation. Par échantillon : coefficients interpolés de la fin du bloc précédent à la
+  fin de celui-ci, oscillateur, passe-haut d'entrée, contre-réaction et son passe-haut, 4 étages, saturation (§3.2).
+- Sortie : 1,0 du modèle = 4 × la pleine échelle, puis la saturation : à DRIVE 0, une courbe douce qui atteint la
+  pleine échelle à 1,5 × pleine échelle (les pointes fortes s'arrondissent au lieu d'écrêter). Avec les réglages par
+  défaut, une note sort à ~0,4 de la pleine échelle avant la chaîne d'ampli, comme TONE après elle.
 - Le même fichier est compilé pour le Cycles (`acid.c`) et pour l'ordinateur (`acid_ref.c`, l'EMAC reproduite :
   chaque produit tronqué à 2^−39, somme, décalage de 31 et saturation) : la preuve les compare à l'échantillon près.
-- Tables (`acid_tables.h`, 1,9 Ko) calculées par `gen_acid.py` d'après les constantes d'Open303.
+- Tables (`acid_tables.h`, 1,8 Ko) calculées par `gen_acid.py` d'après les constantes d'Open303 et la saturation (§3.2).
 
 ## 5. Place
 
@@ -240,16 +280,18 @@ level-pan-values,trigless-dim` ; les mêmes avec `model-tg-st,sample-preview-st`
 Flasher : `webflash_smoke.sh` avec les deux OS officiels, les 688 combinaisons de `REF_MAINOS` (chaque mod vérifié),
 ALL PARTS OK ; la carte ACID seule, avec Model-TG, et son exclusion de MACRO et des moteurs dans les deux sens.
 
-## 10. À vérifier sur la machine
+## 10. Sur la machine
 
-- Le son : CUTOFF, RESO, ENV MOD, DECAY, ACCENT sur toute leur course ; scie et carré (PUNCH) ; niveau à côté des
-  autres machines ; les accents forts (VEL 127, ACCENT 127, RESO haute) saturent un peu, sans craquer.
-- Accent : un pas à VEL 127 (menu du trig) sonne plus brillant et plus fort ; à 100, rien.
-- Slide : LEN 1.06 (ou plus) sur un pas, la note suivante glisse, sans clic ; LEN 1/16, chaque note est rejouée.
-  INF ; un pad tenu en live pendant qu'on en joue un autre. Avec GATE allumé, l'ampli tient à travers le slide.
+**Testé sur la machine (11/10/2026), première version (CONTOUR = accent)**, fichiers ci-dessous : « ça marche bien ».
+L'accent semblait ne rien changer, et Maxime ne le trouvait pas utile ici : remplacé par DRIVE (§3.2). Fichiers de cette
+première version, construits par `tools/build.py` : `6ch-usbup,acid,trig-hold,arp,tempo-max,boot-anim,
+multiline-browser,level-pan-values,trigless-dim` (MAIN OS `fba63d4f…`) et `6ch-usbup,model-tg-st,sample-preview-st,
+acid-tg,trig-hold,arp,tempo-max,boot-anim,multiline-browser,level-pan-values,trigless-dim` (MAIN OS `640b2fd3…`).
+
+À vérifier sur la version avec DRIVE :
+
+- CONTOUR (Drive) de 0 à 127 sur une ligne qui joue : à 0, le son de la première version ; de la chaleur au premier
+  quart, du grain vers le milieu, un fuzz en haut ; le volume reste à peu près le même, sans saut ni craquement.
+- DRIVE au maximum avec RESO haute, en scie et en carré, et sur une note aiguë ; DRIVE verrouillé sur un pas.
+- Le reste comme avant : CUTOFF, RESO, ENV MOD, DECAY, slide (LEN 1.06 ou INF), GATE ; VEL ne change que le volume.
 - Avec Model-TG : la même chose sur la 8e machine.
-
-Fichiers envoyés à Maxime (11/10/2026), construits par `tools/build.py` :
-`6ch-usbup,acid,trig-hold,arp,tempo-max,boot-anim,multiline-browser,level-pan-values,trigless-dim` (MAIN OS
-`fba63d4f…`) et `6ch-usbup,model-tg-st,sample-preview-st,acid-tg,trig-hold,arp,tempo-max,boot-anim,multiline-browser,
-level-pan-values,trigless-dim` (MAIN OS `640b2fd3…`), tous deux prouvés en émulation (§9.1).

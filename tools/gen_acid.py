@@ -7,7 +7,8 @@ Model:Cycles (notes/54).
 
 Le son est notre code (tools/machines/acid/ : acid_dsp.h, le cœur, et acid.c, la passerelle), écrit en virgule
 fixe d'après le modèle d'Open303 de Robin Schmidt (licence MIT : LICENSE-Open303, recopiée à côté du flasher) :
-filtre « TB_303 », enveloppe du filtre, accent, slide. Ses tables (acid_tables.h) sont calculées ici. Aucun octet
+filtre « TB_303 », enveloppe du filtre, slide ; puis une saturation (DRIVE) qui est la nôtre. Ses tables
+(acid_tables.h) sont calculées ici. Aucun octet
 Elektron : le MAIN OS officiel sert à vérifier les octets d'origine, et la table des descripteurs est recopiée au
 build depuis TON fichier (recette « cycles », comme pour MACRO).
 
@@ -61,7 +62,7 @@ BSS_OFF = gm.BSS_OFF               # comme MACRO : variables au-dessus des table
 
 # --- la machine (comme gm.MACHINE) : COLOR, SHAPE, SWEEP, CONTOUR = (nom long, nom court, défaut) ; decay : DECAY
 MACHINE = dict(name="ACID", image=4, decay=50,
-               knobs=(("Cutoff", "CUT", 40), ("Reso", "RES", 90), ("Env Mod", "ENV", 80), ("Accent", "ACC", 80)))
+               knobs=(("Cutoff", "CUT", 40), ("Reso", "RES", 90), ("Env Mod", "ENV", 80), ("Drive", "DRV", 0)))
 
 # --- le modèle d'Open303 (rosic_Open303.cpp, rosic_TeeBeeFilter.h), à 48 kHz ---------------------------------
 OPEN303 = "RobinSchmidt/Open303"
@@ -71,17 +72,24 @@ BLK = 32                           # trames par bloc de la boucle des voix
 NCUT = 103                         # table des coefficients : 200 Hz x 2^(i/16), i = 0..102 (16,6 kHz)
 F0 = 200.0                         # plancher de la fréquence de coupure d'Open303
 C0, C1 = 313.8152786059267, 2394.411986817546      # CUTOFF au minimum, au maximum (mesures d'Open303)
-DECAY_MS = (200.0, 2000.0)         # DECAY : décroissance de l'enveloppe du filtre d'une note sans accent
-ACCENT_DECAY = 0.200               # note accentuée : 200 ms
-RC2_TAU = 0.015                    # accent : intégrateur de 15 ms (rc2)
+DECAY_MS = (200.0, 2000.0)         # DECAY : décroissance de l'enveloppe du filtre
 SLIDE_TAU = 0.0217                 # slide : 90 % de l'écart en 50 ms
 DUTY = (1 - 4.37 / 70.0) / 2       # SQUARE303 = -tanh(70 x scie + 4,37) : haut sur 46,9 % du cycle
 # niveau de sortie : 1,0 du modèle (sortie du filtre d'Open303 pour une scie de +-0,125) = 4 x pleine échelle, avant
-# le coude de acid_out (linéaire jusqu'à 1/2, pleine échelle à 1,5). Notes sans accent, réglages résonants
-# (~0,1 du modèle) : ~0,4 de la pleine échelle ; les accents forts saturent un peu (notes/54).
+# la saturation. Réglages résonants (~0,1 du modèle) : ~0,4 de la pleine échelle (notes/54).
 OUT_LEVEL = 4.0
-OUT_SHIFT = 11                     # qmul(g, y4) = modèle x 2^20 x OUT_GAIN -> Q29 (1,0 = pleine échelle)
-OUT_GAIN = OUT_LEVEL * 2 ** 29 / 2 ** (20 + OUT_SHIFT)
+X_FS = 18                          # qmul(g, y4) = modèle x 2^20 x OUT_GAIN : pleine échelle = 2^18
+OUT_GAIN = OUT_LEVEL * 2 ** X_FS / 2 ** 20
+# saturation (DRIVE, potard CONTOUR, notes/54 §3.2) : gain 1 .. DRIVE_GAIN dB, plus vite au début de la course,
+# courbe u - u^3 / 3 dont le seuil (u = 1) est à 1,5 x pleine échelle / gain (la sortie y vaut 2/3 x 1,5 = la
+# pleine échelle), passe-bas d'un pôle, de « pas de filtre » (DRIVE à 0) à DRIVE_LP Hz (DRIVE au maximum). Le
+# niveau compense le gain que le son reçoit vraiment : tout le gain tant qu'il reste sous le seuil, plus rien
+# au-delà (une note typique a DRIVE_HEADROOM dB de marge avant le seuil, DRIVE à 0), et laisse monter le niveau
+# efficace d'une scie de DRIVE_RISE dB d'un bout à l'autre (mesuré : notes/54 §3.2)
+DRIVE_GAIN = 30.0
+DRIVE_LP = 6000.0
+DRIVE_HEADROOM = 15.0
+DRIVE_RISE = 1.5
 
 
 def q31(x):
@@ -99,6 +107,18 @@ def b0f(fx):
     return (0.00045522346 + 6.1922189 * fx) / (1.0 + 12.358354 * fx + 4.4156345 * fx * fx)
 
 
+def drive_gain(d):
+    """Gain de la saturation pour le potard d (0..1) : 1 .. DRIVE_GAIN dB, en DRIVE_GAIN x (1 - (1 - d)^1,25) dB
+    (le premier quart de la course donne déjà près du tiers du gain : le son change dès le début)."""
+    return 10 ** (DRIVE_GAIN * (1 - (1 - d) ** 1.25) / 20)
+
+
+def drive_level(d):
+    """Niveau après la saturation (1 à DRIVE 0) : l'inverse du gain reçu, qui plafonne à DRIVE_HEADROOM dB."""
+    g, c = drive_gain(d), 10 ** (DRIVE_HEADROOM / 20)
+    return math.sqrt(1 + (g / c) ** 2) / g * 10 ** (DRIVE_RISE * d / 20)
+
+
 def tables():
     """(tableaux, constantes) d'acid_tables.h."""
     lut = lambda f: [f(j / 16) for j in range(17)]        # 17 points sur la course d'un potard
@@ -108,25 +128,25 @@ def tables():
         "ACID_KF": [q31(kfull(x) / 128) for x in fx],
         "ACID_INC": [int(round(2 ** 32 * 440 * 2 ** ((n - 69) / 12) / FS)) for n in range(129)],
         "ACID_RES": lut(lambda x: q31((1 - math.exp(-3 * x)) / (1 - math.exp(-3)))),
-        "ACID_ACCENT": lut(q31),
         "ACID_DEC": lut(lambda x: q31(math.exp(-BLK / (FS * DECAY_MS[0] / 1000 * (DECAY_MS[1] / DECAY_MS[0]) ** x)))),
         "ACID_ENVLO": lut(lambda e: int(round((3.773996325111173 * e + 0.736965594166206) * 2 ** 20))),
         "ACID_ENVHI": lut(lambda e: int(round((4.194548788411135 * e + 0.864344900642434) * 2 ** 20))),
+        # saturation : u = x x m (Q28, 1,0 = le seuil), passe-bas (Q31), niveau x 0,75 (z x 8 x niveau, compté
+        # deux fois par qmac2 : z x 12 x niveau)
+        "ACID_DRV_M": lut(lambda d: int(round(drive_gain(d) * 2 ** 28 / (1.5 * 2 ** X_FS)))),
+        "ACID_DRV_LP": lut(lambda d: q31(1 - d * math.exp(-2 * math.pi * DRIVE_LP / FS))),
+        "ACID_DRV_MK": lut(lambda d: q31(0.75 * drive_level(d))),
     }
     k = {
         "ACID_NCUT": NCUT,
-        "ACID_DEC_ACCENT": q31(math.exp(-BLK / (FS * ACCENT_DECAY))),
         "ACID_EOFF0": q31(0.294391201442418), "ACID_EOFFSPAN": q31(0.048292930943553),
         "ACID_LC0": int(round(16 * math.log2(C0 / F0) * 2 ** 16)),
         "ACID_LCSPAN": int(round(16 * math.log2(C1 / C0) * 2 ** 16)),
         "ACID_K17": q31(128 / (17 * 8)),
-        "ACID_AMP_ENV": q31(0.45 / 8 * OUT_GAIN), "ACID_AMP_ACC": q31(4 / 8 * OUT_GAIN),
-        "ACID_AMP_ONE": q31(1 / 8 * OUT_GAIN),
-        "ACID_RC2_A": q31(1 - math.exp(-BLK / (FS * RC2_TAU))),
+        "ACID_AMP_ENV": q31(0.45 / 8 * OUT_GAIN), "ACID_AMP_ONE": q31(1 / 8 * OUT_GAIN),
         "ACID_SLIDE_A": q31(1 - math.exp(-BLK / (FS * SLIDE_TAU))),
         "ACID_DUTY": int(round(DUTY * 2 ** 32)),
-        "ACID_OUT_SHIFT": OUT_SHIFT,
-        "ACID_OUT_LIM": int(round(1.5 * 2 ** 29 / 2 ** OUT_SHIFT)),
+        "ACID_SAT": 2 ** 29 // 3,                      # 2/3 en Q28 : le haut de la courbe
     }
     for name, fc in (("HP1", 44.486), ("HPF", 150.0)):     # passe-haut d'entrée, passe-haut de la contre-réaction
         x = math.exp(-2 * math.pi * fc / FS)
@@ -152,7 +172,7 @@ def tables_header():
 
 
 LICENSE = """Machine ACID of Modded-Cycles: fixed-point code written after the model of Open303 by Robin Schmidt
-(https://github.com/{repo}, commit {commit}: its TB_303 filter, filter envelope, accent and slide, with their
+(https://github.com/{repo}, commit {commit}: its TB_303 filter, filter envelope and slide, with their
 measured constants), under the MIT license:
 
 The MIT License
@@ -242,8 +262,8 @@ def build_tweak(img, tg=None):
         ] if tg else [
             "Machine ACID en 7e machine, après les 6 d'origine (notes/54).",
         ]) + [
-            "COLOR = CUTOFF, SHAPE = RESONANCE, SWEEP = ENV MOD, CONTOUR = ACCENT, DECAY = décroissance du filtre",
-            "(et de l'ampli), PUNCH = forme d'onde (scie / carré). Filtre « TB_303 », enveloppe, accent et slide",
+            "COLOR = CUTOFF, SHAPE = RESONANCE, SWEEP = ENV MOD, CONTOUR = DRIVE (saturation), DECAY = décroissance",
+            "du filtre (et de l'ampli), PUNCH = forme d'onde (scie / carré). Filtre « TB_303 », enveloppe et slide",
             "d'Open303 (Robin Schmidt, MIT : LICENSE-Open303), réécrits en virgule fixe (tools/machines/acid/).",
             "Une voix muette n'est pas calculée. Généré par tools/gen_acid.py. Aucun octet Elektron dans ce fichier.",
         ],

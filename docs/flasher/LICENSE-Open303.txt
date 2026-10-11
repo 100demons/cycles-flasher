@@ -1,5 +1,5 @@
 Machine ACID of Modded-Cycles: fixed-point code written after the model of Open303 by Robin Schmidt
-(https://github.com/RobinSchmidt/Open303, commit 313bf0d: its TB_303 filter, filter envelope, accent and slide, with their
+(https://github.com/RobinSchmidt/Open303, commit 313bf0d: its TB_303 filter, filter envelope and slide, with their
 measured constants), under the MIT license:
 
 The MIT License

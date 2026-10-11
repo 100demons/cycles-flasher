@@ -330,7 +330,7 @@ Code trop gros pour un masque, ajouté à la fin de l'image (`at`) et copié au 
 | syntakt-toy-swarm | 24 | `0x401aa140` | 269 056 | `0x401ebc40` | `0x43000000` | 269 056 |  |
 | syntakt-toy-swarm-macro | 24 | `0x401aa140` | 239 998 | `0x401e4abe` | `0x43000000` | 471 792 |  |
 | macro | 25 | `0x401aa140` | 103 552 | `0x401c35c0` | `0x43000000` | 324 336 |  |
-| acid | 26 | `0x401aa140` | 11 616 | `0x401acea0` | `0x43000000` | 221 976 |  |
+| acid | 26 | `0x401aa140` | 11 308 | `0x401acd6c` | `0x43000000` | 221 928 |  |
 | model-tg | 30 | `0x401aa140` | 87 936 | `0x401bf8c0` | `0x401aa140` | 87 936 |  |
 | model-tg-st | 30 | `0x401aa140` | 87 936 | `0x401bf8c0` | `0x401aa140` | 87 936 |  |
 | syntakt-tg-bits | 31 | `0x401bf8c0` | 234 548 | `0x401f8cf4` | `0x46700000` | 264 448 | model-tg-st |
@@ -396,7 +396,7 @@ Code trop gros pour un masque, ajouté à la fin de l'image (`at`) et copié au 
 | syntakt-tg-toy-swarm | 31 | `0x401bf8c0` | 241 492 | `0x401fa814` | `0x46700000` | 269 056 | model-tg-st |
 | syntakt-tg-toy-swarm-macro | 31 | `0x401bf8c0` | 240 273 | `0x401fa351` | `0x46700000` | 471 792 | model-tg-st |
 | macro-tg | 32 | `0x401bf8c0` | 103 964 | `0x401d8edc` | `0x46700000` | 324 336 | model-tg-st |
-| acid-tg | 35 | `0x401bf8c0` | 12 028 | `0x401c27bc` | `0x46700000` | 221 976 | model-tg-st |
+| acid-tg | 35 | `0x401bf8c0` | 11 720 | `0x401c2688` | `0x46700000` | 221 928 | model-tg-st |
 | syntakt-meter | 90 | `0x401aa140` | 269 056 | `0x401ebc40` | `0x43000000` | 269 056 |  |
 | syntakt-tg-meter | 91 | `0x401bf8c0` | 243 472 | `0x401fafd0` | `0x46700000` | 269 056 | model-tg-st |
 | syntakt-tg-profile | 92 | `0x401bf8c0` | 243 904 | `0x401fb180` | `0x46700000` | 269 056 | model-tg-st |
@@ -596,7 +596,7 @@ Nombre d'écritures de chaque sorte (une plage pour une famille de moteurs).
 | syntakt-* (32 tweaks) | 124 | 56–57 | 16–17 | 47 | 2 | 2 | 0 | 260 352–269 056 o | notes/36 |
 | syntakt-*-macro (31 tweaks) | 124 | 56 | 17 | 47 | 2 | 2 | 0 | 229 134–240 674 o | notes/36 |
 | macro | 122 | 56 | 14 | 48 | 2 | 2 | 0 | 103 552 o | notes/36 |
-| acid | 122 | 56 | 14 | 48 | 2 | 2 | 0 | 11 616 o | notes/36 |
+| acid | 122 | 56 | 14 | 48 | 2 | 2 | 0 | 11 308 o | notes/36 |
 | model-tg | 142 | 94 | 32 | 0 | 1 | 1 | 14 | 87 936 o | notes/36 |
 | model-tg-st | 142 | 94 | 32 | 0 | 1 | 1 | 14 | 87 936 o | notes/31 |
 | syntakt-tg-* (33 tweaks) | 117–119 | 51 | 17–19 | 47 | 1 | 1 | 0 | 227 760–243 904 o | notes/31, notes/36 |
@@ -604,7 +604,7 @@ Nombre d'écritures de chaque sorte (une plage pour une famille de moteurs).
 | macro-tg | 114 | 50 | 15 | 47 | 1 | 1 | 0 | 103 964 o | notes/43 |
 | sample-preview | 11 | 0 | 3 | 0 | 4 | 4 | 0 |  | notes/46 |
 | sample-preview-st | 11 | 0 | 3 | 0 | 4 | 4 | 0 |  | notes/46 |
-| acid-tg | 114 | 50 | 15 | 47 | 1 | 1 | 0 | 12 028 o | notes/54 |
+| acid-tg | 114 | 50 | 15 | 47 | 1 | 1 | 0 | 11 720 o | notes/54 |
 | arp | 14 | 0 | 6 | 0 | 4 | 4 | 0 |  | notes/32 |
 | trig-hold | 5 | 0 | 3 | 0 | 1 | 1 | 0 |  | notes/33 |
 | tempo-max | 12 | 12 | 0 | 0 | 0 | 0 | 0 |  | notes/38 |

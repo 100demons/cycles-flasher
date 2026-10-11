@@ -9,12 +9,10 @@
  * v+0x3c : fin de la note (LEN ecoulee, touche relachee) ; out : 32 x int32.
  *
  * Potards : PITCH et FINE = l'accord, comme les machines d'origine ; COLOR = CUTOFF ; SHAPE = RESONANCE ;
- * SWEEP = ENV MOD ; CONTOUR = ACCENT (sa force) ; DECAY = la decroissance de l'enveloppe du filtre (200 ms .. 2 s)
- * et celle de l'ampli (la table de TONE) ; PUNCH = forme d'onde (eteint : scie, allume : carre). GATE : la chaine
- * d'ampli d'origine (la note tient tant que le trig dure).
- *
- * Accent : la velocite du trig (VEL), lue en 0x40fe4cdc au bloc du trig. 100 (le defaut) et moins : pas
- * d'accent ; 127 : tout l'ACCENT ; entre les deux, une part.
+ * SWEEP = ENV MOD ; CONTOUR = DRIVE (la saturation) ; DECAY = la decroissance de l'enveloppe du filtre
+ * (200 ms .. 2 s) et celle de l'ampli (la table de TONE) ; PUNCH = forme d'onde (eteint : scie, allume : carre).
+ * GATE : la chaine d'ampli d'origine (la note tient tant que le trig dure). La velocite (VEL) regle le volume de la
+ * note, par l'OS, comme sur les machines d'origine.
  *
  * Slide : un trig dont la longueur (LEN) depasse le pas suivant, ou INF, ou une touche tenue en jeu live, glisse
  * vers la note suivante au lieu de la rejouer. La boucle des voix ne voit alors pas ce trig (v+0x34 efface) : ni
@@ -42,7 +40,6 @@
 #define VCA(o, v)   ((void (*)(s32 *, char *))0x400a9430)(o, v)
 #define PUNCH(o, v) ((void (*)(s32 *, char *))0x400a967a)(o, v)
 #define LUT_DECAY   ((const s32 *)0x4011d84c)        /* DECAY -> multiplicateur par bloc (celui de TONE) */
-#define VEL         ((const s16 *)0x40fe4cdc)        /* velocite du dernier trig de chaque piste, << 8 */
 #define VGAIN       ((const s16 *)0x40fe4c90)        /* gain de la velocite de ce bloc (0..127) */
 #define VGAIN_NEXT  ((s16 *)0x40fe4cd0)              /* celui des blocs suivants */
 #define LEN_LEFT    ((const s32 *)0x800017b4)        /* reste de la longueur du trig (0 : INF, live ou fini) */
@@ -52,7 +49,6 @@
 #define P16(o)      (*(const s16 *)(p + (o)))
 
 #define IDLE_LEVEL  (1 << 14)                        /* enveloppe d'ampli sous -102 dB : voix muette */
-#define ACCENT_VEL  100                              /* velocite au-dessus de laquelle la note est accentuee */
 
 struct track {
 	acid_t s;
@@ -61,7 +57,6 @@ struct track {
 	s32 held;                                        /* une note joue et n'a pas ete relachee */
 	s32 left;                                        /* LEN_LEFT lu au bloc precedent */
 	s32 mach;                                        /* MACHINE (p+0x12) qui a choisi ACID sur cette voix */
-	s32 accent;                                      /* accent de la derniere note (potard x velocite) */
 	s32 gain;                                        /* gain de velocite vise apres un slide ; ramp : en route */
 	s32 ramp;
 };
@@ -79,14 +74,6 @@ static inline u32 mag(s32 x)
 	return x < 0 ? 0u - (u32)x : (u32)x;
 }
 
-static inline s32 accent_of(const char *p, s32 t)   /* ACCENT x la part de la velocite au-dessus de 100 */
-{
-	s32 vel = VEL[t] >> 8;
-
-	vel = vel < ACCENT_VEL ? 0 : (vel > 127 ? 127 : vel) - ACCENT_VEL;
-	return knob(P16(0x1c)) * vel / (127 - ACCENT_VEL);
-}
-
 void acid_update(s32 pmod, char *v, const char *p)
 {
 	s32 t = ((u32)v - CYC_VOICE0) / CYC_VSTRIDE;
@@ -96,7 +83,6 @@ void acid_update(s32 pmod, char *v, const char *p)
 	if (V32(MARK_OFF) != MARK) {                     /* 1re note sur cette machine : celle du trig qui l'a choisie, */
 		tr->idle = 1;                                /* au bloc precedent (l'OS y appelait encore l'ancienne) */
 		tr->held = V32(0x38) != 0;
-		tr->accent = accent_of(p, t);
 		tr->ramp = 0;
 		tr->mach = (s8)p[0x12];
 		V32(MARK_OFF) = MARK;
@@ -115,11 +101,10 @@ void acid_update(s32 pmod, char *v, const char *p)
 		V32(0x48) = 0;
 	}
 
-	/* trig : accent d'apres la velocite ; slide si la note precedente tient encore */
+	/* trig : slide si la note precedente tient encore */
 	left = tr->left;
 	tr->left = LEN_LEFT[t];
 	if (V32(0x34)) {
-		tr->accent = accent_of(p, t);
 		slide = tr->held && !tr->idle && (left == 0 || left > 2 * LEN_STEP) && (s8)p[0x12] == tr->mach;
 		tr->held = 1;
 		tr->ramp = 0;
@@ -146,7 +131,7 @@ void acid_update(s32 pmod, char *v, const char *p)
 	tr->in.cut = knob(P16(0x16));
 	tr->in.res = knob(P16(0x18));
 	tr->in.envmod = knob(P16(0x1a));
-	tr->in.accent = tr->accent;
+	tr->in.drive = knob(P16(0x1c));
 	tr->in.decay = knob(P16(0x24));
 	tr->in.wave = P16(0x1e) != 0;
 	tr->in.trig = slide ? ACID_SLIDE : (V32(0x38) ? ACID_TRIG : 0);

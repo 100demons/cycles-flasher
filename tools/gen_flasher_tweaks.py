@@ -269,8 +269,8 @@ FEATURES = [
         "label": "Machine ACID",
         "desc": "Une machine ajoutee apres Chord (apres le Sampler avec Model-TG) : une basse acide a la maniere de la "
                 "TB-303, d'apres le modele libre d'Open303. COLOR = cutoff, SHAPE = resonance, SWEEP = env mod, "
-                "CONTOUR = accent, PUNCH = scie ou carre ; une VEL au-dessus de 100 accentue la note, une LEN plus "
-                "longue que l'ecart au trig suivant la fait glisser.",
+                "CONTOUR = saturation (drive), PUNCH = scie ou carre ; une LEN plus longue que l'ecart au trig "
+                "suivant fait glisser la note.",
         "status": "experimental",
         "credit": {"kind": "based", "who": "Robin Schmidt", "repo": "RobinSchmidt/Open303"},
         "license": "LICENSE-Open303",

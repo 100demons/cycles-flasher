@@ -11,11 +11,12 @@ reconstitue.
   3. Son, la boucle des voix seule (mcengine) :
      - avant la chaîne d'ampli, la sortie d'ACID est EXACTEMENT celle du même cœur (acid_dsp.h) compilé pour
        l'ordinateur (acid_ref.c, l'EMAC reproduite), avec les réglages que la passerelle doit lui donner, calculés
-       ici d'après notes/54 (Bridge : note, accord, potards, accent d'après la vélocité, trig ou slide) : notes,
-       potards aux bouts, scie et carré, accents, saturation, potards qui bougent, GATE, slide, trigless, voix qui
-       se tait puis repart ;
+       ici d'après notes/54 (Bridge : note, accord, potards, trig ou slide) : notes, potards aux bouts, scie et
+       carré, DRIVE (saturation) de 0 au maximum, potards qui bougent, GATE, slide, trigless, voix qui se tait puis
+       repart ;
      - une voix est calculée exactement quand l'OS l'impose (trig, ou enveloppe d'ampli au-dessus de 2^14) ;
      - la chaîne d'ampli (DECAY, GATE) lit dans la voix exactement ce qu'elle lit pour TONE ;
+     - DRIVE : le son sature de plus en plus (facteur de crête qui baisse), à niveau presque constant ;
      - les machines d'origine ne changent pas (aucune instruction d'ACID sans piste ACID) ; machine locks ; 6 pistes
        ACID ; ACID mêlée aux machines d'origine (et au Sampler de Model-TG) ; ACID avec Model-TG = ACID seule.
   4. Son, avec le séquenceur de l'OS (seqrig.py : la vraie interruption audio, le vrai constructeur des pas) :
@@ -24,7 +25,7 @@ reconstitue.
        trig (pas de fondu, l'ampli continue) ; à 120, 300 et 546 BPM, trig à différents instants du bloc ;
      - jeu live : une touche jouée pendant qu'une autre est tenue glisse ;
      - trigless avec un verrou NOTE : glisse ; verrou MACHINE sur un trig lié : l'OS change bien de machine ;
-     - accent : VEL 127 = tout l'ACCENT, 100 (défaut) et moins = pas d'accent ;
+     - la vélocité ne change que le gain de l'OS (pas d'accent) ; DRIVE verrouillé par pas (p-lock) ;
      - après un slide, le gain de vélocité de l'OS rejoint celui de la nouvelle note pas à pas (1/127 par bloc) ;
      - à chaque bloc, la sortie avant la chaîne d'ampli reste exactement la référence.
   5. Coût : instructions par bloc d'une voix ACID (scie, carré, slide), d'une voix muette, de TONE ; pile.
@@ -70,14 +71,13 @@ check = t7.check                    # échecs : t7.FAIL (et tms.FAIL pour l'inte
 # la passerelle (tools/machines/acid/acid.c)
 MARK = 0x41434431
 IDLE_LEVEL = 1 << 14
-ACCENT_VEL = 100
 TRIG, SLIDE = 1, 2
 # chaîne d'ampli de l'OS, appelée par la passerelle comme par TONE : fonctions sans appel (début, fin)
 AMP = ((0x400a9252, 0x400a9302), (0x400a9430, 0x400a9498), (0x400a967a, 0x400a9756))
 TONE = 4
 OFF = 9                             # machine hors limites : la voix n'est pas calculée
 T120 = 120 * 120                    # 0x40149310 à 120 BPM
-KW = dict(note=48, pitch=64, color=40, shape=90, sweep=80, contour=80, punch=0, gate=0, finetune=64, decay=50)
+KW = dict(note=48, pitch=64, color=40, shape=90, sweep=80, contour=0, punch=0, gate=0, finetune=64, decay=50)
 
 
 def load(name):
@@ -246,25 +246,19 @@ class Bridge:
     l'entrée de acid_update et de acid_render : les réglages du cœur, et ses écritures dans l'OS."""
 
     def __init__(self):
-        self.st = [dict(idle=0, held=0, left=0, mach=0, accent=0, gain=0, ramp=0, note=0, trig=0) for _ in range(6)]
+        self.st = [dict(idle=0, held=0, left=0, mach=0, gain=0, ramp=0, note=0, trig=0) for _ in range(6)]
 
     def update(self, t, pmod, vb, pb, g):
         s = self.st[t]
         v32 = lambda o: struct.unpack_from(">i", vb, o)[0]
         p16 = lambda o: struct.unpack_from(">h", pb, o)[0]
         s8 = lambda o: struct.unpack_from(">b", pb, o)[0]
-
-        def accent():
-            vel = g["vel"] >> 8
-            vel = 0 if vel < ACCENT_VEL else min(vel, 127) - ACCENT_VEL
-            return knob(p16(0x1c)) * vel // (127 - ACCENT_VEL)
         init = v32(0x2c) != MARK
         if init:                         # 1re note sur la machine : celle du trig qui l'a choisie
-            s.update(idle=1, held=int(v32(0x38) != 0), accent=accent(), ramp=0, mach=s8(0x12))
+            s.update(idle=1, held=int(v32(0x38) != 0), ramp=0, mach=s8(0x12))
         left, s["left"] = s["left"], g["left"]
         t34, slide, gain_next = v32(0x34), 0, g["gain_next"]
         if t34:
-            s["accent"] = accent()
             slide = int(bool(s["held"] and not s["idle"] and (left == 0 or left > 2 * g["T"])
                              and s8(0x12) == s["mach"]))
             s.update(held=1, ramp=0)
@@ -283,7 +277,7 @@ class Bridge:
         s["trig"] = SLIDE if slide else TRIG if v32(0x38) else 0
         return dict(note=s["note"], tune=(p16(0x14) << 8) + ((p16(0x22) - 0x4000) << 3) - (64 << 16),
                     cut=knob(p16(0x16)), res=knob(p16(0x18)), envmod=knob(p16(0x1a)), decay=knob(p16(0x24)),
-                    accent=s["accent"], wave=int(p16(0x1e) != 0), trig=s["trig"], init=init,
+                    drive=knob(p16(0x1c)), wave=int(p16(0x1e) != 0), trig=s["trig"], init=init,
                     v34=0 if slide else v32(0x34), gain_next=gain_next)
 
     def render(self, t, vb, rec):
@@ -300,7 +294,7 @@ class Bridge:
 
     @staticmethod
     def line(t, r):
-        return (f"{t} {r['note']} {r['tune']} {r['cut']} {r['res']} {r['envmod']} {r['decay']} {r['accent']} "
+        return (f"{t} {r['note']} {r['tune']} {r['cut']} {r['res']} {r['envmod']} {r['decay']} {r['drive']} "
                 f"{r['wave']} {r['trig']} {r['reset']}\n")
 
 
@@ -429,19 +423,24 @@ def cases(quick):
         ("ENV MOD 0", dict(KW, sweep=0), dict(blocks=80), "T"),
         ("DECAY 0", dict(KW, decay=0), dict(blocks=60), "T"),
         ("DECAY 127, GATE, fin de note", dict(KW, decay=127, gate=1), dict(blocks=200, rels=(120,)), "T"),
-        ("accent : VEL 127", dict(KW, contour=127), dict(blocks=100, vels={1: 127}), "T"),
-        ("accent : VEL 110", dict(KW, contour=127), dict(blocks=100, vels={1: 110}), "T"),
-        ("ACCENT 0, VEL 127 : pas d'accent", dict(KW, contour=0), dict(blocks=60, vels={1: 127}), "T"),
-        ("VEL 64 : pas d'accent", dict(KW), dict(blocks=60, vels={1: 64}), "T"),
-        ("tout au maximum, accent : saturation douce", dict(KW, color=127, shape=127, sweep=127, contour=127,
-                                                             decay=127), dict(blocks=120, vels={1: 127}), "T"),
+        ("DRIVE 20", dict(KW, contour=20), dict(blocks=80), "T"),
+        ("DRIVE 50", dict(KW, contour=50), dict(blocks=80), "T"),
+        ("DRIVE 90", dict(KW, contour=90), dict(blocks=80), "T"),
+        ("DRIVE 127", dict(KW, contour=127), dict(blocks=100), "T"),
+        ("DRIVE 127, VEL 127 puis 64 : pas d'accent", dict(KW, contour=127),
+         dict(trigs=(1, 60), blocks=120, vels={1: 127, 60: 64}), "TT"),
+        ("carré, DRIVE 64", dict(KW, punch=1, contour=64), dict(blocks=80), "T"),
+        ("tout au maximum, DRIVE 127", dict(KW, color=127, shape=127, sweep=127, contour=127, decay=127),
+         dict(blocks=120), "T"),
         ("carré, tout au maximum, note 24", dict(KW, punch=1, note=24, color=127, shape=110, sweep=127,
-                                                 contour=127), dict(blocks=120, vels={1: 127}), "T"),
+                                                 contour=127), dict(blocks=120), "T"),
+        ("CUTOFF 0, RESO 0, ENV MOD 0, DRIVE 127", dict(KW, color=0, shape=0, sweep=0, contour=127),
+         dict(blocks=80), "T"),
         ("potards qui bougent à chaque bloc", dict(KW, decay=100),
          dict(blocks=100, changes={b: dict(color=(3 * b) % 128, shape=127 - (5 * b) % 128, sweep=(7 * b) % 128,
-                                           decay=100 - b % 50) for b in range(100)}), "T"),
+                                           contour=(11 * b) % 128, decay=100 - b % 50) for b in range(100)}), "T"),
         ("voix qui se tait puis repart", dict(KW, decay=10), dict(trigs=(1, 200), blocks=260), "TT"),
-        ("note tenue (sans fin), trig suivant : glisse, accentué", dict(KW, decay=110),
+        ("note tenue (sans fin), trig suivant : glisse, DRIVE 60", dict(KW, decay=110, contour=60),
          dict(trigs=(1, 60, 120), blocks=200, left=0, vels={60: 127, 120: 100},
               changes={60: dict(note=60), 120: dict(note=43)}), "TSS"),
         ("note relâchée puis trig : rejouée", dict(KW, decay=110),
@@ -500,6 +499,28 @@ def amp_like_tone(fw):
           f"jusqu'au silence (blocs {[s for _, s, _ in res]})")
 
 
+def drive_curve(fw):
+    """DRIVE, en sortie finale de la piste (après la chaîne d'ampli de l'OS), une note de 150 blocs (100 ms) :
+    le facteur de crête baisse à chaque cran (le son sature de plus en plus), le niveau efficace reste à
+    quelques dB de celui de DRIVE 0 (notes/54 §3.2)."""
+    rows, ok = [], True
+    for name, kw in (("scie", dict(KW, decay=60)), ("carré", dict(KW, punch=1, decay=60)),
+                     ("ouvert", dict(KW, color=110, shape=20, sweep=30, decay=60, note=60))):
+        lv, cf = [], []
+        for d in (0, 16, 32, 48, 64, 96, 127):
+            x, _, unm = play(fw, dict(kw, contour=d), 152, (1,))
+            y = x[2:152].astype(float).ravel()
+            r = np.sqrt(np.mean(y ** 2))
+            lv.append(20 * np.log10(r))
+            cf.append(20 * np.log10(np.abs(y).max() / r))
+            ok &= not unm
+        rel = [v - lv[0] for v in lv]
+        ok &= all(b < a for a, b in zip(cf, cf[1:])) and all(-4 < v < 4 for v in rel)
+        rows.append(f"{name} : crête/efficace {cf[0]:.1f} -> {cf[-1]:.1f} dB, niveau {min(rel):+.1f}..{max(rel):+.1f} dB")
+    check(ok, f"DRIVE 0, 16, 32, 48, 64, 96, 127 : le son sature de plus en plus, niveau presque constant ; "
+              + " ; ".join(rows))
+
+
 def stock_unchanged(ref_fw, fw, label):
     """6 pistes sur les machines d'origine (2 trigs) : identiques, et rien du code d'ACID ne tourne."""
     def run(f, hook):
@@ -520,12 +541,12 @@ def stock_unchanged(ref_fw, fw, label):
 def like(alone, fw, label):
     """Sortie finale de la piste ACID identique dans deux firmwares."""
     bad = []
-    for kw in (KW, dict(KW, punch=1, note=36), dict(KW, color=110, shape=127, decay=100, gate=1)):
+    for kw in (KW, dict(KW, punch=1, note=36), dict(KW, color=110, shape=127, decay=100, gate=1, contour=100)):
         a, _, _ = play(alone, kw, 200, (1, 120), vels={120: 127})
         b, _, unm = play(fw, kw, 200, (1, 120), vels={120: 127})
         if not np.array_equal(a, b) or unm or not a.any():
             bad.append(kw)
-    check(not bad, f"{label}, sortie finale de la piste (scie, carré, GATE, accent) {bad[:1]}")
+    check(not bad, f"{label}, sortie finale de la piste (scie, carré, GATE, DRIVE) {bad[:1]}")
 
 
 def locks(fw, label):
@@ -649,9 +670,12 @@ def seq_cases(quick):
          dict(decay=90), {}, "TTT"),
         ("GATE, LEN 1.06 : l'ampli tient à travers le slide", 300,
          [(0, dict(note=36, length=L.LEN_106)), (1, dict(note=48, vel=127))], dict(gate=1, decay=40), {}, "TS"),
-        ("accent : VEL 127, 110, 100 (défaut), 64", 300,
-         [(0, dict(vel=127)), (1, dict(vel=110)), (2, dict()), (3, dict(vel=64))], None, {}, "TTTT"),
-        ("slide vers un accent : le gain de vélocité rejoint 127 pas à pas", 300,
+        ("vélocité 127, 110, 100 (défaut), 64 : seul le gain de l'OS change", 300,
+         [(0, dict(vel=127)), (1, dict(vel=110)), (2, dict()), (3, dict(vel=64))], dict(contour=70), {}, "TTTT"),
+        ("DRIVE verrouillé par pas : 0, 40, 90, 127, puis le réglage de la piste", 300,
+         [(s, dict(note=36, locks={E.SLOT["contour"]: v << 8})) for s, v in enumerate((0, 40, 90, 127))]
+         + [(4, dict(note=36))], dict(contour=20), {}, "TTTTT"),
+        ("slide vers une note plus forte : le gain de vélocité rejoint 127 pas à pas", 300,
          [(0, dict(note=36, length=L.LEN_106)), (1, dict(note=48, vel=127, length=L.LEN_106)), (2, dict(note=36))],
          dict(decay=110), {}, "TSS"),
         ("trigless avec un verrou NOTE : glisse", 300,
@@ -668,7 +692,8 @@ def seq_cases(quick):
 
 
 def sequencer(fw, ref, label, quick):
-    """Le vrai séquenceur : trigs rejoués ou liés, accent, gain de vélocité, verrous, jeu live."""
+    """Le vrai séquenceur : trigs rejoués ou liés, vélocité, DRIVE verrouillé, gain de vélocité, verrous, jeu
+    live."""
     bad, n = [], 0
     for name, bpm, steps, kw, ex, kinds in seq_cases(quick):
         infos, pr, unm = sequence(fw, bpm, steps, kw=kw, **ex)
@@ -687,10 +712,16 @@ def sequencer(fw, ref, label, quick):
             end = min([x for x in trig_blocks if x > b] + [len(gains)])
             steps_ok &= all(abs(y - x) <= 1 for x, y in zip(gains[b:end - 1], gains[b + 1:end]))
         extra = []
-        if name.startswith("accent"):
-            acc = [r["accent"] for r in recs if r["trig"] == TRIG]
-            k = knob(KW["contour"] << 8)
-            extra = [] if acc == [k, k * 10 // 27, 0, 0] else [f"accents {acc}"]
+        if name.startswith("vélocité"):
+            # le cœur reçoit les mêmes réglages aux 4 trigs ; l'OS, lui, prend la vélocité de chaque pas
+            ins = {tuple(r[k] for k in ("cut", "res", "envmod", "decay", "drive")) for r in recs
+                   if r["trig"] == TRIG}
+            vel = [r["vel"] for r in recs if r["trig"] == TRIG]
+            extra = [] if len(ins) == 1 and vel == [127, 110, 100, 64] else [f"réglages {ins}, vélocités {vel}"]
+        if name.startswith("DRIVE"):
+            drv = [r["drive"] for r in recs if r["trig"] == TRIG]
+            want = [knob(v << 8) for v in (0, 40, 90, 127, 20)]
+            extra = [] if drv == want else [f"DRIVE {drv} (attendu {want})"]
         if name.startswith("slide vers"):
             i = slides[0]
             extra = [] if gains[i] == 100 and gains[i + 28] == 127 and steps_ok else [f"gains {gains[i:i + 30]}"]
@@ -710,7 +741,8 @@ def sequencer(fw, ref, label, quick):
                   f"gain {'ok' if steps_ok else 'saute'}, {extra}, hors mémoire {unm[:2]}")
     check(not bad, f"{label}, séquenceur de l'OS : {len(seq_cases(quick))} séquences ({n} blocs) : trigs rejoués ou "
                    "liés selon LEN (120, 300, 546 BPM, différents instants du bloc), jeu live, trigless, verrou "
-                   "MACHINE, accent par la vélocité, gain de vélocité rejoint pas à pas après un slide, sans fondu ; "
+                   "MACHINE, vélocité sans accent, DRIVE verrouillé par pas, gain de vélocité rejoint pas à pas "
+                   "après un slide, sans fondu ; "
                    f"avant la chaîne d'ampli, identique à la référence à chaque bloc {bad[:3]}")
 
 
@@ -745,11 +777,13 @@ def cost(fw, label):
     saw, sp1 = run(fw.index, dict(KW, decay=100), 24)
     sq, sp2 = run(fw.index, dict(KW, punch=1, shape=127, decay=100), 24)
     sl, sp3 = run(fw.index, dict(KW, decay=100), 24, trigs=(1, 12), left=0, changes={12: dict(note=60)})
+    drv, sp4 = run(fw.index, dict(KW, decay=100, contour=64), 24)
     idle, _ = run(fw.index, dict(KW, decay=0), 200)
-    deep = E.STACK - 0x100 - min(sp1, sp2, sp3)
+    deep = E.STACK - 0x100 - min(sp1, sp2, sp3, sp4)
     m = lambda x: int(np.median(x[4:])) - zero
-    check(True, f"{label} : coût d'une voix ACID {m(saw)} instructions par bloc (scie), {m(sq)} (carré), 1er bloc "
-                f"{int(saw[2]) - zero}, bloc du slide {int(sl[12]) - zero} ; TONE {m(tone)} ; voix muette "
+    check(True, f"{label} : coût d'une voix ACID {m(saw)} instructions par bloc (scie), {m(sq)} (carré), {m(drv)} "
+                f"(DRIVE 64), 1er bloc {int(saw[2]) - zero}, bloc du slide {int(sl[12]) - zero} ; TONE {m(tone)} ; "
+                f"voix muette "
                 f"{int(np.median(idle[150:])) - zero} ; pile {deep} o sous la boucle des voix")
 
 
@@ -803,6 +837,7 @@ def main():
         print("son")
         exact(alone, ref, todo, "ACID seule")
         amp_like_tone(alone)
+        drive_curve(alone)
         stock_unchanged(off, alone, "l'OS d'origine")
         locks(alone, "ACID seule")
         six_tracks(alone, "ACID seule")
