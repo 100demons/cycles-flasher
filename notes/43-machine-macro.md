@@ -282,6 +282,8 @@ MACRO lourdes font craquer le son.
 ## 11. Suite
 
 - Un régulateur de charge (celui des moteurs du Syntakt) si la machine craque.
+- 10/10/2026 : 13 modèles rendus à 48 kHz (moitié moins de calcul) et le lo-fi RATE / BITS sur FINE (FUNC + PITCH) :
+  [55](55-macro-allegee-et-lofi.md). FINE n'accorde plus MACRO.
 - Les moteurs de Plaits en virgule fixe, un par un, comparés au Plaits d'origine, dans la même machine s'ils tiennent
   en charge (candidats : les trois percussions analogiques, VA, FM, Chords, Speech, String, Modal).
 - ~~MACRO avec les moteurs du Syntakt (une charge utile commune), si on le demande.~~ Demandé par Maxime le 07/10/2026,
