@@ -279,9 +279,10 @@ la passerelle écrit dans l'OS (`voix + 0x34`, `0x40fe4cd0`).
 | Vrai séquenceur (`seqrig.py`) : LEN, VEL (le volume seulement), verrous (DRIVE par pas compris), trigless, jeu live, sans fondu, gain en rampe | 29 séquences, 9 699 blocs (120, 300, 546 BPM, trig à 0,05 / 0,5 / 0,95 bloc) | 13 séquences, 4 001 blocs (300 BPM) |
 | Coût (§8) | 5 080 / 5 223 instructions par bloc ; TONE 5 291 | 5 139 / 5 282 ; TONE 5 669 |
 
-Avec d'autres mods (`with_others`, même jour, TOUT OK) : `6ch-usbup,trig-hold,arp,tempo-max,boot-anim,multiline-browser,
-level-pan-values,trigless-dim` ; les mêmes avec `model-tg-st,sample-preview-st` (ACID en machine 8) ; `chord-keys,
-6ch-usbup,arp,trig-hold`. Chaque fois : démarrage, machines d'origine identiques à ces mods sans ACID, ACID identique
+Avec d'autres mods (`with_others`, version avec DRIVE, 34 vérifications, TOUT OK) : `6ch-usbup,track-filter,trig-hold,
+arp,tempo-max,boot-anim,multiline-browser,level-pan-values,trigless-dim` ; `6ch-usbup,model-tg-st,sample-preview-st,
+trig-hold,arp,tempo-max,boot-anim,multiline-browser,level-pan-values,trigless-dim` (ACID en machine 8) ; `chord-keys,
+6ch-usbup,arp,trig-hold,midi-both`. Chaque fois : démarrage, machines d'origine identiques à ces mods sans ACID, ACID identique
 à ACID seule (ou avec Model-TG seul), machine locks, pistes mélangées.
 
 Filtre par piste avec ACID (`test_track_filter.py --with acid --quick`) : 61 vérifications, TOUT OK. Sur un Model:Samples
