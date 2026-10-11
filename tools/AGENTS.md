@@ -15,6 +15,9 @@ platform and ISA pitfalls: [`notes/03-plateforme-coldfire.md`](../notes/03-plate
 - Detect the cross toolchain as the existing generators do:
   `next((c for c in ("m68k-linux-gnu-", "m68k-elf-") if shutil.which(c + "gcc")), "m68k-linux-gnu-")`.
   Compiled code is built with `-mcpu=54418`. Pin the compiler version used in the note when output bytes depend on it.
+  Without Homebrew, m68k-elf GCC 16.2.0 and binutils 2.47 build from Ubuntu's source tarballs
+  (`gcc-16_16.2.0.orig.tar.gz`, `binutils_2.47.orig.tar.xz`, configure lines in notes/42 §16); that build reproduces
+  `45-chord-keys.json` and the SD VINTAGE JSONs byte for byte.
 
 ## A generator: `gen_<mod>.py`
 

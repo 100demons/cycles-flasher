@@ -13,9 +13,10 @@ Le destructeur ne libère pas ces plans (sprite statique, drapeau +0x18 = 0).
 Un tweak qui veut une de ces zones inclut redirect_write(zone) : build.py voit alors que
 la seule référence vers la zone est réécrite et accepte d'y écrire.
 
-Même principe pour onze sprites 47x47 (constructeurs 0x400ac784..0x400b0580) : leurs masques
+Même principe pour vingt-deux sprites 47x47 (constantes 0x400ac2b2..0x400b133e) : leurs masques
 de 376 o sont identiques (un carré opaque de 47 colonnes, octets ff ff ff ff ff fe 00 00 par
-ligne). On garde celui de 0x40172220 ; les autres peuvent pointer dessus (notes/32 §11).
+ligne). On garde celui de 0x40172220 ; les autres peuvent pointer dessus (notes/32 §11). L'arpégiateur
+en utilise deux, le clavier d'accords quatorze (notes/42 §6), cinq restent libres.
 Chacun n'est désigné que par la constante du constructeur. Ces masques ne sont pas à 0xFF :
 le contrôle des caves de build.py ne les voit pas, les octets « old » des écritures si.
 

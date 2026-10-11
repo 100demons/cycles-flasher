@@ -11,8 +11,8 @@
 <link rel="preconnect" href="https://fonts.googleapis.com">
 <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
 <link rel="stylesheet" href="https://fonts.googleapis.com/css2?family=Familjen+Grotesk:wght@400..700&family=Tiny5&display=swap">
-<link rel="stylesheet" href="../assets/site.css?v=2026-10-10-06">
-<link rel="stylesheet" href="../assets/guide.css?v=2026-10-10-06">
+<link rel="stylesheet" href="../assets/site.css?v=2026-10-10-10">
+<link rel="stylesheet" href="../assets/guide.css?v=2026-10-10-10">
 <script>try{var l=localStorage.getItem("mc-lang"),t=localStorage.getItem("mc-theme")}catch(e){}document.documentElement.lang=l||(/^fr\b/i.test(navigator.language||"")?"fr":"en");if(t)document.documentElement.setAttribute("data-theme",t)</script>
 </head>
 <body data-page="guide">
@@ -55,6 +55,7 @@
         <li><a href="#multiline"><span data-l="en">Multi-line browser</span><span data-l="fr">Navigateur sur plusieurs lignes</span></a></li>
         <li><a href="#level-pan"><span data-l="en">Volume and pan as numbers</span><span data-l="fr">Volume et pan en chiffres</span></a></li>
         <li><a href="#trigless"><span data-l="en">Dimmed trigless trigs</span><span data-l="fr">Trigless trigs atténués</span></a></li>
+        <li><a href="#chord-keys"><span data-l="en">Chord keys</span><span data-l="fr">Clavier d'accords</span></a></li>
         <li><a href="#samples"><span data-l="en">Samples OS</span><span data-l="fr">OS Samples</span></a></li>
         <li><a href="#stock"><span data-l="en">Back to stock</span><span data-l="fr">Revenir à l'origine</span></a></li>
         <li><a href="#recovery"><span data-l="en">Recovery</span><span data-l="fr">Secours</span></a></li>
@@ -597,11 +598,50 @@
           <div><dt><span data-l="en">Steady light</span><span data-l="fr">Lumière stable</span></dt><dd><span data-l="en">the key is lit for one millisecond out of every three, 333 times a second, always the same way: it looks steady, at about a third of its brightness, however many trigless trigs the page holds.</span><span data-l="fr">la touche est allumée une milliseconde sur trois, 333 fois par seconde, toujours de la même façon : elle paraît stable, au tiers de sa lumière environ, quel que soit le nombre de trigless trigs sur la page.</span></dd></div>
           <div><dt><span data-l="en">Credit</span><span data-l="fr">Crédit</span></dt><dd><span data-l="en">a mod by djd_oz, rewritten for the flasher so that it goes with every other mod, Model-TG included.</span><span data-l="fr">un mod de djd_oz, réécrit pour le flasher afin qu'il se combine avec tous les autres mods, Model-TG compris.</span></dd></div>
           <div><dt><span data-l="en">Tested</span><span data-l="fr">Testé</span></dt><dd><span data-l="en">on a Model:Cycles with all 16 trig keys holding trigless trigs, with Model-TG, the 5 Syntakt engines, 6-channel audio and the other mods: steady, clearly darker, and everything else works as usual. A first version, which dimmed the key more slowly, flickered unevenly. In the emulator, on the OS's own code for the panel: the dimmed key is on exactly one millisecond out of three, and every other light is lit exactly as with the stock OS.</span><span data-l="fr">sur un Model:Cycles avec les 16 touches de pas en trigless trig, avec Model-TG, les 5 moteurs du Syntakt, l'audio 6 canaux et les autres mods : stable, nettement plus sombre, et tout le reste marche comme d'habitude. Une première version, qui atténuait la touche plus lentement, scintillait de façon irrégulière. Dans l'émulateur, sur le code même du panneau de l'OS : la touche atténuée est allumée exactement une milliseconde sur trois, et tous les autres voyants s'allument exactement comme avec l'OS d'origine.</span></dd></div>
+      <section id="chord-keys">
+        <h2><span class="n">17</span><span data-l="en">Chord Keys</span><span data-l="fr">Chord Keys</span></h2>
+        <p class="by"><span data-l="en">By</span><span data-l="fr">Par</span> <a href="https://github.com/byNicoHeuser" target="_blank" rel="noopener">Nico Heuser</a></p>
+        <p class="lede"><span data-l="en">Play the selected CHORD track with the sixteen lower TRIG buttons. They follow your scale across more than two octaves, with the extension you chose for each degree. The six large T1–T6 pads keep their usual controls.</span><span data-l="fr">Jouez la piste CHORD sélectionnée avec les seize boutons TRIG du bas. Ils suivent votre gamme sur plus de deux octaves, avec l'extension choisie pour chaque degré. Les six grands pads T1–T6 gardent leurs commandes habituelles.</span></p>
+        <ol>
+          <li><span data-l="en">Select a track with <b>TRACK + T1–T6</b> and choose the <b>CHORD</b> machine. Press <b>FUNC + RETRIG</b> and scroll past Rte, Len and A.On (and Arp / Oct if installed) to the ten new rows.</span><span data-l="fr">Sélectionnez une piste avec <b>TRACK + T1–T6</b> et choisissez la machine <b>CHORD</b>. Appuyez sur <b>FUNC + RETRIG</b> et descendez après Rte, Len et A.On (et Arp / Oct s'ils sont installés) jusqu'aux dix nouvelles lignes.</span></li>
+          <li><span data-l="en">Set <b>Keys</b> to <b>ON</b>, choose <b>Root</b> (C1–C3, in semitones) and <b>Scale</b>: MAJ, DOR, PHR, LYD, MIX, MINOR or LOC. Keys only turns on when the selected track is a CHORD track. Patterns without saved Chord Keys settings start with Keys OFF, Root C3 (the highest root) and MAJ, with TRI on every degree.</span><span data-l="fr">Mettez <b>Keys</b> sur <b>ON</b>, choisissez <b>Root</b> (C1–C3, par demi-tons) et <b>Scale</b> : MAJ, DOR, PHR, LYD, MIX, MINOR ou LOC. Keys ne passe sur ON que si la piste sélectionnée est une piste CHORD. Les patterns sans réglages Chord Keys enregistrés commencent avec Keys OFF, Root C3 (la tonique la plus haute) et MAJ, avec TRI sur tous les degrés.</span></li>
+          <li><span data-l="en">Set the rows <b>I</b> through <b>VII</b> independently: TRI, 7, 9, 11 or 13. The same setting follows that degree in every octave. Major, minor and diminished intervals follow the scale automatically.</span><span data-l="fr">Réglez les lignes <b>I</b> à <b>VII</b> indépendamment : TRI, 7, 9, 11 ou 13. Le même réglage suit ce degré à toutes les octaves. Les intervalles majeurs, mineurs et diminués suivent automatiquement la gamme.</span></li>
+          <li><span data-l="en">Close the menu, leave grid recording mode and play the lower <b>TRIG 1–16</b> buttons. No octave modifier is needed. A new key replaces the previous chord on that track; releasing an older key does not cut the latest chord. Select another track with <b>TRACK + T1–T6</b>.</span><span data-l="fr">Fermez le menu, quittez l'enregistrement en grille et jouez les boutons <b>TRIG 1–16</b> du bas. Aucun modificateur d'octave n'est nécessaire. Une nouvelle touche remplace l'accord précédent de cette piste ; relâcher une ancienne touche ne coupe pas le dernier accord. Sélectionnez une autre piste avec <b>TRACK + T1–T6</b>.</span></li>
+          <li><span data-l="en">Use <b>SHAPE</b>, now shown as <b>Chord Voicing</b>, to arrange those notes: BASE, CLS0–3 or OPN0–3. Start at BASE with <b>COLOR 32</b>. COLOR blends the voices without changing their octaves; only I–VII choose the extensions.</span><span data-l="fr">Utilisez <b>SHAPE</b>, désormais nommé <b>Chord Voicing</b>, pour disposer ces notes : BASE, CLS0–3 ou OPN0–3. Commencez sur BASE avec <b>COLOR 32</b>. COLOR mélange les voix sans changer leurs octaves ; seules les lignes I–VII choisissent les extensions.</span></li>
+        </ol>
+        <div class="tbl fluid">
+          <table>
+            <thead><tr><th><span data-l="en">TRIG buttons</span><span data-l="fr">Boutons TRIG</span></th><th><span data-l="en">Degrees, left to right</span><span data-l="fr">Degrés, de gauche à droite</span></th><th><span data-l="en">Octave</span><span data-l="fr">Octave</span></th></tr></thead>
+            <tbody>
+              <tr><th>1–7</th><td>I · II · III · IV · V · VI · VII</td><td>Root</td></tr>
+              <tr><th>8–14</th><td>I · II · III · IV · V · VI · VII</td><td>Root + 1</td></tr>
+              <tr><th>15–16</th><td>I · II</td><td>Root + 2</td></tr>
+            </tbody>
+          </table>
+        </div>
+        <p><span data-l="en">For example, Root C3, MAJ and TRI give C, Dm, Em, F, G, Am and B diminished on 1–7. Buttons 8–14 repeat those chords one octave higher; 15–16 play C and Dm two octaves higher. Choosing 9 for degree I changes buttons 1, 8 and 15 together.</span><span data-l="fr">Par exemple, Root C3, MAJ et TRI donnent Do, Rém, Mim, Fa, Sol, Lam et Si diminué sur 1–7. Les boutons 8–14 reprennent ces accords une octave plus haut ; 15–16 jouent Do et Rém deux octaves plus haut. Choisir 9 pour le degré I change ensemble les boutons 1, 8 et 15.</span></p>
+        <div class="tbl fluid">
+          <table>
+            <thead><tr><th>SHAPE</th><th><span data-l="en">What you hear</span><span data-l="fr">Ce que vous entendez</span></th></tr></thead>
+            <tbody>
+              <tr><th>BASE</th><td><span data-l="en">Root position with the extension above the octave, as chosen in I–VII. For triads and 7ths it sounds the same as CLS0.</span><span data-l="fr">Position fondamentale, avec l'extension au-dessus de l'octave, selon le choix I–VII. Pour les triades et les septièmes, elle sonne comme CLS0.</span></td></tr>
+              <tr><th>CLS0–3</th><td><span data-l="en">Close spacing. CLS0 fits the notes within one octave; each next position raises the lowest note by an octave. For a triad, CLS3 is the whole CLS0 chord one octave higher.</span><span data-l="fr">Disposition resserrée. CLS0 rassemble les notes dans une octave ; chaque position suivante monte la note la plus grave d'une octave. Pour une triade, CLS3 reprend tout l'accord CLS0 une octave plus haut.</span></td></tr>
+              <tr><th>OPN0–3</th><td><span data-l="en">The corresponding CLS position spread out by raising alternate voices an octave. For example, C–E–G becomes C–G–E above.</span><span data-l="fr">La position CLS correspondante, élargie en montant une voix sur deux d'une octave. Par exemple, Do–Mi–Sol devient Do–Sol–Mi aigu.</span></td></tr>
+            </tbody>
+          </table>
+        </div>
+        <dl class="facts">
+          <div><dt><span data-l="en">Four voices</span><span data-l="fr">Quatre voix</span></dt><dd><span data-l="en">TRI = root, third, fifth; 7 = root, third, fifth, seventh. The 9, 11 and 13 choices use root, third, seventh and the chosen extension, omitting the fifth. You hear one chord at a time per track.</span><span data-l="fr">TRI = fondamentale, tierce, quinte ; 7 = fondamentale, tierce, quinte, septième. Les choix 9, 11 et 13 utilisent fondamentale, tierce, septième et extension choisie, en omettant la quinte. Vous entendez un accord à la fois par piste.</span></dd></div>
+          <div><dt><span data-l="en">Sound</span><span data-l="fr">Son</span></dt><dd><span data-l="en">With Keys ON, SHAPE changes the spacing and inversions of notes in the scale while preserving the chosen extension and number of voices. COLOR changes their levels and can fade some voices out. PITCH and FINE transpose the whole chord. Start with both at their neutral positions; at very high transpositions the upper voices can fall silent and the lowest voice reaches the engine’s pitch ceiling. For open voicings on the upper TRIG keys, lower Root, for example to C2, to keep more notes within range.</span><span data-l="fr">Avec Keys ON, SHAPE change l'espacement et les renversements des notes de la gamme en conservant l'extension choisie et le nombre de voix. COLOR règle leurs niveaux et peut en atténuer certaines jusqu'au silence. PITCH et FINE transposent l'accord entier. Commencez avec les deux en position neutre ; dans les transpositions très aiguës, les voix supérieures peuvent devenir muettes et la voix la plus grave atteint le plafond de hauteur du moteur. Pour les dispositions ouvertes sur les touches TRIG aiguës, baissez Root, par exemple à C2, pour garder davantage de notes dans la plage du moteur.</span></dd></div>
+          <div><dt><span data-l="en">Patterns</span><span data-l="fr">Patterns</span></dt><dd><span data-l="en">When you record, and on MIDI out, only each chord's root note is sent; the sequencer keeps it. The current scale and extension settings determine its harmony during playback too: changing an extension changes existing notes of that degree. Notes outside the scale retain their original SHAPE chord, although the screen keeps the Chord Voicing labels until Keys is OFF. Save the project to keep each track's settings in each pattern; the original OS ignores these settings and plays its normal chords.</span><span data-l="fr">À l'enregistrement et sur la sortie MIDI, seule la fondamentale de chaque accord est envoyée ; le séquenceur la garde. La gamme et les extensions courantes déterminent aussi son harmonie à la lecture : modifier une extension change les notes existantes de ce degré. Les notes hors gamme gardent leur accord SHAPE d’origine, même si l’écran conserve les libellés Chord Voicing tant que Keys est ON. Enregistrez le projet pour conserver les réglages de chaque piste dans chaque pattern ; l'OS d'origine ignore ces réglages et joue ses accords habituels.</span></dd></div>
+          <div><dt><span data-l="en">Controls</span><span data-l="fr">Commandes</span></dt><dd><span data-l="en">T1–T6 keep their normal playing, track selection and mute controls. Grid recording, menus and shortcuts with FUNC, TRACK or PATTERN keep their usual actions. PAGE keeps Fill and its other functions; RETRIG no longer selects an octave bank. Chords played on TRIG 1–16 are never retriggered or arpeggiated. RETRIG and the arpeggiator still work on the large pads and, with Keys OFF, on the TRIG keys. Set Keys OFF to restore the ordinary chromatic TRIG keyboard.</span><span data-l="fr">T1–T6 gardent leurs commandes habituelles de jeu, de sélection de piste et de mute. L'enregistrement en grille, les menus et les raccourcis avec FUNC, TRACK ou PATTERN gardent leurs actions habituelles. PAGE garde Fill et ses autres fonctions ; RETRIG ne sélectionne plus de banque d'octave. Les accords joués sur TRIG 1–16 ne sont jamais répétés ni arpégés. RETRIG et l'arpégiateur marchent toujours sur les grands pads et, avec Keys OFF, sur les touches TRIG. Remettez Keys sur OFF pour retrouver le clavier chromatique TRIG ordinaire.</span></dd></div>
+          <div><dt><span data-l="en">Compatibility</span><span data-l="fr">Compatibilité</span></dt><dd><span data-l="en">CHORD tracks only. It can be installed with the other mods (6-channel USB audio, arpeggiator, tempo up to 546 BPM, startup animation, latching mute, trig preview, scrolling names, easier trig removal, multi-line browser, volume and pan as numbers, dimmed trigless trigs, MACRO machine, Syntakt engines), but not with Model-TG. Samples OS is a separate installation.</span><span data-l="fr">Pistes CHORD uniquement. Il s'installe avec les autres mods (audio USB 6 canaux, arpégiateur, tempo jusqu'à 546 BPM, animation de démarrage, mute verrouillé, écoute d'un pas, noms qui défilent, effacement facilité des trigs, navigateur sur plusieurs lignes, volume et pan en chiffres, trigless trigs atténués, machine MACRO, moteurs du Syntakt), mais pas avec Model-TG. L'OS Samples s'installe séparément.</span></dd></div>
+          <div><dt><span data-l="en">Status</span><span data-l="fr">État</span></dt><dd><span data-l="en">Tested on the Model:Cycles, alone and with other mods, including the fix for a note that could stay stuck after releasing a TRIG key while PATTERN was held. Not yet tried on the machine together with MACRO.</span><span data-l="fr">Testé sur le Model:Cycles, seul et avec d'autres mods, y compris la correction d'une note qui pouvait rester bloquée après avoir lâché une touche TRIG pendant que PATTERN était tenu. Pas encore essayé sur la machine avec MACRO.</span></dd></div>
         </dl>
       </section>
 
       <section id="samples">
-        <h2><span class="n">17</span><span data-l="en">Samples OS</span><span data-l="fr">OS Samples</span></h2>
+        <h2><span class="n">18</span><span data-l="en">Samples OS</span><span data-l="fr">OS Samples</span></h2>
         <p class="lede"><span data-l="en">The Model:Cycles starts as a Model:Samples: you load and play your own samples, managed with Elektron Transfer.</span><span data-l="fr">Le Model:Cycles démarre en Model:Samples : vous chargez et jouez vos propres samples, gérés avec Elektron Transfer.</span></p>
         <p><span data-l="en">The flasher puts the official Model:Samples OS inside your Model:Cycles firmware file:</span><span data-l="fr">Le flasher place l'OS officiel du Model:Samples dans le fichier firmware de votre Model:Cycles :</span></p>
         <dl class="layers fig">
@@ -635,13 +675,13 @@
       </section>
 
       <section id="stock">
-        <h2><span class="n">18</span><span data-l="en">Back to stock</span><span data-l="fr">Revenir à l'origine</span></h2>
+        <h2><span class="n">19</span><span data-l="en">Back to stock</span><span data-l="fr">Revenir à l'origine</span></h2>
         <p><span data-l="en">The <b>Official firmware</b> tab of the flasher sends your OS file unchanged, over USB, like a normal update. It is also a good rehearsal before a first mod: it checks the cable and the setup without changing anything.</span><span data-l="fr">L'onglet <b>Firmware officiel</b> du flasher renvoie votre fichier d'OS sans le modifier, par USB, comme une mise à jour normale. C'est aussi une bonne répétition avant un premier mod : elle vérifie le câble et l'installation sans rien changer.</span></p>
         <p><span data-l="en">With Syntakt engines, the MACRO machine or Model-TG's Sampler, first set your tracks back to an original machine.</span><span data-l="fr">Avec des moteurs du Syntakt, la machine MACRO ou le Sampler de Model-TG, remettez d'abord vos pistes sur une machine d'origine.</span></p>
       </section>
 
       <section id="recovery">
-        <h2><span class="n">19</span><span data-l="en">Recovery</span><span data-l="fr">Secours</span></h2>
+        <h2><span class="n">20</span><span data-l="en">Recovery</span><span data-l="fr">Secours</span></h2>
         <p class="lede"><span data-l="en">If the Model:Cycles no longer starts, its startup menu can always reinstall the OS: it lives in an area that updates never write.</span><span data-l="fr">Si le Model:Cycles ne démarre plus, son menu de démarrage peut toujours réinstaller l'OS : il vit dans une zone que les mises à jour n'écrivent jamais.</span></p>
         <figure class="fig">
           <div data-device data-scenes="func @logo | func,mainvol | s4 @READY TO/>RECEIVE" data-ms="1300"></div>
@@ -655,7 +695,7 @@
       </section>
 
       <section id="trouble">
-        <h2><span class="n">20</span><span data-l="en">Troubleshooting</span><span data-l="fr">Dépannage</span></h2>
+        <h2><span class="n">21</span><span data-l="en">Troubleshooting</span><span data-l="fr">Dépannage</span></h2>
         <div class="faq">
           <details>
             <summary><span data-l="en">Nothing happens on the Model:Cycles screen</span><span data-l="fr">Rien ne se passe sur l'écran du Model:Cycles</span></summary>
@@ -719,8 +759,8 @@
   </div>
 </footer>
 
-<script src="../assets/release.js?v=2026-10-10-06"></script>
-<script src="../assets/cycles.js?v=2026-10-10-06"></script>
-<script src="../assets/site.js?v=2026-10-10-06"></script>
+<script src="../assets/release.js?v=2026-10-10-10"></script>
+<script src="../assets/cycles.js?v=2026-10-10-10"></script>
+<script src="../assets/site.js?v=2026-10-10-10"></script>
 </body>
 </html>
