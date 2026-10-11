@@ -491,6 +491,7 @@ le filtre à côté, puis l'interface et la sauvegarde fonction par fonction :
 python3 tools/gen_track_filter.py --cycles model-cycles_OS1.13.syx [--check]
 python3 tools/emu/test_track_filter.py --cycles model-cycles_OS1.13.syx [--quick] \
     [--with 6ch-usbup,syntakt-sd-cp-toy-bits-swarm,arp,trig-hold,tempo-max,boot-anim --syntakt Syntakt_OS1.42.syx]
+    [--with syntakt-sd-cp-toy-bits-swarm-macro,6ch-usbup,chord-keys,level-pan-values,trigless-dim,multiline-browser,… --syntakt Syntakt_OS1.42.syx]
 ```
 
 | `-t` | MAIN OS patché (SHA-256) |
@@ -498,6 +499,7 @@ python3 tools/emu/test_track_filter.py --cycles model-cycles_OS1.13.syx [--quick
 | `track-filter` | `f5db01334779499fc0932cfdc4a23c899319d333fed98fc5169972080b662967` |
 | `6ch-usbup,track-filter` | `340fb353bacb25fc2923f836b7d685a704c710e43988258cdc2d21f42b997016` |
 | `6ch-usbup,syntakt-sd-cp-toy-bits-swarm,trig-hold,arp,tempo-max,boot-anim,track-filter` | `5493f878652f5050a75ed0aab4aba9b19671764455943c5dd525484465c3f5ac` |
+| `macro,track-filter` | `fd3cb1440d5123d7b8a227024064fdce09e1a70ac12d3587ff6a0930dd87a19c` |
 
 ### Écoute d'un pas en pause
 

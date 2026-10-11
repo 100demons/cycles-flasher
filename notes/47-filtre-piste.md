@@ -259,6 +259,7 @@ TONE CHORD, trois séries de notes aux blocs 1, 100 et 180) :
 | Sauvegarde du son, versions 2 et 1 | même enregistrement plus 7 octets (emplacements 18, 27, 30, 31) ; relu : valeurs, LFO → Filter Reso, vélocité → Filter Env ; un son d'avant le filtre se charge filtre OFF |
 | P-locks du pattern | aller-retour complet et mise à jour d'un seul p-lock : tout revient (sur l'OS d'origine, 7 pistes de p-locks k ≥ 23 se perdaient ou changeaient de paramètre) ; p-locks d'origine : fichier identique octet pour octet |
 | Avec les autres mods et le Syntakt | tous les essais ci-dessus refaits : mêmes résultats que seul (écarts au modèle identiques) ; descripteurs trouvés dans la table déplacée par les moteurs du Syntakt (`0x43034000`), k 28..31 et son initialisé sur les 11 machines |
+| Avec MACRO (11/10/2026, après la fusion de main) | mêmes essais, mêmes résultats, avec `macro` (7 machines) puis `syntakt-sd-cp-toy-bits-swarm-macro` (12 machines), chacun avec `6ch-usbup`, `chord-keys`, `level-pan-values`, `trigless-dim`, `multiline-browser`, `midi-both` ou `midi-live-both`, `arp`, `trig-hold`, `tempo-max`, `boot-anim` et les trois de drumkilla ; k 28..31 et son initialisé sur toutes les machines |
 
 ## 9. Coût
 
