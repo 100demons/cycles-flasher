@@ -282,18 +282,24 @@ def engines_like(fw, ref, codes, first, label):
                    f"{first + 1}..{first + len(codes)}) identique aux moteurs seuls {bad}")
 
 
-def macro_like(fw, alone, label, models=(0, 9, 21, 25, 28, 34, 37, 41, 44)):
-    """La piste MACRO, sortie finale : identique à MACRO seule (à l'arrêt de la voix muette près)."""
+# lo-fi (notes/55), FINE : modèle allégé rendu plus lentement, modèle à 96 kHz échantillonné-bloqué, BITS
+LOFI = ((38, 16), (9, 40), (25, 30), (0, 100))
+
+
+def macro_like(fw, alone, label, models=(0, 9, 21, 25, 28, 34, 37, 41, 44), lofi=LOFI):
+    """La piste MACRO, sortie finale : identique à MACRO seule (à l'arrêt de la voix muette près), FINE au centre
+    puis avec le lo-fi."""
     bad, cut = [], []
-    for m in models:
-        kw = dict(BASE_KW, shape=m, decay=40)
+    for m, fine in [(m, 64) for m in models] + list(lofi):
+        kw = dict(BASE_KW, shape=m, decay=40, finetune=fine)
         a, _, _ = tm.play(alone, alone.index, kw, 400, (1, 300))
         b, _, unm = tm.play(fw, fw.index, kw, 400, (1, 300))
         ok, f = same_or_idle(a, b, 300)
         cut.append(f)
         if not ok or unm or not b.any():
-            bad.append(tm.NAMES[m])
-    check(not bad, f"{label} : piste MACRO identique à MACRO seule, {len(models)} modèles (voix muette arrêtée par le "
+            bad.append(tm.NAMES[m] + ("" if fine == 64 else f" FINE {fine}"))
+    check(not bad, f"{label} : piste MACRO identique à MACRO seule, {len(models)} modèles, plus {len(lofi)} avec le "
+                   f"lo-fi (FINE {', '.join(f'{f} sur {tm.NAMES[m]}' for m, f in lofi)}) (voix muette arrêtée par le "
                    f"régulateur aux blocs {cut}, la référence sous le seuil jusqu'au trig suivant) {bad}")
 
 

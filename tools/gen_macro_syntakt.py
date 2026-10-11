@@ -52,13 +52,14 @@ BASE = gx.BASE
 # Place de MACRO dans la charge utile (décalages depuis son début, PAY) : au-dessus de tout ce que les moteurs y
 # mettent (lay["end"] : 0x41c00 avec les 5), le code et les tables de Braids, puis ses variables (6 voix).
 MACRO_AT = 0x42000
-MACRO_BSS = 0x5a000
+MACRO_BSS = 0x5b000
 TG_ROOM = 0x100000           # avec Model-TG : le dernier Mo de sa zone d'échantillons est à nous (notes/31 §4)
 # Combinaisons testées sur un vrai Model:Cycles (seules, puis avec Model-TG). Ajouter ici après un test réussi.
 HW_TESTED = set()
 # 10/10/2026 : Model-TG + les 5 moteurs + MACRO, avec 6ch-usbup, sample-preview-st, trig-hold, arp, tempo-max et
 # boot-anim, construit par build.py (MAIN OS f44bfad6…), après la correction du blocage au démarrage (notes/50 §8) :
-# « ça marche nickel » (Maxime).
+# « ça marche nickel » (Maxime). 11/10/2026, avec la MACRO de notes/55 (modèles allégés, lo-fi) : « ça marche
+# nickel sur machine » (Maxime).
 HW_TESTED_TG = {("sd", "cp", "toy", "bits", "swarm")}
 
 
