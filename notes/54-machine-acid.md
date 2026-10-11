@@ -14,7 +14,7 @@ l'OS 1.13.
   ACCENT, DECAY = DECAY (enveloppe du filtre, et la décroissance de l'ampli), PUNCH = forme d'onde (éteint : scie,
   allumé : carré). PITCH, FINE, GATE, les touches et le clavier comme sur les autres machines.
 - **L'accent et le slide viennent du séquenceur, sans le modifier** :
-  - accent = la vélocité du trig (VEL dans le menu du trig, ou un pad frappé fort) : 100 (le défaut) et moins, pas
+  - accent = la vélocité du trig (VEL dans le menu du trig) : 100 (le défaut) et moins, pas
     d'accent ; 127, tout l'ACCENT ; entre les deux, une part ;
   - slide = la longueur du trig (LEN) : un trig plus long que l'écart au trig suivant (1.06, 1/8… ou INF) glisse
     vers la note suivante au lieu de la rejouer ; avec LEN 1/16 sur des pas voisins (le défaut), chaque note est
@@ -216,7 +216,29 @@ La référence est le même cœur compilé pour l'ordinateur (`acid_ref.c`), pil
 passerelle doit lui donner, calculés par le test d'après cette note (classe `Bridge`) ; le test vérifie aussi ce que
 la passerelle écrit dans l'OS (`voix + 0x34`, `0x40fe4cd0`).
 
-Résultats : §9.1 (rempli à la fin de la preuve).
+### 9.1 Résultats (11/10/2026, `test_acid.py` complet : 64 vérifications, TOUT OK)
+
+| Vérification | Seule (machine 7) | Avec Model-TG (machine 8) |
+|---|---|---|
+| Démarrage : décompresseur, crochet, charge utile reconstituée, SRAM intacte, fin d'image sous `0x40200000` | ok (`0x401acea0`) | ok (`0x401c27bc`) |
+| Interface : écran MACHINES, molette, enregistrements, potards, descripteurs, CC 16..19, machine hors limites | ok | ok |
+| Avant la chaîne d'ampli, identique échantillon par échantillon au cœur compilé pour l'ordinateur | 30 cas, crêtes 0,01 à 1,00 | 30 cas |
+| Voix muette non calculée, sortie nulle | 3 310 blocs, 169 muets | idem |
+| Chaîne d'ampli : mêmes lectures de la voix que TONE (24 champs) jusqu'au silence | ok | — |
+| 6 machines d'origine identiques, sans une instruction d'ACID | ok (OS d'origine) | ok (Model-TG seul) |
+| Sortie finale de la piste identique à ACID seule | — | ok (scie, carré, GATE, accent) |
+| Machine locks SNARE → ACID → TONE → ACID (carré) → KICK | ok | ok |
+| 6 pistes ACID ensemble ; pistes mélangées avec les machines d'origine (et le Sampler) | ok | ok |
+| Vrai séquenceur (`seqrig.py`) : LEN, VEL, verrous, trigless, jeu live, sans fondu, gain en rampe | 28 séquences, 9 281 blocs (120, 300, 546 BPM, trig à 0,05 / 0,5 / 0,95 bloc) | 12 séquences, 3 583 blocs (300 BPM) |
+| Coût (§8) | 4 559 / 4 837 instructions par bloc ; TONE 5 291 | 4 618 / 4 896 ; TONE 5 669 |
+
+Avec d'autres mods (`with_others`, même jour, TOUT OK) : `6ch-usbup,trig-hold,arp,tempo-max,boot-anim,multiline-browser,
+level-pan-values,trigless-dim` ; les mêmes avec `model-tg-st,sample-preview-st` (ACID en machine 8) ; `chord-keys,
+6ch-usbup,arp,trig-hold`. Chaque fois : démarrage, machines d'origine identiques à ces mods sans ACID, ACID identique
+à ACID seule (ou avec Model-TG seul), machine locks, pistes mélangées.
+
+Flasher : `webflash_smoke.sh` avec les deux OS officiels, les 688 combinaisons de `REF_MAINOS` (chaque mod vérifié),
+ALL PARTS OK ; la carte ACID seule, avec Model-TG, et son exclusion de MACRO et des moteurs dans les deux sens.
 
 ## 10. À vérifier sur la machine
 
@@ -226,3 +248,8 @@ Résultats : §9.1 (rempli à la fin de la preuve).
 - Slide : LEN 1.06 (ou plus) sur un pas, la note suivante glisse, sans clic ; LEN 1/16, chaque note est rejouée.
   INF ; un pad tenu en live pendant qu'on en joue un autre. Avec GATE allumé, l'ampli tient à travers le slide.
 - Avec Model-TG : la même chose sur la 8e machine.
+
+Fichiers envoyés à Maxime (11/10/2026), construits par `tools/build.py` :
+`6ch-usbup,acid,trig-hold,arp,tempo-max,boot-anim,multiline-browser,level-pan-values,trigless-dim` (MAIN OS
+`fba63d4f…`) et `6ch-usbup,model-tg-st,sample-preview-st,acid-tg,trig-hold,arp,tempo-max,boot-anim,multiline-browser,
+level-pan-values,trigless-dim` (MAIN OS `640b2fd3…`), tous deux prouvés en émulation (§9.1).
