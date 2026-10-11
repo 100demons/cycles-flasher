@@ -770,13 +770,24 @@ def main():
     p1, _ = build.apply_writes(stock, others + [tw])
     pl1, _ = build.build_payload(others + [tw], stock, args.syntakt)
     base, img = bytes(p0) + pl0, bytes(p1) + pl1
-    syn = [t for t in others if t.get("append", {}).get("syntakt")]
+    # charge utile ajoutée après l'OS (moteurs du Syntakt, MACRO, ou les deux), telle qu'en mémoire après le démarrage
+    app_ = [t for t in others if t.get("append") and not t["id"].startswith("model-tg")]
     payload, nm = None, 6
-    if syn:
-        import syntakt
-        payload = (int(syn[0]["append"]["dest"], 16),
-                   build.payload_runtime(syn[0], stock, syntakt.dsp_image(args.syntakt)))
-        nm = 6 + len(syn[0]["id"].split("-")) - 1
+    if app_:
+        t = app_[0]
+        st_img = None
+        if t["append"].get("syntakt"):
+            import syntakt
+            st_img = syntakt.dsp_image(args.syntakt)
+        dest = int(t["append"]["dest"], 16)
+        rt = bytearray(build.payload_runtime(t, stock, st_img))
+        if t["append"].get("compress"):         # MACRO avec les moteurs : les tables de CHORD, copiées au démarrage
+            import test_macro_syntakt as tms    # (notes/50)
+            ctx = dict(st_img=st_img, chord=tms.chord_tables(stock))
+            at = tms.chord_at(t, ctx)
+            rt[at - dest:at - dest + len(ctx["chord"])] = ctx["chord"]
+        payload = (dest, bytes(rt))
+        nm = 6 + len(t["id"].split("-")) - 1 if st_img else 7       # syntakt-sd-…[-macro] ; macro : 7 machines
     print(f"firmware : {', '.join(t['id'] for t in others + [tw])}")
     centre_tests(base, img, payload)
     model_tests(base, img, payload)
