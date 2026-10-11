@@ -11,8 +11,8 @@
 <link rel="preconnect" href="https://fonts.googleapis.com">
 <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
 <link rel="stylesheet" href="https://fonts.googleapis.com/css2?family=Familjen+Grotesk:wght@400..700&family=Tiny5&display=swap">
-<link rel="stylesheet" href="../assets/site.css?v=2026-10-11-02">
-<link rel="stylesheet" href="../assets/guide.css?v=2026-10-11-02">
+<link rel="stylesheet" href="../assets/site.css?v=2026-10-11-03">
+<link rel="stylesheet" href="../assets/guide.css?v=2026-10-11-03">
 <script>try{var l=localStorage.getItem("mc-lang"),t=localStorage.getItem("mc-theme")}catch(e){}document.documentElement.lang=l||(/^fr\b/i.test(navigator.language||"")?"fr":"en");if(t)document.documentElement.setAttribute("data-theme",t)</script>
 </head>
 <body data-page="guide">
@@ -58,6 +58,9 @@
         <li><a href="#chord-keys"><span data-l="en">Chord keys</span><span data-l="fr">Clavier d'accords</span></a></li>
         <li><a href="#midi-both"><span data-l="en">MIDI OUT while in THRU</span><span data-l="fr">MIDI OUT pendant THRU</span></a></li>
         <li><a href="#midi-live-both"><span data-l="en">Live MIDI OUT + THRU toggle</span><span data-l="fr">Basculer MIDI OUT + THRU en direct</span></a></li>
+        <li><a href="#va"><span data-l="en">VA machines</span><span data-l="fr">Machines VA</span></a></li>
+        <li><a href="#generate"><span data-l="en">Trig generator</span><span data-l="fr">Générateur de trigs</span></a></li>
+        <li><a href="#lfo-plus"><span data-l="en">LFO 2, 3, 4</span><span data-l="fr">LFO 2, 3, 4</span></a></li>
         <li><a href="#samples"><span data-l="en">Samples OS</span><span data-l="fr">OS Samples</span></a></li>
         <li><a href="#stock"><span data-l="en">Back to stock</span><span data-l="fr">Revenir à l'origine</span></a></li>
         <li><a href="#recovery"><span data-l="en">Recovery</span><span data-l="fr">Secours</span></a></li>
@@ -600,6 +603,9 @@
           <div><dt><span data-l="en">Steady light</span><span data-l="fr">Lumière stable</span></dt><dd><span data-l="en">the key is lit for one millisecond out of every three, 333 times a second, always the same way: it looks steady, at about a third of its brightness, however many trigless trigs the page holds.</span><span data-l="fr">la touche est allumée une milliseconde sur trois, 333 fois par seconde, toujours de la même façon : elle paraît stable, au tiers de sa lumière environ, quel que soit le nombre de trigless trigs sur la page.</span></dd></div>
           <div><dt><span data-l="en">Credit</span><span data-l="fr">Crédit</span></dt><dd><span data-l="en">a mod by djd_oz, rewritten for the flasher so that it goes with every other mod, Model-TG included.</span><span data-l="fr">un mod de djd_oz, réécrit pour le flasher afin qu'il se combine avec tous les autres mods, Model-TG compris.</span></dd></div>
           <div><dt><span data-l="en">Tested</span><span data-l="fr">Testé</span></dt><dd><span data-l="en">on a Model:Cycles with all 16 trig keys holding trigless trigs, with Model-TG, the 5 Syntakt engines, 6-channel audio and the other mods: steady, clearly darker, and everything else works as usual. A first version, which dimmed the key more slowly, flickered unevenly. In the emulator, on the OS's own code for the panel: the dimmed key is on exactly one millisecond out of three, and every other light is lit exactly as with the stock OS.</span><span data-l="fr">sur un Model:Cycles avec les 16 touches de pas en trigless trig, avec Model-TG, les 5 moteurs du Syntakt, l'audio 6 canaux et les autres mods : stable, nettement plus sombre, et tout le reste marche comme d'habitude. Une première version, qui atténuait la touche plus lentement, scintillait de façon irrégulière. Dans l'émulateur, sur le code même du panneau de l'OS : la touche atténuée est allumée exactement une milliseconde sur trois, et tous les autres voyants s'allument exactement comme avec l'OS d'origine.</span></dd></div>
+        </dl>
+      </section>
+
       <section id="chord-keys">
         <h2><span class="n">17</span><span data-l="en">Chord Keys</span><span data-l="fr">Chord Keys</span></h2>
         <p class="by"><span data-l="en">By</span><span data-l="fr">Par</span> <a href="https://github.com/byNicoHeuser" target="_blank" rel="noopener">Nico Heuser</a></p>
@@ -679,8 +685,96 @@
         </dl>
       </section>
 
+      <section id="va">
+        <h2><span class="n">20</span><span data-l="en">VA machines</span><span data-l="fr">Machines VA</span></h2>
+        <p class="by"><span data-l="en">By DavidCaruso, from his Model-TG-VA-DR-v1 firmware, rewritten for this project</span><span data-l="fr">De DavidCaruso, d'après son firmware Model-TG-VA-DR-v1, réécrites pour ce projet</span></p>
+        <p class="lede"><span data-l="en">Four extra machines: <b>VA</b>, a light synth with two oscillators, and three analog-style drums, <b>VA KICK</b>, <b>VA SNARE</b> and <b>VA HIHAT</b>. In the emulator, they compute exactly the same samples as David's firmware (one exception, below).</span><span data-l="fr">Quatre machines ajoutées : <b>VA</b>, un synthé léger à deux oscillateurs, et trois percussions façon analogique, <b>VA KICK</b>, <b>VA SNARE</b> et <b>VA HIHAT</b>. En émulation, elles calculent exactement les mêmes échantillons que le firmware de David (une exception, plus bas).</span></p>
+        <ol>
+          <li><span data-l="en">Press <b>MACHINES</b> and pick one after Chord: VA is the 7th machine, VA KICK the 8th, VA SNARE the 9th and VA HIHAT the 10th. With <a href="#model-tg">Model-TG</a> they come after its Sampler, from the 8th to the 11th, the same numbers as in David's firmware, so his projects open on the same machines. Their icons are Tone's, Kick's, Snare's and Metal's.</span><span data-l="fr">Appuyez sur <b>MACHINES</b> et choisissez-en une après Chord : VA est la 7<sup>e</sup> machine, VA KICK la 8<sup>e</sup>, VA SNARE la 9<sup>e</sup> et VA HIHAT la 10<sup>e</sup>. Avec <a href="#model-tg">Model-TG</a>, elles viennent après son Sampler, de la 8<sup>e</sup> à la 11<sup>e</sup> : les numéros du firmware de David, ses projets se rouvrent sur les mêmes machines. Leurs icônes sont celles de Tone, Kick, Snare et Metal.</span></li>
+          <li><span data-l="en">The four knobs have their own names on the screen (table below).</span><span data-l="fr">Les quatre potards ont leur propre nom à l'écran (tableau ci-dessous).</span></li>
+          <li><span data-l="en">The keys, <b>PITCH</b> and <b>FINE</b> set the note, on all four. <b>DECAY</b> sets how long the sound lasts (the volume envelope), <b>GATE</b> and <b>PUNCH</b> work as on Tone.</span><span data-l="fr">Les touches, <b>PITCH</b> et <b>FINE</b> règlent la note, sur les quatre. <b>DECAY</b> règle la durée du son (l'enveloppe de volume), <b>GATE</b> et <b>PUNCH</b> marchent comme sur Tone.</span></li>
+          <li><span data-l="en">With Model-TG, hold <b>MACHINES</b> and turn <b>DECAY</b>, <b>SWEEP</b> and <b>CONTOUR</b> for Attack, Filter and Resonance, as on every machine.</span><span data-l="fr">Avec Model-TG, maintenez <b>MACHINES</b> et tournez <b>DECAY</b>, <b>SWEEP</b> et <b>CONTOUR</b> pour l'Attack, le Filtre et la Résonance, comme sur toutes les machines.</span></li>
+        </ol>
+        <div class="tbl">
+          <table>
+            <thead><tr><th>Machine</th><th>COLOR</th><th>SHAPE</th><th>SWEEP</th><th>CONTOUR</th></tr></thead>
+            <tbody>
+              <tr><th>VA</th><td><span data-l="en"><b>Osc1 Wave</b>: 0–42 saw, 43–85 square, 86–127 triangle</span><span data-l="fr"><b>Osc1 Wave</b> : 0–42 scie, 43–85 carré, 86–127 triangle</span></td><td><span data-l="en"><b>Osc2 Wave</b>: the same for oscillator 2</span><span data-l="fr"><b>Osc2 Wave</b> : pareil pour l'oscillateur 2</span></td><td><span data-l="en"><b>Osc2 Tune</b>: oscillator 2 from one octave down to one octave up, fine near the middle (64 = in tune; default 68, a slight detune)</span><span data-l="fr"><b>Osc2 Tune</b> : l'oscillateur 2 d'une octave en dessous à une octave au-dessus, fin vers le milieu (64 = accordé ; 68 par défaut, un léger désaccord)</span></td><td><span data-l="en"><b>Osc Mix</b>: 0 oscillator 1 only, 64 both, 127 oscillator 2 only</span><span data-l="fr"><b>Osc Mix</b> : 0 l'oscillateur 1 seul, 64 les deux, 127 l'oscillateur 2 seul</span></td></tr>
+              <tr><th>VA KICK</th><td><span data-l="en"><b>Sweep Depth</b>: how high the pitch starts (up to 5 times the note)</span><span data-l="fr"><b>Sweep Depth</b> : la hauteur de départ (jusqu'à 5 fois la note)</span></td><td><span data-l="en"><b>Sweep Time</b>: how fast it falls (2 to 150 ms)</span><span data-l="fr"><b>Sweep Time</b> : la vitesse de la chute (2 à 150 ms)</span></td><td><span data-l="en"><b>Drive</b>: saturation, off at 0</span><span data-l="fr"><b>Drive</b> : saturation, coupée à 0</span></td><td><span data-l="en"><b>Click</b>: a short burst of noise at the start</span><span data-l="fr"><b>Click</b> : un bref bruit à l'attaque</span></td></tr>
+              <tr><th>VA SNARE</th><td><span data-l="en"><b>Noise Mix</b>: 0 body only, 127 noise only</span><span data-l="fr"><b>Noise Mix</b> : 0 le corps seul, 127 le bruit seul</span></td><td><span data-l="en"><b>Pitch Drop</b>: how high the body starts</span><span data-l="fr"><b>Pitch Drop</b> : la hauteur de départ du corps</span></td><td><span data-l="en"><b>Noise Tone</b>: dark to bright noise</span><span data-l="fr"><b>Noise Tone</b> : bruit sombre à brillant</span></td><td><span data-l="en"><b>Drive</b>: saturation, off at 0</span><span data-l="fr"><b>Drive</b> : saturation, coupée à 0</span></td></tr>
+              <tr><th>VA HIHAT</th><td><span data-l="en"><b>Tone</b>: brightness</span><span data-l="fr"><b>Tone</b> : la brillance</span></td><td><span data-l="en"><b>Spread</b>: 0 one pitch, 64 the six pitches of the TR-808, 127 wider</span><span data-l="fr"><b>Spread</b> : 0 une seule hauteur, 64 les six hauteurs du TR-808, 127 plus écartées</span></td><td><span data-l="en"><b>Noise</b>: 0 metal only, up to noise</span><span data-l="fr"><b>Noise</b> : 0 le métal seul, jusqu'au bruit</span></td><td><span data-l="en"><b>Drive</b>: saturation, off at 0</span><span data-l="fr"><b>Drive</b> : saturation, coupée à 0</span></td></tr>
+            </tbody>
+          </table>
+        </div>
+        <dl class="facts">
+          <div><dt><span data-l="en">The note</span><span data-l="fr">La note</span></dt><dd><span data-l="en">at note 60 (C4) with PITCH in the middle, VA plays C4, VA KICK about 55 Hz, VA SNARE about 180 Hz, and VA HIHAT the 808's six pitches. Very high notes, from about C8 up, fall back to low pitches, as in David's firmware.</span><span data-l="fr">à la note 60 (do 4), PITCH au milieu, VA joue do 4, VA KICK environ 55 Hz, VA SNARE environ 180 Hz, et VA HIHAT les six hauteurs du 808. Les notes très aiguës, à partir du do 8 environ, retombent dans le grave, comme dans le firmware de David.</span></dd></div>
+          <div><dt><span data-l="en">Sound</span><span data-l="fr">Son</span></dt><dd><span data-l="en">computed at 96 kHz and brought down to 48 kHz like Tone. A silent VA track is not computed. One difference with David's firmware: on VA HIHAT, high notes with Spread turned up (from about note 78 at Spread 100) had wrong pitches in his firmware, a calculation that overflowed. Here they are right. Below that, the sound is the same.</span><span data-l="fr">calculé à 96 kHz et ramené à 48 kHz comme Tone. Une piste VA muette n'est pas calculée. Une différence avec le firmware de David : sur VA HIHAT, les notes aiguës avec Spread monté (à partir de la note 78 environ à Spread 100) avaient des hauteurs fausses chez lui, un calcul qui débordait. Ici elles sont justes. En dessous, le son est le même.</span></dd></div>
+          <div><dt><span data-l="en">Processor</span><span data-l="fr">Processeur</span></dt><dd><span data-l="en">a VA voice costs about as much as a Tone voice (less with one oscillator), VA KICK and VA SNARE about 1.4 times, VA HIHAT about 1.8 times (measured in the emulator). There is no load governor: many drum tracks at once could make the sound crackle.</span><span data-l="fr">une voix VA coûte à peu près une voix Tone (moins avec un seul oscillateur), VA KICK et VA SNARE environ 1,4 fois, VA HIHAT environ 1,8 fois (mesuré en émulation). Il n'y a pas de régulateur de charge : beaucoup de pistes de percussions à la fois pourraient faire craquer le son.</span></dd></div>
+          <div><dt><span data-l="en">Other mods</span><span data-l="fr">Autres mods</span></dt><dd><span data-l="en">not yet with the <a href="#macro">MACRO machine</a> or the <a href="#syntakt">Syntakt engines</a>: they all add machines after Chord. With Model-TG, tick both cards. Goes with the other mods.</span><span data-l="fr">pas encore avec la <a href="#macro">machine MACRO</a> ni avec les <a href="#syntakt">moteurs du Syntakt</a>, qui ajoutent tous des machines après Chord. Avec Model-TG, cochez les deux cartes. Se combine avec les autres mods.</span></dd></div>
+          <div><dt><span data-l="en">Status</span><span data-l="fr">État</span></dt><dd><span data-l="en">experimental: checked in the emulator on the OS's own code, alone and with Model-TG, not yet tested on a Model:Cycles.</span><span data-l="fr">expérimental : vérifié en émulation sur le code même de l'OS, seul et avec Model-TG, pas encore testé sur un Model:Cycles.</span></dd></div>
+        </dl>
+        <p class="note"><span data-l="en"><b>Before flashing another choice or the official firmware,</b> set your VA tracks back to an original machine (Kick to Chord): the official OS doesn't have these machines.</span><span data-l="fr"><b>Avant de flasher un autre choix ou le firmware officiel,</b> remettez vos pistes VA sur une machine d'origine (de Kick à Chord) : l'OS officiel n'a pas ces machines.</span></p>
+      </section>
+
+      <section id="generate">
+        <h2><span class="n">21</span><span data-l="en">Trig generator</span><span data-l="fr">Générateur de trigs</span></h2>
+        <p class="by"><span data-l="en">Idea and first version by DavidCaruso, rewritten for this project</span><span data-l="fr">Idée et première version de DavidCaruso, réécrit pour ce projet</span></p>
+        <p class="lede"><span data-l="en">Fills the selected track with a new pattern in one press: Euclidean rhythms (hits spread as evenly as possible) or random trigs, with optional notes taken from a scale and optional random velocities. Needs <a href="#model-tg">Model-TG</a>.</span><span data-l="fr">Remplit la piste sélectionnée d'un nouveau motif en un appui : rythmes euclidiens (coups répartis le plus régulièrement possible) ou trigs aléatoires, avec en option des notes prises dans une gamme et des vélocités aléatoires. Demande <a href="#model-tg">Model-TG</a>.</span></p>
+        <ol>
+          <li><span data-l="en">Select the track you want to fill, hold <b>SETTINGS</b> and press <b>TRACK</b>. The Generate list opens over the screen, like Model-TG's option lists. Releasing SETTINGS does not open the Config Menu.</span><span data-l="fr">Sélectionnez la piste à remplir, tenez <b>SETTINGS</b> et appuyez sur <b>TRACK</b>. La liste Generate s'ouvre par-dessus l'écran, comme les listes d'options de Model-TG. Relâcher SETTINGS n'ouvre pas le Config Menu.</span></li>
+          <li><span data-l="en">Turn <b>LEVEL/DATA</b> to choose a line, press it to edit the value, turn to change it, press again to leave the line. Press SETTINGS to close the list.</span><span data-l="fr">Tournez <b>LEVEL/DATA</b> pour choisir une ligne, appuyez pour éditer sa valeur, tournez pour la changer, rappuyez pour quitter la ligne. SETTINGS ferme la liste.</span></li>
+          <li><span data-l="en">On the <b>GEN</b> line, a press of LEVEL/DATA generates the pattern and shows “Trigs: N” (how many trigs were placed). The list stays open: press again for a new random draw, or change a setting first.</span><span data-l="fr">Sur la ligne <b>GEN</b>, un appui sur LEVEL/DATA génère le motif et affiche « Trigs: N » (le nombre de trigs posés). La liste reste ouverte : rappuyez pour un nouveau tirage, ou changez un réglage avant.</span></li>
+        </ol>
+        <div class="tbl">
+          <table>
+            <thead><tr><th><span data-l="en">Line</span><span data-l="fr">Ligne</span></th><th><span data-l="en">What it does</span><span data-l="fr">Ce qu'elle fait</span></th><th><span data-l="en">Values (default)</span><span data-l="fr">Valeurs (défaut)</span></th></tr></thead>
+            <tbody>
+              <tr><th>MOD</th><td><span data-l="en">RND: random trigs; EUC: Euclidean rhythm</span><span data-l="fr">RND : trigs aléatoires ; EUC : rythme euclidien</span></td><td>RND, EUC (RND)</td></tr>
+              <tr><th>DNS</th><td><span data-l="en">RND only: chance of a trig on each step, in %</span><span data-l="fr">RND seulement : chance d'un trig sur chaque pas, en %</span></td><td>0–100 (50)</td></tr>
+              <tr><th>HIT</th><td><span data-l="en">EUC only: number of trigs</span><span data-l="fr">EUC seulement : nombre de trigs</span></td><td>1–64 (4)</td></tr>
+              <tr><th>ROT</th><td><span data-l="en">EUC only: moves the rhythm to the right, in steps</span><span data-l="fr">EUC seulement : décale le rythme vers la droite, en pas</span></td><td>0–63 (0)</td></tr>
+              <tr><th>NOT</th><td><span data-l="en">ON: each trig gets a random note from the scale below</span><span data-l="fr">ON : chaque trig reçoit une note au hasard dans la gamme ci-dessous</span></td><td>OFF, ON (OFF)</td></tr>
+              <tr><th>KEY</th><td><span data-l="en">root note</span><span data-l="fr">tonique</span></td><td><span data-l="en">C to B (C)</span><span data-l="fr">C à B (C)</span></td></tr>
+              <tr><th>SCL</th><td><span data-l="en">scale: major, minor, dorian, phrygian, lydian, mixolydian, locrian, harmonic minor, melodic minor, major and minor pentatonic, blues, chromatic</span><span data-l="fr">gamme : majeure, mineure, dorienne, phrygienne, lydienne, mixolydienne, locrienne, mineure harmonique, mineure mélodique, pentatonique majeure et mineure, blues, chromatique</span></td><td>MAJ … CHR (MAJ)</td></tr>
+              <tr><th>OCT</th><td><span data-l="en">lowest octave (4 = middle C)</span><span data-l="fr">octave la plus basse (4 = do du milieu)</span></td><td>0–8 (4)</td></tr>
+              <tr><th>RNG</th><td><span data-l="en">how many octaves the notes can span</span><span data-l="fr">sur combien d'octaves les notes peuvent aller</span></td><td>1–4 (1)</td></tr>
+              <tr><th>VEL</th><td><span data-l="en">ON: each trig gets a random velocity between VMN and VMX</span><span data-l="fr">ON : chaque trig reçoit une vélocité au hasard entre VMN et VMX</span></td><td>OFF, ON (OFF)</td></tr>
+              <tr><th>VMN, VMX</th><td><span data-l="en">lowest and highest velocity</span><span data-l="fr">vélocité la plus basse et la plus haute</span></td><td>1–127 (64, 127)</td></tr>
+              <tr><th>GEN</th><td><span data-l="en">press to generate</span><span data-l="fr">appuyer pour générer</span></td><td>GO</td></tr>
+            </tbody>
+          </table>
+        </div>
+        <dl class="facts">
+          <div><dt><span data-l="en">No undo</span><span data-l="fr">Pas d'annulation</span></dt><dd><span data-l="en">GEN rewrites the whole track, every step up to the track length (all pages): trigs outside the new rhythm are erased with their parameter locks. Save your project first if you want to keep the old pattern. With NOT on OFF, the steps' notes are reset (the track plays its own note); with VEL on OFF, the steps' velocities are reset.</span><span data-l="fr">GEN réécrit toute la piste, chaque pas jusqu'à la longueur de la piste (toutes les pages) : les trigs hors du nouveau rythme sont effacés avec leurs p-locks. Sauvez le projet avant si vous voulez garder l'ancien motif. Avec NOT sur OFF, les notes des pas sont remises à zéro (la piste joue sa propre note) ; avec VEL sur OFF, les vélocités des pas aussi.</span></dd></div>
+          <div><dt><span data-l="en">Settings</span><span data-l="fr">Réglages</span></dt><dd><span data-l="en">shared by all tracks, back to their defaults when you switch the machine off. The generated pattern itself is saved with the project like any other. The list works on the track that was selected when you opened it.</span><span data-l="fr">communs à toutes les pistes, ils reviennent par défaut quand on éteint la machine. Le motif généré, lui, est sauvé avec le projet comme n'importe quel autre. La liste agit sur la piste sélectionnée à son ouverture.</span></dd></div>
+          <div><dt><span data-l="en">Where</span><span data-l="fr">Où</span></dt><dd><span data-l="en">it does not open on the Retrig page or in the slice editor, nor while another Model-TG list is open.</span><span data-l="fr">elle ne s'ouvre pas sur la page Retrig ni dans l'éditeur de tranches, ni quand une autre liste de Model-TG est ouverte.</span></dd></div>
+          <div><dt><span data-l="en">Status</span><span data-l="fr">État</span></dt><dd><span data-l="en">experimental: checked in the emulator on the OS's and Model-TG's own code, with and without the Syntakt engines, not yet tested on a Model:Cycles.</span><span data-l="fr">expérimental : vérifié en émulation sur le code même de l'OS et de Model-TG, avec et sans les moteurs du Syntakt, pas encore testé sur un Model:Cycles.</span></dd></div>
+        </dl>
+      </section>
+
+      <section id="lfo-plus">
+        <h2><span class="n">22</span><span data-l="en">LFO 2, 3, 4</span><span data-l="fr">LFO 2, 3, 4</span></h2>
+        <p class="by"><span data-l="en">Idea and first version by DavidCaruso (Model-TG-VA-DR-v1), rewritten for this project</span><span data-l="fr">Idée et première version de DavidCaruso (Model-TG-VA-DR-v1), réécrit pour ce projet</span></p>
+        <p class="lede"><span data-l="en">Each track gets three more LFOs next to the original one, so up to four LFOs modulate a track at once. With or without Model-TG.</span><span data-l="fr">Chaque piste reçoit trois LFO de plus à côté de celui d'origine : jusqu'à quatre LFO modulent une piste en même temps. Avec ou sans Model-TG.</span></p>
+        <ol>
+          <li><span data-l="en">Press <b>[LFO]</b> to open the LFO page as usual: this is LFO 1.</span><span data-l="fr">Appuyez sur <b>[LFO]</b> pour ouvrir la page LFO comme d'habitude : c'est LFO 1.</span></li>
+          <li><span data-l="en">Press <b>[LFO]</b> again: a big <b>2</b> in the left box means you are now setting LFO 2. Again for <b>3</b>, again for <b>4</b>. The fifth press closes the page. Next time the page opens on LFO 1.</span><span data-l="fr">Appuyez encore sur <b>[LFO]</b> : un grand <b>2</b> dans le cadre de gauche indique que vous réglez LFO 2. Encore une fois pour <b>3</b>, encore une fois pour <b>4</b>. Le cinquième appui ferme la page. Elle se rouvre ensuite sur LFO 1.</span></li>
+          <li><span data-l="en">On pages 2, 3 and 4, the knobs <b>SPD</b>, <b>MULT</b>, <b>WAVE</b>, <b>DEST</b> and <b>DEP</b> belong to that LFO. Pick a destination with DEST and raise DEP to hear it.</span><span data-l="fr">Sur les pages 2, 3 et 4, les potards <b>SPD</b>, <b>MULT</b>, <b>WAVE</b>, <b>DEST</b> et <b>DEP</b> sont ceux de ce LFO. Choisissez une destination avec DEST et montez DEP pour l'entendre.</span></li>
+          <li><span data-l="en"><b>FADE</b>, <b>SPH</b> and <b>MODE</b> are shared by the four LFOs: on pages 2 to 4 they change LFO 1's settings too. Trig retrig is shared as well.</span><span data-l="fr"><b>FADE</b>, <b>SPH</b> et <b>MODE</b> sont communs aux quatre LFO : sur les pages 2 à 4, ils changent aussi les réglages de LFO 1. Le redémarrage au trig est commun lui aussi.</span></li>
+        </ol>
+        <dl class="facts">
+          <div><dt><span data-l="en">LFO 2 is saved</span><span data-l="fr">LFO 2 est sauvé</span></dt><dd><span data-l="en">it is part of the sound, like LFO 1: saved with the kit and in the sound pool, back when you load them. Hold a trig and turn a knob on page 2 to p-lock LFO 2; its locks are saved with the pattern. Its SPD and DEP are saved a little less finely than LFO 1's: the whole values shown on the screen come back exactly, finer settings are rounded when you reload the sound.</span><span data-l="fr">il fait partie du son, comme LFO 1 : sauvé avec le kit et dans la réserve de sons, il revient quand vous les rechargez. Pour p-locker LFO 2, tenez un trig et tournez un potard sur la page 2 ; ses locks sont sauvés avec le pattern. Ses SPD et DEP sont sauvés un peu moins finement que ceux de LFO 1 : les valeurs entières affichées reviennent exactement, un réglage plus fin est arrondi quand vous rechargez le son.</span></dd></div>
+          <div><dt><span data-l="en">LFO 3 and 4 are for live play</span><span data-l="fr">LFO 3 et 4 servent au live</span></dt><dd><span data-l="en">each track has one setting for each, whatever the pattern, kit or sound. They are not saved and go back to their defaults when you switch the machine on. They cannot be p-locked: turning a knob with a trig held changes the setting itself.</span><span data-l="fr">chaque piste a un réglage pour chacun, quels que soient le pattern, le kit ou le son. Ils ne sont pas sauvés et reviennent à leurs réglages par défaut à l'allumage. Ils ne se p-lockent pas : tourner un potard en tenant un trig change le réglage lui-même.</span></dd></div>
+          <div><dt><span data-l="en">Destinations</span><span data-l="fr">Destinations</span></dt><dd><span data-l="en">an extra LFO aimed at LFO 1's destination does nothing: only LFO 1 moves that parameter. The DEST knob skips destinations already used by another LFO of the same track, so this only happens with older or loaded settings. NONE is always available. Two extra LFOs can still share a destination if their settings were loaded that way: their movements add up.</span><span data-l="fr">un LFO de plus réglé sur la destination de LFO 1 ne fait rien : seul LFO 1 fait bouger ce paramètre. La molette DEST saute les destinations déjà prises par un autre LFO de la piste, donc cela n'arrive qu'avec des réglages plus anciens ou rechargés. NONE reste toujours possible. Deux LFO de plus peuvent partager une destination si leurs réglages ont été chargés ainsi : leurs mouvements s'additionnent.</span></dd></div>
+          <div><dt><span data-l="en">Old and other sounds</span><span data-l="fr">Anciens et autres sons</span></dt><dd><span data-l="en">sounds and projects made without this mod load as before, LFO 2 then starts with no destination. Sounds saved with DavidCaruso's firmware keep their LFO 2. The official OS loads sounds saved with this mod and simply ignores LFO 2.</span><span data-l="fr">les sons et projets faits sans ce mod se chargent comme avant, LFO 2 démarre alors sans destination. Les sons sauvés avec le firmware de DavidCaruso gardent leur LFO 2. L'OS officiel charge les sons sauvés avec ce mod et ignore simplement LFO 2.</span></dd></div>
+          <div><dt><span data-l="en">With Model-TG</span><span data-l="fr">Avec Model-TG</span></dt><dd><span data-l="en">this mod also fixes p-locks on Attack, Filter and Resonance: after reloading a pattern, they used to come back as locks on other parameters (NONE, LFO speed, multiplier). Patterns saved before keep the wrong locks.</span><span data-l="fr">ce mod corrige aussi les p-locks d'Attack, Filtre et Résonance : au rechargement d'un pattern, ils revenaient comme des locks sur d'autres paramètres (NONE, vitesse du LFO, multiplicateur). Les patterns sauvés avant gardent ces locks faux.</span></dd></div>
+          <div><dt><span data-l="en">Processor</span><span data-l="fr">Processeur</span></dt><dd><span data-l="en">nothing to speak of while the extra LFOs have no destination; about 1.3 % of the audio time for LFO 2 on all six tracks, about 3.5 % with LFO 2, 3 and 4 everywhere (measured in the emulator).</span><span data-l="fr">rien de notable tant que les LFO de plus n'ont pas de destination ; environ 1,3 % du temps audio pour LFO 2 sur les six pistes, environ 3,5 % avec LFO 2, 3 et 4 partout (mesuré en émulation).</span></dd></div>
+          <div><dt><span data-l="en">Status</span><span data-l="fr">État</span></dt><dd><span data-l="en">experimental: checked in the emulator on the OS's own code, with and without Model-TG, not yet tested on a Model:Cycles. Goes with every other mod.</span><span data-l="fr">expérimental : vérifié en émulation sur le code même de l'OS, avec et sans Model-TG, pas encore testé sur un Model:Cycles. Se combine avec tous les autres mods.</span></dd></div>
+        </dl>
+      </section>
+
       <section id="samples">
-        <h2><span class="n">20</span><span data-l="en">Samples OS</span><span data-l="fr">OS Samples</span></h2>
+        <h2><span class="n">23</span><span data-l="en">Samples OS</span><span data-l="fr">OS Samples</span></h2>
         <p class="lede"><span data-l="en">The Model:Cycles starts as a Model:Samples: you load and play your own samples, managed with Elektron Transfer.</span><span data-l="fr">Le Model:Cycles démarre en Model:Samples : vous chargez et jouez vos propres samples, gérés avec Elektron Transfer.</span></p>
         <p><span data-l="en">The flasher puts the official Model:Samples OS inside your Model:Cycles firmware file:</span><span data-l="fr">Le flasher place l'OS officiel du Model:Samples dans le fichier firmware de votre Model:Cycles :</span></p>
         <dl class="layers fig">
@@ -714,13 +808,13 @@
       </section>
 
       <section id="stock">
-        <h2><span class="n">21</span><span data-l="en">Back to stock</span><span data-l="fr">Revenir à l'origine</span></h2>
+        <h2><span class="n">24</span><span data-l="en">Back to stock</span><span data-l="fr">Revenir à l'origine</span></h2>
         <p><span data-l="en">The <b>Official firmware</b> tab of the flasher sends your OS file unchanged, over USB, like a normal update. It is also a good rehearsal before a first mod: it checks the cable and the setup without changing anything.</span><span data-l="fr">L'onglet <b>Firmware officiel</b> du flasher renvoie votre fichier d'OS sans le modifier, par USB, comme une mise à jour normale. C'est aussi une bonne répétition avant un premier mod : elle vérifie le câble et l'installation sans rien changer.</span></p>
         <p><span data-l="en">With Syntakt engines, the MACRO machine or Model-TG's Sampler, first set your tracks back to an original machine.</span><span data-l="fr">Avec des moteurs du Syntakt, la machine MACRO ou le Sampler de Model-TG, remettez d'abord vos pistes sur une machine d'origine.</span></p>
       </section>
 
       <section id="recovery">
-        <h2><span class="n">22</span><span data-l="en">Recovery</span><span data-l="fr">Secours</span></h2>
+        <h2><span class="n">25</span><span data-l="en">Recovery</span><span data-l="fr">Secours</span></h2>
         <p class="lede"><span data-l="en">If the Model:Cycles no longer starts, its startup menu can always reinstall the OS: it lives in an area that updates never write.</span><span data-l="fr">Si le Model:Cycles ne démarre plus, son menu de démarrage peut toujours réinstaller l'OS : il vit dans une zone que les mises à jour n'écrivent jamais.</span></p>
         <figure class="fig">
           <div data-device data-scenes="func @logo | func,mainvol | s4 @READY TO/>RECEIVE" data-ms="1300"></div>
@@ -734,7 +828,7 @@
       </section>
 
       <section id="trouble">
-        <h2><span class="n">23</span><span data-l="en">Troubleshooting</span><span data-l="fr">Dépannage</span></h2>
+        <h2><span class="n">26</span><span data-l="en">Troubleshooting</span><span data-l="fr">Dépannage</span></h2>
         <div class="faq">
           <details>
             <summary><span data-l="en">Nothing happens on the Model:Cycles screen</span><span data-l="fr">Rien ne se passe sur l'écran du Model:Cycles</span></summary>
@@ -798,8 +892,8 @@
   </div>
 </footer>
 
-<script src="../assets/release.js?v=2026-10-11-02"></script>
-<script src="../assets/cycles.js?v=2026-10-11-02"></script>
-<script src="../assets/site.js?v=2026-10-11-02"></script>
+<script src="../assets/release.js?v=2026-10-11-03"></script>
+<script src="../assets/cycles.js?v=2026-10-11-03"></script>
+<script src="../assets/site.js?v=2026-10-11-03"></script>
 </body>
 </html>

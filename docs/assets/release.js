@@ -3,6 +3,18 @@
  *   { version: "1.1", date: "2026-10-15", changes: [{ en: "…", fr: "…" }] }
  */
 window.MC_RELEASES = [
+  { version: "1.43", date: "2026-10-11", changes: [
+    { en: "Three new mods after DavidCaruso's Model-TG-VA-DR-v1 firmware, split so you pick only what you want, each rewritten for this project",
+      fr: "Trois nouveaux mods d'après le firmware Model-TG-VA-DR-v1 de DavidCaruso, séparés pour ne prendre que ce que vous voulez, chacun réécrit pour ce projet" },
+    { en: "VA machines: four extra machines after Chord (after the Sampler with Model-TG): VA, a light two-oscillator synth, and VA KICK, VA SNARE and VA HIHAT, analog-style drums with named knobs. The keys and PITCH set the note, DECAY the length. Machines 7 to 10, or 8 to 11 with Model-TG, as in David's firmware. Not yet with MACRO or the Syntakt engines",
+      fr: "Machines VA : quatre machines ajoutées après Chord (après le Sampler avec Model-TG) : VA, un synthé léger à deux oscillateurs, et VA KICK, VA SNARE et VA HIHAT, des percussions façon analogique aux potards nommés. Les touches et PITCH règlent la note, DECAY la durée. Machines 7 à 10, ou 8 à 11 avec Model-TG, comme dans le firmware de David. Pas encore avec MACRO ni les moteurs du Syntakt" },
+    { en: "Trig generator (with Model-TG): hold SETTINGS and press TRACK to fill the selected track with a Euclidean or random rhythm, with optional scale notes and random velocities. No undo: save your project first",
+      fr: "Générateur de trigs (avec Model-TG) : tenez SETTINGS et appuyez sur TRACK pour remplir la piste sélectionnée d'un rythme euclidien ou aléatoire, avec des notes dans une gamme et des vélocités aléatoires si vous voulez. Pas d'annulation : sauvez le projet avant" },
+    { en: "LFO 2, 3, 4: three more LFOs on every track. On the LFO page, press [LFO] again to reach LFO 2, 3 and 4. LFO 2 is saved with the sound and can be p-locked; LFO 3 and 4 are for live play. Works with or without Model-TG, and fixes Model-TG's Attack, Filter and Resonance p-locks in patterns",
+      fr: "LFO 2, 3, 4 : trois LFO de plus sur chaque piste. Sur la page LFO, appuyez encore sur [LFO] pour passer à LFO 2, 3 et 4. LFO 2 est sauvé avec le son et se p-locke ; LFO 3 et 4 servent au live. Marche avec ou sans Model-TG, et corrige les p-locks d'Attack, Filtre et Résonance de Model-TG dans les patterns" },
+    { en: "All three are experimental: checked in the emulator on the OS's own code, alone and with the other mods, not yet tested on a Model:Cycles",
+      fr: "Les trois sont expérimentaux : vérifiés en émulation sur le code même de l'OS, seuls et avec les autres mods, pas encore testés sur un Model:Cycles" },
+  ] },
   { version: "1.41", date: "2026-10-11", changes: [
     { en: "Two new MIDI mods by AveyCole, under USB & MIDI. With THR selected (SETTINGS, CONFIG › MIDI › PORTS › OUT/THRU), the Model:Cycles forwards what arrives on its MIDI IN and also sends its own clock, notes and parameter changes. MIDI OUT while in THRU does it all the time; Live MIDI OUT + THRU toggle switches it on and off with FUNC + a press on the LEVEL/DATA knob, the screen staying on THR",
       fr: "Deux nouveaux mods MIDI d'AveyCole, dans USB et MIDI. Avec THR choisi (SETTINGS, CONFIG › MIDI › PORTS › OUT/THRU), le Model:Cycles relaie ce qui arrive sur son MIDI IN et envoie aussi son horloge, ses notes et ses changements de paramètres. MIDI OUT pendant THRU le fait tout le temps ; Basculer MIDI OUT + THRU en direct l'active et le coupe avec FUNC + un appui sur le potard LEVEL/DATA, l'écran restant sur THR" },

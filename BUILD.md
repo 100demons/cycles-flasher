@@ -479,6 +479,45 @@ python3 tools/emu/test_midi_thru.py --cycles model-cycles_OS1.13.syx \
 | `6ch-usbup,model-tg-st,syntakt-tg-sd-cp-toy-bits-swarm,trig-hold,arp,tempo-max,boot-anim,multiline-browser,midi-both` | `705302a9ddf03d02dc2dae40422796b476d1583261e2971560a195dd033d18a8` |
 | `6ch-usbup,model-tg-st,syntakt-tg-sd-cp-toy-bits-swarm,trig-hold,arp,tempo-max,boot-anim,multiline-browser,midi-live-both` | `a00ac9d50ce7e11a92737ee54ddf782ac94ce29bdd9f40caf29cb4be434319ad` |
 
+### Ajouts de DavidCaruso : générateur de trigs, LFO 2, 3, 4, machines VA
+
+Trois mods tirés du firmware `Model-TG-VA-DR-v1` de DavidCaruso, réécrits sans ses octets ([note 56](notes/56-ajouts-davidcaruso.md)).
+Son fichier n'est jamais nécessaire : les preuves acceptent `--david Model-TG-VA-DR-v1.syx` pour comparer à son binaire,
+sans l'exiger.
+
+- `49-generate.json` (`generate`, sur `model-tg`) et `49-generate-st.json` (`generate-st`, sur `model-tg-st`) : liste
+  Generate sur SETTINGS + TRACK ; `tools/machines/generate/generate.S` (1 214 o) assemblé dans sept masques 48×22
+  libérés, accroché au `jmp key_hook` que Model-TG pose en `0x4007240c` (§2).
+- `60-lfo-plus.json` (`lfo-plus`, avec ou sans Model-TG) : LFO 2, 3, 4 ; `tools/machines/lfo_plus/lfo_plus.S` (1 844 o)
+  dans sept masques 34×34 libérés, mémoire de travail `0x4233f000..0x4233f49b` (§3).
+- `27-va.json` (`va`, machines 7 à 10) et `36-va-tg.json` (`va-tg`, par-dessus `model-tg-st`, machines 8 à 11) :
+  `tools/machines/va/va.c` compilé par `m68k-linux-gnu-gcc` (les JSON versionnés viennent du GCC 13.3 d'Ubuntu 24.04),
+  en charge utile après l'image comme MACRO ; pas avec MACRO ni les moteurs du Syntakt (§4).
+
+```sh
+python3 tools/gen_generate.py --cycles model-cycles_OS1.13.syx [--check]
+python3 tools/gen_lfo_plus.py --cycles model-cycles_OS1.13.syx [--check]
+python3 tools/gen_va.py --cycles model-cycles_OS1.13.syx [--check]
+python3 tools/emu/test_generate.py --cycles model-cycles_OS1.13.syx \
+    [--with 6ch-usbup,model-tg-st,syntakt-tg-sd-cp-toy-bits-swarm,trig-hold,arp,tempo-max --syntakt Syntakt_OS1.42.syx]
+python3 tools/emu/test_lfo_plus.py --cycles model-cycles_OS1.13.syx [--with model-tg,arp] [--david Model-TG-VA-DR-v1.syx]
+python3 tools/emu/test_va.py --cycles model-cycles_OS1.13.syx [--quick] [--with 6ch-usbup,trig-hold,arp] \
+    [--david Model-TG-VA-DR-v1.syx]
+```
+
+| `-t` | MAIN OS patché (SHA-256) |
+|---|---|
+| `model-tg,generate` | `08cddfd5961958b96cf24730ccdf68ef82cd3b0d5059c580a6ee6f5c8f5e85d2` |
+| `model-tg-st,syntakt-tg-sd-cp-toy-bits-swarm,generate-st` | `cc701c32a165fa6c95a35bb1964f277bf9a0766f1a7796525f8ffaa8f39fd54a` |
+| `lfo-plus` | `61c48e85f74bca0387871df4bd82cd8bfa770759fbfab9dc629ec62e4b9dd26c` |
+| `model-tg,generate,lfo-plus` | `2f7887894115dd593f3af9a1d20c693961d4cc794bcc61c58ba6ba47fa789539` |
+| `va` | `5e7ec9e18a2ad9ec0dfc5804c17be46706264cd30b31ecd54f551a81166259cc` |
+| `va,lfo-plus` | `d5f7f8884da6347df72d2ed1cc102f83a2a93f6aaadbffa9cc66e228241310bd` |
+| `model-tg-st,va-tg` | `af009dd2da9e70e95bb749b7363d8d21d8eeb558c839bbae387301a00d827359` |
+| `model-tg-st,va-tg,generate-st,lfo-plus` | `11a718211d34444adbedc0570dd068ee4419f208d7041af40987dca0346cef41` |
+| `6ch-usbup,model-tg-st,syntakt-tg-sd-cp-toy-bits-swarm,trig-hold,arp,tempo-max,boot-anim,multiline-browser,generate-st,lfo-plus` | `155b68714cc859950fb49b8cacd1524a11653c624ccb93d2e6d6c74aff8d3b08` |
+| `6ch-usbup,model-tg-st,va-tg,trig-hold,arp,tempo-max,boot-anim,multiline-browser,generate-st,lfo-plus` | `5b257cd2cf8d9c3b6b70d5dd30707e6d9783a1739b04242199f777b55cb9c6d3` |
+
 ### Écoute d'un pas en pause
 
 `trig-preview` (et sa copie dans Model-TG) accepte le séquenceur en pause, où le met un Stop MIDI reçu même à l'arrêt : 3 octets

@@ -212,10 +212,10 @@ async function main() {
     check(typeof w.MCBuilder === "object" && typeof w.MCFlasher === "object", "MCBuilder + MCFlasher present");
     const ids = w.MC_TWEAKS.tweaks.map((x) => x.id);
     const nEng = w.MC_TWEAKS.features.find((f) => f.engines).engines.length;
-    check(ids.slice(0, 21).join() === "6ch-usbup,model-tg,model-tg-st,sample-preview,sample-preview-st,latching-mute,trig-preview,browser-scroll,trig-hold,arp,tempo-max,boot-anim,multiline-browser,level-pan-values,trigless-dim,midi-both,midi-live-both,macro,macro-tg,chord-keys,syntakt-sd"
-      && ids.length === 20 + 4 * ((1 << nEng) - 1) && ids.includes("syntakt-sd-cp") && ids.includes("syntakt-tg-sd-cp-toy-bits")
+    check(ids.slice(0, 26).join() === "6ch-usbup,model-tg,model-tg-st,sample-preview,sample-preview-st,latching-mute,trig-preview,browser-scroll,trig-hold,arp,tempo-max,boot-anim,multiline-browser,level-pan-values,trigless-dim,midi-both,midi-live-both,macro,macro-tg,va,va-tg,chord-keys,generate,generate-st,lfo-plus,syntakt-sd"
+      && ids.length === 25 + 4 * ((1 << nEng) - 1) && ids.includes("syntakt-sd-cp") && ids.includes("syntakt-tg-sd-cp-toy-bits")
       && ids.includes("syntakt-sd-macro") && ids.includes("syntakt-tg-sd-cp-toy-bits-swarm-macro")
-      && ids.includes("arp") && !ids.some((x) => /exact|snare|multiout/.test(x)) && w.MC_TWEAKS.features.length === 18,
+      && ids.includes("arp") && !ids.some((x) => /exact|snare|multiout/.test(x)) && w.MC_TWEAKS.features.length === 21,
       `MC_TWEAKS: only USB-friendly tweaks, one tweak per choice of the ${nEng} Syntakt engines (no SNARE replacement), alone and with Model-TG, with and without MACRO: ${ids.length} tweaks`);
     check(/build \d{4}-/.test(text(doc, "build-stamp")), "version stamp shown");
     const srcs = [...doc.querySelectorAll("script[src]")].map((x) => x.getAttribute("src"));
@@ -225,8 +225,8 @@ async function main() {
     // display order: by section (Packs, Sounds & machines, Sequencer, Live playing, Screen & browsing, USB & MIDI),
     // FEATURES order inside a section; the build keeps FEATURES order (checked in 1b)
     const feats = [...doc.querySelectorAll("#features input[type=checkbox]")].map((c) => c.id);
-    check(feats.join() === "feat-model-tg,feat-macro,feat-syntakt,feat-trig-preview,feat-trig-hold,feat-arp,feat-tempo-max,feat-trigless-dim,feat-latching-mute,feat-chord-keys,feat-sample-preview,feat-browser-scroll,feat-boot-anim,feat-multiline-browser,feat-level-pan-values,feat-usb6,feat-midi-both,feat-midi-live-both",
-      "18 feature rows, by section: " + JSON.stringify(feats));
+    check(feats.join() === "feat-model-tg,feat-macro,feat-va,feat-lfo-plus,feat-syntakt,feat-trig-preview,feat-trig-hold,feat-arp,feat-tempo-max,feat-trigless-dim,feat-generate,feat-latching-mute,feat-chord-keys,feat-sample-preview,feat-browser-scroll,feat-boot-anim,feat-multiline-browser,feat-level-pan-values,feat-usb6,feat-midi-both,feat-midi-live-both",
+      "21 feature rows, by section: " + JSON.stringify(feats));
     check(w.MC_TWEAKS.features.every((f) => doc.querySelector(`#cat-${f.cat || "other"} #mod-${f.id} #feat-${f.id}`)),
       "every feature has a row in its section (cat)");
     const tagOfFeat = (f) => (f.status === "tested" ? "Tested" : "Experimental");
@@ -269,6 +269,9 @@ async function main() {
     const djd = ["level-pan-values", "trigless-dim"].map((id) => doc.querySelector(`label[for=feat-${id}] .credit`));
     check(djd.every((c) => c && c.textContent === "based on a mod by djd_oz" && !c.querySelector("a")),
       "djd_oz's two mods: “based on a mod by djd_oz”, no link (no public repository)");
+    const david = ["va", "generate", "lfo-plus"].map((id) => doc.querySelector(`label[for=feat-${id}] .credit`));
+    check(david.every((c) => c && c.textContent === "based on a mod by DavidCaruso" && !c.querySelector("a")),
+      "DavidCaruso's three mods: “based on a mod by DavidCaruso”, no link (no public repository)");
     const list = [...doc.querySelectorAll("#credits-list a")].map((a) => a.textContent);
     check(list.join() === "scottmetoyer/ms-multi-output,drumkilla/elektron-model-tweaks,pichenettes/eurorack,TinyGregAudio/Model-TG,mischa85/elektron-firmware-tool,mxldyn/octamax",
       "credits section lists the 6 upstream repositories");
@@ -294,6 +297,23 @@ async function main() {
     check(macroAlone === "macro" && macroTg === "model-tg-st,macro-tg" && macroNote && allThree === "model-tg-st,syntakt-tg-sd-macro"
       && saidTg && withEng === "syntakt-sd-macro" && bothOn && !chosen().length && doc.querySelector('#features a[href$="#macro"]'),
       `MACRO: alone ${macroAlone}, with Model-TG ${macroTg}, its note shown; with the Syntakt engines ${withEng}, and with Model-TG too ${allThree}`);
+    // DavidCaruso's mods (notes/56): VA machines take model-tg-st + va-tg with Model-TG and don't go with MACRO; the
+    // generator needs Model-TG (ticking it ticks Model-TG) and takes generate-st on model-tg-st; LFO 2, 3, 4 go with all
+    box("feat-va").click(); await wait(5);
+    const vaAlone = chosen();
+    box("feat-generate").click(); await wait(5);
+    const vaGen = chosen(), genTicksTg = box("feat-model-tg").checked;
+    box("feat-lfo-plus").click(); await wait(5);
+    const vaGenLfo = chosen();
+    box("feat-macro").click(); await wait(5);
+    const macroGen = chosen(), vaOff = !box("feat-va").checked && /The mod “VA machines” was unticked/.test(textOf(doc, "#mod-macro .say.swap"));
+    box("feat-macro").click(); box("feat-model-tg").click(); await wait(5);
+    const lfoOnly = chosen(), genOff = !box("feat-generate").checked;
+    box("feat-lfo-plus").click(); await wait(5);
+    check(vaAlone === "va" && genTicksTg && vaGen === "model-tg-st,va-tg,generate-st" && vaGenLfo === "model-tg-st,va-tg,generate-st,lfo-plus"
+      && vaOff && macroGen === "model-tg-st,macro-tg,generate-st,lfo-plus" && genOff && lfoOnly === "lfo-plus" && !chosen().length
+      && ["va", "generate", "lfo-plus"].every((id) => doc.querySelector(`#features a[href$="#${id}"]`)),
+      `DavidCaruso's mods: VA alone ${vaAlone}, + generator ${vaGen}, + LFO ${vaGenLfo}; MACRO unticks VA ${macroGen}; without Model-TG ${lfoOnly}`);
     // Model-TG holds drumkilla's tweaks: ticked, it shows them ticked and locked, "(included with Model-TG)", and
     // builds without them; unticked, they are free again. With the Syntakt engines it makes the combined version
     // (notes/31): its base, then the engines' tweak built on top of it

@@ -79,7 +79,7 @@ FEATURES = [
         # avec les moteurs du Syntakt : la base de la version combinee (notes/31), et pour chaque combinaison de
         # moteurs son tweak syntakt-tg-<moteurs> (« tg » des combinaisons de la carte des moteurs) ; de meme avec
         # la machine MACRO (notes/43), qui prend alors macro-tg
-        "with": {"syntakt": "30-model-tg-st", "macro": "30-model-tg-st"},
+        "with": {"syntakt": "30-model-tg-st", "macro": "30-model-tg-st", "va": "30-model-tg-st"},
     },
     {
         "id": "sample-preview",
@@ -95,7 +95,7 @@ FEATURES = [
             {"file": "33-sample-preview", "label": None},
         ],
         # avec les moteurs du Syntakt, Model-TG devient model-tg-st : l'ecoute prend la version faite pour lui
-        "with": {"syntakt": "33-sample-preview-st", "macro": "33-sample-preview-st"},
+        "with": {"syntakt": "33-sample-preview-st", "macro": "33-sample-preview-st", "va": "33-sample-preview-st"},
     },
     {
         "id": "latching-mute",
@@ -263,6 +263,23 @@ FEATURES = [
         "with": {"model-tg": "32-macro-tg"},
     },
     {
+        "id": "va",
+        "cat": "sound",
+        "label": "Machines VA de DavidCaruso",
+        "desc": "Quatre machines ajoutees apres Chord (apres le Sampler avec Model-TG) : VA, synthe a deux oscillateurs "
+                "(scie, carre, triangle), et trois batteries analogiques, VA KICK, VA SNARE et VA HIHAT (six carres "
+                "comme la TR-808). Pas avec MACRO ni les moteurs du Syntakt.",
+        "status": "experimental",
+        "credit": {"kind": "based", "who": "DavidCaruso"},
+        # MACRO et les moteurs du Syntakt s'ajoutent au meme endroit (machines 7 et suivantes) : pas encore combines
+        "excludes": ["macro", "syntakt"],
+        "variants": [
+            {"file": "27-va", "label": None},
+        ],
+        # avec Model-TG : la version qui s'ajoute apres model-tg-st (Model-TG prend cette base, « with » ci-dessus)
+        "with": {"model-tg": "36-va-tg"},
+    },
+    {
         "id": "chord-keys",
         "cat": "live",
         "label": "Accords de gamme sur TRIG 1–16",
@@ -273,6 +290,36 @@ FEATURES = [
         "credit": {"kind": "by", "who": "Nico Heuser", "repo": "byNicoHeuser"},
         "excludes": ["model-tg"],
         "variants": [{"file": "45-chord-keys", "label": None}],
+    },
+    {
+        "id": "generate",
+        "cat": "seq",
+        "label": "Generateur de trigs (SETTINGS + TRACK)",
+        "desc": "Tenir SETTINGS et appuyer sur TRACK ouvre la liste Generate : rythme euclidien (coups, rotation) ou "
+                "trigs aleatoires (densite), notes dans une gamme et velocites aleatoires si on veut ; GEN reecrit "
+                "toute la piste selectionnee. Reglages perdus a l'extinction, pas d'annulation. Demande Model-TG.",
+        "status": "experimental",
+        "credit": {"kind": "based", "who": "DavidCaruso"},
+        "requires": "model-tg",
+        "variants": [
+            {"file": "49-generate", "label": None},
+        ],
+        # avec les moteurs du Syntakt, MACRO ou les machines VA, Model-TG devient model-tg-st : la version faite pour lui
+        "with": {"syntakt": "49-generate-st", "macro": "49-generate-st", "va": "49-generate-st"},
+    },
+    {
+        "id": "lfo-plus",
+        "cat": "sound",
+        "label": "LFO 2, 3, 4",
+        "desc": "Trois LFO de plus par piste : sur la page LFO, chaque nouvel appui sur [LFO] passe a LFO 2, 3, 4. "
+                "Vitesse, multiplicateur, forme, destination et profondeur propres ; fondu, phase et mode communs "
+                "avec LFO 1. LFO 2 est sauve avec le son et se p-locke, LFO 3 et 4 servent au live. Avec ou sans "
+                "Model-TG.",
+        "status": "experimental",
+        "credit": {"kind": "based", "who": "DavidCaruso"},
+        "variants": [
+            {"file": "60-lfo-plus", "label": None},
+        ],
     },
     {
         "id": "syntakt",
