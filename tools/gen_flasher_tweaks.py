@@ -218,13 +218,40 @@ FEATURES = [
         ],
     },
     {
+        "id": "midi-both",
+        "cat": "io",
+        "label": "MIDI OUT pendant THRU",
+        "desc": "Avec THR choisi dans CONFIG > MIDI > PORTS > OUT/THRU, le Cycles relaie le MIDI recu et envoie aussi "
+                "son horloge, ses notes et ses parametres. OUT ne change pas, le menu non plus.",
+        "status": "tested",                # par AveyCole, sur sa machine (notes/53 §9)
+        "credit": {"kind": "by", "who": "AveyCole", "repo": "AveyCole/Modded-Cycles"},
+        "excludes": ["midi-live-both"],
+        "variants": [
+            {"file": "50-midi-both", "label": None},
+        ],
+    },
+    {
+        "id": "midi-live-both",
+        "cat": "io",
+        "label": "Basculer MIDI OUT + THRU en direct",
+        "desc": "Sur la ligne OUT/THRU qui affiche THR, FUNC + appui sur le potard LEVEL/DATA ajoute au relais l'envoi "
+                "de l'horloge, des notes et des parametres du Cycles, ou le retire. L'ecran reste sur THR.",
+        "status": "tested",                # par AveyCole, sur sa machine (notes/53 §9)
+        "credit": {"kind": "by", "who": "AveyCole", "repo": "AveyCole/Modded-Cycles"},
+        "excludes": ["midi-both"],
+        "variants": [
+            {"file": "51-midi-live-both", "label": None},
+        ],
+    },
+    {
         "id": "macro",
         "cat": "sound",
         "label": "Machine MACRO",
         "desc": "Une machine ajoutee apres Chord (apres le Sampler avec Model-TG, apres les moteurs du Syntakt s'ils "
                 "sont coches aussi) : les 47 modeles du code libre "
                 "de Braids d'Emilie Gillet. SHAPE choisit le modele, COLOR et SWEEP le reglent, CONTOUR ouvre le "
-                "timbre avec l'enveloppe.",
+                "timbre avec l'enveloppe, FUNC + PITCH donne le lo-fi (RATE a gauche, BITS a droite).",
+        # 13 modeles a 48 kHz et le lo-fi (notes/55) : testes sur la machine le 11/10/2026
         "status": "tested",
         "credit": {"kind": "based", "who": "Émilie Gillet", "repo": "pichenettes/eurorack"},
         "license": "LICENSE-Braids",
@@ -247,6 +274,20 @@ FEATURES = [
         "credit": {"kind": "by", "who": "Nico Heuser", "repo": "byNicoHeuser"},
         "excludes": ["model-tg"],
         "variants": [{"file": "45-chord-keys", "label": None}],
+    },
+    {
+        "id": "track-filter",
+        "cat": "sound",
+        "label": "Filtre par piste (LP / OFF / HP)",
+        "desc": "MACHINES tenu + SWEEP : un filtre par piste, passe-bas a gauche, rien au centre, passe-haut a droite. "
+                "CONTOUR : resonance ; COLOR et SHAPE : enveloppe du filtre (quantite, decay). P-locks, LFO, CC 74 / 71.",
+        "status": "tested",
+        "credit": None,
+        # meme geste que le filtre de Model-TG (MACHINES + SWEEP / CONTOUR) : pas ensemble pour l'instant (notes/47 §7, §11)
+        "excludes": ["model-tg"],
+        "variants": [
+            {"file": "48-track-filter", "label": None},
+        ],
     },
     {
         "id": "syntakt",

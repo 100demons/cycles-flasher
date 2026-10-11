@@ -1,5 +1,5 @@
 #!/usr/bin/env python3
-"""Preuve de l'OS Cycles AVEC MODS pour Model:Samples (notes/53, tools/mods_for_samples.py, MCBuilder.modsForSamples).
+"""Preuve de l'OS Cycles AVEC MODS pour Model:Samples (notes/57, tools/mods_for_samples.py, MCBuilder.modsForSamples).
 
 Le firmware est toujours l'OS Cycles (avec mods), quelle que soit la machine ; sur un Model:Samples, il voyage dans le
 conteneur officiel du Samples, signé Samples, avec le correctif de 32 octets de notes/41 §3. Ce test reprend les outils

@@ -1,7 +1,7 @@
 #!/usr/bin/env python3
-"""OS Cycles avec mods pour un Model:Samples (notes/53, notes/41).
+"""OS Cycles avec mods pour un Model:Samples (notes/57, notes/41).
 
-Le firmware est TOUJOURS l'OS du Model:Cycles, avec les mods choisis, quelle que soit la machine (notes/53) : sur un
+Le firmware est TOUJOURS l'OS du Model:Cycles, avec les mods choisis, quelle que soit la machine (notes/57) : sur un
 Model:Samples, le sampling vient de Model-TG, pas de l'OS Samples. Seul l'emballage change avec la machine.
 
 Prend un .syx Model:Cycles avec mods (sortie de build.py, ou « Télécharger le .syx » de l'onglet Mods de la page) et met

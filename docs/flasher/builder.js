@@ -837,7 +837,7 @@ function cyclesForSamples(cycRaw, smpRaw) {
   return { raw, mainOsSha: hex(sha256(m)) };
 }
 
-/* OS Cycles AVEC MODS pour Model:Samples (tools/mods_for_samples.py, notes/53) : builtRaw = le .syx Model:Cycles construit
+/* OS Cycles AVEC MODS pour Model:Samples (tools/mods_for_samples.py, notes/57) : builtRaw = le .syx Model:Cycles construit
  * par build() depuis cycRaw (officiel), dont seule la section 3 differe. Toujours l'OS Cycles, quelle que soit la machine ;
  * le correctif de cle de cyclesForSamples est toujours applique. into = l'OS qui tourne sur le Model:Samples :
  * "samples" (OS Samples officiel : transport 0x0F, octet appareil 0x0A) ou "cycles" (un OS Cycles de la page, cle
