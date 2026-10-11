@@ -238,6 +238,18 @@ FEATURES = [
         "with": {"model-tg": "32-macro-tg"},
     },
     {
+        "id": "chord-keys",
+        "cat": "live",
+        "label": "Accords de gamme sur TRIG 1–16",
+        "desc": "Une piste CHORD, sept modes et une extension par degré. TRIG 1–7 jouent I–VII, "
+                "8–14 une octave plus haut, 15–16 I–II deux octaves plus haut. T1–T6 gardent leurs fonctions. "
+                "Réglages dans FUNC + RETRIG, sauvés avec le pattern.",
+        "status": "tested",
+        "credit": {"kind": "by", "who": "Nico Heuser", "repo": "byNicoHeuser"},
+        "excludes": ["model-tg"],
+        "variants": [{"file": "45-chord-keys", "label": None}],
+    },
+    {
         "id": "syntakt",
         "cat": "sound",
         "label": "Vrais moteurs du Syntakt",
