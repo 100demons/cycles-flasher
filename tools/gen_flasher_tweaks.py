@@ -317,6 +317,21 @@ FEATURES = [
         ],
     },
     {
+        "id": "lfo-plus",
+        "cat": "sound",
+        "label": "LFO 2, 3, 4",
+        "desc": "Trois LFO de plus par piste : sur la page LFO, chaque nouvel appui sur [LFO] passe a LFO 2, 3, 4. "
+                "Vitesse, multiplicateur, forme, destination et profondeur propres ; fondu, phase et mode communs "
+                "avec LFO 1. LFO 2 est sauve avec le son et se p-locke, LFO 3 et 4 servent au live. Avec ou sans "
+                "Model-TG.",
+        "status": "tested",
+        "credit": {"kind": "based", "who": "DavidCaruso"},
+        "excludes": ["track-filter"],   # memes k 28..31 et octets +88..+91 du son (notes/56 §3.6)
+        "variants": [
+            {"file": "60-lfo-plus", "label": None},
+        ],
+    },
+    {
         "id": "syntakt",
         "cat": "sound",
         "label": "Vrais moteurs du Syntakt",

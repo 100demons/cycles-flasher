@@ -213,10 +213,10 @@ async function main() {
     check(typeof w.MCBuilder === "object" && typeof w.MCFlasher === "object", "MCBuilder + MCFlasher present");
     const ids = w.MC_TWEAKS.tweaks.map((x) => x.id);
     const nEng = w.MC_TWEAKS.features.find((f) => f.engines).engines.length;
-    check(ids.slice(0, 24).join() === "6ch-usbup,model-tg,model-tg-st,sample-preview,sample-preview-st,latching-mute,trig-preview,browser-scroll,trig-hold,arp,tempo-max,boot-anim,multiline-browser,level-pan-values,trigless-dim,midi-both,midi-live-both,macro,macro-tg,acid,acid-tg,chord-keys,track-filter,syntakt-sd"
-      && ids.length === 23 + 4 * ((1 << nEng) - 1) && ids.includes("syntakt-sd-cp") && ids.includes("syntakt-tg-sd-cp-toy-bits")
+    check(ids.slice(0, 25).join() === "6ch-usbup,model-tg,model-tg-st,sample-preview,sample-preview-st,latching-mute,trig-preview,browser-scroll,trig-hold,arp,tempo-max,boot-anim,multiline-browser,level-pan-values,trigless-dim,midi-both,midi-live-both,macro,macro-tg,acid,acid-tg,chord-keys,track-filter,lfo-plus,syntakt-sd"
+      && ids.length === 24 + 4 * ((1 << nEng) - 1) && ids.includes("syntakt-sd-cp") && ids.includes("syntakt-tg-sd-cp-toy-bits")
       && ids.includes("syntakt-sd-macro") && ids.includes("syntakt-tg-sd-cp-toy-bits-swarm-macro")
-      && ids.includes("arp") && !ids.some((x) => /exact|snare|multiout/.test(x)) && w.MC_TWEAKS.features.length === 20,
+      && ids.includes("arp") && !ids.some((x) => /exact|snare|multiout/.test(x)) && w.MC_TWEAKS.features.length === 21,
       `MC_TWEAKS: only USB-friendly tweaks, one tweak per choice of the ${nEng} Syntakt engines (no SNARE replacement), alone and with Model-TG, with and without MACRO: ${ids.length} tweaks`);
     check(/build \d{4}-/.test(text(doc, "build-stamp")), "version stamp shown");
     const srcs = [...doc.querySelectorAll("script[src]")].map((x) => x.getAttribute("src"));
@@ -226,8 +226,8 @@ async function main() {
     // display order: by section (Packs, Sounds & machines, Sequencer, Live playing, Screen & browsing, USB & MIDI),
     // FEATURES order inside a section; the build keeps FEATURES order (checked in 1b)
     const feats = [...doc.querySelectorAll("#features input[type=checkbox]")].map((c) => c.id);
-    check(feats.join() === "feat-model-tg,feat-macro,feat-acid,feat-track-filter,feat-syntakt,feat-trig-preview,feat-trig-hold,feat-arp,feat-tempo-max,feat-trigless-dim,feat-latching-mute,feat-chord-keys,feat-sample-preview,feat-browser-scroll,feat-boot-anim,feat-multiline-browser,feat-level-pan-values,feat-usb6,feat-midi-both,feat-midi-live-both",
-      "19 feature rows, by section: " + JSON.stringify(feats));
+    check(feats.join() === "feat-model-tg,feat-macro,feat-acid,feat-track-filter,feat-lfo-plus,feat-syntakt,feat-trig-preview,feat-trig-hold,feat-arp,feat-tempo-max,feat-trigless-dim,feat-latching-mute,feat-chord-keys,feat-sample-preview,feat-browser-scroll,feat-boot-anim,feat-multiline-browser,feat-level-pan-values,feat-usb6,feat-midi-both,feat-midi-live-both",
+      "21 feature rows, by section: " + JSON.stringify(feats));
     check(w.MC_TWEAKS.features.every((f) => doc.querySelector(`#cat-${f.cat || "other"} #mod-${f.id} #feat-${f.id}`)),
       "every feature has a row in its section (cat)");
     const tagOfFeat = (f) => (f.status === "tested" ? "Tested" : "Experimental");
@@ -268,7 +268,9 @@ async function main() {
       && creditOf("macro")[0] === "https://github.com/pichenettes/eurorack" && /\/LICENSE-Braids\.txt$/.test(creditOf("macro")[1])
       && creditOf("acid")[0] === "https://github.com/RobinSchmidt/Open303" && /\/LICENSE-Open303\.txt$/.test(creditOf("acid")[1])
       && creditOf("chord-keys").join() === "https://github.com/byNicoHeuser"
-      && ["midi-both", "midi-live-both"].every((id) => creditOf(id).join() === "https://github.com/AveyCole/Modded-Cycles"),
+      && ["midi-both", "midi-live-both"].every((id) => creditOf(id).join() === "https://github.com/AveyCole/Modded-Cycles")
+      && creditOf("lfo-plus").length === 0
+      && /based on a mod by DavidCaruso/.test((doc.querySelector("label[for=feat-lfo-plus] .credit") || {}).textContent || ""),
       "each row credits its author, with a link to the MIT license of the code it carries, Chord Keys by Nico Heuser, the MIDI THRU mods by AveyCole: " + JSON.stringify(credits));
     const djd = ["level-pan-values", "trigless-dim"].map((id) => doc.querySelector(`label[for=feat-${id}] .credit`));
     check(djd.every((c) => c && c.textContent === "based on a mod by djd_oz" && !c.querySelector("a")),
@@ -611,23 +613,26 @@ async function main() {
     check(box("feat-arp") !== arp && doc.activeElement && doc.activeElement.id === "feat-arp", "focus kept on the ticked box after the rebuild");
     await clearAll();
     // search: hidden under 20 mods; from 20, by words in both languages, accents ignored
-    check(box("mod-find").hidden === feats.length < 20, `search field ${feats.length < 20 ? "hidden" : "shown"} with ${feats.length} mods`);
-    const usb = feats.find((f) => f.id === "usb6");
-    for (let k = 0, n = 21 - feats.length; k < n; k++) feats.push(Object.assign({}, usb, { id: "usb6-copy-" + k, credit: null }));
-    app.applyLang("en");
+    check(feats.length >= 20 && !box("mod-find").hidden, `search field with ${feats.length} mods`);
     const q = box("mod-q");
     q.value = "ÉCOUTE";
     q.dispatchEvent(new w.Event("input"));
     await wait(5);
     const found = !box("mod-find").hidden && !box("mod-trig-preview").hidden && !box("mod-sample-preview").hidden
-      && box("mod-usb6").hidden && box("cat-io").hidden && /2 of 21 mods/.test(text(doc, "mod-found"));
+      && box("mod-usb6").hidden && box("cat-io").hidden && new RegExp(`2 of ${feats.length} mods`).test(text(doc, "mod-found"));
     box("mod-q").dispatchEvent(new w.KeyboardEvent("keydown", { key: "Escape" }));
     await wait(5);
     check(found && !box("mod-usb6").hidden && box("mod-found").hidden && box("mod-q").value === "",
       "search from 20 mods: « ÉCOUTE » finds Trig preview and Sample preview (French names, any case or accent); Esc shows all again");
-    feats.splice(feats.findIndex((f) => f.id === "usb6-copy-0"));
+    const n = feats.length, out = [], needed = new Set(feats.map((f) => f.requires).filter(Boolean));
+    for (let i = n - 1; i >= 0 && feats.length > 19; i--)
+      if (!feats[i].engines && !needed.has(feats[i].id)) out.unshift([i, feats.splice(i, 1)[0]]);
     app.applyLang("en");
-    check(box("mod-find").hidden === feats.length < 20 && !box("mod-usb6-copy-0"), "back to " + feats.length + " mods");
+    check(feats.length === 19 && box("mod-find").hidden && out.every(([, f]) => !box("mod-" + f.id)),
+      `no search field with ${feats.length} mods (hidden under 20)`);
+    for (const [i, f] of out) feats.splice(i, 0, f);
+    app.applyLang("en");
+    check(!box("mod-find").hidden && feats.length === n && out.every(([, f]) => box("mod-" + f.id)), "back to " + feats.length + " mods");
     // French
     app.applyLang("fr");
     await click(box("feat-model-tg"));

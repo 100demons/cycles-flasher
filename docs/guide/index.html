@@ -60,6 +60,7 @@
         <li><a href="#midi-live-both"><span data-l="en">Live MIDI OUT + THRU toggle</span><span data-l="fr">Basculer MIDI OUT + THRU en direct</span></a></li>
         <li><a href="#track-filter"><span data-l="en">Per-track filter</span><span data-l="fr">Filtre par piste</span></a></li>
         <li><a href="#acid"><span data-l="en">ACID machine</span><span data-l="fr">Machine ACID</span></a></li>
+        <li><a href="#lfo-plus">LFO 2, 3, 4</a></li>
         <li><a href="#mods-on-samples"><span data-l="en">Mods on a Model:Samples</span><span data-l="fr">Des mods sur un Model:Samples</span></a></li>
         <li><a href="#samples"><span data-l="en">Samples OS</span><span data-l="fr">OS Samples</span></a></li>
         <li><a href="#stock"><span data-l="en">Back to stock</span><span data-l="fr">Revenir à l'origine</span></a></li>
@@ -605,6 +606,9 @@
           <div><dt><span data-l="en">Steady light</span><span data-l="fr">Lumière stable</span></dt><dd><span data-l="en">the key is lit for one millisecond out of every three, 333 times a second, always the same way: it looks steady, at about a third of its brightness, however many trigless trigs the page holds.</span><span data-l="fr">la touche est allumée une milliseconde sur trois, 333 fois par seconde, toujours de la même façon : elle paraît stable, au tiers de sa lumière environ, quel que soit le nombre de trigless trigs sur la page.</span></dd></div>
           <div><dt><span data-l="en">Credit</span><span data-l="fr">Crédit</span></dt><dd><span data-l="en">a mod by djd_oz, rewritten for the flasher so that it goes with every other mod, Model-TG included.</span><span data-l="fr">un mod de djd_oz, réécrit pour le flasher afin qu'il se combine avec tous les autres mods, Model-TG compris.</span></dd></div>
           <div><dt><span data-l="en">Tested</span><span data-l="fr">Testé</span></dt><dd><span data-l="en">on a Model:Cycles with all 16 trig keys holding trigless trigs, with Model-TG, the 5 Syntakt engines, 6-channel audio and the other mods: steady, clearly darker, and everything else works as usual. A first version, which dimmed the key more slowly, flickered unevenly. In the emulator, on the OS's own code for the panel: the dimmed key is on exactly one millisecond out of three, and every other light is lit exactly as with the stock OS.</span><span data-l="fr">sur un Model:Cycles avec les 16 touches de pas en trigless trig, avec Model-TG, les 5 moteurs du Syntakt, l'audio 6 canaux et les autres mods : stable, nettement plus sombre, et tout le reste marche comme d'habitude. Une première version, qui atténuait la touche plus lentement, scintillait de façon irrégulière. Dans l'émulateur, sur le code même du panneau de l'OS : la touche atténuée est allumée exactement une milliseconde sur trois, et tous les autres voyants s'allument exactement comme avec l'OS d'origine.</span></dd></div>
+        </dl>
+      </section>
+
       <section id="chord-keys">
         <h2><span class="n">17</span><span data-l="en">Chord Keys</span><span data-l="fr">Chord Keys</span></h2>
         <p class="by"><span data-l="en">By</span><span data-l="fr">Par</span> <a href="https://github.com/byNicoHeuser" target="_blank" rel="noopener">Nico Heuser</a></p>
@@ -740,8 +744,29 @@
         <p class="note"><span data-l="en"><b>Before flashing another choice or the official firmware,</b> set your ACID tracks back to an original machine (Kick to Chord): ACID is the last added machine, so its number depends on Model-TG, and the official OS doesn't have it.</span><span data-l="fr"><b>Avant de flasher un autre choix ou le firmware officiel,</b> remettez vos pistes ACID sur une machine d'origine (de Kick à Chord) : ACID est la dernière machine ajoutée, son numéro dépend donc de Model-TG, et l'OS officiel ne l'a pas.</span></p>
       </section>
 
+      <section id="lfo-plus">
+        <h2><span class="n">22</span><span data-l="en">LFO 2, 3, 4</span><span data-l="fr">LFO 2, 3, 4</span></h2>
+        <p class="by"><span data-l="en">Idea and first version by DavidCaruso (Model-TG-VA-DR-v1), rewritten for this project</span><span data-l="fr">Idée et première version de DavidCaruso (Model-TG-VA-DR-v1), réécrit pour ce projet</span></p>
+        <p class="lede"><span data-l="en">Each track gets three more LFOs next to the original one, so up to four LFOs modulate a track at once. With or without Model-TG.</span><span data-l="fr">Chaque piste reçoit trois LFO de plus à côté de celui d'origine : jusqu'à quatre LFO modulent une piste en même temps. Avec ou sans Model-TG.</span></p>
+        <ol>
+          <li><span data-l="en">Press <b>[LFO]</b> to open the LFO page as usual: this is LFO 1.</span><span data-l="fr">Appuyez sur <b>[LFO]</b> pour ouvrir la page LFO comme d'habitude : c'est LFO 1.</span></li>
+          <li><span data-l="en">Press <b>[LFO]</b> again: a big <b>2</b> in the left box means you are now setting LFO 2. Again for <b>3</b>, again for <b>4</b>. The fifth press closes the page. Next time the page opens on LFO 1.</span><span data-l="fr">Appuyez encore sur <b>[LFO]</b> : un grand <b>2</b> dans le cadre de gauche indique que vous réglez LFO 2. Encore une fois pour <b>3</b>, encore une fois pour <b>4</b>. Le cinquième appui ferme la page. Elle se rouvre ensuite sur LFO 1.</span></li>
+          <li><span data-l="en">On pages 2, 3 and 4, the knobs <b>SPD</b>, <b>MULT</b>, <b>WAVE</b>, <b>DEST</b> and <b>DEP</b> belong to that LFO. Pick a destination with DEST and raise DEP to hear it.</span><span data-l="fr">Sur les pages 2, 3 et 4, les potards <b>SPD</b>, <b>MULT</b>, <b>WAVE</b>, <b>DEST</b> et <b>DEP</b> sont ceux de ce LFO. Choisissez une destination avec DEST et montez DEP pour l'entendre.</span></li>
+          <li><span data-l="en"><b>FADE</b>, <b>SPH</b> and <b>MODE</b> are shared by the four LFOs: on pages 2 to 4 they change LFO 1's settings too. Trig retrig is shared as well.</span><span data-l="fr"><b>FADE</b>, <b>SPH</b> et <b>MODE</b> sont communs aux quatre LFO : sur les pages 2 à 4, ils changent aussi les réglages de LFO 1. Le redémarrage au trig est commun lui aussi.</span></li>
+        </ol>
+        <dl class="facts">
+          <div><dt><span data-l="en">LFO 2 is saved</span><span data-l="fr">LFO 2 est sauvé</span></dt><dd><span data-l="en">it is part of the sound, like LFO 1: saved with the kit and in the sound pool, back when you load them. Hold a trig and turn a knob on page 2 to p-lock LFO 2; its locks are saved with the pattern. Its SPD and DEP are saved a little less finely than LFO 1's: the whole values shown on the screen come back exactly, finer settings are rounded when you reload the sound.</span><span data-l="fr">il fait partie du son, comme LFO 1 : sauvé avec le kit et dans la réserve de sons, il revient quand vous les rechargez. Pour p-locker LFO 2, tenez un trig et tournez un potard sur la page 2 ; ses locks sont sauvés avec le pattern. Ses SPD et DEP sont sauvés un peu moins finement que ceux de LFO 1 : les valeurs entières affichées reviennent exactement, un réglage plus fin est arrondi quand vous rechargez le son.</span></dd></div>
+          <div><dt><span data-l="en">LFO 3 and 4 are for live play</span><span data-l="fr">LFO 3 et 4 servent au live</span></dt><dd><span data-l="en">each track has one setting for each, whatever the pattern, kit or sound. They are not saved and go back to their defaults when you switch the machine on. They cannot be p-locked: turning a knob with a trig held changes the setting itself.</span><span data-l="fr">chaque piste a un réglage pour chacun, quels que soient le pattern, le kit ou le son. Ils ne sont pas sauvés et reviennent à leurs réglages par défaut à l'allumage. Ils ne se p-lockent pas : tourner un potard en tenant un trig change le réglage lui-même.</span></dd></div>
+          <div><dt><span data-l="en">Destinations</span><span data-l="fr">Destinations</span></dt><dd><span data-l="en">an extra LFO aimed at LFO 1's destination does nothing: only LFO 1 moves that parameter. The DEST knob skips destinations already used by another LFO of the same track, so this only happens with older or loaded settings. NONE is always available. Two extra LFOs can still share a destination if their settings were loaded that way: their movements add up.</span><span data-l="fr">un LFO de plus réglé sur la destination de LFO 1 ne fait rien : seul LFO 1 fait bouger ce paramètre. La molette DEST saute les destinations déjà prises par un autre LFO de la piste, donc cela n'arrive qu'avec des réglages plus anciens ou rechargés. NONE reste toujours possible. Deux LFO de plus peuvent partager une destination si leurs réglages ont été chargés ainsi : leurs mouvements s'additionnent.</span></dd></div>
+          <div><dt><span data-l="en">Old and other sounds</span><span data-l="fr">Anciens et autres sons</span></dt><dd><span data-l="en">sounds and projects made without this mod load as before, LFO 2 then starts with no destination. Sounds saved with DavidCaruso's firmware keep their LFO 2. The official OS loads sounds saved with this mod and simply ignores LFO 2.</span><span data-l="fr">les sons et projets faits sans ce mod se chargent comme avant, LFO 2 démarre alors sans destination. Les sons sauvés avec le firmware de DavidCaruso gardent leur LFO 2. L'OS officiel charge les sons sauvés avec ce mod et ignore simplement LFO 2.</span></dd></div>
+          <div><dt><span data-l="en">With Model-TG</span><span data-l="fr">Avec Model-TG</span></dt><dd><span data-l="en">this mod also fixes p-locks on Attack, Filter and Resonance: after reloading a pattern, they used to come back as locks on other parameters (NONE, LFO speed, multiplier). Patterns saved before keep the wrong locks.</span><span data-l="fr">ce mod corrige aussi les p-locks d'Attack, Filtre et Résonance : au rechargement d'un pattern, ils revenaient comme des locks sur d'autres paramètres (NONE, vitesse du LFO, multiplicateur). Les patterns sauvés avant gardent ces locks faux.</span></dd></div>
+          <div><dt><span data-l="en">Processor</span><span data-l="fr">Processeur</span></dt><dd><span data-l="en">nothing to speak of while the extra LFOs have no destination; about 1.3 % of the audio time for LFO 2 on all six tracks, about 3.5 % with LFO 2, 3 and 4 everywhere (measured in the emulator).</span><span data-l="fr">rien de notable tant que les LFO de plus n'ont pas de destination ; environ 1,3 % du temps audio pour LFO 2 sur les six pistes, environ 3,5 % avec LFO 2, 3 et 4 partout (mesuré en émulation).</span></dd></div>
+          <div><dt><span data-l="en">Tested</span><span data-l="fr">Testé</span></dt><dd><span data-l="en">on a Model:Cycles, and in the emulator on the OS's own code, with and without Model-TG. Goes with every other mod except the <a href="#track-filter">Per-track filter</a>: both keep their settings in the same place of the sound.</span><span data-l="fr">sur un Model:Cycles, et en émulation sur le code même de l'OS, avec et sans Model-TG. Se combine avec tous les autres mods, sauf le <a href="#track-filter">Filtre par piste</a> : les deux rangent leurs réglages au même endroit du son.</span></dd></div>
+        </dl>
+      </section>
+
       <section id="mods-on-samples">
-        <h2><span class="n">22</span><span data-l="en">Mods on a Model:Samples</span><span data-l="fr">Des mods sur un Model:Samples</span></h2>
+        <h2><span class="n">23</span><span data-l="en">Mods on a Model:Samples</span><span data-l="fr">Des mods sur un Model:Samples</span></h2>
         <p class="lede"><span data-l="en">A Model:Samples can run the Model:Cycles OS with the same mods as a Model:Cycles. Whatever the machine, the flasher always installs the Model:Cycles OS; on a Model:Samples, <a href="#model-tg">Model-TG</a>'s Sampler plays your samples.</span><span data-l="fr">Un Model:Samples peut tourner sous l'OS du Model:Cycles avec les mêmes mods qu'un Model:Cycles. Quelle que soit la machine, le flasher installe toujours l'OS du Model:Cycles ; sur un Model:Samples, le Sampler de <a href="#model-tg">Model-TG</a> joue vos samples.</span></p>
         <ol>
           <li><span data-l="en">Back up your samples and projects with Elektron Transfer, then close Transfer.</span><span data-l="fr">Sauvegardez vos samples et vos projets avec Elektron Transfer, puis fermez Transfer.</span></li>
@@ -765,7 +790,7 @@
       </section>
 
       <section id="samples">
-        <h2><span class="n">23</span><span data-l="en">Samples OS</span><span data-l="fr">OS Samples</span></h2>
+        <h2><span class="n">24</span><span data-l="en">Samples OS</span><span data-l="fr">OS Samples</span></h2>
         <p class="lede"><span data-l="en">The Model:Cycles starts as a Model:Samples: you load and play your own samples, managed with Elektron Transfer.</span><span data-l="fr">Le Model:Cycles démarre en Model:Samples : vous chargez et jouez vos propres samples, gérés avec Elektron Transfer.</span></p>
         <p><span data-l="en">The flasher puts the official Model:Samples OS inside your Model:Cycles firmware file:</span><span data-l="fr">Le flasher place l'OS officiel du Model:Samples dans le fichier firmware de votre Model:Cycles :</span></p>
         <dl class="layers fig">
@@ -799,13 +824,13 @@
       </section>
 
       <section id="stock">
-        <h2><span class="n">24</span><span data-l="en">Back to stock</span><span data-l="fr">Revenir à l'origine</span></h2>
+        <h2><span class="n">25</span><span data-l="en">Back to stock</span><span data-l="fr">Revenir à l'origine</span></h2>
         <p><span data-l="en">The <b>Official firmware</b> tab of the flasher sends your OS file unchanged, over USB, like a normal update. It is also a good rehearsal before a first mod: it checks the cable and the setup without changing anything.</span><span data-l="fr">L'onglet <b>Firmware officiel</b> du flasher renvoie votre fichier d'OS sans le modifier, par USB, comme une mise à jour normale. C'est aussi une bonne répétition avant un premier mod : elle vérifie le câble et l'installation sans rien changer.</span></p>
         <p><span data-l="en">With Syntakt engines, the MACRO or ACID machine or Model-TG's Sampler, first set your tracks back to an original machine.</span><span data-l="fr">Avec des moteurs du Syntakt, la machine MACRO ou ACID ou le Sampler de Model-TG, remettez d'abord vos pistes sur une machine d'origine.</span></p>
       </section>
 
       <section id="recovery">
-        <h2><span class="n">25</span><span data-l="en">Recovery</span><span data-l="fr">Secours</span></h2>
+        <h2><span class="n">26</span><span data-l="en">Recovery</span><span data-l="fr">Secours</span></h2>
         <p class="lede"><span data-l="en">If the Model:Cycles no longer starts, its startup menu can always reinstall the OS: it lives in an area that updates never write.</span><span data-l="fr">Si le Model:Cycles ne démarre plus, son menu de démarrage peut toujours réinstaller l'OS : il vit dans une zone que les mises à jour n'écrivent jamais.</span></p>
         <figure class="fig">
           <div data-device data-scenes="func @logo | func,mainvol | s4 @READY TO/>RECEIVE" data-ms="1300"></div>
@@ -819,7 +844,7 @@
       </section>
 
       <section id="trouble">
-        <h2><span class="n">26</span><span data-l="en">Troubleshooting</span><span data-l="fr">Dépannage</span></h2>
+        <h2><span class="n">27</span><span data-l="en">Troubleshooting</span><span data-l="fr">Dépannage</span></h2>
         <div class="faq">
           <details>
             <summary><span data-l="en">Nothing happens on the Model:Cycles screen</span><span data-l="fr">Rien ne se passe sur l'écran du Model:Cycles</span></summary>

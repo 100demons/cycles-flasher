@@ -48,6 +48,7 @@ Going back to the official firmware is one click away.
 | **Chord Keys** | Play the selected CHORD track with the lower `TRIG 1–16` buttons: I–VII on 1–7, the same degrees one octave higher on 8–14, then I–II two octaves higher on 15–16. T1–T6 keep their normal controls. Choose a triad, 7th, 9th, 11th or 13th for each degree in `FUNC` + `RETRIG`, saved per track and pattern. SHAPE arranges the notes (BASE, close or open voicings); COLOR blends their levels. Does not combine with Model-TG. By Nico Heuser. | ✅ Tested |
 | **Tempo up to 546 BPM** | The TEMPO knob, tap tempo, MIDI clock and saved projects go past 300 BPM. Tempo-synced LFOs stay in time. | ✅ Tested |
 | **Per-track filter** | Hold `MACHINES` and turn `SWEEP`: low-pass to the left, off in the centre, high-pass to the right, like a DJ mixer, with the Model:Samples' range. `CONTOUR` sets the resonance, `COLOR` and `SHAPE` a filter envelope. Real parameters: p-locks, LFO, velocity, MIDI CC 74/71. Not with Model-TG yet. | ✅ Tested |
+| **LFO 2, 3, 4** | Three more LFOs per track: on the LFO page, press `LFO` again for LFO 2, 3 and 4. LFO 2 is saved with the sound and can be p-locked; LFO 3 and 4 are for live play. With or without Model-TG, not with the per-track filter. After DavidCaruso. | ✅ Tested |
 | **Startup animation** | When the Model:Cycles starts, the four squares of the modded-cycles logo pop in and “modded-cycles” types itself underneath, instead of the original tile animation. Same duration. | ✅ Tested |
 | **Multi-line browser** | The preset browser shows three names at once in a small font instead of one in big letters, with a `>` on the name under the cursor. From an idea by a community member. | ✅ Tested |
 | **Volume and pan as numbers** | On the main screen, turning `LEVEL/DATA` shows the track's volume (0 to 127) as a number; with `FUNC` held, its pan (-64 to 63). `LEVEL/DATA` then moves in steps of 1 instead of 2 there. Based on a mod by djd_oz. | ✅ Tested |
@@ -62,7 +63,7 @@ Going back to the official firmware is one click away.
 | **Cycles OS for Model:Samples** | The other way round: turns a Model:Samples into a Model:Cycles, over USB, from both official OS files. Going back to the Model:Samples OS works over USB too, from the same tab. | 🧪 Experimental |
 | **Mods on a Model:Samples** | Pick your machine in the Mods tab: a Model:Samples gets the Model:Cycles OS with the mods you tick (Model-TG's Sampler plays your samples), over USB, and can change mods later. The flasher always installs the Model:Cycles OS, whatever the machine. Original flasher by RDS (AIM), integrated into Modded Cycles by DaftMaple. | ✅ Tested |
 
-The mods can be combined freely (the two MIDI THRU mods are alternatives; Samples OS and Cycles OS for Model:Samples are separate installs; Chord Keys and Model-TG not together; ACID with neither MACRO nor the Syntakt engines). Each one is explained step by step, with the buttons to press, in the
+The mods can be combined freely (the two MIDI THRU mods are alternatives; Samples OS and Cycles OS for Model:Samples are separate installs; Chord Keys and Model-TG not together; ACID with neither MACRO nor the Syntakt engines; LFO 2, 3, 4 and the per-track filter not together). Each one is explained step by step, with the buttons to press, in the
 **[guide](https://18nelli18.github.io/Modded-Cycles/guide/)**.
 
 <p align="center">
