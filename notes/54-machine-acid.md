@@ -291,8 +291,10 @@ vérifications de `test_mods_for_samples.py` sur `model-tg-st,acid-tg` et les de
 (seule et avec Model-TG) passent toutes (aller, refus du Cycles, démarrage par le bootstrap Samples sous `0x40200000`,
 changer de mods, transport).
 
-Flasher : `webflash_smoke.sh` avec les deux OS officiels, les 688 combinaisons de `REF_MAINOS` (chaque mod vérifié),
-ALL PARTS OK ; la carte ACID seule, avec Model-TG, et son exclusion de MACRO et des moteurs dans les deux sens.
+Flasher : `webflash_smoke.sh` avec les trois OS officiels (Model:Cycles, Syntakt, Model:Samples), version avec DRIVE,
+après la fusion de main : les 838 combinaisons de `REF_MAINOS` (chaque mod vérifié), ALL PARTS OK ; la carte ACID
+seule, avec Model-TG, son exclusion de MACRO et des moteurs dans les deux sens, son texte en français ; les parcours
+Model:Samples sans erreur.
 
 ## 10. Sur la machine
 
