@@ -13,7 +13,8 @@ vérifient le fichier officiel ; la table des descripteurs est recopiée au buil
 « cycles », comme pour MACRO).
 
 La mécanique est celle de MACRO (gen_macro.added_machine, notes/43) : mêmes détours, mêmes tables déplacées, même
-place dans la charge utile. ACID exclut donc MACRO et les moteurs du Syntakt.
+place dans la charge utile. Avec MACRO et les moteurs du Syntakt : tools/gen_acid_combos.py (notes/54 §11), qui
+reprend compile_machine à une autre place.
 
     python3 tools/gen_acid.py --cycles model-cycles_OS1.13.syx [--check]
 

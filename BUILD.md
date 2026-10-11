@@ -427,7 +427,8 @@ python3 tools/gen_acid.py --cycles model-cycles_OS1.13.syx [--check]
 python3 tools/emu/test_acid.py --cycles model-cycles_OS1.13.syx [--quick] \
     [--with 6ch-usbup,model-tg-st,trig-hold,arp,tempo-max,boot-anim]
 ```
-Incompatible avec MACRO, les moteurs du Syntakt et SD VINTAGE (même mécanique, même place).
+Incompatible avec SD VINTAGE (même mécanique, même place). Avec MACRO ou les moteurs du Syntakt : les versions
+combinées, ci-dessous.
 
 | `-t` | MAIN OS patché (SHA-256) |
 |---|---|
@@ -438,6 +439,32 @@ Incompatible avec MACRO, les moteurs du Syntakt et SD VINTAGE (même mécanique,
 | `6ch-usbup,model-tg-st,sample-preview-st,acid-tg,trig-hold,arp,tempo-max,boot-anim,multiline-browser,level-pan-values,trigless-dim` | `d54495435dfe302bbe2044614ab7603eabe6383105210f85d13ea68abdc827c9` |
 | `6ch-usbup,acid,trig-hold,arp,tempo-max,boot-anim,multiline-browser,level-pan-values,trigless-dim` | `6fe2cf2ba1450f92f7e2e91e2403fd2a817bae7df2cfd2eb9fcfa72392636d56` |
 | `6ch-usbup,acid,track-filter,trig-hold,arp,tempo-max,boot-anim,multiline-browser,level-pan-values,trigless-dim` | `9ebda7222c94322cf85b1a79379c0c43f4c21a9e026508ec44b90e96d5660281` |
+
+ACID avec MACRO et les moteurs du Syntakt ([note 54 §11](notes/54-machine-acid.md)) : `tools/gen_acid_combos.py`
+produit `25-macro-acid.json` et `32-macro-acid-tg.json` (MACRO puis ACID), et `24-syntakt-<moteurs>[-macro]-acid.json`
+et `31-syntakt-tg-<moteurs>[-macro]-acid.json` (les moteurs, MACRO s'il est coché, puis ACID) : 126 fichiers. ACID y
+est compilé avec `GOV_SKIP` et lié à `+0x76000` dans toutes ; MACRO comme dans `25-macro.json` (même clone de
+pichenettes/eurorack que `gen_macro.py`) ; les moteurs comme dans leurs tweaks. La preuve demande `gcc`, `g++` (Braids
+et ACID compilés pour l'ordinateur) et `m68k-elf-objdump` :
+```sh
+python3 tools/gen_acid_combos.py --cycles model-cycles_OS1.13.syx --syntakt Syntakt_OS1.42.syx \
+    --eurorack vendor/eurorack [--engines sd,cp | --engines none] [--tg] [--macro yes|no|both] [--check]
+python3 tools/emu/test_acid_combos.py --cycles model-cycles_OS1.13.syx --syntakt Syntakt_OS1.42.syx \
+    --eurorack vendor/eurorack [--engines sd,cp,toy,bits,swarm | --engines none] [--macro yes|no|both] \
+    [--only alone|tg] [--quick] [--with 6ch-usbup,model-tg-st,trig-hold,…]
+```
+
+| `-t` (avec `--syntakt Syntakt_OS1.42.syx`) | MAIN OS patché (SHA-256) |
+|---|---|
+| `macro-acid` | `94d5edfe3f46f5c915040c9eb969ceff2a98dfdb9c8b67ad4686085b5bce1b97` |
+| `6ch-usbup,macro-acid` | `3abf8aa33f38ef1850b91d11b70223b47c71df0686e40f9b30e6bea82b1b9dee` |
+| `model-tg-st,macro-acid-tg` | `6eb7e101d625483d0d9cb526dd0d63fe569138d546f1e63819c00d9ffe9e8492` |
+| `syntakt-sd-acid` | `04524bf1109ae8999095836c5b91673afd5113f04e6218a5b3c33236da73f84b` |
+| `syntakt-sd-macro-acid` | `23ca2059f0b6f7e9607007e55cdaee690cf25be84081689afa50f822907aac20` |
+| `syntakt-sd-cp-toy-bits-swarm-macro-acid` | `a7671673e105ba16a573db824282a07da5375f21c85615d81c7cb72568d64541` |
+| `model-tg-st,syntakt-tg-sd-cp-toy-bits-swarm-macro-acid` | `d38b354c06f6ce7c9ed20aa11f1c04209320cf04b1beba1a94f1011c01962674` |
+| `6ch-usbup,model-tg-st,sample-preview-st,syntakt-tg-sd-cp-toy-bits-swarm-macro-acid,trig-hold,arp,tempo-max,boot-anim,multiline-browser,level-pan-values,trigless-dim` | `d823ff90f8cf8ab0a2654bb61a15717eba325687d6fdf4cb356add8dd75f058b` |
+| `6ch-usbup,syntakt-sd-cp-toy-bits-swarm-macro-acid,track-filter,trig-hold,arp,tempo-max,boot-anim,multiline-browser,level-pan-values,trigless-dim` | `851397735f5eecd17d0988e785dfeb65e0e6a0a638f59a95408f76c46be1434f` |
 
 ### Navigateur sur plusieurs lignes
 

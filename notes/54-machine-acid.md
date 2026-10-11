@@ -9,7 +9,8 @@ l'OS 1.13.
 ## En bref
 
 - **Une machine ajoutée, ACID**, après Chord (après le Sampler avec Model-TG), avec la mécanique de MACRO
-  ([43](43-machine-macro.md)) : même place, mêmes détours. Elle exclut donc MACRO et les moteurs du Syntakt.
+  ([43](43-machine-macro.md)) : même place, mêmes détours. Depuis le §11, elle joue aussi avec MACRO et les moteurs du
+  Syntakt (versions combinées, `tools/gen_acid_combos.py`), toujours la dernière machine.
 - **Les réglages d'une 303, sur les potards du Cycles** : COLOR = CUTOFF, SHAPE = RESO, SWEEP = ENV MOD, CONTOUR =
   DRIVE (saturation, §3.2), DECAY = DECAY (enveloppe du filtre, et la décroissance de l'ampli), PUNCH = forme d'onde
   (éteint : scie, allumé : carré). PITCH, FINE, GATE, les touches et le clavier comme sur les autres machines.
@@ -28,7 +29,8 @@ l'OS 1.13.
   vélocité, verrous, jeu live) ; les machines d'origine ne changent pas.
 - **Charge** : une voix ACID coûte un peu moins qu'une voix TONE (§8). Une voix muette n'est pas calculée.
 - **Testé sur la machine (11/10/2026)** : la première version (avec l'accent), puis la version avec DRIVE, « ça marche
-  nickel » (§10).
+  nickel » (§10). Les versions avec MACRO et les moteurs du Syntakt (§11) : prouvées en émulation, pas encore testées
+  sur la machine.
 
 ## 1. Le modèle : Open303
 
@@ -228,9 +230,9 @@ partagent la mécanique ; les octets de MACRO n'ont pas changé (`gen_macro.py -
 
 ## 7. Incompatibilités
 
-- **MACRO, moteurs du Syntakt** (seuls ou avec Model-TG), **SD VINTAGE** : même mécanique de machines ajoutées, même
-  place et même crochet de démarrage. Le flasher rend la carte ACID exclusive de MACRO et des moteurs (`excludes`).
-  Une version combinée (comme [50](50-macro-avec-moteurs-syntakt.md)) reste possible plus tard.
+- **SD VINTAGE** : même mécanique de machines ajoutées, même place et même crochet de démarrage.
+- **MACRO, moteurs du Syntakt** (seuls ou avec Model-TG) : exclus jusqu'au 11/10/2026 pour la même raison ; depuis,
+  des versions combinées (§11) : le flasher prend la version qui contient tout ce qui est coché.
 - Avec Model-TG cochée, le flasher prend `model-tg-st` + `acid-tg` (son `with`).
 - Avec les autres mods du flasher : aucune écriture ne se chevauche (`tools/check_overlaps.py`).
 
@@ -323,3 +325,106 @@ Ce qu'il fallait vérifier sur la version avec DRIVE :
 - DRIVE au maximum avec RESO haute, en scie et en carré, et sur une note aiguë ; DRIVE verrouillé sur un pas.
 - Le reste comme avant : CUTOFF, RESO, ENV MOD, DECAY, slide (LEN 1.06 ou INF), GATE ; VEL ne change que le volume.
 - Avec Model-TG : la même chose sur la 8e machine.
+
+## 11. Avec MACRO et les moteurs du Syntakt (versions combinées)
+
+Demande de Maxime (fil du projet, 11/10/2026, 19:11 UTC), juste après son test de la version avec DRIVE : « est ce
+qu'il marche en meme temps avec les autre moteur (macro et les moteur syntakt)? » ; à la carte de décision (19:13) :
+« Dans cette PR ». Générateur `tools/gen_acid_combos.py`, preuve `tools/emu/test_acid_combos.py`.
+
+### 11.1 Les tweaks
+
+| | Sans Model-TG | Avec Model-TG (par-dessus `model-tg-st`) |
+|---|---|---|
+| MACRO puis ACID | `25-macro-acid.json` (machines 7 et 8) | `32-macro-acid-tg.json` (8 et 9) |
+| Moteurs puis ACID | `24-syntakt-<moteurs>-acid.json` | `31-syntakt-tg-<moteurs>-acid.json` |
+| Moteurs, MACRO puis ACID | `24-syntakt-<moteurs>-macro-acid.json` | `31-syntakt-tg-<moteurs>-macro-acid.json` |
+
+31 choix de moteurs × 2 × 2, plus les deux `macro-acid` : 126 fichiers. ACID est toujours la dernière machine.
+
+- **MACRO + ACID** : la mécanique de MACRO seule ([43](43-machine-macro.md)), `gen_macro.added_machine`, qui prend
+  maintenant plusieurs machines : charge utile rangée en clair par morceaux (PACK), reconstituée par le crochet ;
+  MACRO à `+0` avec les octets de `25-macro.json` / `32-macro-tg.json`, ACID à `+0x76000`.
+- **Avec les moteurs** : la mécanique de [50](50-macro-avec-moteurs-syntakt.md), `gen_macro_syntakt.build_tweak`, qui
+  prend maintenant ACID, avec ou sans MACRO : passerelle et régulateur des moteurs repris octet pour octet de leur
+  tweak, charge utile compressée (aPLib), 2e étage du crochet entre la fin des moteurs et MACRO (ou ACID), cache
+  d'instructions invalidé avant de l'exécuter ; MACRO à `+0x42000` avec les octets des tweaks `-macro`, ACID à
+  `+0x76000`.
+
+### 11.2 Place
+
+| Décalage dans la charge utile | Contenu |
+|---|---|
+| `+0` | les moteurs du Syntakt (avec eux), ou MACRO (sans eux) |
+| `+0x33000..0x36000` | détours, données, descripteurs, rangées, enregistrements (`gs.LAYOUT`) |
+| `+0x42000` | MACRO, avec les moteurs ; ses variables à `+0x5b000`, ses voix jusqu'à `+0x743e0` |
+| `+0x76000` | ACID : code et tables, 6 024 o (28 de plus que seule : `GOV_SKIP`, §11.3) |
+| `+0x78000` | variables d'ACID (6 voix, 744 o) ; fin de la charge utile `+0x78300` (492 288 o) |
+
+ACID est lié à la même place dans les 126 tweaks : le flasher ne range ses octets qu'une fois par base (`0x43000000`
+seul, `0x46700000` avec Model-TG). Sept machines ajoutées (5 moteurs, MACRO, ACID) font 76 + 35 = 111 descripteurs
+(`0x1848` o), qui débordent sur les rangées (`DESCN + 0x1800`) : au-delà de 6 machines ajoutées, les rangées sont
+déplacées (`gs.ROWS7` : `ROWSN` à `+0x35860`, `CCROWSN` à `+0x35a20`) et `gs.check_room` vérifie que descripteurs,
+rangées, rangées CC (14 machines avec Model-TG : jusqu'à `+0x35be0`) et enregistrements (`+0x35c00 + 7 × 0x60`)
+tiennent à leur place. Écran MACHINES : avec Model-TG, 14 repères remplissent exactement les 2 lignes de 7.
+
+| Tweak | Descripteurs | Rangée dans l'image | Fin de l'image décompressée |
+|---|---|---|---|
+| `macro-acid` | 86 | 111 264 o (en clair) | `0x401c53e0` |
+| `macro-acid-tg` | 86 | 111 596 o | `0x401dacac` |
+| `syntakt-sd-acid` | 86 | 145 726 o (aPLib) | `0x401cda7e` |
+| `syntakt-sd-macro-acid` | 91 | 235 272 o | `0x401e3848` |
+| `syntakt-sd-cp-toy-bits-swarm-macro-acid` | 111 | 246 780 o | `0x401e653c` |
+| `syntakt-tg-sd-cp-toy-bits-swarm-macro-acid` | 111 | 247 052 o | `0x401fbdcc` (marge 16 948 o sous `0x40200000`) |
+
+### 11.3 GOV_SKIP : ACID sous le régulateur de charge des moteurs
+
+Avec les moteurs, leur régulateur de charge ([25](25-regulateur-de-charge.md), [36](36-regulateur-sans-coupures-inutiles.md))
+enveloppe toutes les machines ajoutées, comme MACRO ([50](50-macro-avec-moteurs-syntakt.md)) : il cesse d'appeler
+update et render d'une voix restée sous −108 dB pendant 64 blocs, ou éteinte en fondu sous la surcharge, jusqu'à son
+prochain trig. ACID garde un état d'une note à l'autre (note tenue, voix tue, reste de longueur, §3.3) : sans appels,
+cet état se fige, et le trig qui réveille la voix pouvait glisser depuis une note éteinte au lieu de la rejouer
+`[FAIT en émulation]` (§11.5).
+
+Dans les versions combinées, `acid.c` est compilé avec `GOV_SKIP` : à chaque appel, la passerelle lit le minuteur DMA 0
+(`0xfc07000c`, 135,168 MHz, 90 112 ticks par bloc, celui du régulateur) ; plus de 3 blocs depuis son appel précédent
+sur cette piste marque la voix tue, et le trig suivant rejoue la note, cœur remis à zéro, comme après un silence. Coût :
+une lecture et une comparaison par bloc. ACID seule (`26-acid`, `35-acid-tg`, pas de régulateur) ne change pas, octet
+pour octet (`gen_acid.py --check`). Sans les moteurs (`macro-acid`), personne ne saute d'appel : l'écart reste d'un
+bloc, sans effet.
+
+### 11.4 Flasher
+
+- La carte ACID se coche avec MACRO et les moteurs (`joins: ["syntakt", "macro"]`) ; la carte MACRO porte ses versions
+  avec ACID (`versions`). La première carte hôte cochée construit la version qui contient tout : les moteurs (et
+  MACRO) puis ACID, ou MACRO puis ACID ; avec Model-TG, la version `-tg`. Le résumé dit « With the ACID machine: it
+  comes last ».
+- Ces versions sont expérimentales (`HW_TESTED` vides dans `gen_acid_combos.py`) ; ACID seule et avec Model-TG reste
+  « testée ».
+- `tweaks.js` : 274 tweaks, 7,7 Mo (1,24 Mo en gzip, servi compressé par GitHub Pages) ; `REF_MAINOS` : 1 136
+  combinaisons.
+
+### 11.5 Preuve en émulation
+
+`tools/emu/test_acid_combos.py`, pour une version (seule ou avec Model-TG) d'un choix de moteurs, avec ou sans MACRO.
+Références construites avec les mêmes mods de base : ACID seule, MACRO seule, les moteurs seuls et avec MACRO. Le
+minuteur DMA 0 avance d'un bloc à chaque bloc ; la référence d'ACID (`Bridge`) suit `GOV_SKIP`.
+`mcengine` intercepte maintenant l'EMAC du code d'ACID où qu'il soit (`payload_code`) : à `+0x76000`, hors des zones
+du Syntakt, Unicorn aurait exécuté ses `mac.l` lui-même, faux en mode fractionnaire signé (`emac.py`).
+
+- Démarrage : décompresseur du bootstrap, crochet (PACK, ou aPLib avec le cache d'instructions), charge utile, partie
+  des moteurs identique aux moteurs seuls hors de ce qui compte les machines, MACRO identique à son tweak, SRAM, fin
+  d'image.
+- Interface : les vérifications de `test_syntakt_machines.py` (seul) et `test_model_tg_syntakt.py` (avec Model-TG),
+  pour toutes les machines ajoutées.
+- Son : ACID exacte avant la chaîne d'ampli (le cœur compilé pour l'ordinateur), MACRO exacte (Braids), machines
+  d'origine et moteurs identiques aux moteurs seuls, pas une instruction d'ACID sans piste ACID, piste ACID identique à
+  ACID seule (à l'arrêt d'une voix muette par le régulateur près), piste MACRO identique à MACRO seule, 6 pistes ACID,
+  6 pistes mêlées (avec le Sampler), machine locks par toutes les machines ajoutées.
+- Régulateur : surcharge à 97 % (toutes les pistes ACID et MACRO éteintes, jamais le Sampler) et à 46 % + 7 % par
+  voix (une partie) ; `GOV_SKIP` : une note ACID tenue (GATE, sans fin), éteinte sous la surcharge, puis un trig : TT
+  (rejouée, cœur remis à zéro) ; ACID seule, jamais éteinte : TS (glisse) ; minuteur figé pour ACID (ce que ferait
+  ACID sans `GOV_SKIP`) : TS, depuis la note éteinte.
+- Vrai séquenceur (`seqrig.py`) et coût, comme `test_acid.py`.
+
+Résultats : §11.6.
