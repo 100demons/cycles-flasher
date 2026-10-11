@@ -471,6 +471,12 @@ La première version de la vérification `GOV_SKIP` attendait la remise à zéro
 Générateurs, `--check` après coup : `gen_acid`, `gen_acid_combos` (126 tweaks), `gen_macro`, `gen_macro_syntakt`
 (5 moteurs ; SD avec Model-TG) : à jour ; aucun tweak existant ne change.
 
+Flasher : `webflash_smoke.sh` avec les trois OS officiels (Model:Cycles, Syntakt, Model:Samples) : les 1 136
+combinaisons de `REF_MAINOS` (chaque mod vérifié), ALL PARTS OK ; la carte ACID prend la bonne version avec MACRO et
+les moteurs, avec et sans Model-TG (`macro-acid-tg`, `syntakt-sd-acid`, `syntakt-sd-macro-acid`,
+`syntakt-tg-sd-macro-acid`), « Experimental » quand elles sont cochées ensemble ; textes en français ; parcours
+Model:Samples sans erreur.
+
 ### 11.7 Sur la machine
 
 Pas encore testé sur la machine : les versions combinées restent « expérimentales ». Fichiers de test construits par
