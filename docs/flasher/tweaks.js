@@ -98612,7 +98612,7 @@ window.MC_TWEAKS = {
    "id": "macro",
    "label": "Machine MACRO",
    "desc": "Une machine ajoutee apres Chord (apres le Sampler avec Model-TG, apres les moteurs du Syntakt s'ils sont coches aussi) : les 47 modeles du code libre de Braids d'Emilie Gillet. SHAPE choisit le modele, COLOR et SWEEP le reglent, CONTOUR ouvre le timbre avec l'enveloppe, FUNC + PITCH donne le lo-fi (RATE a gauche, BITS a droite).",
-   "status": "experimental",
+   "status": "tested",
    "credit": {
     "kind": "based",
     "who": "Émilie Gillet",
@@ -99246,7 +99246,7 @@ window.MC_TWEAKS = {
       "id": "syntakt-sd-cp-toy-bits-swarm-macro",
       "tg": "syntakt-tg-sd-cp-toy-bits-swarm-macro",
       "tested": false,
-      "tg_tested": false
+      "tg_tested": true
      }
     }
    ],

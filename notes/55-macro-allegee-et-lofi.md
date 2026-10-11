@@ -25,8 +25,9 @@ calcule *vraiment* moins d'échantillons, comme le RATE de Braids mais en allég
   - à droite, **BITS** : de 12 bits à 2 bits, arrondis au plus près.
 - En échange, **FINE n'accorde plus MACRO**. Un projet dont une piste MACRO a FINE ≠ 64 sonne maintenant lo-fi au lieu
   d'être désaccordé (MACRO existe depuis la version 1.31).
-- **Expérimental** de nouveau jusqu'au test de Maxime : la carte MACRO et ses combinaisons avec les moteurs du Syntakt
-  repassent en « Expérimental » (le test du 10/10/2026 portait sur la version d'avant).
+- **Testé sur la machine (11/10/2026)** : « ça marche nickel sur machine » (Maxime, §7). La carte MACRO et Model-TG +
+  les 5 moteurs + MACRO repassent en « Testé » (expérimentales entre-temps : le test du 10/10/2026 portait sur la
+  version d'avant).
 
 ## 1. Pourquoi 96 kHz, et ce que change 48 kHz `[FAIT]`
 
@@ -246,7 +247,9 @@ note 60, réglages par défaut), avant, maintenant (FINE au centre), puis avec R
 Ce sont des instructions ; sur la machine, les modèles à tables d'ondes paient aussi les défauts de cache (tables de
 33 Ko), deux fois moins nombreux à 48 kHz `[HYP]`. La page System de Model-TG donne le temps de MACRO.
 
-## 7. À vérifier sur la machine
+## 7. Sur la machine `[FAIT]`
+
+Ce qui était à vérifier :
 
 1. Sur une piste MACRO, FUNC + PITCH : que montre l'écran ? Au centre (valeur par défaut), le son est celui d'avant.
 2. Les modèles allégés sonnent comme avant (comparer avec le firmware d'avant, ou avec un modèle voisin) : CSAW,
@@ -255,3 +258,7 @@ Ce sont des instructions ; sur la machine, les modèles à tables d'ondes paient
    Un p-lock de FINE sur un pas.
 4. Charge : 4 à 6 pistes WAVE MAP ensemble, au centre puis avec RATE à gauche ; avec Model-TG, la page System.
 5. MACRO avec les moteurs du Syntakt (Model-TG + les 5 moteurs, comme le 10/10/2026) : démarrage et son.
+
+Testé sur la machine le 11/10/2026 : « ça marche nickel sur machine je viens de testé. Si c ok pour toi tu peux
+fusionner » (Maxime). Il n'a pas détaillé les points un par un : ce que l'écran affiche avec FUNC + PITCH (§3.4,
+`[HYP]`) reste à noter.
