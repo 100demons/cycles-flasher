@@ -304,7 +304,7 @@ FEATURES = [
                 "Vitesse, multiplicateur, forme, destination et profondeur propres ; fondu, phase et mode communs "
                 "avec LFO 1. LFO 2 est sauve avec le son et se p-locke, LFO 3 et 4 servent au live. Avec ou sans "
                 "Model-TG.",
-        "status": "experimental",
+        "status": "tested",
         "credit": {"kind": "based", "who": "DavidCaruso"},
         "excludes": ["track-filter"],   # memes k 28..31 et octets +88..+91 du son (notes/56 §3.6)
         "variants": [

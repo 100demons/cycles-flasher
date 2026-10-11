@@ -22,8 +22,8 @@ VA de l'OS 1.13 ; « chez David » renvoie à la section 3 de son `.syx`, dépaq
   octet qu'un autre écrit (§3.4).
 - **Place** : 7 masques 34×34 et 1 180 o de mémoire au-dessus du BSS. `tweaks/model-cycles_OS1.13/REGISTRY.md` est
   régénéré avec ce tweak.
-- **Pas encore testé sur la machine.** **Licence** : il faut l'accord de David (MIT, comme le reste du projet) avant
-  de fusionner (§1.3).
+- **Testé sur la machine (11/10/2026)** par Maxime : « ça marche nickel ». **Licence** : MIT, accord de David
+  transmis par Maxime le 11/10/2026 (§1.3).
 
 ## 1. Le firmware de David
 
@@ -51,7 +51,8 @@ DavidCaruso n'a publié ni source ni licence. Le code d'ici est réécrit (aucun
 rangement dans le son (octets +88..+91) est gardé pour que ses sons se rechargent. Le crédit est sur la carte du
 flasher (« based on a mod by DavidCaruso »), dans le guide, `PROVENANCE.md` et la description du tweak. Le
 10/10/2026, le fil a demandé à Maxime d'obtenir l'accord de David (licence MIT) et, s'il veut bien, ses sources. Rien
-n'a été envoyé à David de notre côté. `[À FAIRE]` Accord de David avant la fusion.
+n'a été envoyé à David de notre côté. `[FAIT]` Le 11/10/2026, Maxime transmet que David est d'accord pour la licence
+MIT ; la contribution est inscrite dans `THIRD-PARTY-NOTICES.md`.
 
 ## 2. Générateur de trigs et machines VA : faits, puis retirés
 
@@ -477,7 +478,9 @@ Chez David, mesuré de la même façon : +1 566 toujours, +4 734 avec les trois.
 - **Modulation croisée des LFO** (un LFO de plus sur la vitesse de LFO 1…) : le moteur la permet, la liste DEST de
   l'OS ne la propose pas.
 
-### 3.10 À essayer sur la machine `[À FAIRE]`
+### 3.10 À essayer sur la machine `[FAIT]`
+
+Testé sur la machine (11/10/2026) : Maxime, avec les fichiers de `ajouts-david/` (LFO seul, avec Model-TG, ensemble complet) : « ça marche nickel ». La liste ci-dessous reste comme mémoire de ce qui a été essayé.
 
 Flasher `lfo-plus` seul, puis avec `model-tg` (et MACRO ou arp, au choix).
 

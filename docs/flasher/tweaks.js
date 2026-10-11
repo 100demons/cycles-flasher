@@ -98873,7 +98873,7 @@ window.MC_TWEAKS = {
    "id": "lfo-plus",
    "label": "LFO 2, 3, 4",
    "desc": "Trois LFO de plus par piste : sur la page LFO, chaque nouvel appui sur [LFO] passe a LFO 2, 3, 4. Vitesse, multiplicateur, forme, destination et profondeur propres ; fondu, phase et mode communs avec LFO 1. LFO 2 est sauve avec le son et se p-locke, LFO 3 et 4 servent au live. Avec ou sans Model-TG.",
-   "status": "experimental",
+   "status": "tested",
    "credit": {
     "kind": "based",
     "who": "DavidCaruso"
