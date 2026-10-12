@@ -262,7 +262,8 @@ FEATURES = [
                 "sont coches aussi) : les 47 modeles du code libre "
                 "de Braids d'Emilie Gillet. SHAPE choisit le modele, COLOR et SWEEP le reglent, CONTOUR ouvre le "
                 "timbre avec l'enveloppe, FUNC + PITCH donne le lo-fi (RATE a gauche, BITS a droite).",
-        # 13 modeles a 48 kHz et le lo-fi (notes/55) : testes sur la machine le 11/10/2026
+        # 13 modeles a 48 kHz (notes/55) : testes sur la machine le 11/10/2026 ; le lo-fi par FUNC + PITCH et son
+        # affichage (notes/55 §8, 1.54) : testes sur la machine le 12/10/2026
         "status": "tested",
         "credit": {"kind": "based", "who": "Émilie Gillet", "repo": "pichenettes/eurorack"},
         "license": "LICENSE-Braids",

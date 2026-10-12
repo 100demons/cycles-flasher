@@ -56,6 +56,7 @@ import gen_macro as gm              # noqa: E402
 import gen_macro_syntakt as gms     # noqa: E402
 import gen_sdvintage_7th as g7      # noqa: E402
 import gen_syntakt_engines as gs    # noqa: E402
+import lofi_ui                      # noqa: E402
 import mcengine as E                # noqa: E402
 import seqrig as S                  # noqa: E402
 import syntakt                      # noqa: E402
@@ -520,6 +521,11 @@ def run_set(stock, ctx, codes, macro, tg, others, quick, label_extra=""):
     if not others:
         print("interface")
         interface(stock, fw, tw, tgs, make() if tg else None)
+    if macro:                     # le lo-fi de MACRO sous FUNC + PITCH (notes/55 §8), ACID après elle
+        lref = ref_eng or make()
+        lofi_ui.check_lofi(lref.img, fw.img, fw.payload, macro_v.index, f"MACRO dans {tw['id']}{label_extra}", check,
+                           end=fw.blob_end, base_end=lref.blob_end, base_payload=lref.payload,
+                           base="les mêmes mods sans MACRO ni ACID", after=1)
     print("son")
     gs.set_base(fw.dest)
     todo = ta.cases(True)
