@@ -29,8 +29,9 @@ calcule *vraiment* moins d'échantillons, comme le RATE de Braids mais en allég
 - En échange, **FINE n'accorde plus MACRO**. Un projet dont une piste MACRO a FINE ≠ 64 sonne maintenant lo-fi au lieu
   d'être désaccordé (MACRO existe depuis la version 1.31).
 - **Testé sur la machine (11/10/2026)** : « ça marche nickel sur machine » (Maxime, §7) : les modèles à 48 kHz, MACRO
-  et Model-TG + les 5 moteurs + MACRO. Le lo-fi, lui, n'était pas joignable (§8) : il repasse en expérimental jusqu'à
-  l'essai de la 1.51.
+  et Model-TG + les 5 moteurs + MACRO. Le lo-fi, lui, n'était pas joignable (§8), corrigé en 1.51.
+- **Lo-fi testé sur la machine (12/10/2026)** : « ça marche parfaitement » (Maxime, §8.4), FUNC + PITCH et sa valeur
+  à l'écran ; MACRO repasse en « testé ».
 
 ## 1. Pourquoi 96 kHz, et ce que change 48 kHz `[FAIT]`
 
@@ -410,3 +411,8 @@ moteurs + MACRO).
 descend de `46K` à `4K` et le son devient granuleux ; vers la droite : `12B` à `2B`, de plus en plus écrasé ; au centre
 `OFF`, le son d'avant ; PITCH sans FUNC accorde toujours. Une piste d'une autre machine : FUNC + PITCH change la note
 par demi-tons, comme avant.
+
+**Testé sur la machine (12/10/2026)** avec les fichiers `-v4` : « ça marche parfaitement » (Maxime, 05:58 UTC). Il n'a
+pas précisé lequel des deux fichiers il a flashé (MACRO seule ou Model-TG + les 5 moteurs + MACRO) ; le code du lo-fi
+est le même dans les deux (`gs.detours_asm(…, lofi=True)`). MACRO (`"status": "tested"`) et la combinaison Model-TG +
+les 5 moteurs + MACRO (`HW_TESTED_TG` de `gen_macro_syntakt.py`) repassent en « testé ».
