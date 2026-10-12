@@ -57,8 +57,12 @@ ACID_BSS = 0x78000
 DEFS = ("GOV_SKIP",)
 # Combinaisons testées sur un vrai Model:Cycles : (moteurs, avec MACRO), sans puis avec Model-TG. Ajouter ici après
 # un test réussi (règle 3 d'AGENTS.md : seulement sur le retour de Maxime).
-HW_TESTED = set()
-HW_TESTED_TG = set()
+# 12/10/2026 : les 5 moteurs, MACRO et ACID, fichiers construits par build.py avec les mods de notes/54 §11.7, sans
+# Model-TG (MAIN OS 85139773…) et avec (d823ff90…) : « c nickel sur machine ça marche parfait » (Maxime, qui n'a pas
+# dit lequel des deux fichiers il a flashé).
+FIVE = ("sd", "cp", "toy", "bits", "swarm")
+HW_TESTED = {(FIVE, True)}
+HW_TESTED_TG = {(FIVE, True)}
 
 
 def tweak_id(codes, tg=False, macro=True):

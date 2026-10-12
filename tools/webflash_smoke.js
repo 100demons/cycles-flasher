@@ -311,7 +311,8 @@ async function main() {
       `MACRO: alone ${macroAlone}, with Model-TG ${macroTg}, its note shown; with the Syntakt engines ${withEng}, and with Model-TG too ${allThree}`);
     // ACID (notes/54): like MACRO, alone or after Model-TG's base. With MACRO both stay ticked and MACRO takes its
     // version with ACID; with the Syntakt engines, they take their version with ACID (and MACRO), ACID always last
-    // (notes/54 §11). Those versions are new: Experimental until tried on the machine
+    // (notes/54 §11). Experimental until tried on the machine: only the 5 engines + MACRO + ACID are (12/10/2026), so
+    // SDVtg's versions stay Experimental and the details name the 5 engines
     const tagAt = (id) => doc.querySelector(`label[for=feat-${id}] .tag`).textContent;
     box("feat-acid").click(); await wait(5);
     const acidAlone = chosen(), acidTag = tagAt("acid");
@@ -329,7 +330,7 @@ async function main() {
     const engMacroAcid = chosen();
     box("feat-macro").click(); await wait(5);
     const engAcid = chosen(), engSaid = /SDVtg \+ ACID\./.test(textOf(doc, "#mod-syntakt .combo"));
-    const det = /With Real Syntakt engines: checked in the emulator/.test(textOf(doc, "#det-acid"))
+    const det = /With Real Syntakt engines: tried on the machine with the 5 engines/.test(textOf(doc, "#det-acid"))
       && /With MACRO machine: checked in the emulator/.test(textOf(doc, "#det-acid"))
       && /With ACID machine: checked in the emulator/.test(textOf(doc, "#det-macro"));
     box("feat-syntakt").click(); await wait(5);

@@ -182466,8 +182466,8 @@ window.MC_TWEAKS = {
      "macro+acid": {
       "id": "syntakt-sd-cp-toy-bits-swarm-macro-acid",
       "tg": "syntakt-tg-sd-cp-toy-bits-swarm-macro-acid",
-      "tested": false,
-      "tg_tested": false
+      "tested": true,
+      "tg_tested": true
      }
     }
    ],

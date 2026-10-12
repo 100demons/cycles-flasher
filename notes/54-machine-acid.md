@@ -29,8 +29,8 @@ l'OS 1.13.
   vélocité, verrous, jeu live) ; les machines d'origine ne changent pas.
 - **Charge** : une voix ACID coûte un peu moins qu'une voix TONE (§8). Une voix muette n'est pas calculée.
 - **Testé sur la machine (11/10/2026)** : la première version (avec l'accent), puis la version avec DRIVE, « ça marche
-  nickel » (§10). Les versions avec MACRO et les moteurs du Syntakt (§11) : prouvées en émulation, pas encore testées
-  sur la machine.
+  nickel » (§10). Avec MACRO et les moteurs du Syntakt (§11) : prouvé en émulation ; les 5 moteurs, MACRO et ACID,
+  avec et sans Model-TG, testés sur la machine le 12/10/2026 (§11.7).
 
 ## 1. Le modèle : Open303
 
@@ -399,8 +399,9 @@ bloc, sans effet.
   avec ACID (`versions`). La première carte hôte cochée construit la version qui contient tout : les moteurs (et
   MACRO) puis ACID, ou MACRO puis ACID ; avec Model-TG, la version `-tg`. Le résumé dit « With the ACID machine: it
   comes last ».
-- Ces versions sont expérimentales (`HW_TESTED` vides dans `gen_acid_combos.py`) ; ACID seule et avec Model-TG reste
-  « testée ».
+- Une version est « testée » quand sa combinaison est dans `HW_TESTED` / `HW_TESTED_TG` de `gen_acid_combos.py` :
+  depuis le 12/10/2026, les 5 moteurs avec MACRO (§11.7) ; les autres restent expérimentales. ACID seule et avec
+  Model-TG reste « testée ».
 - `tweaks.js` : 274 tweaks, 7,7 Mo (1,24 Mo en gzip, servi compressé par GitHub Pages) ; `REF_MAINOS` : 1 136
   combinaisons.
 
@@ -479,8 +480,12 @@ Model:Samples sans erreur.
 
 ### 11.7 Sur la machine
 
-Pas encore testé sur la machine : les versions combinées restent « expérimentales ». Fichiers de test construits par
-`tools/build.py` (dossier du projet `machine-acid/avec-macro-et-moteurs/`, jamais dans le dépôt) :
+**Testé sur la machine (12/10/2026)**, fichiers ci-dessous : « c nickel sur machine ça marche parfait » (Maxime, fil du
+projet, 05:56 UTC ; il n'a pas dit lequel des deux fichiers il a flashé, comme pour la version avec DRIVE, §10). Les
+5 moteurs, MACRO et ACID passent en « testé » dans le flasher, sans et avec Model-TG (`HW_TESTED`, `HW_TESTED_TG` de
+`gen_acid_combos.py`) ; les autres choix (moins de moteurs, MACRO sans moteurs, moteurs sans MACRO) restent
+expérimentaux. Fichiers de test construits par `tools/build.py` (dossier du projet `machine-acid/avec-macro-et-moteurs/`,
+jamais dans le dépôt) :
 
 - `model-cycles_acid-macro-syntakt.syx` : `6ch-usbup,syntakt-sd-cp-toy-bits-swarm-macro-acid,track-filter,trig-hold,
   arp,tempo-max,boot-anim,multiline-browser,level-pan-values,trigless-dim`, MAIN OS `85139773…` ;
@@ -488,8 +493,7 @@ Pas encore testé sur la machine : les versions combinées restent « expérimen
   syntakt-tg-sd-cp-toy-bits-swarm-macro-acid,trig-hold,arp,tempo-max,boot-anim,multiline-browser,level-pan-values,
   trigless-dim`, MAIN OS `d823ff90…`.
 
-À vérifier : le démarrage et l'écran MACHINES (13 machines, 14 avec Model-TG, ACID en dernier) ; ACID, MACRO et un
-moteur sur trois pistes en même temps, chacun comme seul ; un verrou de machine par pas ACID → MACRO → moteur ; une
-forte charge (les six pistes, tempo rapide) : le régulateur peut éteindre des notes, la machine ne doit pas se figer,
-et après une note éteinte le trig ACID suivant rejoue la note ; DRIVE, slide et GATE comme avant. Si tout marche :
-`HW_TESTED` / `HW_TESTED_TG` de `gen_acid_combos.py`, puis le passage à « testé », dans un commit à part.
+Ce qu'il fallait vérifier : le démarrage et l'écran MACHINES (13 machines, 14 avec Model-TG, ACID en dernier) ; ACID,
+MACRO et un moteur sur trois pistes en même temps, chacun comme seul ; un verrou de machine par pas ACID → MACRO →
+moteur ; une forte charge (les six pistes, tempo rapide) : le régulateur peut éteindre des notes, la machine ne doit pas
+se figer, et après une note éteinte le trig ACID suivant rejoue la note ; DRIVE, slide et GATE comme avant.
