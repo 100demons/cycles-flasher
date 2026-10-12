@@ -46,9 +46,12 @@ OUT = ROOT / "docs" / "flasher" / "tweaks.js"
 # cat : rubrique du flasher, une de CATS (meme liste que CATS dans docs/flasher/app.js, plus « other »). Sans cat,
 # la carte s'affiche a la fin, dans « Autres mods » (avertissement ici). L'ordre de FEATURES reste l'ordre du build
 # (cles de REF_MAINOS), quel que soit l'ordre d'affichage par rubriques.
-# joins : carte de moteurs qui contient deja cette fonctionnalite quand les deux sont cochees (MACRO avec les moteurs
-# du Syntakt, notes/50) : cette carte n'ajoute alors aucun tweak, chaque combinaison de moteurs porte le sien
-# (combo[<id de cette carte>] : id, tg, tested, tg_tested, comme la combinaison elle-meme).
+# joins : cartes qui contiennent deja cette fonctionnalite quand elles sont cochees aussi, dans l'ordre des machines
+# (MACRO avec les moteurs du Syntakt, notes/50 ; ACID avec eux et avec MACRO, notes/54 §11). La premiere cochee (la
+# racine) construit la version qui porte toutes les cartes cochees qui la rejoignent ; ces cartes n'ajoutent alors
+# aucun tweak. Cle de la version : leurs id, dans l'ordre de FEATURES, joints par « + » (macro, acid, macro+acid).
+# Une carte de moteurs porte combo[<cle>] (id, tg, tested, tg_tested, comme la combinaison elle-meme) ; une carte a
+# variante (MACRO) porte versions[<cle>] (fichier, fichier avec Model-TG). Les deux listent leurs cles dans joined.
 # Pour ajouter une fonctionnalite : ecrire son tweak JSON, puis l'ajouter ici.
 CATS = ("pack", "sound", "seq", "live", "screen", "io")
 FEATURES = [
@@ -82,7 +85,7 @@ FEATURES = [
         # avec les moteurs du Syntakt : la base de la version combinee (notes/31), et pour chaque combinaison de
         # moteurs son tweak syntakt-tg-<moteurs> (« tg » des combinaisons de la carte des moteurs) ; de meme avec
         # la machine MACRO (notes/43), qui prend alors macro-tg
-        "with": {"syntakt": "30-model-tg-st", "macro": "30-model-tg-st"},
+        "with": {"syntakt": "30-model-tg-st", "macro": "30-model-tg-st", "acid": "30-model-tg-st"},
     },
     {
         "id": "sample-preview",
@@ -99,7 +102,8 @@ FEATURES = [
             {"file": "33-sample-preview", "label": None},
         ],
         # avec les moteurs du Syntakt, Model-TG devient model-tg-st : l'ecoute prend la version faite pour lui
-        "with": {"syntakt": "33-sample-preview-st", "macro": "33-sample-preview-st"},
+        "with": {"syntakt": "33-sample-preview-st", "macro": "33-sample-preview-st",
+                 "acid": "33-sample-preview-st"},
     },
     {
         "id": "latching-mute",
@@ -259,17 +263,40 @@ FEATURES = [
                 "de Braids d'Emilie Gillet. SHAPE choisit le modele, COLOR et SWEEP le reglent, CONTOUR ouvre le "
                 "timbre avec l'enveloppe, FUNC + PITCH donne le lo-fi (RATE a gauche, BITS a droite).",
         # 13 modeles a 48 kHz (notes/55) : testes sur la machine le 11/10/2026 ; le lo-fi par FUNC + PITCH et son
-        # affichage (notes/55 §8, 1.49) : testes sur la machine le 12/10/2026
+        # affichage (notes/55 §8, 1.54) : testes sur la machine le 12/10/2026
         "status": "tested",
         "credit": {"kind": "based", "who": "Émilie Gillet", "repo": "pichenettes/eurorack"},
         "license": "LICENSE-Braids",
         # avec les moteurs du Syntakt : la combinaison de moteurs prend sa version avec MACRO (notes/50)
-        "joins": "syntakt",
+        "joins": ["syntakt"],
         "variants": [
             {"file": "25-macro", "label": None},
         ],
         # avec Model-TG : la version qui s'ajoute apres model-tg-st (Model-TG prend cette base, « with » ci-dessus)
         "with": {"model-tg": "32-macro-tg"},
+        # avec ACID, sans les moteurs : MACRO puis ACID (notes/54 §11 ; « tested » : gen_acid_combos.HW_TESTED)
+        "versions": {"acid": {"file": "25-macro-acid", "tg": "32-macro-acid-tg"}},
+    },
+    {
+        "id": "acid",
+        "cat": "sound",
+        "label": "Machine ACID",
+        "desc": "Une machine ajoutee apres Chord (apres le Sampler avec Model-TG, puis les moteurs du Syntakt et "
+                "MACRO s'ils sont coches aussi : toujours la derniere) : une basse acide a la maniere de la TB-303, "
+                "d'apres le modele libre d'Open303. COLOR = cutoff, SHAPE = resonance, SWEEP = env mod, "
+                "CONTOUR = saturation (drive), PUNCH = scie ou carre ; une LEN plus longue que l'ecart au trig "
+                "suivant fait glisser la note.",
+        "status": "tested",
+        "credit": {"kind": "based", "who": "Robin Schmidt", "repo": "RobinSchmidt/Open303"},
+        "license": "LICENSE-Open303",
+        # meme place et meme mecanique que MACRO et les moteurs du Syntakt (notes/54 §7) : avec eux, leurs versions
+        # avec ACID en derniere machine (gen_acid_combos.py, notes/54 §11)
+        "joins": ["syntakt", "macro"],
+        "variants": [
+            {"file": "26-acid", "label": None},
+        ],
+        # avec Model-TG : la version qui s'ajoute apres model-tg-st (Model-TG prend cette base, « with » ci-dessus)
+        "with": {"model-tg": "35-acid-tg"},
     },
     {
         "id": "chord-keys",
@@ -327,14 +354,38 @@ FEATURES = [
 ]
 
 
-def engine_feature(f, load):
-    """Carte des vrais moteurs du Syntakt : les moteurs du catalogue et le tweak de chaque combinaison."""
-    import gen_syntakt_engines as gs
+def hosts(f):
+    return list(f.get("joins") or [])
+
+
+def join_keys(f):
+    """Cles des versions d'une carte hote : ses cartes jointes (joins), chaque ensemble non vide, dans l'ordre de
+    FEATURES, joint par « + »."""
+    joined = [g["id"] for g in FEATURES if f["id"] in hosts(g)]
+    return ["+".join(x for x in joined if k >> joined.index(x) & 1) for k in range(1, 1 << len(joined))]
+
+
+def engine_versions():
+    """Versions d'une combinaison de moteurs avec les cartes jointes : cle -> (codes, tg) -> (id, teste)."""
+    import gen_acid_combos as gac
     import gen_macro_syntakt as gms
+    return {
+        "macro": lambda codes, tg: (gms.tweak_id(codes, tg=tg), tuple(codes) in (gms.HW_TESTED_TG if tg else gms.HW_TESTED)),
+        "acid": lambda codes, tg: (gac.tweak_id(codes, tg, macro=False),
+                                   (tuple(codes), False) in (gac.HW_TESTED_TG if tg else gac.HW_TESTED)),
+        "macro+acid": lambda codes, tg: (gac.tweak_id(codes, tg, macro=True),
+                                         (tuple(codes), True) in (gac.HW_TESTED_TG if tg else gac.HW_TESTED)),
+    }
+
+
+def engine_feature(f, load):
+    """Carte des vrais moteurs du Syntakt : les moteurs du catalogue et le tweak de chaque combinaison, seule et avec
+    les cartes jointes (joins)."""
+    import gen_syntakt_engines as gs
     engines = [{"code": c, "name": m["name"], "label": m["label"]} for c, m in gs.CATALOG.items()]
-    joined = [g["id"] for g in FEATURES if g.get("joins") == f["id"]]
-    if any(j != "macro" for j in joined):
-        sys.exit(f"!! {f['id']} : seule la machine MACRO sait se joindre aux moteurs (joins)")
+    keys, known = join_keys(f), engine_versions()
+    if set(keys) - set(known):
+        sys.exit(f"!! {f['id']} : pas de version des moteurs pour {sorted(set(keys) - set(known))} (joins)")
     combos = []
     for codes in gs.subsets():
         t = load(gs.subset_id(codes))
@@ -342,11 +393,11 @@ def engine_feature(f, load):
              "label": ", ".join(gs.CATALOG[c]["name"] for c in codes),
              "tg": load(gs.tweak_id(codes, tg=True))["id"],      # avec Model-TG (notes/31)
              "tg_tested": tuple(codes) in gs.HW_TESTED_TG}
-        for j in joined:                                         # avec la machine MACRO (notes/50)
-            c[j] = {"id": load(gms.tweak_id(codes))["id"], "tg": load(gms.tweak_id(codes, tg=True))["id"],
-                    "tested": tuple(codes) in gms.HW_TESTED, "tg_tested": tuple(codes) in gms.HW_TESTED_TG}
+        for k in keys:                                           # avec MACRO (notes/50), ACID (notes/54 §11)
+            (tid, ok), (tid_tg, ok_tg) = known[k](codes, False), known[k](codes, True)
+            c[k] = {"id": load(tid)["id"], "tg": load(tid_tg)["id"], "tested": ok, "tg_tested": ok_tg}
         combos.append(c)
-    return engines, combos
+    return engines, combos, keys
 
 
 SHARED_MIN = 2048      # valeurs partagees : chaines ou listes d'au moins 2 Ko en JSON compact
@@ -471,7 +522,9 @@ def render():
         if f.get("requires"):                   # carte qui doit etre cochee aussi (verifiee par check_requires)
             feat["requires"] = f["requires"]
         if f.get("engines"):
-            feat["engines"], feat["combos"] = engine_feature(f, load)
+            feat["engines"], feat["combos"], keys = engine_feature(f, load)
+            if keys:
+                feat["joined"] = keys
             feat["status"] = "tested" if any(c["tested"] or c["tg_tested"] for c in feat["combos"]) else "experimental"
         else:
             by_file = {json.loads((DEV_DIR / f"{v['file']}.json").read_text(encoding="utf-8"))["id"]: v for v in f["variants"]}
@@ -482,13 +535,28 @@ def render():
             feat["excludes"] = f["excludes"]
         if f.get("includes"):
             feat["includes"] = f["includes"]
-        if f.get("joins"):                      # contenue dans les combinaisons de cette carte de moteurs
-            if not next((g for g in FEATURES if g["id"] == f["joins"]), {}).get("engines"):
-                sys.exit(f"!! {f['id']} : joins {f['joins']!r} n'est pas une carte de moteurs")
-            feat["joins"] = f["joins"]
+        if f.get("joins"):                      # contenue dans les versions de ces cartes (racine : la 1re cochee)
+            ids = [g["id"] for g in FEATURES]
+            for i, h in enumerate(hosts(f)):
+                g = next((x for x in FEATURES if x["id"] == h), None)
+                if not g or not (g.get("engines") or g.get("versions")):
+                    sys.exit(f"!! {f['id']} : joins {h!r} n'est ni une carte de moteurs ni une carte a versions")
+                # les hotes d'un hote viennent avant lui : la 1re cochee est toujours la racine
+                if any(x not in hosts(f)[:i] for x in hosts(g)) or ids.index(h) > ids.index(f["id"]) and not g.get("engines"):
+                    sys.exit(f"!! {f['id']} : joins {hosts(f)} dans le mauvais ordre")
+            feat["joins"] = hosts(f)
         if f.get("with"):                       # autre tweak quand une autre carte est cochee aussi
             feat["with"] = {g: load(json.loads((DEV_DIR / f"{v}.json").read_text(encoding="utf-8"))["id"])["id"]
                             for g, v in f["with"].items()}
+        if f.get("versions"):                   # carte a variante qui en heberge d'autres (MACRO avec ACID)
+            import gen_acid_combos as gac
+            if sorted(f["versions"]) != sorted(join_keys(f)):
+                sys.exit(f"!! {f['id']} : versions {sorted(f['versions'])} au lieu de {join_keys(f)}")
+            fid = lambda v: json.loads((DEV_DIR / f"{v}.json").read_text(encoding="utf-8"))["id"]
+            feat["versions"] = {k: {"id": load(fid(v["file"]))["id"], "tg": load(fid(v["tg"]))["id"],
+                                    "tested": ((), True) in gac.HW_TESTED, "tg_tested": ((), True) in gac.HW_TESTED_TG}
+                                for k, v in f["versions"].items()}
+            feat["joined"] = join_keys(f)
         if f.get("license"):                    # texte de la licence, servi a cote de la page (licenses())
             feat["license"] = f["license"] + ".txt"
         features.append(feat)

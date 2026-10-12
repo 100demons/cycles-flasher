@@ -18,7 +18,7 @@ calcule *vraiment* moins d'échantillons, comme le RATE de Braids mais en allég
   (cartes d'ondes, TRIPLE SQUARE). Les 34 autres modèles restent à 96 kHz, échantillon pour échantillon comme avant.
 - **FUNC + PITCH (FINE) devient le lo-fi des pistes MACRO**. Sur la machine, la 1.46 ne le faisait pas : FUNC + PITCH
   y réglait encore PITCH, par demi-tons, et FINE n'était sous aucun potard (retour Discord du 11/10/2026, §8). Corrigé
-  en 1.49 : sur une piste MACRO, FUNC + PITCH règle FINE, un pas par cran, et l'écran dit `OFF`, la fréquence (`46K` ..
+  en 1.54 : sur une piste MACRO, FUNC + PITCH règle FINE, un pas par cran, et l'écran dit `OFF`, la fréquence (`46K` ..
   `4K`) ou les bits (`12B` .. `2B`) ; prouvé sur le vrai code de l'interface `[FAIT en émulation]`, à essayer sur la
   machine :
   - au centre (64, la valeur par défaut) : rien ne change, les projets existants sonnent comme avant ;
@@ -29,7 +29,7 @@ calcule *vraiment* moins d'échantillons, comme le RATE de Braids mais en allég
 - En échange, **FINE n'accorde plus MACRO**. Un projet dont une piste MACRO a FINE ≠ 64 sonne maintenant lo-fi au lieu
   d'être désaccordé (MACRO existe depuis la version 1.31).
 - **Testé sur la machine (11/10/2026)** : « ça marche nickel sur machine » (Maxime, §7) : les modèles à 48 kHz, MACRO
-  et Model-TG + les 5 moteurs + MACRO. Le lo-fi, lui, n'était pas joignable (§8), corrigé en 1.49.
+  et Model-TG + les 5 moteurs + MACRO. Le lo-fi, lui, n'était pas joignable (§8), corrigé en 1.54.
 - **Lo-fi testé sur la machine (12/10/2026)** : « ça marche parfaitement » (Maxime, §8.4), FUNC + PITCH et sa valeur
   à l'écran ; MACRO repasse en « testé ».
 
@@ -172,7 +172,7 @@ preuve vérifie les 13 modèles retenus à chaque passage (§5).
 - `FINE` (mot 8.8 en `p + 0x22`, 0..127) est arrondi à l'entier ; il ne s'ajoute plus à la note. Un p-lock de FINE
   donne un lo-fi par pas ; avec le mod slide, il glisse.
 - ~~`[HYP]` FUNC + PITCH règle FINE~~ : faux. Dans l'OS, FUNC + PITCH règle PITCH par demi-tons, et FINE n'est sous
-  aucun potard (§8). Depuis la 1.49, nos détours mettent FINE sous FUNC + PITCH sur les pistes MACRO.
+  aucun potard (§8). Depuis la 1.54, nos détours mettent FINE sous FUNC + PITCH sur les pistes MACRO.
 
 ## 4. Place
 
@@ -279,7 +279,7 @@ Le même jour, sur Discord (fil de la 1.46, relayé par Maxime à 17 h 11 UTC) :
 still makes fine tuning so the pitch is changing but nothing happens on the bitrate or sample rate » (RICARDOPABLO909),
 « same here » (amok_san). Le lo-fi n'était donc pas joignable : §8.
 
-## 8. FUNC + PITCH : ce que l'OS en fait, et la correction (1.49)
+## 8. FUNC + PITCH : ce que l'OS en fait, et la correction (1.54)
 
 ### 8.1 Ce que l'OS fait de FUNC + PITCH `[FAIT]`
 
@@ -414,5 +414,28 @@ par demi-tons, comme avant.
 
 **Testé sur la machine (12/10/2026)** avec les fichiers `-v4` : « ça marche parfaitement » (Maxime, 05:58 UTC). Il n'a
 pas précisé lequel des deux fichiers il a flashé (MACRO seule ou Model-TG + les 5 moteurs + MACRO) ; le code du lo-fi
-est le même dans les deux (`gs.detours_asm(…, lofi=True)`). MACRO (`"status": "tested"`) et la combinaison Model-TG +
+est le même dans les deux (`gs.detours_asm`, §8.2). MACRO (`"status": "tested"`) et la combinaison Model-TG +
 les 5 moteurs + MACRO (`HW_TESTED_TG` de `gen_macro_syntakt.py`) repassent en « testé ».
+
+### 8.5 Avec ACID (fusion du 12/10/2026)
+
+ACID (notes/54, release 1.53) a été fusionnée avant cette correction, avec 64 versions où MACRO est suivie d'ACID
+(`tools/gen_acid_combos.py` : `25-macro-acid`, `32-macro-acid-tg`, `24-syntakt-<moteurs>-macro-acid`,
+`31-syntakt-tg-<moteurs>-macro-acid`). MACRO n'y est plus la dernière machine ajoutée : `detours_asm` reçoit donc le
+rang de MACRO parmi les machines ajoutées (`lofi`, donné par `gs.lofi_index(machines)` depuis `MACHINE["lofi"]`) au
+lieu de la supposer dernière : son enregistrement (`RECS + 0x60 * lofi`) et son index de machine (`first + lofi`)
+dans `knob_vec`. Quand MACRO est dernière, le code est le même octet pour octet (`gen_macro.py --check`,
+`gen_macro_syntakt.py --check` : à jour). Les 64 versions avec ACID sont régénérées ; les 62 versions ACID sans MACRO
+ne changent pas.
+
+Preuve : `lofi_ui.check_lofi(…, after=1)` vérifie en plus que sur ACID (après MACRO) FUNC + PITCH reste PITCH et
+qu'aucun potard ne donne FINE ; `test_acid_combos.py` l'appelle pour chaque version avec MACRO.
+`test_acid_combos.py --engines none --macro yes --quick` : **TOUT OK** (`macro-acid` et `macro-acid-tg`, lo-fi
+compris : FUNC + PITCH -> FINE, pas, texte, fenêtre de valeur, les 77 objets d'interface). Avec Model-TG et les
+5 moteurs (`--engines sd,cp,toy,bits,swarm --macro yes --only tg --quick`) : tout OK jusqu'au régulateur de charge et
+GOV_SKIP compris (lo-fi, son, machine locks) ; la dernière partie (séquenceur d'ACID, dont le code ne change pas) n'a
+pas fini dans le temps alloué. `gen_acid_combos.py --check` à jour (126 fichiers).
+
+Sur la machine, la combinaison 5 moteurs + MACRO + ACID a été testée par Maxime le 12/10/2026 (notes/54 §11) avant
+cette correction ; le lo-fi qu'elle reçoit est le code testé avec MACRO seule et avec les moteurs (§8.4), à une autre
+place : son statut « testé » est gardé, à confirmer à son prochain essai.

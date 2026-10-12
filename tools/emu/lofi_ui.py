@@ -184,9 +184,10 @@ def want_step(cur, delta):
 
 
 def check_lofi(base_img, fw_img, payload, top, label, check, end=None, base_end=None, base_payload=None,
-               base="l'OS d'origine"):
+               base="l'OS d'origine", after=0):
     """FUNC + PITCH sur une piste MACRO (machine top) : FINE, pas à pas, avec son texte ; le reste comme sans MACRO
-    (base : les mêmes mods sans MACRO, ses machines 0..top-1)."""
+    (base : les mêmes mods sans MACRO, ses machines 0..top-1). after : machines ajoutées après MACRO (ACID,
+    tools/gen_acid_combos.py) : FUNC + PITCH y reste PITCH, FINE sous aucun potard."""
     a = UI(base_img, base_payload, end=base_end)
     b = UI(fw_img, payload, end=end)
     check(a.init_ok and b.init_ok, f"{label} : objets d'interface construits par l'OS (0x400de244)")
@@ -206,6 +207,15 @@ def check_lofi(base_img, fw_img, payload, top, label, check, end=None, base_end=
           f"{label} : les potards 3 à 13 de MACRO : avec FUNC comme sans (14 et 15 : leur 2e paramètre, comme l'OS)")
     check(same, f"{label} : machines 0..{top - 1}, les 14 potards, avec et sans FUNC : le même descripteur que "
                 f"{base} (FUNC + PITCH : PITCH)")
+    if after:
+        later = {(m, k, f): b.lookup(m, k, f) for m in range(top + 1, top + 1 + after) for k in range(2, 16)
+                 for f in (False, True)}
+        check(None not in later.values() and FTUN not in later.values()
+              and all(later[m, PITCH_KNOB, f] == PITCH for m in range(top + 1, top + 1 + after) for f in (False, True))
+              and all(later[m, k, True] == later[m, k, False] for m in range(top + 1, top + 1 + after)
+                      for k in range(3, 14)),
+              f"{label} : machines {top + 1}..{top + after} (après MACRO) : FUNC + PITCH -> PITCH, FINE sous aucun "
+              f"potard, potards 3 à 13 avec FUNC comme sans")
     # 2. le tour de potard avec FUNC : sans MACRO, FINE revient au centre ; ici un pas par cran (au moins)
     reset = {a.edit_func(FTUN, cur, d) for cur in (0, 0x2000, 0x5f00) for d in (0x100, -0x100)}
     check(reset == {0x4000}, f"{base} : FUNC + un tour sur FINE le remet à {sorted(reset)} (le défaut) : pourquoi "

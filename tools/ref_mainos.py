@@ -11,15 +11,17 @@ tools/build.py (conflits, zones 0xFF, charges utiles enchaînées) :
   - chaque carte seule (chaque variante ; pour les vrais moteurs du Syntakt, chaque combinaison de moteurs) ;
   - chaque paire de cartes que la page laisse cocher ensemble ;
   - les plus grandes combinaisons : toutes les cartes compatibles cochées, à partir de chaque carte, dans l'ordre des
-    cartes puis dans l'ordre inverse, avec et sans les cartes qui demandent un autre fichier (les moteurs du Syntakt).
+    cartes puis dans l'ordre inverse, avec et sans les cartes qui demandent un autre fichier (les moteurs du Syntakt),
+    et sans chaque ensemble des cartes qui en rejoignent d'autres (MACRO, ACID : chaque version des moteurs).
 La page compare le MAIN OS de ces combinaisons à leur empreinte et refuse s'il diffère. Avec tools/check_overlaps.py
 (deux mods qu'on peut cocher ensemble n'écrivent jamais aux mêmes octets, sauf écriture identique ou mod posé par-dessus
 l'autre), cet échantillon suffit : il grandit d'une quarantaine d'entrées par nouvelle carte, au lieu de doubler. Les
 cartes suivent les règles de app.js : « excludes » et « includes » (jamais cochées ensemble), « with » (un autre tweak
 quand une autre carte est cochée), « requires » (une carte qui ne va qu'avec une autre : la page coche l'autre avec
-elle, l'aperçu des samples avec Model-TG), « joins » (une carte qui, cochée avec la carte des moteurs du Syntakt,
-n'ajoute rien : chaque combinaison de moteurs a sa version avec elle, MACRO, notes/50), et Model-TG avec les moteurs
-du Syntakt (leur version « tg »). Une sélection dont un tweak n'a pas le tweak qu'il demande (« requires » du tweak)
+elle, l'aperçu des samples avec Model-TG), « joins » (une carte qui, cochée avec une de ses cartes hôtes, n'ajoute
+rien : la première hôte cochée construit sa version avec toutes les cartes qu'elle porte ; MACRO et ACID avec les
+moteurs du Syntakt, notes/50 et notes/54 §11, ACID avec MACRO), et Model-TG avec les moteurs du Syntakt (leur
+version « tg »). Une sélection dont un tweak n'a pas le tweak qu'il demande (« requires » du tweak)
 est laissée de côté, car les deux builds la refusent.
 
     python3 tools/ref_mainos.py --cycles model-cycles_OS1.13.syx --syntakt Syntakt_OS1.42.syx [--check]
@@ -113,16 +115,33 @@ class Cards:
                     todo.append(n)
         return sel
 
+    def hosts(self, f):
+        j = f.get("joins") or []
+        return [j] if isinstance(j, str) else list(j)
+
+    def root(self, f, sel):
+        """La carte qui porte f dans sa version (la 1re cochée de ses « joins »), ou None."""
+        return next((h for h in self.hosts(f) if h in sel), None)
+
+    def key(self, f, sel):
+        """Clé de la version d'une carte hôte : les cartes cochées qu'elle porte, dans l'ordre des cartes, jointes par
+        « + » (macro, acid, macro+acid), ou ""."""
+        return "+".join(g["id"] for g in self.features if g["id"] in sel and self.root(g, sel) == f["id"])
+
     def ids(self, sel):
         """Tweaks construits pour une sélection {carte: choix}, dans l'ordre des cartes (la clé de REF_MAINOS)."""
         out = []
         for f in self.features:
-            if f["id"] not in sel or f.get("joins") in sel:   # « joins » : MACRO avec les moteurs, dans leur version
+            if f["id"] not in sel or self.root(f, sel):        # « joins » : dans la version de sa carte hôte
                 continue
-            o = sel[f["id"]]
-            if f.get("engines"):                               # avec MACRO cochée : la version avec MACRO (notes/50)
-                o = next((o[g["id"]] for g in self.features if g.get("joins") == f["id"] and g["id"] in sel), o)
+            o, k = sel[f["id"]], self.key(f, sel)
+            if f.get("engines"):                               # avec MACRO, ACID : leur version (notes/50, 54 §11)
+                o = o[k] if k else o
                 tid = o["tg"] if "model-tg" in sel else o["id"]
+            elif k and f.get("versions"):                      # MACRO avec ACID, sans les moteurs
+                v = f["versions"][k]
+                out.append(v["tg"] if "model-tg" in sel else v["id"])
+                continue
             else:
                 tid = o
             for g, alt in (f.get("with") or {}).items():
@@ -137,13 +156,17 @@ class Cards:
         out = [("single", {c: o}) for c, o in picks]
         out += [("pair", {c: o, d: p}) for (c, o), (d, p) in itertools.combinations(picks, 2) if c != d]
         plain = [f for f in self.features if not f.get("needs")]     # sans les cartes qui demandent un autre fichier
+        joiners = [f["id"] for f in self.features if self.hosts(f)]
+        skips = [set(x) for r in range(len(joiners) + 1) for x in itertools.combinations(joiners, r)]
         for c, o in picks:
-            for order in (self.features, self.features[::-1], plain, plain[::-1]):
+            for skip, order in itertools.product(skips, (self.features, self.features[::-1], plain, plain[::-1])):
+                if c in skip:
+                    continue
                 sel = self.close({c: o})
                 if not self.valid(sel):
                     continue
                 for g in order:
-                    if g["id"] not in sel:
+                    if g["id"] not in sel and g["id"] not in skip:
                         trial = self.close(dict(sel, **{g["id"]: self.biggest(g)}))
                         if self.valid(trial):
                             sel = trial
@@ -160,7 +183,7 @@ GROUPS = {
     "single": "each card alone: each variant, each combination of real Syntakt engines",
     "pair": "every pair of cards the page lets you tick together",
     "largest": "the largest combinations: every compatible card ticked, from each card, both ways, with and without "
-               "the Syntakt engines",
+               "the Syntakt engines, with and without each of the machines that join them",
 }
 
 

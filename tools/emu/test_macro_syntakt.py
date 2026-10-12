@@ -159,8 +159,9 @@ def icache_watch(uc, fw, dst):
     return faults, inval
 
 
-def boot(fw, ref, tg=None):
-    """Le crochet de démarrage, exécuté pour de vrai (comme test_macro.boot)."""
+def boot(fw, ref, tg=None, allowed=None):
+    """Le crochet de démarrage, exécuté pour de vrai (comme test_macro.boot). allowed : [(début, fin)] (décalages)
+    où la charge utile peut différer de celle des moteurs seuls (défaut : détours, données, descripteurs)."""
     uc = Uc(UC_ARCH_M68K, UC_MODE_BIG_ENDIAN)
     uc.ctl_set_cpu_model(mk.UC_CPU_M68K_ANY)
     uc.mem_map(0x40000000, 0x02400000)
@@ -217,7 +218,7 @@ def boot(fw, ref, tg=None):
     # descripteurs, rangées) ; les tables d'ondes de CHORD aux mêmes adresses, mêmes octets
     rref = ref.runtime
     diff = [k for k in range(0, len(rref), 4) if rref[k:k + 4] != got[k:k + 4]]
-    allowed = [(gs.LAYOUT["STUBS"], gs.LAYOUT["DESCN"] + 0x1730)]
+    allowed = allowed or [(gs.LAYOUT["STUBS"], gs.LAYOUT["DESCN"] + 0x1730)]
     off = [k for k in diff if not any(lo <= k < hi for lo, hi in allowed)]
     c0 = fw.chord_at - dst
     check(not off and rref[c0:c0 + 0x7878] == got[c0:c0 + 0x7878],

@@ -49,12 +49,12 @@ def check(ok, msg):
         FAIL.append(msg)
 
 
-def engine(img, end=None, payload=None):
+def engine(img, end=None, payload=None, payload_code=()):
     """Moteur d'émulation pour une image qui contient Model-TG (ou l'OS d'origine). end : fin de son bloc de code
-    (défaut : fin de l'image) ; payload : charge utile de la version combinée (mcengine.Engine)."""
+    (défaut : fin de l'image) ; payload, payload_code : charge utile de la version combinée (mcengine.Engine)."""
     tg = len(img) > E.IMAGE_LEN
     end = end or E.BASE + len(img)
-    e = E.Engine(img, extra_code=[(BLOB, end - BLOB)] if tg else (), payload=payload)
+    e = E.Engine(img, extra_code=[(BLOB, end - BLOB)] if tg else (), payload=payload, payload_code=payload_code)
     e.uc.mem_map(0x40800000, 0x01800000)          # BSS de l'OS (Model-TG y lit l'état du séquenceur)
     e.uc.mem_map(0x42400000, 0x00c00000)
     e.uc.mem_map(0x48000000, 0x08000000)          # vue sans cache de la SDRAM (zone d'échantillons)

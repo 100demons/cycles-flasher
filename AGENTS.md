@@ -48,7 +48,9 @@ Owner: Maxime (GitHub `18nelli18`). He tests every firmware change on his own Mo
 7. **Respect the licenses and credit authors.** The project is MIT (`LICENSE`); the scope and every third-party
    license are in `THIRD-PARTY-NOTICES.md`: drumkilla's tweaks and `tools/mtlib/` (MIT), elektron-firmware-tool by
    Marcel Bierling (MIT), Model-TG by TinyGregAudio (MIT, `LICENSE-Model-TG`), ms-multi-output by scottmetoyer (MIT,
-   `LICENSE-ms-multi-output`), Braids by Émilie Gillet (MIT, `LICENSE-Braids`, compiled unchanged for MACRO), and `tools/webxfer_check.py`, transcribed from Elektroid (GPL-3.0-or-later). Never
+   `LICENSE-ms-multi-output`), Braids by Émilie Gillet (MIT, `LICENSE-Braids`, compiled unchanged for MACRO), Open303
+   by Robin Schmidt (MIT, `LICENSE-Open303`, the model rewritten for ACID), and `tools/webxfer_check.py`, transcribed
+   from Elektroid (GPL-3.0-or-later). Never
    transcribe or closely paraphrase code whose license does not allow it into the repo (GPL code into MIT files, code
    with no license); check an upstream's license before porting from it, and keep its notice next to the copy. Record
    the origin and license of every tweak in `tweaks/model-cycles_OS1.13/PROVENANCE.md` (and outside code in
