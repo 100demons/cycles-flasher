@@ -18,7 +18,7 @@ calcule *vraiment* moins d'échantillons, comme le RATE de Braids mais en allég
   (cartes d'ondes, TRIPLE SQUARE). Les 34 autres modèles restent à 96 kHz, échantillon pour échantillon comme avant.
 - **FUNC + PITCH (FINE) devient le lo-fi des pistes MACRO**. Sur la machine, la 1.46 ne le faisait pas : FUNC + PITCH
   y réglait encore PITCH, par demi-tons, et FINE n'était sous aucun potard (retour Discord du 11/10/2026, §8). Corrigé
-  en 1.51 : sur une piste MACRO, FUNC + PITCH règle FINE, un pas par cran, et l'écran dit `OFF`, la fréquence (`46K` ..
+  en 1.49 : sur une piste MACRO, FUNC + PITCH règle FINE, un pas par cran, et l'écran dit `OFF`, la fréquence (`46K` ..
   `4K`) ou les bits (`12B` .. `2B`) ; prouvé sur le vrai code de l'interface `[FAIT en émulation]`, à essayer sur la
   machine :
   - au centre (64, la valeur par défaut) : rien ne change, les projets existants sonnent comme avant ;
@@ -29,7 +29,7 @@ calcule *vraiment* moins d'échantillons, comme le RATE de Braids mais en allég
 - En échange, **FINE n'accorde plus MACRO**. Un projet dont une piste MACRO a FINE ≠ 64 sonne maintenant lo-fi au lieu
   d'être désaccordé (MACRO existe depuis la version 1.31).
 - **Testé sur la machine (11/10/2026)** : « ça marche nickel sur machine » (Maxime, §7) : les modèles à 48 kHz, MACRO
-  et Model-TG + les 5 moteurs + MACRO. Le lo-fi, lui, n'était pas joignable (§8), corrigé en 1.51.
+  et Model-TG + les 5 moteurs + MACRO. Le lo-fi, lui, n'était pas joignable (§8), corrigé en 1.49.
 - **Lo-fi testé sur la machine (12/10/2026)** : « ça marche parfaitement » (Maxime, §8.4), FUNC + PITCH et sa valeur
   à l'écran ; MACRO repasse en « testé ».
 
@@ -172,7 +172,7 @@ preuve vérifie les 13 modèles retenus à chaque passage (§5).
 - `FINE` (mot 8.8 en `p + 0x22`, 0..127) est arrondi à l'entier ; il ne s'ajoute plus à la note. Un p-lock de FINE
   donne un lo-fi par pas ; avec le mod slide, il glisse.
 - ~~`[HYP]` FUNC + PITCH règle FINE~~ : faux. Dans l'OS, FUNC + PITCH règle PITCH par demi-tons, et FINE n'est sous
-  aucun potard (§8). Depuis la 1.51, nos détours mettent FINE sous FUNC + PITCH sur les pistes MACRO.
+  aucun potard (§8). Depuis la 1.49, nos détours mettent FINE sous FUNC + PITCH sur les pistes MACRO.
 
 ## 4. Place
 
@@ -279,7 +279,7 @@ Le même jour, sur Discord (fil de la 1.46, relayé par Maxime à 17 h 11 UTC) :
 still makes fine tuning so the pitch is changing but nothing happens on the bitrate or sample rate » (RICARDOPABLO909),
 « same here » (amok_san). Le lo-fi n'était donc pas joignable : §8.
 
-## 8. FUNC + PITCH : ce que l'OS en fait, et la correction (1.51)
+## 8. FUNC + PITCH : ce que l'OS en fait, et la correction (1.49)
 
 ### 8.1 Ce que l'OS fait de FUNC + PITCH `[FAIT]`
 

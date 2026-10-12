@@ -62,6 +62,11 @@ is under the MIT License, like the rest of the project, is still pending (see [`
 - **Multi-line browser** (`44-multiline-browser.json`): written by this project from the idea and display choices of a
   community member's script; none of its code is used.
 
+Confirmed under the MIT License:
+
+- **LFO 2, 3, 4** (`60-lfo-plus.json`): rewritten by this project from DavidCaruso's `Model-TG-VA-DR-v1` firmware;
+  DavidCaruso agreed to the MIT License (relayed by Maxime on 11/10/2026).
+
 ## Tools used but not included
 
 The emulation proofs import [Unicorn](https://www.unicorn-engine.org/) (GPL-2.0) and numpy (BSD-3-Clause); the

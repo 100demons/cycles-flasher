@@ -60,7 +60,7 @@ HW_TESTED = set()
 # boot-anim, construit par build.py (MAIN OS f44bfad6…), après la correction du blocage au démarrage (notes/50 §8) :
 # « ça marche nickel » (Maxime). 11/10/2026, avec la MACRO de notes/55 (modèles allégés, lo-fi) : « ça marche
 # nickel sur machine » (Maxime). 11/10/2026 au soir : FUNC + PITCH n'atteignait pas le lo-fi (notes/55 §8) ;
-# corrigé en 1.51 et testé sur la machine le 12/10/2026 (fichiers -v4) : « ça marche parfaitement » (Maxime).
+# corrigé en 1.49 et testé sur la machine le 12/10/2026 (fichiers -v4) : « ça marche parfaitement » (Maxime).
 HW_TESTED_TG = {("sd", "cp", "toy", "bits", "swarm")}
 
 
