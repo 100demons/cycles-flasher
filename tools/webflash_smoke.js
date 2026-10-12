@@ -48,20 +48,25 @@ async function pickEngines(doc, codes) {
 // or the Syntakt engines of a combination, alone or with Model-TG), including the tweak a card takes with another one ("with").
 function cardsOf(w, key) {
   const own = {}, feats = w.MC_TWEAKS.features;
+  const cardsOfKey = (k) => k.split("+").map((id) => feats.find((x) => x.id === id));
   for (const f of feats) {
     if (f.engines) for (const c of f.combos) {
       own[c.id] = own[c.tg] = { f, engines: c.engines };
-      for (const g of feats.filter((x) => x.joins === f.id && c[x.id]))   // MACRO with the engines (notes/50): both cards
-        own[c[g.id].id] = own[c[g.id].tg] = { f, engines: c.engines, also: g };
+      for (const k of f.joined || [])          // MACRO, ACID with the engines (notes/50, notes/54 §11): all the cards
+        own[c[k].id] = own[c[k].tg] = { f, engines: c.engines, also: cardsOfKey(k) };
     }
-    else for (const v of f.variants) own[v.id] = { f, variant: v.id };
+    else {
+      for (const v of f.variants) own[v.id] = { f, variant: v.id };
+      for (const [k, v] of Object.entries(f.versions || {}))     // MACRO with ACID: both cards
+        own[v.id] = own[v.tg] = { f, variant: f.variants[0].id, also: cardsOfKey(k) };
+    }
   }
   for (const f of feats)
     for (const alt of Object.values(f.with || {})) if (!own[alt]) own[alt] = f.engines ? { f } : { f, variant: f.variants[0].id };
   const sel = new Map();
   for (const id of key.split("+")) {
     sel.set(own[id].f.id, own[id]);
-    if (own[id].also) sel.set(own[id].also.id, { f: own[id].also, variant: own[id].also.variants[0].id });
+    for (const g of own[id].also || []) sel.set(g.id, { f: g, variant: g.variants[0].id });
   }
   return sel;
 }
@@ -213,11 +218,12 @@ async function main() {
     check(typeof w.MCBuilder === "object" && typeof w.MCFlasher === "object", "MCBuilder + MCFlasher present");
     const ids = w.MC_TWEAKS.tweaks.map((x) => x.id);
     const nEng = w.MC_TWEAKS.features.find((f) => f.engines).engines.length;
-    check(ids.slice(0, 23).join() === "6ch-usbup,model-tg,model-tg-st,sample-preview,sample-preview-st,latching-mute,trig-preview,browser-scroll,trig-hold,arp,tempo-max,boot-anim,multiline-browser,level-pan-values,trigless-dim,midi-both,midi-live-both,macro,macro-tg,chord-keys,track-filter,lfo-plus,syntakt-sd"
-      && ids.length === 22 + 4 * ((1 << nEng) - 1) && ids.includes("syntakt-sd-cp") && ids.includes("syntakt-tg-sd-cp-toy-bits")
+    check(ids.slice(0, 27).join() === "6ch-usbup,model-tg,model-tg-st,sample-preview,sample-preview-st,latching-mute,trig-preview,browser-scroll,trig-hold,arp,tempo-max,boot-anim,multiline-browser,level-pan-values,trigless-dim,midi-both,midi-live-both,macro,macro-tg,macro-acid,macro-acid-tg,acid,acid-tg,chord-keys,track-filter,lfo-plus,syntakt-sd"
+      && ids.length === 26 + 8 * ((1 << nEng) - 1) && ids.includes("syntakt-sd-cp") && ids.includes("syntakt-tg-sd-cp-toy-bits")
+      && ids.includes("syntakt-sd-acid") && ids.includes("syntakt-tg-sd-cp-toy-bits-swarm-macro-acid")
       && ids.includes("syntakt-sd-macro") && ids.includes("syntakt-tg-sd-cp-toy-bits-swarm-macro")
-      && ids.includes("arp") && !ids.some((x) => /exact|snare|multiout/.test(x)) && w.MC_TWEAKS.features.length === 20,
-      `MC_TWEAKS: only USB-friendly tweaks, one tweak per choice of the ${nEng} Syntakt engines (no SNARE replacement), alone and with Model-TG, with and without MACRO: ${ids.length} tweaks`);
+      && ids.includes("arp") && !ids.some((x) => /exact|snare|multiout/.test(x)) && w.MC_TWEAKS.features.length === 21,
+      `MC_TWEAKS: only USB-friendly tweaks, one tweak per choice of the ${nEng} Syntakt engines (no SNARE replacement), alone and with Model-TG, with and without MACRO and ACID: ${ids.length} tweaks`);
     check(/build \d{4}-/.test(text(doc, "build-stamp")), "version stamp shown");
     const srcs = [...doc.querySelectorAll("script[src]")].map((x) => x.getAttribute("src"));
     check(["builder.js", "tweaks.js", "flasher.js", "app.js"].every((f) => srcs.some((x) => x.startsWith(f + "?")))
@@ -226,8 +232,8 @@ async function main() {
     // display order: by section (Packs, Sounds & machines, Sequencer, Live playing, Screen & browsing, USB & MIDI),
     // FEATURES order inside a section; the build keeps FEATURES order (checked in 1b)
     const feats = [...doc.querySelectorAll("#features input[type=checkbox]")].map((c) => c.id);
-    check(feats.join() === "feat-model-tg,feat-macro,feat-track-filter,feat-lfo-plus,feat-syntakt,feat-trig-preview,feat-trig-hold,feat-arp,feat-tempo-max,feat-trigless-dim,feat-latching-mute,feat-chord-keys,feat-sample-preview,feat-browser-scroll,feat-boot-anim,feat-multiline-browser,feat-level-pan-values,feat-usb6,feat-midi-both,feat-midi-live-both",
-      "20 feature rows, by section: " + JSON.stringify(feats));
+    check(feats.join() === "feat-model-tg,feat-macro,feat-acid,feat-track-filter,feat-lfo-plus,feat-syntakt,feat-trig-preview,feat-trig-hold,feat-arp,feat-tempo-max,feat-trigless-dim,feat-latching-mute,feat-chord-keys,feat-sample-preview,feat-browser-scroll,feat-boot-anim,feat-multiline-browser,feat-level-pan-values,feat-usb6,feat-midi-both,feat-midi-live-both",
+      "21 feature rows, by section: " + JSON.stringify(feats));
     check(w.MC_TWEAKS.features.every((f) => doc.querySelector(`#cat-${f.cat || "other"} #mod-${f.id} #feat-${f.id}`)),
       "every feature has a row in its section (cat)");
     const tagOfFeat = (f) => (f.status === "tested" ? "Tested" : "Experimental");
@@ -259,13 +265,14 @@ async function main() {
       && doc.getElementById("drop3-wrap").hidden, "last engine unticked -> the card turns off");
     const credits = [...doc.querySelectorAll("#features .credit a")].map((a) => a.href);
     const creditOf = (id) => [...doc.querySelectorAll(`label[for=feat-${id}] .credit a`)].map((a) => a.href);
-    check(credits.length === 17 && creditOf("usb6")[0] === "https://github.com/scottmetoyer/ms-multi-output"
+    check(credits.length === 19 && creditOf("usb6")[0] === "https://github.com/scottmetoyer/ms-multi-output"
       && /\/LICENSE-ms-multi-output\.txt$/.test(creditOf("usb6")[1])
       && creditOf("model-tg")[0] === "https://github.com/TinyGregAudio/Model-TG" && /\/LICENSE-Model-TG\.txt$/.test(creditOf("model-tg")[1])
       && creditOf("sample-preview")[0] === "https://github.com/TinyGregAudio/Model-TG" && /\/LICENSE-Model-TG\.txt$/.test(creditOf("sample-preview")[1])
       && ["latching-mute", "trig-preview", "browser-scroll"].every((id) => creditOf(id)[0] === "https://github.com/drumkilla/elektron-model-tweaks"
         && /\/LICENSE-elektron-model-tweaks\.txt$/.test(creditOf(id)[1]))
       && creditOf("macro")[0] === "https://github.com/pichenettes/eurorack" && /\/LICENSE-Braids\.txt$/.test(creditOf("macro")[1])
+      && creditOf("acid")[0] === "https://github.com/RobinSchmidt/Open303" && /\/LICENSE-Open303\.txt$/.test(creditOf("acid")[1])
       && creditOf("chord-keys").join() === "https://github.com/byNicoHeuser"
       && ["midi-both", "midi-live-both"].every((id) => creditOf(id).join() === "https://github.com/AveyCole/Modded-Cycles")
       && creditOf("lfo-plus").length === 0
@@ -275,8 +282,8 @@ async function main() {
     check(djd.every((c) => c && c.textContent === "based on a mod by djd_oz" && !c.querySelector("a")),
       "djd_oz's two mods: “based on a mod by djd_oz”, no link (no public repository)");
     const list = [...doc.querySelectorAll("#credits-list a")].map((a) => a.textContent);
-    check(list.join() === "scottmetoyer/ms-multi-output,drumkilla/elektron-model-tweaks,pichenettes/eurorack,TinyGregAudio/Model-TG,mischa85/elektron-firmware-tool,dagargo/elektroid,mxldyn/octamax",
-      "credits section lists the 7 upstream repositories");
+    check(list.join() === "scottmetoyer/ms-multi-output,drumkilla/elektron-model-tweaks,pichenettes/eurorack,RobinSchmidt/Open303,TinyGregAudio/Model-TG,mischa85/elektron-firmware-tool,dagargo/elektroid,mxldyn/octamax",
+      "credits section lists the 8 upstream repositories");
     const lic = [...doc.querySelectorAll("#credits a")].map((a) => a.href).filter((h) => /LICENSE|NOTICES/.test(h));
     check(lic.join() === "https://github.com/18nelli18/Modded-Cycles/blob/main/LICENSE,https://github.com/18nelli18/Modded-Cycles/blob/main/THIRD-PARTY-NOTICES.md",
       "credits section links the project's MIT license and the third-party notices: " + JSON.stringify(lic));
@@ -292,7 +299,7 @@ async function main() {
     box("feat-syntakt").click(); await wait(5);
     const allThree = chosen();
     const saidTg = /SDVtg \+ MACRO with Model-TG\./.test(textOf(doc, "#mod-syntakt .combo"))
-      && /With the MACRO machine: it comes last/.test(textOf(doc, "#mod-syntakt"));
+      && /With the MACRO machine: it comes right after these engines/.test(textOf(doc, "#mod-syntakt"));
     box("feat-model-tg").click(); await wait(5);
     const withEng = chosen();
     const bothOn = box("feat-macro").checked && box("feat-syntakt").checked && /SDVtg \+ MACRO\./.test(textOf(doc, "#mod-syntakt .combo"))
@@ -302,6 +309,40 @@ async function main() {
     check(macroAlone === "macro" && macroTg === "model-tg-st,macro-tg" && macroNote && allThree === "model-tg-st,syntakt-tg-sd-macro"
       && saidTg && withEng === "syntakt-sd-macro" && bothOn && !chosen().length && doc.querySelector('#features a[href$="#macro"]'),
       `MACRO: alone ${macroAlone}, with Model-TG ${macroTg}, its note shown; with the Syntakt engines ${withEng}, and with Model-TG too ${allThree}`);
+    // ACID (notes/54): like MACRO, alone or after Model-TG's base. With MACRO both stay ticked and MACRO takes its
+    // version with ACID; with the Syntakt engines, they take their version with ACID (and MACRO), ACID always last
+    // (notes/54 §11). Experimental until tried on the machine: only the 5 engines + MACRO + ACID are (12/10/2026), so
+    // SDVtg's versions stay Experimental and the details name the 5 engines
+    const tagAt = (id) => doc.querySelector(`label[for=feat-${id}] .tag`).textContent;
+    box("feat-acid").click(); await wait(5);
+    const acidAlone = chosen(), acidTag = tagAt("acid");
+    box("feat-model-tg").click(); await wait(5);
+    const acidTg = chosen();
+    const acidNote = /needs a firmware with ACID at the same place/.test(text(doc, "features"));
+    box("feat-macro").click(); await wait(5);
+    const macroAcidTg = chosen(), keptBoth = box("feat-macro").checked && box("feat-acid").checked;
+    const newTags = tagAt("acid") === "Experimental" && tagAt("macro") === "Experimental";
+    box("feat-syntakt").click(); await wait(5);
+    const allFour = chosen(), fourTags = tagAt("acid") === "Experimental" && tagAt("syntakt") === "Experimental";
+    const saidAll = /SDVtg \+ MACRO \+ ACID with Model-TG\./.test(textOf(doc, "#mod-syntakt .combo"))
+      && /With the ACID machine: it comes last/.test(textOf(doc, "#mod-syntakt"));
+    box("feat-model-tg").click(); await wait(5);
+    const engMacroAcid = chosen();
+    box("feat-macro").click(); await wait(5);
+    const engAcid = chosen(), engSaid = /SDVtg \+ ACID\./.test(textOf(doc, "#mod-syntakt .combo"));
+    const det = /With Real Syntakt engines: tried on the machine with the 5 engines/.test(textOf(doc, "#det-acid"))
+      && /With MACRO machine: checked in the emulator/.test(textOf(doc, "#det-acid"))
+      && /With ACID machine: checked in the emulator/.test(textOf(doc, "#det-macro"));
+    box("feat-syntakt").click(); await wait(5);
+    const acidBack = chosen();
+    box("feat-acid").click(); await wait(5);
+    check(acidAlone === "acid" && acidTag === "Tested" && acidTg === "model-tg-st,acid-tg" && acidNote
+      && macroAcidTg === "model-tg-st,macro-acid-tg" && keptBoth && newTags
+      && allFour === "model-tg-st,syntakt-tg-sd-macro-acid" && fourTags && saidAll
+      && engMacroAcid === "syntakt-sd-macro-acid" && engAcid === "syntakt-sd-acid" && engSaid && det && acidBack === "acid"
+      && !chosen().length && doc.querySelector('#features a[href$="#acid"]'),
+      `ACID: alone ${acidAlone}, with Model-TG ${acidTg}; with MACRO ${macroAcidTg}; with the Syntakt engines ${allFour}, `
+      + `${engMacroAcid}, ${engAcid}; Experimental together, its note and details shown`);
     // Model-TG holds drumkilla's tweaks: ticked, it shows them ticked and locked, "(included with Model-TG)", and
     // builds without them; unticked, they are free again. With the Syntakt engines it makes the combined version
     // (notes/31): its base, then the engines' tweak built on top of it
@@ -430,6 +471,9 @@ async function main() {
       "FR: sample preview row translated, says « avec Model-TG » (Détails : seulement avec lui), with its guide link");
     check(/Machine MACRO/.test(text(doc, "features")) && /tirés du code libre de Braids/.test(text(doc, "features")) && /d'après eurorack d'Émilie Gillet/.test(text(doc, "features"))
       && doc.querySelector('#features a[href$="#macro"]'), "FR: MACRO card translated, with its credit and guide link");
+    check(/Machine ACID/.test(text(doc, "features")) && /une basse acide à la manière de la TB-303/.test(text(doc, "features"))
+      && /d'après Open303 de Robin Schmidt/.test(text(doc, "features")) && doc.querySelector('#features a[href$="#acid"]'),
+      "FR: ACID card translated, with its credit and guide link");
     check(/Chord Keys/.test(text(doc, "features"))
       && doc.querySelector('#features a[href$="#chord-keys"]'),
       "FR: chord keyboard translated, with its guide link");
@@ -1223,6 +1267,20 @@ async function main() {
     check(sent.length - n2 === w.MCFlasher.splitMessages(fm.raw).length
       && /after Chord come CPVtg \(CP VINTAGE\), MACRO \(47 models from Braids\)\./.test(text(doc, "result")),
       "full transfer + message for CPVtg + MACRO: " + text(doc, "result").slice(0, 110));
+    // ACID ticked too (notes/54 §11): the engines' version with MACRO and ACID, ACID named last
+    doc.getElementById("feat-acid").click();
+    await settle(w);
+    const fa = app.state.fw;
+    check(fa && (fa.ref || fa.modsRef) && fa.sdv === "syntakt-cp-macro-acid" && fa.name.endsWith("syntakt-cp-macro-acid.syx"),
+      `CPVtg + MACRO + ACID -> checked build ${fa ? fa.name : ""}`);
+    const n3 = sent.length;
+    doc.getElementById("flash").click();
+    for (let i = 0; i < 200 && app.state.sending; i++) await wait(50);
+    check(sent.length - n3 === w.MCFlasher.splitMessages(fa.raw).length
+      && /after Chord come CPVtg \(CP VINTAGE\), MACRO \(47 models from Braids\), ACID \(acid bass in the style of the TB-303\)\./.test(text(doc, "result")),
+      "full transfer + message for CPVtg + MACRO + ACID: " + text(doc, "result").slice(0, 140));
+    doc.getElementById("feat-acid").click();
+    await settle(w);
     doc.getElementById("feat-macro").click();
     await settle(w);
     doc.getElementById("eng-cp").click();

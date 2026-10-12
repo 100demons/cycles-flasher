@@ -94,7 +94,7 @@ HW_TESTED = set()
 # l'arpégiateur, construite par build.py (même MAIN OS que le flasher), « c bon ça fonctionne nickel » ; l'utilisateur
 # a demandé l'étiquette sans attendre un essai depuis le flasher.
 HW_TESTED_TG = {("sd", "cp", "toy", "bits", "swarm")}
-MAX_EXTRA = 6
+MAX_EXTRA = 7                # 5 moteurs, MACRO et ACID (notes/54 §11)
 
 # --- Syntakt : fermeture et plages copiées -----------------------------------------------------------------
 # La copie dépend du DERNIER moteur coché (ordre du catalogue) : elle contient tout ce qu'il faut aux moteurs du
@@ -164,7 +164,7 @@ def sram_init(image, init, a, n):
             return bytes(image[lo - BASE + a - dst:][:n])
     return None
 
-# --- charge utile (adresses fixes, jusqu'à 6 machines ajoutées) --------------------------------------------
+# --- charge utile (adresses fixes, jusqu'à 7 machines ajoutées) --------------------------------------------
 # Adresse d'exécution PAY : seule, au-dessus du BSS du Cycles (notes/17) ; avec Model-TG, le haut de sa zone
 # d'échantillons, qu'il nous laisse (notes/31). Tout le reste est à un décalage fixe de PAY.
 PAY_ALONE = 0x43000000
@@ -177,13 +177,20 @@ LAYOUT = dict(
     DST_END=0x33000,
     STUBS=0x33000,
     DATA=0x33800,            # noms, update/render, VEC, table machine -> moteur, chaînes
-    DESCN=0x34000,           # 76 + 5 x N descripteurs (au plus 106 x 0x38 = 0x1730)
+    DESCN=0x34000,           # 76 + 5 x N descripteurs (106 x 0x38 = 0x1730 pour 6 ; 7 : ROWS7)
     ROWSN=0x35800,           # (6 + N) x 32 o, (7 + N) avec Model-TG
     CCROWSN=0x35a00,         # idem
     RECS=0x35c00,            # enregistrement par machine ajoutée : 0x60 o chacun (76 o + drapeau)
     REC_ATK=0x35f00,         # avec Model-TG : copie d'un enregistrement, Attack sur le potard DECAY (76 o)
     TABLES_AT=0x36000,       # tables_high des moteurs
 )
+
+
+# 7 machines ajoutées (les 5 moteurs, MACRO et ACID, notes/54 §11) : 111 descripteurs (0x1848 o) dépasseraient
+# DESCN..ROWSN (0x1800 o), et l'OS réécrit les rangées au démarrage. Les rangées passent alors juste après les
+# descripteurs (14 x 32 o chacune avec Model-TG, jusqu'à 0x35be0 < RECS). Jusqu'à 6 machines, rien ne bouge : les
+# firmwares déjà testés gardent leurs octets.
+ROWS7 = dict(ROWSN=0x35860, CCROWSN=0x35a20)
 
 
 def set_base(pay):
@@ -193,6 +200,23 @@ def set_base(pay):
     for k, off in LAYOUT.items():
         globals()[k] = pay + off
     gx.DST_CODE, gx.DST_SRAM, gx.DST_BRIDGE, gx.DST_END = pay, DST_SRAM, DST_BRIDGE, DST_END
+
+
+def set_rows(n):
+    """Rangées de l'écran des paramètres pour n machines ajoutées (ROWS7 au-delà de 6)."""
+    for k in ROWS7:
+        globals()[k] = PAY + (ROWS7[k] if n > 6 else LAYOUT[k])
+
+
+def check_room(n, nm):
+    """Les tables de n machines ajoutées (nm machines en tout) tiennent à leur place."""
+    ndesc = g7.NDESC + 5 * n
+    for what, end, limit in (("descripteurs", DESCN + ndesc * g7.DSTRIDE, ROWSN), ("rangées", ROWSN + 32 * nm, CCROWSN),
+                             ("rangées CC", CCROWSN + 32 * nm, RECS), ("enregistrements", RECS + 0x60 * n, REC_ATK)):
+        if end > limit:
+            raise SystemExit(f"!! {what} jusqu'à {end:#x}, au-delà de {limit:#x}")
+    if nm > 2 * MARKS_ROW:
+        raise SystemExit(f"!! {nm} machines : les repères de l'écran MACHINES n'ont que 2 lignes de {MARKS_ROW}")
 
 
 set_base(PAY_ALONE)
@@ -1064,6 +1088,7 @@ def build_tweak(img, st_img, codes, generic=False, meter=False, tg=None, own=Non
     n = len(machines)
     if not 1 <= n <= MAX_EXTRA:
         raise SystemExit("!! nombre de moteurs")
+    set_rows(n)
     cur = tg["img"] if tg else img              # l'image telle que nos écritures la trouvent
     u32 = lambda va: struct.unpack_from(">I", cur, va - BASE)[0]
     check_sram_map(img, st_img)
@@ -1129,6 +1154,7 @@ def build_tweak(img, st_img, codes, generic=False, meter=False, tg=None, own=Non
         e[0x10:0x14] = g7.be32(m["decay"] << 8)
         new += e
     ndesc = g7.NDESC + 5 * n
+    check_room(n, nm)
 
     writes = []
 
