@@ -500,12 +500,12 @@ se figer, et après une note éteinte le trig ACID suivant rejoue la note ; DRIV
 
 ## 12. Fondu d'entrée (anti-clic)
 
-Signalement d'un utilisateur (13/10/2026) : ACID claque au début des notes. Même cause que la machine Wave (branche `wave`, `tools/machines/wavetable/wt.c`, son fondu `ATK`) : la
+Signalement d'un utilisateur (13/10/2026) : ACID claque au début des notes. Cause : la
 chaîne d'ampli de l'OS, réglée comme TONE (§3.4), n'a pas d'attaque pour une machine ajoutée ; TONE monte sur son
 premier bloc, ACID sortait d'emblée à pleine amplitude (et, si la voix jouait encore, sur une autre valeur que celle de
 l'échantillon précédent : la marche s'entend).
 
-Correction, comme Wave : dans `acid_block` (`acid_dsp.h`), au bloc d'une nouvelle note (`ACID_TRIG`), la sortie est
+Correction : dans `acid_block` (`acid_dsp.h`), au bloc d'une nouvelle note (`ACID_TRIG`), la sortie est
 multipliée par n/32 (n = 0..31), soit un fondu linéaire de 32 échantillons (~0,7 ms). Le slide n'est pas touché (pas
 de fondu, §3.3), ni l'état du filtre et de la saturation : seuls les 32 échantillons du bloc du trig changent. Le
 fondu est dans le cœur, donc aussi dans `acid_ref.c` : la preuve compare toujours à l'échantillon près.

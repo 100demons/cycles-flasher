@@ -226,7 +226,7 @@ static inline void acid_block(acid_t *s, const acid_in_t *in, s32 *out)
 			}
 			z += qmul(lp, u - z);
 			out[n] = qmac2(z << 3, mk, z << 3, mk);       /* z x 12 x niveau, sature a la pleine echelle */
-			if (in->trig == ACID_TRIG)                   /* fondu d'entree (anti-clic, comme Wave) */
+			if (in->trig == ACID_TRIG)                   /* fondu d'entree (anti-clic) */
 				out[n] = (out[n] >> ACID_ATK_SH) * n;
 			b += db;
 			k += dk;
