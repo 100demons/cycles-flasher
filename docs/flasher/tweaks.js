@@ -498,6 +498,112 @@ window.MC_TWEAKS = {
    ]
   },
   {
+   "id": "control-all-config",
+   "order": 49,
+   "name": "Control All : choix des pistes",
+   "description": [
+    "TRACK + TRIG 1-6 retire la piste 1-6 de Control All (TRACK tenu + potard) ou l'y remet ; TRACK tenu, les TRIG 1-6 s'allument pour les pistes qui suivent et restent éteints pour les autres.",
+    "La piste active suit toujours, comme sur les Digitakt et Digitone. Les pistes écartées gardent aussi leur machine, leur destination de LFO et PUNCH/GATE quand on les change TRACK tenu.",
+    "Choix en RAM seulement : après l'allumage, toutes les pistes suivent de nouveau, comme à l'origine.",
+    "Code de Control All Config v1.0 (durchgemacht, MIT, https://github.com/durchgemacht/cycles-control-all-config) dans quatre masques de sprites 48×22 libérés (tools/sprites.py) : 164 o en 0x4018b9c8, 78 o en 0x4018bb48, 138 o en 0x4018cbc8, 114 o en 0x4018d038. Généré par tools/gen_control_all_config.py, notes/58."
+   ],
+   "device": "Model:Cycles",
+   "os": "1.13",
+   "section": 3,
+   "conflicts": [],
+   "version": "v1.0",
+   "source": "https://github.com/durchgemacht/cycles-control-all-config/tree/436e308bb33d2322bb0fd3274ef25874050ffe6b",
+   "symbols": {
+    "cac_mask": "0x4018b9cc",
+    "cac_held": "0x4018b9cd",
+    "cac_skip": "0x4018b9ce",
+    "cac_loop1": "0x4018ba00",
+    "cac_loop2": "0x4018ba24",
+    "cac_loop3": "0x4018ba48",
+    "cac_loop4": "0x4018bb48",
+    "cac_loop5": "0x4018bb6c",
+    "cac_keys": "0x4018cbc8",
+    "cac_leds": "0x4018d038"
+   },
+   "writes": [
+    {
+     "off": 108666,
+     "old": "2f022f034e92",
+     "new": "4ef94018bb48"
+    },
+    {
+     "off": 119202,
+     "old": "20522f032f02",
+     "new": "4ef94018ba24"
+    },
+    {
+     "off": 119544,
+     "old": "20522668007c",
+     "new": "4ef94018ba00"
+    },
+    {
+     "off": 124882,
+     "old": "205248780020",
+     "new": "4ef94018ba48"
+    },
+    {
+     "off": 664472,
+     "old": "2f022f054e94",
+     "new": "4ef94018bb6c"
+    },
+    {
+     "off": 706962,
+     "old": "4018d038",
+     "new": "4014b364"
+    },
+    {
+     "off": 707022,
+     "old": "4018cbc8",
+     "new": "4014b364"
+    },
+    {
+     "off": 707624,
+     "old": "4018bb48",
+     "new": "4014b364"
+    },
+    {
+     "off": 707656,
+     "old": "4018b9c8",
+     "new": "4014b364"
+    },
+    {
+     "off": 1051368,
+     "old": "40024078",
+     "new": "4018cbc8"
+    },
+    {
+     "off": 1051544,
+     "old": "40023d8c",
+     "new": "4018d038"
+    },
+    {
+     "off": 1619400,
+     "old": "fffffc00fffffc00fffffc00fffffc00fffffc00fffffc00fffffc00fffffc00fffffc00fffffc00fffffc00fffffc00fffffc00fffffc00fffffc00fffffc00fffffc00fffffc00fffffc00fffffc00fffffc00fffffc00fffffc00fffffc00fffffc00fffffc00fffffc00fffffc00fffffc00fffffc00fffffc00fffffc00fffffc00fffffc00fffffc00fffffc00fffffc00fffffc00fffffc00fffffc00fffffc00",
+     "new": "4341433100007200123afffa010167242f004eb9400cf8662f004eb94000eb902e804eb940012412588f221fb280670470014e7570004e7520024ebaffca4a80660c20522668007c4ef94001d6fe52827006b08266e24ef94001d75420024ebaffa64a80660c20522f032f024ef94001d5a852827006b08266e24ef94001d5d8200b4ebaff824a80660c2052487800204ef94001ebd8528b7006b08b66e24ef94001ebfe"
+    },
+    {
+     "off": 1619784,
+     "old": "fffffc00fffffc00fffffc00fffffc00fffffc00fffffc00fffffc00fffffc00fffffc00fffffc00fffffc00fffffc00fffffc00fffffc00fffffc00fffffc00fffffc00fffffc00fffffc00ffff",
+     "new": "20024ebafe824a80660c2f022f034e924ef94001ac8052827006b08266e24ef94001ac8a20024ebafe5e4a80660c2f022f054e944ef9400a279e528206840000000c7006b08266dc4ef9400a27e2"
+    },
+    {
+     "off": 1624008,
+     "old": "fffffc00fffffc00fffffc00fffffc00fffffc00fffffc00fffffc00fffffc00fffffc00fffffc00fffffc00fffffc00fffffc00fffffc00fffffc00fffffc00fffffc00fffffc00fffffc00fffffc00fffffc00fffffc00fffffc00fffffc00fffffc00fffffc00fffffc00fffffc00fffffc00fffffc00fffffc00fffffc00fffffc00fffffc00ffff",
+     "new": "206f00082028000c7202b081660842394018b9cd606e721090817205b0816264222800100801000067360281000000286642720012394018b9cc014113c14018b9cc720012394018b9cd01c113c14018b9cd2f2f00044eb9400760ba588f6020720012394018b9cd0181671813c14018b9cd600c720012394018b9cd0101670470014e754ef940024078"
+    },
+    {
+     "off": 1625144,
+     "old": "fffffc00fffffc00fffffc00fffffc00fffffc00fffffc00fffffc00fffffc00fffffc00fffffc00fffffc00fffffc00fffffc00fffffc00fffffc00fffffc00fffffc00fffffc00fffffc00fffffc00fffffc00fffffc00fffffc00fffffc00fffffc00fffffc00fffffc00fffffc00ffff",
+     "new": "2f2f000c2f2f000c2f2f000c4eb940023d8c4fef000c4feffff448d7040c246f00184eb9400cfaf426007400720012394018b9cc70020501670270014879404a8c682f00200252802f002f034eb940005f864fef0010700122025281e3a8819252827006b08266c44cd7040c4fef000c4e75"
+    }
+   ]
+  },
+  {
    "id": "trig-preview",
    "order": 2,
    "name": "Trig preview (TRIG + PAGE)",
@@ -189454,6 +189560,25 @@ window.MC_TWEAKS = {
     }
    ],
    "license": "LICENSE-elektron-model-tweaks.txt"
+  },
+  {
+   "id": "control-all-config",
+   "label": "Control All : choix des pistes",
+   "desc": "TRACK + TRIG 1-6 retire une piste de Control All (TRACK tenu + potard) ou l'y remet ; TRACK tenu, les TRIG 1-6 montrent les pistes qui suivent. La piste active suit toujours. Choix en RAM.",
+   "status": "experimental",
+   "credit": {
+    "kind": "by",
+    "who": "durchgemacht",
+    "repo": "durchgemacht/cycles-control-all-config"
+   },
+   "cat": "live",
+   "variants": [
+    {
+     "id": "control-all-config",
+     "label": null
+    }
+   ],
+   "license": "LICENSE-Control-All-Config.txt"
   },
   {
    "id": "trig-preview",

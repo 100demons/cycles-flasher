@@ -11,8 +11,8 @@
 <link rel="preconnect" href="https://fonts.googleapis.com">
 <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
 <link rel="stylesheet" href="https://fonts.googleapis.com/css2?family=Familjen+Grotesk:wght@400..700&family=Tiny5&display=swap">
-<link rel="stylesheet" href="../assets/site.css?v=2026-10-12-08">
-<link rel="stylesheet" href="../assets/guide.css?v=2026-10-12-08">
+<link rel="stylesheet" href="../assets/site.css?v=2026-10-17-01">
+<link rel="stylesheet" href="../assets/guide.css?v=2026-10-17-01">
 <script>try{var l=localStorage.getItem("mc-lang"),t=localStorage.getItem("mc-theme")}catch(e){}document.documentElement.lang=l||(/^fr\b/i.test(navigator.language||"")?"fr":"en");if(t)document.documentElement.setAttribute("data-theme",t)</script>
 </head>
 <body data-page="guide">
@@ -65,6 +65,7 @@
         <li><a href="#samples"><span data-l="en">Samples OS</span><span data-l="fr">OS Samples</span></a></li>
         <li><a href="#stock"><span data-l="en">Back to stock</span><span data-l="fr">Revenir à l'origine</span></a></li>
         <li><a href="#recovery"><span data-l="en">Recovery</span><span data-l="fr">Secours</span></a></li>
+        <li><a href="#control-all"><span data-l="en">Control All, your choice of tracks</span><span data-l="fr">Control All : choix des pistes</span></a></li>
         <li><a href="#trouble"><span data-l="en">Troubleshooting</span><span data-l="fr">Dépannage</span></a></li>
       </ol>
     </nav>
@@ -843,8 +844,26 @@
         <p><span data-l="en">The startup menu doesn't listen to the USB port, only to the MIDI IN (3.5 mm jack, or DIN through the adapter supplied with the Model:Cycles). The full procedure is on <a href="https://github.com/18nelli18/Modded-Cycles/blob/main/FLASH.md" target="_blank" rel="noopener">GitHub</a>.</span><span data-l="fr">Le menu de démarrage n'écoute pas le port USB, seulement le MIDI IN (jack 3,5 mm, ou DIN avec l'adaptateur fourni avec le Model:Cycles). La marche à suivre complète est sur <a href="https://github.com/18nelli18/Modded-Cycles/blob/main/FLASH.md" target="_blank" rel="noopener">GitHub</a>.</span></p>
       </section>
 
+      <section id="control-all">
+        <h2><span class="n">27</span><span data-l="en">Control All, your choice of tracks</span><span data-l="fr">Control All : choix des pistes</span></h2>
+        <p class="by"><span data-l="en">By</span><span data-l="fr">Par</span> <a href="https://github.com/durchgemacht/cycles-control-all-config" target="_blank" rel="noopener">durchgemacht</a></p>
+        <p class="lede"><span data-l="en">Leave single tracks out of Control All: with TRACK held, a knob changes only the tracks you chose.</span><span data-l="fr">Écartez des pistes de Control All : TRACK tenu, un potard ne change que les pistes que vous avez choisies.</span></p>
+        <ol>
+          <li><span data-l="en">Hold <b>TRACK</b> and press <b>TRIG 1</b>–<b>6</b>: that track leaves Control All. Press again to put it back.</span><span data-l="fr">Tenez <b>TRACK</b> et appuyez sur <b>TRIG 1</b> à <b>6</b> : cette piste sort de Control All. Appuyez de nouveau pour l'y remettre.</span></li>
+          <li><span data-l="en">While <b>TRACK</b> is held, TRIG 1–6 light for the tracks that follow Control All and stay dark for the ones left out.</span><span data-l="fr">TRACK tenu, les TRIG 1–6 s'allument pour les pistes qui suivent Control All et restent éteints pour les autres.</span></li>
+          <li><span data-l="en">Hold <b>TRACK</b> and turn a knob: it changes the tracks that follow. The active track always follows, as on the Digitakt and Digitone, so what the screen shows is what the knob does.</span><span data-l="fr">Tenez <b>TRACK</b> et tournez un potard : il change les pistes qui suivent. La piste active suit toujours, comme sur les Digitakt et Digitone : ce que l'écran montre, le potard le fait.</span></li>
+        </ol>
+        <dl class="facts">
+          <div><dt><span data-l="en">Also</span><span data-l="fr">Aussi</span></dt><dd><span data-l="en">left-out tracks keep their machine, LFO destination and PUNCH/GATE when you change those with TRACK held.</span><span data-l="fr">les pistes écartées gardent leur machine, leur destination de LFO et PUNCH/GATE quand vous les changez TRACK tenu.</span></dd></div>
+          <div><dt><span data-l="en">Not saved</span><span data-l="fr">Pas enregistré</span></dt><dd><span data-l="en">after power-on every track follows again, as on the stock OS.</span><span data-l="fr">après l'allumage, toutes les pistes suivent de nouveau, comme sur l'OS d'origine.</span></dd></div>
+          <div><dt><span data-l="en">Limits</span><span data-l="fr">Limites</span></dt><dd><span data-l="en">TRACK + LEVEL/DATA (volume, and pan with FUNC) still moves all six tracks. A left-out track that is the active one shows dark but follows while it is active.</span><span data-l="fr">TRACK + LEVEL/DATA (volume, et pan avec FUNC) bouge encore les six pistes. Une piste écartée qui est la piste active s'affiche éteinte mais suit tant qu'elle est active.</span></dd></div>
+          <div><dt><span data-l="en">Credit</span><span data-l="fr">Crédit</span></dt><dd><span data-l="en">Control All Config 1.0 by durchgemacht (MIT), unchanged; placed here in four free sprite masks so that it goes with every other mod.</span><span data-l="fr">Control All Config 1.0 de durchgemacht (MIT), inchangé ; logé ici dans quatre masques de sprites libres pour aller avec tous les autres mods.</span></dd></div>
+          <div><dt><span data-l="en">Tested</span><span data-l="fr">Testé</span></dt><dd><span data-l="en">by its author on a Model:Cycles, in his own build. Experimental here until it is tested on Maxime's machine with the other mods.</span><span data-l="fr">par son auteur sur un Model:Cycles, dans sa propre image. Expérimental ici jusqu'au test sur la machine de Maxime avec les autres mods.</span></dd></div>
+        </dl>
+      </section>
+
       <section id="trouble">
-        <h2><span class="n">27</span><span data-l="en">Troubleshooting</span><span data-l="fr">Dépannage</span></h2>
+        <h2><span class="n">28</span><span data-l="en">Troubleshooting</span><span data-l="fr">Dépannage</span></h2>
         <div class="faq">
           <details>
             <summary><span data-l="en">Nothing happens on the Model:Cycles screen</span><span data-l="fr">Rien ne se passe sur l'écran du Model:Cycles</span></summary>
@@ -910,8 +929,8 @@
   </div>
 </footer>
 
-<script src="../assets/release.js?v=2026-10-12-08"></script>
-<script src="../assets/cycles.js?v=2026-10-12-08"></script>
-<script src="../assets/site.js?v=2026-10-12-08"></script>
+<script src="../assets/release.js?v=2026-10-17-01"></script>
+<script src="../assets/cycles.js?v=2026-10-17-01"></script>
+<script src="../assets/site.js?v=2026-10-17-01"></script>
 </body>
 </html>

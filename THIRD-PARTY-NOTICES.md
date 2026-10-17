@@ -68,6 +68,12 @@ Confirmed under the MIT License:
 - **LFO 2, 3, 4** (`60-lfo-plus.json`): rewritten by this project from DavidCaruso's `Model-TG-VA-DR-v1` firmware;
   DavidCaruso agreed to the MIT License (relayed by Maxime on 11/10/2026).
 
+- **Control All Config** (`49-control-all-config.json`): by durchgemacht, from
+  [durchgemacht/cycles-control-all-config](https://github.com/durchgemacht/cycles-control-all-config) (MIT, text in
+  `tweaks/model-cycles_OS1.13/LICENSE-Control-All-Config`, served with the flasher), contributed by its author as a pull
+  request; its source is copied unchanged into `tools/machines/control_all_config/` and relocated by
+  `tools/gen_control_all_config.py`.
+
 ## Tools used but not included
 
 The emulation proofs import [Unicorn](https://www.unicorn-engine.org/) (GPL-2.0) and numpy (BSD-3-Clause); the

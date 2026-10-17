@@ -57,6 +57,7 @@ Going back to the official firmware is one click away.
 | **Live MIDI OUT + THRU toggle** | With `THR` selected, hold `FUNC` and press the `LEVEL/DATA` knob to add the Cycles' own MIDI to what it forwards, or take it away. The screen stays on `THR`. By AveyCole. | ✅ Tested |
 | **Easier trig removal** | A quick press on a step that holds a trig removes it, instead of opening it as a hold. | ✅ Tested |
 | **Latching mute** | Hold `TRACK` and tap `FUNC`: mute mode stays on, no more holding `FUNC`. By [drumkilla](https://github.com/drumkilla/elektron-model-tweaks). | ✅ Tested |
+| **Control All, your choice of tracks** | Hold `TRACK` and press `TRIG 1–6` to leave that track out of Control All, or put it back; with `TRACK` held, `TRIG 1–6` light for the tracks that follow. The active track always follows, as on the Digitakt and Digitone. Not saved. By [durchgemacht](https://github.com/durchgemacht/cycles-control-all-config). | 🧪 Experimental |
 | **Trig preview** | Sequencer stopped or paused: hold a step and press `PAGE` to hear it, with its note, length and p-locks. By drumkilla. | ✅ Tested |
 | **Scrolling names** | Sound names too long for the screen scroll in the sound browser. By drumkilla. | ✅ Tested |
 | **Samples OS** | Turns the Model:Cycles into a Model:Samples, built from both official OS files. Coming back needs a MIDI interface. | ✅ Tested |

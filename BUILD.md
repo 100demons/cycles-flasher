@@ -245,6 +245,21 @@ python3 tools/emu/test_tempo_max.py --cycles model-cycles_OS1.13.syx
 | `model-tg,tempo-max` | `97cc13b34d3f4b3440d42bdb1c692e64bf0aa8b2de54b806b14320914936ef4f` |
 | `6ch-usbup,model-tg-st,syntakt-tg-sd-cp-toy-bits-swarm,trig-hold,arp,tempo-max` | `c8214dc5fe88a5ff346d8554f05753bb25acec448cb0eb23140236b10a9404d4` |
 
+
+### Control All : choix des pistes
+
+`tweaks/model-cycles_OS1.13/49-control-all-config.json` est produit par `tools/gen_control_all_config.py`, qui assemble
+`tools/machines/control_all_config/control_all_config.s` (le mod **Control All Config** 1.0 de durchgemacht, MIT, recopié
+tel quel) et le pose dans quatre masques de sprites 48×22 libérés ([note 58](notes/58-control-all-config.md)). TRACK + TRIG 1-6
+écarte une piste de Control All ou l'y remet ; TRACK tenu, les TRIG 1-6 montrent les pistes qui suivent ; la piste active
+suit toujours ; choix en RAM. La preuve fait tourner le vrai code des cinq boucles de Control All, du gestionnaire de
+touches et du producteur de LED de `TrackSelectionView`, d'origine et modifié :
+```sh
+python3 tools/gen_control_all_config.py --cycles model-cycles_OS1.13.syx [--check]
+python3 tools/emu/test_control_all_config.py --cycles model-cycles_OS1.13.syx \
+    [--with 6ch-usbup,model-tg-st,syntakt-tg-sd-cp-toy-bits-swarm,arp,trig-hold,tempo-max,boot-anim --syntakt Syntakt_OS1.42.syx]
+python3 tools/build.py -i model-cycles_OS1.13.syx -t control-all-config
+```
 ### OS Cycles pour Model:Samples (et retour par USB)
 
 Pas un tweak : `tools/crossflash.py` met l'OS Cycles officiel dans le conteneur officiel du Model:Samples, en changeant les

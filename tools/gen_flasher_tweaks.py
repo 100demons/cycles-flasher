@@ -119,6 +119,19 @@ FEATURES = [
         ],
     },
     {
+        "id": "control-all-config",
+        "cat": "live",
+        "label": "Control All : choix des pistes",
+        "desc": "TRACK + TRIG 1-6 retire une piste de Control All (TRACK tenu + potard) ou l'y remet ; TRACK tenu, "
+                "les TRIG 1-6 montrent les pistes qui suivent. La piste active suit toujours. Choix en RAM.",
+        "status": "experimental",
+        "credit": {"kind": "by", "who": "durchgemacht", "repo": "durchgemacht/cycles-control-all-config"},
+        "license": "LICENSE-Control-All-Config",
+        "variants": [
+            {"file": "49-control-all-config", "label": None},
+        ],
+    },
+    {
         "id": "trig-preview",
         "cat": "seq",
         "label": "Ecoute d'un pas (TRIG + PAGE)",
