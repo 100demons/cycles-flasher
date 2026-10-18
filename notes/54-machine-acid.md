@@ -31,6 +31,7 @@ l'OS 1.13.
 - **Testé sur la machine (11/10/2026)** : la première version (avec l'accent), puis la version avec DRIVE, « ça marche
   nickel » (§10). Avec MACRO et les moteurs du Syntakt (§11) : prouvé en émulation ; les 5 moteurs, MACRO et ACID,
   avec et sans Model-TG, testés sur la machine le 12/10/2026 (§11.7).
+  Fondu d'entrée anti-clic (§12) : testé sur la machine le 18/10/2026 avec les 5 moteurs et MACRO (§12.1).
 
 ## 1. Le modèle : Open303
 
@@ -497,3 +498,30 @@ Ce qu'il fallait vérifier : le démarrage et l'écran MACHINES (13 machines, 14
 MACRO et un moteur sur trois pistes en même temps, chacun comme seul ; un verrou de machine par pas ACID → MACRO →
 moteur ; une forte charge (les six pistes, tempo rapide) : le régulateur peut éteindre des notes, la machine ne doit pas
 se figer, et après une note éteinte le trig ACID suivant rejoue la note ; DRIVE, slide et GATE comme avant.
+
+## 12. Fondu d'entrée (anti-clic)
+
+Signalement d'un utilisateur (13/10/2026) : ACID claque au début des notes. Cause : la
+chaîne d'ampli de l'OS, réglée comme TONE (§3.4), n'a pas d'attaque pour une machine ajoutée ; TONE monte sur son
+premier bloc, ACID sortait d'emblée à pleine amplitude (et, si la voix jouait encore, sur une autre valeur que celle de
+l'échantillon précédent : la marche s'entend).
+
+Correction : dans `acid_block` (`acid_dsp.h`), au bloc d'une nouvelle note (`ACID_TRIG`), la sortie est
+multipliée par n/32 (n = 0..31), soit un fondu linéaire de 32 échantillons (~0,7 ms). Le slide n'est pas touché (pas
+de fondu, §3.3), ni l'état du filtre et de la saturation : seuls les 32 échantillons du bloc du trig changent. Le
+fondu est dans le cœur, donc aussi dans `acid_ref.c` : la preuve compare toujours à l'échantillon près.
+
+`[FAIT en émulation]` Une ligne de 2 mesures jouée par le vrai séquenceur à 120 BPM (30 notes rejouées, 2 slides),
+avant / après : les deux sorties ne diffèrent que dans les 32 premiers échantillons des 30 notes rejouées ; la marche
+au premier échantillon d'une note passe de 7 329 LSB (médiane, en 16 bits, max 19 313) à 13 (max 28).
+`test_acid.py` complet : TOUT OK. Tous les tweaks d'ACID régénérés (`gen_acid.py`, `gen_acid_combos.py` : 128
+fichiers), MAIN OS de `BUILD.md`, `REF_MAINOS` et `REF_MODS` mis à jour.
+
+### 12.1 Sur la machine
+
+**Testé sur la machine (18/10/2026)** : « tout marche bien » (Maxime). Il a flashé la version la plus complète,
+construite par `tools/build.py` depuis la branche de cette PR : `syntakt-sd-cp-toy-bits-swarm-macro-acid` (les 5 moteurs
+du Syntakt, MACRO, ACID en dernière machine), MAIN OS `4fe2f5a8…`, avec une piste ACID en doubles croches, cutoff
+fermé, résonance haute, DECAY court et un slide : plus de clic au début des notes, attaque et slide comme avant.
+ACID seule (`acid`, MAIN OS `01e81a42…`) et avec Model-TG (`model-tg-st,acid-tg`, `39b0b593…`) ont le même cœur
+(`acid_dsp.h`) mais n'ont pas été flashées : vérifiées en émulation seulement.

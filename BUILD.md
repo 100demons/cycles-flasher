@@ -432,13 +432,13 @@ combinées, ci-dessous.
 
 | `-t` | MAIN OS patché (SHA-256) |
 |---|---|
-| `acid` | `575787a216f0e840ebc4b13bea08196729f0eb9e1bbcbad55e05980cacd87a59` |
-| `6ch-usbup,acid` | `c803d8f78b50dfea27d74b21db1628c5f053205fb8b5728361e34a4a6c8ca532` |
-| `model-tg-st,acid-tg` | `cea79442887d3e318809e89b5d9e18249fa091c0017a3423133c13812b8a78be` |
-| `6ch-usbup,model-tg-st,acid-tg,trig-hold,arp,tempo-max,boot-anim` | `ccfe86b21325e38431fb6cfa4233b311dc15e7dd4c2cf7a4a80b21fa5731fc52` |
-| `6ch-usbup,model-tg-st,sample-preview-st,acid-tg,trig-hold,arp,tempo-max,boot-anim,multiline-browser,level-pan-values,trigless-dim` | `d54495435dfe302bbe2044614ab7603eabe6383105210f85d13ea68abdc827c9` |
-| `6ch-usbup,acid,trig-hold,arp,tempo-max,boot-anim,multiline-browser,level-pan-values,trigless-dim` | `6fe2cf2ba1450f92f7e2e91e2403fd2a817bae7df2cfd2eb9fcfa72392636d56` |
-| `6ch-usbup,acid,track-filter,trig-hold,arp,tempo-max,boot-anim,multiline-browser,level-pan-values,trigless-dim` | `9ebda7222c94322cf85b1a79379c0c43f4c21a9e026508ec44b90e96d5660281` |
+| `acid` | `01e81a42dd24060d73b68e3abc0fc55d40b976a5fcef16f970b1bc4288aeade8` |
+| `6ch-usbup,acid` | `990a083a302ee2559d7f7790132c842d1f189ae06eb3ae7156e4ccd3292d761b` |
+| `model-tg-st,acid-tg` | `39b0b593eb8ee353a9bc8897ea67bdbe8975088d165ad5c32988e00c5a6220cf` |
+| `6ch-usbup,model-tg-st,acid-tg,trig-hold,arp,tempo-max,boot-anim` | `d878cba74140edcc0dbf4e056cd8f0d67a39a761ad002770bfbbdaf829ca3de9` |
+| `6ch-usbup,model-tg-st,sample-preview-st,acid-tg,trig-hold,arp,tempo-max,boot-anim,multiline-browser,level-pan-values,trigless-dim` | `f13e4b3c13b125551503a494f7d900802e0d94a86f4d058d22991b82b0437ff0` |
+| `6ch-usbup,acid,trig-hold,arp,tempo-max,boot-anim,multiline-browser,level-pan-values,trigless-dim` | `ca155f8d6e5a08e821d34ff774951ccc0651f2bb6b2065e83e39660e134424a8` |
+| `6ch-usbup,acid,track-filter,trig-hold,arp,tempo-max,boot-anim,multiline-browser,level-pan-values,trigless-dim` | `9f440f23090b103f6b6399dc43dda21dcfa4456817ca76cb23633b14fd98d8f3` |
 
 ACID avec MACRO et les moteurs du Syntakt ([note 54 §11](notes/54-machine-acid.md)) : `tools/gen_acid_combos.py`
 produit `25-macro-acid.json` et `32-macro-acid-tg.json` (MACRO puis ACID), et `24-syntakt-<moteurs>[-macro]-acid.json`
@@ -456,15 +456,15 @@ python3 tools/emu/test_acid_combos.py --cycles model-cycles_OS1.13.syx --syntakt
 
 | `-t` (avec `--syntakt Syntakt_OS1.42.syx`) | MAIN OS patché (SHA-256) |
 |---|---|
-| `macro-acid` | `94d5edfe3f46f5c915040c9eb969ceff2a98dfdb9c8b67ad4686085b5bce1b97` |
-| `6ch-usbup,macro-acid` | `3abf8aa33f38ef1850b91d11b70223b47c71df0686e40f9b30e6bea82b1b9dee` |
-| `model-tg-st,macro-acid-tg` | `6eb7e101d625483d0d9cb526dd0d63fe569138d546f1e63819c00d9ffe9e8492` |
-| `syntakt-sd-acid` | `04524bf1109ae8999095836c5b91673afd5113f04e6218a5b3c33236da73f84b` |
-| `syntakt-sd-macro-acid` | `23ca2059f0b6f7e9607007e55cdaee690cf25be84081689afa50f822907aac20` |
-| `syntakt-sd-cp-toy-bits-swarm-macro-acid` | `a7671673e105ba16a573db824282a07da5375f21c85615d81c7cb72568d64541` |
-| `model-tg-st,syntakt-tg-sd-cp-toy-bits-swarm-macro-acid` | `d38b354c06f6ce7c9ed20aa11f1c04209320cf04b1beba1a94f1011c01962674` |
-| `6ch-usbup,model-tg-st,sample-preview-st,syntakt-tg-sd-cp-toy-bits-swarm-macro-acid,trig-hold,arp,tempo-max,boot-anim,multiline-browser,level-pan-values,trigless-dim` | `d823ff90f8cf8ab0a2654bb61a15717eba325687d6fdf4cb356add8dd75f058b` |
-| `6ch-usbup,syntakt-sd-cp-toy-bits-swarm-macro-acid,track-filter,trig-hold,arp,tempo-max,boot-anim,multiline-browser,level-pan-values,trigless-dim` | `851397735f5eecd17d0988e785dfeb65e0e6a0a638f59a95408f76c46be1434f` |
+| `macro-acid` | `bf24f6c0461ce168daf94b3caf6041996d579b0da328338197d38fd1ac63425b` |
+| `6ch-usbup,macro-acid` | `19a64308feb58da22152d3aedba585858877b22bf1f3a96de69dfd9fed54c54a` |
+| `model-tg-st,macro-acid-tg` | `20288a4746499f43f7e9350fdcce0ec6f763bb902e3c3d580c69be4cda276acf` |
+| `syntakt-sd-acid` | `cbd0dc0b07ce7931e83838cb4f17467e8745d893234e96cfb1abd128b71ae62f` |
+| `syntakt-sd-macro-acid` | `13079fc76c734a5a46e3481c88f0bf7ea7bc0387524262c2c66678cc965b418f` |
+| `syntakt-sd-cp-toy-bits-swarm-macro-acid` | `4fe2f5a8ce63b2f51b4a32fd523c6633237addfa9b53f314b7cf2c93880b4264` |
+| `model-tg-st,syntakt-tg-sd-cp-toy-bits-swarm-macro-acid` | `a44bc3e09b82ce2f8f4cfb9949787794c1ea27a09bdeb6f88499310e527fea5f` |
+| `6ch-usbup,model-tg-st,sample-preview-st,syntakt-tg-sd-cp-toy-bits-swarm-macro-acid,trig-hold,arp,tempo-max,boot-anim,multiline-browser,level-pan-values,trigless-dim` | `82cdc6a71078307692b7085410b74e0963dd2f1559ced16ac55c56bfe6960ce3` |
+| `6ch-usbup,syntakt-sd-cp-toy-bits-swarm-macro-acid,track-filter,trig-hold,arp,tempo-max,boot-anim,multiline-browser,level-pan-values,trigless-dim` | `4e22da455cda7187ea8c441f46c6cf8e4d84ede429ba1d4308928cbdcbf4efd1` |
 
 ### Navigateur sur plusieurs lignes
 

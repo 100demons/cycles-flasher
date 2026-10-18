@@ -86,6 +86,7 @@ typedef struct {
 
 #define ACID_TRIG  1
 #define ACID_SLIDE 2
+#define ACID_ATK_SH 5      /* fondu d'entree d'une nouvelle note : 2^5 = 32 echantillons (~0,7 ms) */
 
 static inline s32 acid_lut17(const s32 *t, s32 x)        /* 17 points sur 0..32767, interpoles */
 {
@@ -225,6 +226,8 @@ static inline void acid_block(acid_t *s, const acid_in_t *in, s32 *out)
 			}
 			z += qmul(lp, u - z);
 			out[n] = qmac2(z << 3, mk, z << 3, mk);       /* z x 12 x niveau, sature a la pleine echelle */
+			if (in->trig == ACID_TRIG)                   /* fondu d'entree (anti-clic) */
+				out[n] = (out[n] >> ACID_ATK_SH) * n;
 			b += db;
 			k += dk;
 			g += dg;
