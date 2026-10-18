@@ -1,7 +1,8 @@
 # 58 — Control All : choisir les pistes qu'il touche (tweak `control-all-config`)
 
 Mod **Control All Config** de durchgemacht ([durchgemacht/cycles-control-all-config](https://github.com/durchgemacht/cycles-control-all-config),
-MIT, version 1.0 du 17/10/2026, tag `v1.0`, commit `436e308`), porté ici par son auteur. Sur le Model:Cycles, Control
+MIT, version 1.0 du 17/10/2026, tag `v1.0` ; source au commit `fb3969b`, la même découpée en une section par
+routine, image identique), porté ici par son auteur. Sur le Model:Cycles, Control
 All (TRACK tenu + potard) touche toujours les six pistes ; les Digitakt et Digitone laissent choisir les pistes
 concernées (« Control All Config »), d'où le nom. Tweak `49-control-all-config.json` (`tools/gen_control_all_config.py`,
 source dans `tools/machines/control_all_config/`), preuve en émulation `tools/emu/test_control_all_config.py`.

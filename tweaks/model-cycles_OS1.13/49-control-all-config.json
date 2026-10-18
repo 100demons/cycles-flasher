@@ -13,7 +13,7 @@
  "section": 3,
  "conflicts": [],
  "version": "v1.0",
- "source": "https://github.com/durchgemacht/cycles-control-all-config/tree/436e308bb33d2322bb0fd3274ef25874050ffe6b",
+ "source": "https://github.com/durchgemacht/cycles-control-all-config/tree/fb3969bc98c6496a45cd9b5bd639c88b70a6dd50",
  "symbols": {
   "cac_mask": "0x4018b9cc",
   "cac_held": "0x4018b9cd",

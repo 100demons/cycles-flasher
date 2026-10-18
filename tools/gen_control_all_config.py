@@ -8,8 +8,9 @@ RAM : après l'allumage, toutes les pistes suivent de nouveau, comme à l'origin
 leur machine, leur destination de LFO et PUNCH/GATE quand on les change TRACK tenu.
 
 Code : « Control All Config » 1.0 de durchgemacht (MIT, https://github.com/durchgemacht/cycles-control-all-config,
-tag v1.0 = commit 436e308b…), testé sur un Model:Cycles dans ce dépôt d'origine. Sa source est recopiée telle quelle
-dans tools/machines/control_all_config/ avec sa licence ; ses neuf sections sont posées dans quatre masques de sprites
+tag v1.0), testé sur un Model:Cycles dans ce dépôt d'origine. Sa source, telle que le commit fb3969b l'a découpée en
+une section par routine (même image que v1.0, octet pour octet), est recopiée telle quelle dans
+tools/machines/control_all_config/ avec sa licence ; ses neuf sections sont posées dans quatre masques de sprites
 48×22 libérés (tools/sprites.py, notes/52). Les cinq accroches (un jmp de 6 o au début de chaque boucle de Control
 All) et les deux entrées de vtable de TrackSelectionView sont celles du dépôt d'origine ; seules les adresses du code
 changent. Les octets « old » viennent du fichier officiel de l'utilisateur, jamais du dépôt.
@@ -37,7 +38,7 @@ SRC = HERE / "machines" / "control_all_config" / "control_all_config.s"
 OUT = HERE.parent / "tweaks" / "model-cycles_OS1.13" / "49-control-all-config.json"
 BASE = build.BASE
 UPSTREAM = "https://github.com/durchgemacht/cycles-control-all-config"
-UPSTREAM_TAG, UPSTREAM_COMMIT = "v1.0", "436e308bb33d2322bb0fd3274ef25874050ffe6b"
+UPSTREAM_TAG, UPSTREAM_COMMIT = "v1.0", "fb3969bc98c6496a45cd9b5bd639c88b70a6dd50"   # v1.0 = image 17ead2b6… ; ce commit : la même source, une section par routine
 
 # (section de sortie, masque 48×22 libéré, sections de la source). cac_skip lit cac_mask et les boucles appellent
 # cac_skip en relatif au PC (±32 Ko) : l'état, cac_skip et les boucles restent donc voisins. cac_keys et cac_leds
