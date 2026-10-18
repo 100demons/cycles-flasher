@@ -3,11 +3,11 @@
  *   { version: "1.1", date: "2026-10-15", changes: [{ en: "…", fr: "…" }] }
  */
 window.MC_RELEASES = [
-  { version: "1.55", date: "2026-10-13", changes: [
+  { version: "1.55", date: "2026-10-18", changes: [
     { en: "ACID machine, no more click at the start of notes: each new note now fades in over less than a millisecond, too short to hear as an attack, so the bass line stays punchy without the tick. Slides are unchanged",
       fr: "Machine ACID, plus de clic au début des notes : chaque nouvelle note monte maintenant en moins d'une milliseconde, trop court pour s'entendre comme une attaque, la ligne de basse garde son mordant sans le clic. Le slide ne change pas" },
-    { en: "Checked in the emulator on the OS's own code with the real sequencer: only the first moment of each new note changes. Applies to every version of ACID (alone, with Model-TG, with MACRO and the Syntakt engines)",
-      fr: "Vérifié en émulation sur le code même de l'OS avec le vrai séquenceur : seul le tout début de chaque nouvelle note change. Vaut pour toutes les versions d'ACID (seule, avec Model-TG, avec MACRO et les moteurs du Syntakt)" },
+    { en: "Tested on a Model:Cycles with the five Syntakt engines and MACRO, and checked in the emulator on the OS's own code with the real sequencer: only the first moment of each new note changes. Applies to every version of ACID (alone, with Model-TG, with MACRO and the Syntakt engines)",
+      fr: "Testé sur un Model:Cycles avec les cinq moteurs du Syntakt et MACRO, et vérifié en émulation sur le code même de l'OS avec le vrai séquenceur : seul le tout début de chaque nouvelle note change. Vaut pour toutes les versions d'ACID (seule, avec Model-TG, avec MACRO et les moteurs du Syntakt)" },
   ] },
   { version: "1.54", date: "2026-10-12", changes: [
     { en: "MACRO machine, lo-fi fixed: on a MACRO track, hold FUNC and turn PITCH to really set the lo-fi. In 1.46 this still changed the note by semitones, and the lo-fi could not be reached from the knobs. The screen now shows OFF in the middle, the sample rate on the left (46K down to 4K, in kHz) and the bit depth on the right (12B down to 2B, in bits), in large letters, one step per click of the knob",
