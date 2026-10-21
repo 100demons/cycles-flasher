@@ -186,6 +186,28 @@ Hardware tests follow every increment, by the maintainer, before anything is cal
   proven with SAMPLE and the reference machine, and the flasher keeps its one card until a second machine worth
   offering exists.
 
+## 8a. B1 built (2026-10-21)
+
+`tools/compose.py`, `tools/machines/sampler/manifest.json`, `tools/machines/refmachine/` (`refmachine.c`, 1 304 bytes
+of code, 192 of variables, five `R_68K_32` relocations, no undefined symbol) and `tools/gen_refmachine.py`
+(`28-refmachine.json`, 116 writes, the reference machine alone). Results:
+
+- `compose.py --machines sampler` gives `27-sampler.json`'s writes, payload and symbols **byte for byte**, the MAIN
+  OS `7e40344e…` of One-Shot 0.7, and even the same `.syx` as One-Shot's own build (`c0c44621…`): the composer's
+  path for one machine is the generator's path.
+- `sampler,refmachine` and `refmachine,sampler` build (MAIN OS `0e79c89d…` and `1f10fb27…`: the order changes the
+  indices, so the bytes), 295 160 bytes of payload, 37 636 added to the image; with `arp` and `trig-hold` too.
+  The emitted pair tweak, dropped into `tweaks/`, is applied by `build.py -t sampler+refmachine` to the same MAIN
+  OS, so the flasher could take it as it is.
+- `check_overlaps.py`, `registry.py --check`, `gen_flasher_tweaks.py --check` pass with `28-refmachine.json` in the
+  folder (285 tweaks). A composed tweak's conflict list is computed against the folder at compose time: composed
+  before `28-refmachine.json` existed, the pair did not name `refmachine` and the checker said so; recomposed, it
+  does. A composed tweak is a build, valid for the folder it was built from.
+- digiemu (maintainer, 2026-10-21): the reference machine alone (`222ddeec…`) and the pair `sampler+refmachine`
+  (`06155a2a…`) run; REF plays, and SAMPLE in the pair plays the files put in `/incoming` as it does alone. "Passt."
+- Not done here: the emulation proof (no Unicorn in this Python) and the hardware test. Nothing is offered in the
+  flasher.
+
 ## 9. The way not taken: pre-built combinations
 
 `gen_acid_combos.py` builds MACRO and ACID into one tweak at fixed offsets (ACID at `+0x76000`, variables at

@@ -48,6 +48,7 @@ window.MC_TWEAKS = {
     "macro-tg",
     "model-tg",
     "model-tg-st",
+    "refmachine",
     "sample-preview",
     "sample-preview-st",
     "sdvintage-7th",

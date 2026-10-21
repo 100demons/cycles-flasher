@@ -86,6 +86,11 @@ tweaks/model-cycles_OS1.13/   tweak JSON files (generated), device.json, PROVENA
 tools/build.py                Python build: applies tweaks, checks caves, repacks and re-signs (mtlib)
 tools/gen_*.py                one generator per mod: writes its tweak JSON, --check verifies it is up to date
 tools/machines/<mod>/         C and assembly sources compiled into the firmware
+tools/machines/<id>/manifest.json   a machine as a package (Cycles Mod Standard, notes/59): sources, flags, patch points,
+                              hooks; tools/compose.py composes the chosen packages into one tweak at build time
+tools/compose.py              Level B, increment B1: lays packages out, links them, registers them together through
+                              gen_macro.added_machine, computes the conflicts, builds the .syx (notes/59)
+tools/machines/refmachine/    the reference machine: the smallest added machine, proves the composer, never offered
 tools/emu/                    Unicorn emulation of the OS: test_<mod>.py proofs, mcengine.py, emac.py, syntakt.py
 tools/gen_flasher_tweaks.py   FEATURES list -> docs/flasher/tweaks.js (generated)
 tools/crossflash.py, tools/mods_for_samples.py   one OS in the other machine's container (notes/41, 57): Samples OS tab,
