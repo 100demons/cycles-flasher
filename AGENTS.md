@@ -46,8 +46,8 @@ maintained by 18nelli18; model27 is not affiliated with it, and never speaks for
    reports that it works on their Model:Cycles does it become `"tested"`, in a separate commit ("… tested on the
    Model:Cycles"). Never mark anything tested yourself, never claim a hardware result you did not get from them.
 4. **One user-visible change, one commit series**, with its docs, guide, release notes and note. Commit only when the
-   maintainer asks, never on your own, and never add a co-author trailer to a commit message. The maintainer decides
-   what lands, after testing on the hardware.
+   maintainer asks, never on your own. Every commit message ends with the trailer `Co-Authored-By: Claude` (the
+   maintainer's choice for the mod repositories). The maintainer decides what lands, after testing on the hardware.
 5. **Prove it in emulation first.** Every mod has a generator with `--check` and a proof under `tools/emu/` that runs
    the OS's own code (Unicorn), stock vs patched. Unproven code does not go in the flasher.
 6. **Recovery must stay possible.** Only section 3 is touched; the bootloader and updater stay identical, so the
@@ -172,7 +172,8 @@ If a check cannot run (no network, no toolchain), say so instead of skipping it 
 ## Commits
 
 - Commit messages in English: a short subject saying what the user gets ("Tempo up to 546 BPM (tempo-max tweak,
-  notes/38)"), a body with the why, the bullets of what changed, and how it was proven. No co-author trailers.
+  notes/38)"), a body with the why, the bullets of what changed, and how it was proven, then the trailer
+  `Co-Authored-By: Claude`.
 - Merge `main` into a feature branch rather than rebasing shared branches; regenerate `tweaks.js` and `REF_MAINOS`/`REF_MODS`
   after a merge instead of resolving their conflicts by hand.
 - Before proposing a commit, say what the user sees before and after, how it was proven, and **what the maintainer

@@ -1,0 +1,262 @@
+#!/usr/bin/env python3
+"""Generates the tweak of the SAMPLE machine: Cycles One-Shot, a one-shot sampler for samples on the +Drive, as an
+added machine of the Model:Cycles.
+
+  - 27-sampler.json: 7th machine, after the 6 stock ones.
+
+The code is Cycles One-Shot's (durchgemacht, MIT: tools/machines/sampler/LICENSE, copied next to the tweaks as
+LICENSE-One-Shot), taken as is from https://github.com/durchgemacht/cycles-one-shot at tag v0.7 (UPSTREAM_COMMIT
+below), with the same paths as there: src/ the sound core (6-tap polyphase interpolation at 96 kHz, the Model:Samples'
+filter), machine/ the bridge to the voice loop, the sample memory (loaded from the +Drive, chosen in the PRESET
+browser, saved with the sound), the waveform view and the hooks. Nothing of it is changed here; what differs from
+One-Shot's own build (its machine/build.py) is only the file name, the English name and description, and the
+"version" and "source" fields. The tweak carries, of the OS, only the short stock bytes ("old") that check the
+official file; the descriptor table is copied at build time from YOUR file ("cycles" recipe, as for MACRO).
+
+The mechanics are MACRO's and ACID's (gen_macro.added_machine, notes/43, notes/54): same detours, same moved tables,
+same place in the payload (0x43000000). SAMPLE's own hooks follow: the browser's file open, the sound record save
+(two versions) and load, the screen's redraw, and the draw methods of the main screen and of the knob view (vtable
+entries). The sample pool is the RAM from 8 MB above the payload window to Model-TG's window
+(0x43800000..0x46700000, 47 MB; POOL below): a combined build whose payload ends above POOL[0] must move it.
+
+What this tweak conflicts with is computed, not listed by hand: every other tweak of the folder that writes other
+bytes to the same address, or whose payload runs in SAMPLE's payload window or in its pool (the machine-adding
+tweaks, Model-TG, the track filter), plus sample-preview by name (it plays sample files from the same browser and
+needs Model-TG). Rerun this generator when a tweak is added, so that the list stays current (--check says so).
+
+MACRO's and ACID's optional writes (usb_steady, voice_loop) are left out, as in One-Shot's own build: the tweak then
+gives the MAIN OS that One-Shot 0.7 built and tested on a Model:Cycles (2026-10-21), byte for byte.
+
+    python3 tools/gen_sampler.py --cycles model-cycles_OS1.13.syx [--check]
+
+The committed JSON is compiled with m68k-elf-gcc (Homebrew); another GCC can give other bytes, and --check says so.
+"""
+import argparse
+import json
+import pathlib
+import sys
+import tempfile
+
+HERE = pathlib.Path(__file__).resolve().parent
+sys.path.insert(0, str(HERE))
+sys.path.insert(0, str(HERE / "emu"))
+
+import build                       # noqa: E402
+import gen_macro as gm             # noqa: E402
+import gen_sdvintage_exact as gx   # noqa: E402
+import gen_sdvintage_7th as g7     # noqa: E402
+import gen_syntakt_engines as gs   # noqa: E402
+
+DEV = HERE.parent / "tweaks" / "model-cycles_OS1.13"
+OUT = DEV / "27-sampler.json"
+LICENSE_OUT = DEV / "LICENSE-One-Shot"
+SRC = HERE / "machines" / "sampler"
+BASE = build.BASE
+
+UPSTREAM = "https://github.com/durchgemacht/cycles-one-shot"
+UPSTREAM_TAG, UPSTREAM_COMMIT = "v0.7", "9a322af78ea52a6e626e3e4f45e6ff9cfdada0ac"
+VERSION = "0.7"
+
+# The machine, as One-Shot's machine/build.py declares it: knobs COLOR, SHAPE, SWEEP, CONTOUR = (long name, short
+# name, default[, min, max]); Start and Length run to 120 as on the Model:Samples; decay = default of its Amp Decay;
+# image = the picture it borrows (the OS has only 6; 4 = TONE).
+MACHINE = dict(name="SAMPLE", image=4, decay=127,
+               knobs=(("Start", "STRT", 0, 0, 120), ("Length", "LEN", 120, 0, 120), ("Cutoff", "FREQ", 64),
+                      ("Reso", "RESO", 0)))
+POOL = (0x43800000, 0x46700000)
+SOURCES = ("src/smp_core.c", "src/smp_coeffs.c", "src/smp_filter.c", "src/smp_filter_tab.c", "src/smp_filter_cf.S",
+           "machine/sampler.c", "machine/pool.c", "machine/view.c", "machine/hooks.S")
+# One-Shot's own flags, so that the bytes are its (gen_acid.py adds -malign-int and -fomit-frame-pointer for ACID)
+CFLAGS = ["-std=c99", "-mcpu=54418", "-O2", "-ffreestanding", "-fno-builtin", "-fno-tree-loop-distribute-patterns",
+          "-nostdlib", "-fno-pic", "-fno-common", "-ffunction-sections", "-fdata-sections", "-Wall", "-Wextra",
+          "-Werror"]
+LINK = """SECTIONS
+{{
+  .text {code:#x} : {{ *(.text.sampler_update) *(.text.sampler_render) *(.text*) }}
+  .rodata : {{ *(.rodata*) }}
+  .data : {{ *(.data*) }}
+  .bss {bss:#x} (NOLOAD) : {{ *(.bss*) *(COMMON) }}
+  /DISCARD/ : {{ *(.comment) *(.note*) *(.eh_frame*) }}
+}}
+"""
+BSS_OFF = gm.BSS_OFF               # as MACRO: variables above the moved tables (gs.LAYOUT)
+# SAMPLE's hooks: (address, stock bytes, "jsr" or "jmp", symbol). A jmp replaces the first 8 bytes of a function
+# (lea -12(sp),sp ; movem.l a2-a4,(sp)), which the hook runs itself (machine/hooks.S).
+HOOKS = ((0x400a6602, "4eb9400a3052", "jsr", "smp_hook_open"),       # the browser opens a file
+         (0x4005afa0, "4feffff448d71c00", "jmp", "smp_hook_save2"),  # sound -> record, version 2
+         (0x4005b054, "4feffff448d71c00", "jmp", "smp_hook_save1"),  # sound -> record, version 1
+         (0x4005aecc, "4feffff448d71c00", "jmp", "smp_hook_load"),   # record -> sound
+         (0x400075f0, "4eb940076be4", "jsr", "smp_hook_tick"))       # the screen's redraw, about 30 Hz
+# SAMPLE's view: (vtable entry, stock method, symbol). Entry +16 is a view's draw method, called by the screen's
+# redraw (0x40076c76) with the view and the screen's Bitmap; each entry is the only reference to its method, and
+# SAMPLE's calls the stock one for anything else.
+VIEWS = ((0x400ffe30, 0x4001b22a, "smp_main_draw"),       # MainScreenView (vtable 0x400ffe20)
+         (0x4010053c, 0x4001e40a, "smp_knob_draw"))       # the knob view (vtable 0x4010052c)
+EXTRA_CONFLICTS = {"sample-preview", "sample-preview-st"}
+ORDER = 27
+
+
+def compile_machine(tmp, code_at, bss_at, code_end, machine_index, desc_start):
+    """One-Shot's core, table, filter, bridge, sample memory, view and hooks, linked at code_at (code and data) and
+    bss_at (variables); the code must end before code_end. machine_index is SAMPLE's index among the machines and
+    desc_start its first descriptor, both from the registrar's layout. Returns (bytes from code_at to the end of
+    the data, symbols, end of the variables)."""
+    defs = [f"-DSAMPLE_MACHINE={machine_index}", f"-DDESC_START={desc_start}",
+            f"-DCUTOFF_OBJECT={g7.SNARE_DESC + 2}",     # added machines' knobs share SNARE's objects (notes/18)
+            f"-DPOOL_BASE={POOL[0]:#x}u", f"-DPOOL_LIMIT={POOL[1]:#x}u"]
+    objs = []
+    for rel in SOURCES:
+        src = SRC / rel
+        o = tmp / (src.stem + ".o")
+        gx.run([gx.CROSS + "gcc", *CFLAGS, *defs, f"-I{SRC / 'src'}", f"-I{SRC / 'machine'}", "-c", str(src),
+                "-o", str(o)])
+        objs.append(o)
+    ld, elf, out = tmp / "link.ld", tmp / "sampler.elf", tmp / "sampler.bin"
+    ld.write_text(LINK.format(code=code_at, bss=bss_at))
+    keep = [a for sym in [h[3] for h in HOOKS] + [v[2] for v in VIEWS] for a in ("-u", sym)]
+    gx.run([gx.CROSS + "ld", "-T", str(ld), "--gc-sections", "--no-warn-rwx-segments", "-e", "sampler_update",
+            "-u", "sampler_render", *keep, "-o", str(elf), *map(str, objs)])
+    secs = {}
+    for line in gx.run([gx.CROSS + "objdump", "-h", str(elf)]).splitlines():
+        f = line.split()
+        if len(f) > 4 and f[0].isdigit():
+            secs[f[1]] = (int(f[3], 16), int(f[2], 16))      # address, size
+    if set(secs) - {".text", ".rodata", ".data", ".bss"}:
+        raise SystemExit(f"!! unexpected sections: {sorted(secs)}")
+    gx.run([gx.CROSS + "objcopy", "-O", "binary", "-R", ".bss", str(elf), str(out)])
+    blob = out.read_bytes()
+    syms = {p[2]: int(p[0], 16) for p in (l.split() for l in gx.run([gx.CROSS + "nm", str(elf)]).splitlines())
+            if len(p) == 3}
+    if code_at + len(blob) > code_end:
+        raise SystemExit(f"!! code and tables too big: {len(blob)} bytes")
+    bss = secs.get(".bss", (bss_at, 0))
+    if bss[0] != bss_at:
+        raise SystemExit("!! BSS")
+    return blob, syms, (bss[0] + bss[1] + 3) & ~3
+
+
+def own_writes(img, syms):
+    """SAMPLE's hooks and view entries as writes, each checked against the stock bytes."""
+    writes = []
+    for va, old, op, sym in HOOKS:
+        old = bytes.fromhex(old)
+        new = (bytes.fromhex("4eb9") + g7.be32(syms[sym]) if op == "jsr"
+               else bytes.fromhex("4ef9") + g7.be32(syms[sym]) + bytes.fromhex("4e71"))
+        if len(new) != len(old):
+            raise SystemExit(f"!! hook at {va:#x}: {len(new)} bytes for {len(old)}")
+        if img[va - BASE:va - BASE + len(old)] != old:
+            raise SystemExit(f"!! {va:#x}: {old.hex()} expected, {img[va - BASE:va - BASE + len(old)].hex()} found")
+        writes.append({"off": va - BASE, "old": old.hex(), "new": new.hex()})
+    for va, method, sym in VIEWS:
+        if g7.refs32(img, method) != [va]:
+            raise SystemExit(f"!! references to {method:#x}: {[hex(r) for r in g7.refs32(img, method)]}")
+        writes.append({"off": va - BASE, "old": g7.be32(method).hex(), "new": g7.be32(syms[sym]).hex()})
+    return writes
+
+
+def computed_conflicts(writes, ram):
+    """The ids of the folder's other tweaks this one cannot be installed with: a write of other bytes to the same
+    address, or a payload that runs in one of our RAM ranges (the payload window, the pool). The same whole write
+    (a sprite mask freed by both) is not a conflict, as in check_overlaps.py."""
+    mine = {}
+    for w in writes:
+        for i, b in enumerate(bytes.fromhex(w["new"])):
+            mine[w["off"] + i] = b
+    ids = set()
+    for f in sorted(DEV.glob("*.json")):
+        if f.name in ("device.json", OUT.name):
+            continue
+        t = json.loads(f.read_text(encoding="utf-8"))
+        tid = t.get("id")
+        if not tid:
+            continue
+        clash = any(mine.get(w["off"] + i, b) != b
+                    for w in t.get("writes", []) for i, b in enumerate(bytes.fromhex(w["new"])))
+        ap = t.get("append")
+        if ap and not clash:
+            lo, hi = int(ap["dest"], 16), int(ap["dest"], 16) + ap["size"]
+            clash = any(lo < b and a < hi for a, b in ram)
+        if clash:
+            ids.add(tid)
+    return ids
+
+
+def build_tweak(img):
+    """The tweak: SAMPLE registered through gen_macro.added_machine as the 7th machine, at the alone payload
+    window, with its own hooks and view entries, and the conflicts computed from the folder's tweaks."""
+    pay = gs.PAY_ALONE
+    gs.set_base(pay)
+    with tempfile.TemporaryDirectory() as d:
+        tmp = pathlib.Path(d)
+        blob, syms, bss_end = compile_machine(tmp, pay, pay + BSS_OFF, gs.STUBS, 6, 76)
+        if bss_end > POOL[0]:
+            raise SystemExit(f"!! the payload ends at {bss_end:#x}, inside the sample pool ({POOL[0]:#x}): move POOL")
+        machine = dict(MACHINE, update=syms["sampler_update"], render=syms["sampler_render"])
+        writes, append = gm.added_machine(img, None, [machine], tmp, [(pay, blob)], bss_end)
+    writes += own_writes(img, syms)
+    writes.sort(key=lambda x: x["off"])
+    for a_, b_ in zip(writes, writes[1:]):
+        if a_["off"] + len(a_["new"]) // 2 > b_["off"]:
+            raise SystemExit(f"!! writes overlap at {BASE + b_['off']:#x}")
+    conflicts = (computed_conflicts(writes, [(pay, bss_end), POOL]) | EXTRA_CONFLICTS) - {"sampler"}
+    out = {
+        "id": "sampler",
+        "order": ORDER,
+        "name": "SAMPLE machine: one-shot sampler for samples on the +Drive (Cycles One-Shot %s)" % VERSION,
+        "description": [
+            "7th machine after the 6 stock ones, registered like MACRO and ACID (gen_macro.added_machine). Plays a",
+            "sample from the +Drive once per trig: 6-tap polyphase interpolation at 96 kHz, the stock decimator, the",
+            "amp chain set up like TONE, then the Model:Samples' filter. The sample is chosen for a SAMPLE track in",
+            "the PRESET browser (FUNC + MACHINE) and saved with the sound; stereo files play as mono, other rates at",
+            "their pitch. COLOR = Start, SHAPE = Length (0..120 each, as on the Model:Samples; the trig ends at",
+            "Start + Length), SWEEP = Cutoff (-64 .. 63: lowpass below 0, off at 0, highpass above), CONTOUR = Reso;",
+            "DECAY, GATE and PUNCH: the stock amp chain. On a SAMPLE track the main screen shows the sample's name",
+            "and waveform with the start and end marked.",
+            "Code of Cycles One-Shot %s (durchgemacht, MIT, %s, tag %s), copied as is into tools/machines/sampler/."
+            % (VERSION, UPSTREAM, UPSTREAM_TAG),
+            "Samples live in %#x..%#x (%d MB); the payload runs at %#x. Conflicts computed from the other tweaks:"
+            % (POOL[0], POOL[1], (POOL[1] - POOL[0]) >> 20, pay),
+            "other bytes at the same address, or a payload in SAMPLE's window or pool. Generated by",
+            "tools/gen_sampler.py.",
+        ],
+        "device": "Model:Cycles",
+        "os": "1.13",
+        "section": 3,
+        "version": VERSION,
+        "source": f"{UPSTREAM}/tree/{UPSTREAM_COMMIT}",
+        "conflicts": sorted(conflicts),
+        "writes": writes,
+        "append": append,
+        # for the proofs: the entries of the bridge, the hooks and the view
+        "symbols": {k: f"{syms[k]:#x}" for k in ("sampler_update", "sampler_render") + tuple(h[3] for h in HOOKS)
+                    + tuple(v[2] for v in VIEWS)},
+    }
+    build.apply_writes(img, [out])            # a bad "old" fails here, not in the user's build
+    segs = sum(n for _, n in append["pack"])
+    return out, dict(code=len(blob), bss=bss_end - pay - BSS_OFF, image=segs, pay=pay, bss_end=bss_end)
+
+
+def main():
+    ap = argparse.ArgumentParser(description=__doc__, formatter_class=argparse.RawDescriptionHelpFormatter)
+    ap.add_argument("--cycles", help="official model-cycles_OS1.13.syx (without it: only the license file)")
+    ap.add_argument("--check", action="store_true", help="checks that the committed files match")
+    args = ap.parse_args()
+    bad = gm.emit(LICENSE_OUT, (SRC / "LICENSE").read_text(encoding="utf-8"), args.check)
+    if args.cycles:
+        img = g7.cycles_main(args.cycles)
+        if len(img) != gx.IMAGE_LEN:
+            raise SystemExit("!! not the official MAIN OS 1.13")
+        if build.sha(img) != json.loads((DEV / "device.json").read_text(encoding="utf-8"))["section_sha256"]:
+            raise SystemExit("!! not the official MAIN OS 1.13 (section 3 hash)")
+        tweak, info = build_tweak(img)
+        text = json.dumps(tweak, indent=1, ensure_ascii=False) + "\n"
+        print(f"  {tweak['id']}: {len(tweak['writes'])} writes, code and tables {info['code']} bytes, variables "
+              f"{info['bss']} bytes, {info['image']} bytes added to the image, payload {info['pay']:#x}..{info['bss_end']:#x}, "
+              f"pool {POOL[0]:#x}..{POOL[1]:#x}, {len(tweak['conflicts'])} conflicts computed")
+        bad += gm.emit(OUT, text, args.check)
+    if bad:
+        raise SystemExit(1)
+
+
+if __name__ == "__main__":
+    main()
