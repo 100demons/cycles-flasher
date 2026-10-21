@@ -2,8 +2,8 @@
 
 ## What the license covers
 
-The MIT License in [`LICENSE`](LICENSE) applies to the original work of the Modded-Cycles authors and contributors in
-this repository: the tools and generators, the mod sources (C and assembly) and the code compiled from them, the tweak
+The MIT License in [`LICENSE`](LICENSE) applies to the original work of the Modded-Cycles authors and contributors,
+and to model27's own changes, in this repository: the tools and generators, the mod sources (C and assembly) and the code compiled from them, the tweak
 files, the emulation proofs, the web flasher and the website, the guide and the technical notes. A file or folder that
 names another license is under that license instead (see the table below).
 
@@ -21,10 +21,11 @@ This license grants no rights in:
 - **Third-party code and data** listed below, which keep their own licenses.
 - **Quotations** from the Elektronauts forum and other sources, which belong to their authors and are quoted with
   attribution.
-- **Trademarks.** Elektron, Model:Cycles, Model:Samples, Syntakt and Elektron Transfer are trademarks of Elektron Music
-  Machines MAV AB. Modded-Cycles is an independent project, not affiliated with or endorsed by Elektron. The name and
-  logo "Modded-Cycles" identify this project: a modified version should use another name or say clearly that it is
-  unofficial.
+- **Trademarks and names.** Elektron, Model:Cycles, Model:Samples, Syntakt and Elektron Transfer are trademarks of
+  Elektron Music Machines MAV AB. model27 is an independent project, not affiliated with or endorsed by Elektron. The
+  name and logo "Modded-Cycles" identify the upstream project this repository is forked from; model27 is a modified
+  version under its own name, unofficial and not endorsed by Modded-Cycles' maintainers, and will not offer the
+  startup animation that shows the Modded-Cycles name and logo.
 
 Modifying firmware is at your own risk. The software is provided "as is", without warranty, as the license says. No
 license settles whether tools that rebuild and re-sign firmware are allowed where you live: that is a separate

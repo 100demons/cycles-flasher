@@ -1,7 +1,8 @@
-# Contributing to Modded-Cycles
+# Contributing to model27
 
-Thanks for wanting to help. New mods, fixes, test reports and ideas are welcome: open an issue or a pull request, or
-come and talk on the [Discord](https://discord.gg/hWegtJZcmm).
+Thanks for wanting to help. model27 keeps its list of mods short on purpose: a new mod gets in when it fits the
+project's aims (the README says what they are) and, once it exists, follows the Cycles Mod Standard. Fixes, test
+reports and ideas are welcome as issues or pull requests.
 
 ## License of your contribution
 
@@ -25,5 +26,5 @@ rules (only the MAIN OS section is touched, every mod is proven in emulation, re
 ## How a mod gets in
 
 [`AGENTS.md`](AGENTS.md) describes the usual path: a technical note, a generator, an emulation proof, the flasher card,
-the guide and the release notes. A new mod ships as *Experimental*; it becomes *Tested* only after Maxime has tried it
-on his own Model:Cycles.
+the guide and the release notes. A new mod ships as *Experimental*; it becomes *Tested* only after the maintainer has
+tried it on their own Model:Cycles.

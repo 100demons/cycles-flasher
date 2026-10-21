@@ -1,4 +1,4 @@
-# AGENTS.md — Modded Cycles
+# AGENTS.md — model27
 
 Guidance for coding agents working on this repository. Read this file first, then the `AGENTS.md` of every folder
 you touch:
@@ -12,10 +12,16 @@ you touch:
 
 ## What this project is
 
+**model27** is a downstream fork of [Modded-Cycles](https://github.com/18nelli18/Modded-Cycles), started from its
+release 1.55 (the last one with a mod picker) plus the Control All Config mod. It keeps the mod picker and aims at a
+short, curated list of mods, four-knob machines and the Cycles Mod Standard (a companion draft, not published yet):
+every mod declares what it touches, and what can be ticked together is computed from that. Everything below about the
+build, the proofs and the licenses is inherited from Modded-Cycles and still applies.
+
 Firmware mods for the **Elektron Model:Cycles, OS 1.13** (ColdFire MCF54415, big-endian m68k). A mod is a *tweak*: a
 table of byte writes (`old` → `new`) applied to section 3 (the MAIN OS) of the user's **own** official `.syx`, plus,
 for some mods, code compiled or assembled into free space. Users pick mods in a web flasher
-(`docs/flasher/`, served by GitHub Pages at <https://18nelli18.github.io/Modded-Cycles/>), which builds the firmware in
+(`docs/flasher/`; model27's own site is not published yet), which builds the firmware in
 the browser and sends it over USB. A pure-Python toolchain (`tools/build.py`) does the same build on the command line.
 
 **Always the Model:Cycles OS, whatever the machine** (decision of 10/10/2026, notes/57). The Mods tab also flashes a
@@ -24,7 +30,8 @@ picker only changes the packing (official Model:Samples container and signature,
 transport `0x0F` or `0x11`; `tools/mods_for_samples.py`, `MCBuilder.modsForSamples`). Build, prove and reference a mod
 once, on the Model:Cycles OS; never add a mod built on the Samples OS.
 
-Owner: Maxime (GitHub `18nelli18`). He tests every firmware change on his own Model:Cycles.
+Maintainer: durchgemacht. They test every firmware change on their own Model:Cycles. Upstream Modded-Cycles is
+maintained by 18nelli18; model27 is not affiliated with it, and never speaks for it.
 
 ## Hard rules
 
@@ -35,11 +42,12 @@ Owner: Maxime (GitHub `18nelli18`). He tests every firmware change on his own Mo
    see notes/17). Never write that a file holds "no Elektron bytes" when it carries `old` bytes.
 2. **Build from the official image only**, never on top of a previous build. Every write carries its `old` bytes and
    the build refuses a mismatch. Stock hashes are in `tweaks/model-cycles_OS1.13/device.json`.
-3. **Hardware testing is Maxime's.** A new mod ships as `"status": "experimental"`. Only after he reports that it works
-   on his Model:Cycles does it become `"tested"`, in a separate commit ("… tested on the Model:Cycles"). Never mark
-   anything tested yourself, never claim a hardware result you did not get from him.
-4. **One user-visible change, one PR**, with its docs, guide, release notes and note in the same PR. Open it as a
-   draft and ask before merging; Maxime merges after testing on the hardware.
+3. **Hardware testing is the maintainer's.** A new mod ships as `"status": "experimental"`. Only after the maintainer
+   reports that it works on their Model:Cycles does it become `"tested"`, in a separate commit ("… tested on the
+   Model:Cycles"). Never mark anything tested yourself, never claim a hardware result you did not get from them.
+4. **One user-visible change, one commit series**, with its docs, guide, release notes and note. Commit only when the
+   maintainer asks, never on your own, and never add a co-author trailer to a commit message. The maintainer decides
+   what lands, after testing on the hardware.
 5. **Prove it in emulation first.** Every mod has a generator with `--check` and a proof under `tools/emu/` that runs
    the OS's own code (Unicorn), stock vs patched. Unproven code does not go in the flasher.
 6. **Recovery must stay possible.** Only section 3 is touched; the bootloader and updater stay identical, so the
@@ -60,10 +68,12 @@ Owner: Maxime (GitHub `18nelli18`). He tests every firmware change on his own Mo
 
 ## Languages
 
-- **Talk to Maxime in French.**
-- **French**: technical notes (`notes/`), `BUILD.md`, `FLASH.md`, `dossier-technique.md`, `PROVENANCE.md`, tweak
-  `name`/`description`, comments and docstrings in `tools/`.
-- **English**: `README.md`, commit messages, PR titles and bodies, the code of the web pages.
+- **Talk to the maintainer in German.**
+- **English** for everything new: notes, generators, tweak `name`/`description`, comments and docstrings, `README.md`,
+  commit messages, the code of the web pages.
+- **French** stays where Modded-Cycles wrote it (`notes/`, `BUILD.md`, `FLASH.md`, `dossier-technique.md`,
+  `PROVENANCE.md`, the existing tweaks and tools) until a file is rewritten for another reason; do not translate
+  files just to translate them.
 - **Both, side by side**: everything users see on the site (flasher cards, guide, release notes, home page), as
   `en`/`fr` pairs or `data-l="en"`/`data-l="fr"` spans. Never add one language without the other.
 - User-facing text speaks to musicians: what the mod does on the machine, which buttons to press, its limits. No
@@ -90,7 +100,6 @@ tools/web*_check.*, webflash_smoke.*   checks of the web flasher against the Pyt
 docs/                         GitHub Pages site: index.html, flasher/, guide/, assets/release.js
 notes/                        numbered technical notes (French), index in notes/README.md
 BUILD.md, FLASH.md            command-line build and flashing (French)
-.github/                      discord.yml + scripts/discord.mjs: new versions, mod status changes and merged PRs -> Discord
 README.md                     English overview for Model:Cycles owners (mod table)
 LICENSE, THIRD-PARTY-NOTICES.md   MIT for the project; what it does not cover; every third-party license
 CONTRIBUTING.md               terms for outside contributions
@@ -121,10 +130,10 @@ Follow the shape of the last ones (tempo-max: commits `5997b4a`, `14fb9fa`, `6e5
 6. **Document it for users**: a guide section in `docs/guide/index.html` (en + fr, buttons to press, limits), a new
    release at the top of `docs/assets/release.js` (en + fr), bump the `MC_BUILD` / `?v=` stamp on the pages, a row
    in the mod table of `README.md`.
-7. **Validate** (below), commit, push, open a **draft** PR, and tell Maxime what to test on the machine.
-8. **After his test**: a small follow-up commit flips the status to `tested` (generator `FEATURES`, `tweaks.js`,
-   guide, release notes, README, note: "Testé sur la machine (JJ/MM/AAAA)"). If he reports a problem, record it in the
-   note, fix, and bump the release.
+7. **Validate** (below), then propose the commit and tell the maintainer what to test on the machine.
+8. **After their test**: a small follow-up commit flips the status to `tested` (generator `FEATURES`, `tweaks.js`,
+   guide, release notes, README, note: "Tested on the Model:Cycles (YYYY-MM-DD)"). If they report a problem, record it
+   in the note, fix, and bump the release.
 
 A fix to an existing mod follows the same path, minus the new files: note section, generator, proof, regenerated
 JSON/`tweaks.js`/`REF_MAINOS`, release entry.
@@ -158,13 +167,13 @@ tools/webflash_smoke.sh firmware/model-cycles_OS1.13.syx firmware/Syntakt_OS1.42
 Emulation needs `pip install unicorn numpy`. Code mods need the m68k toolchain (`m68k-linux-gnu-*` from the Debian/Ubuntu
 packages `binutils-m68k-linux-gnu gcc-m68k-linux-gnu`, or `m68k-elf-*`); some committed outputs were compiled with a
 specific GCC (SD VINTAGE v2 with `m68k-elf-gcc` 16.2, notes/16 §6), so `--check` can differ with another compiler.
-If a check cannot run (no network, no toolchain), say so in the PR instead of skipping it silently.
+If a check cannot run (no network, no toolchain), say so instead of skipping it silently.
 
-## Commits and PRs
+## Commits
 
 - Commit messages in English: a short subject saying what the user gets ("Tempo up to 546 BPM (tempo-max tweak,
-  notes/38)"), a body with the why, the bullets of what changed, and how it was proven.
+  notes/38)"), a body with the why, the bullets of what changed, and how it was proven. No co-author trailers.
 - Merge `main` into a feature branch rather than rebasing shared branches; regenerate `tweaks.js` and `REF_MAINOS`/`REF_MODS`
   after a merge instead of resolving their conflicts by hand.
-- The PR body says what the user sees before and after, how it was proven, and **what Maxime should test on the
-  machine** (which mods ticked, which buttons, what to listen or look for).
+- Before proposing a commit, say what the user sees before and after, how it was proven, and **what the maintainer
+  should test on the machine** (which mods ticked, which buttons, what to listen or look for).
