@@ -1,4 +1,4 @@
-/* Modded-Cycles — shared page behaviour: language, version, the Model:Cycles drawings and the
+/* model27 (from Modded-Cycles) — shared page behaviour: language, version, the Model:Cycles drawings and the
  * small demos of the guide. Each part runs only if its elements are on the page.
  * The flasher handles its own language switch (app.js); here it only gets the version. */
 (function () {

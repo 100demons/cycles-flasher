@@ -13,7 +13,8 @@
 "use strict";
 
 const $ = (id) => document.getElementById(id);
-const REPO = "https://github.com/18nelli18/Modded-Cycles";
+const REPO = "https://github.com/durchgemacht/model-twentyseven";   // model27; the code comes from https://github.com/18nelli18/Modded-Cycles
+const UPSTREAM = "https://github.com/18nelli18/Modded-Cycles";
 const ELEKTRON_DL = "https://www.elektron.se/support-downloads/modelcycles";
 const ELEKTRON_SMP_DL = "https://www.elektron.se/support-downloads/modelsamples";
 const ELEKTRON_ST_DL = "https://www.elektron.se/support-downloads/syntakt";
@@ -44,6 +45,9 @@ const REF_SAMPLES_BACK = "d63ce13dd1a5039d11b60d3f69d4e88e9d0f56fb2e7350c105ec64
 
 // Open-source work this flasher builds on (shown in the Credits section).
 const CREDITS = [
+  { who: "18nelli18 and the Modded-Cycles contributors", repo: "18nelli18/Modded-Cycles",
+    en: "Modded-Cycles (MIT license): the tools, the build, this flasher, the notes and the mods model27 starts from; the authors of its mods are named on each card and in the guide",
+    fr: "Modded-Cycles (licence MIT) : les outils, le build, ce flasher, les notes et les mods dont model27 est parti ; les auteurs de ses mods sont nommés sur chaque carte et dans le guide" },
   { who: "scottmetoyer", repo: "scottmetoyer/ms-multi-output",
     en: "the 6-channel USB audio mod (MIT license)", fr: "le mod audio USB 6 canaux (licence MIT)" },
   { who: "drumkilla", repo: "drumkilla/elektron-model-tweaks",
@@ -109,7 +113,6 @@ const CAT_ICON = {
 };
 const SEARCH_FROM = 20;         // the search field shows from this many mods
 const PARTLY = false;           // true: an unticked engine card tested with some engines only says "Partly tested"
-const DISCORD = "https://discord.gg/hWegtJZcmm";
 
 // ---------------------------------------------------------------------------
 // Texts
@@ -179,7 +182,7 @@ const T = {
     search_clear: "Clear the search",
     found: "<b>{n}</b> of {total} mods for “{q}” · ",
     show_all: "show all",
-    found_none: `No mod for “{q}”. An idea for a mod? <a href="${DISCORD}" target="_blank" rel="noopener">Suggest it on Discord</a>. · `,
+    found_none: `No mod for “{q}”. An idea for a mod? <a href="${REPO}/issues" target="_blank" rel="noopener">Open an issue on GitHub</a>. · `,
     restore_text: "Sends your official OS file <b>unchanged</b>, to go back to the stock firmware. It is also a good first rehearsal: it checks your cable and your setup without changing anything.",
     tab_samples: "Samples OS",
     samples_title: "Turn your Model:Cycles into a Model:Samples",
@@ -243,7 +246,7 @@ const T = {
     download_hint: "to drop onto <b>Elektron Transfer</b> (just as fast), or to keep.",
     credits: "Credits",
     credits_intro: "This flasher stands on the shoulders of these projects, none of which includes firmware:",
-    credits_license: `Modded-Cycles is released under the <a href="${REPO}/blob/main/LICENSE" target="_blank" rel="noopener">MIT license</a>. Third-party code keeps its own license and Elektron's firmware is not covered: see the <a href="${REPO}/blob/main/THIRD-PARTY-NOTICES.md" target="_blank" rel="noopener">notices</a>.`,
+    credits_license: `model27 is built on <a href="${UPSTREAM}" target="_blank" rel="noopener">Modded-Cycles</a>, released under the <a href="${UPSTREAM}/blob/main/LICENSE" target="_blank" rel="noopener">MIT license</a>; model27's changes are under the same license. Third-party code keeps its own license and Elektron's firmware is not covered: see the <a href="${REPO}/blob/main/THIRD-PARTY-NOTICES.md" target="_blank" rel="noopener">third-party notices</a>.`,
     privacy: "Your firmware file never leaves your computer. Nothing is uploaded, no firmware is provided.",
     links: "Not affiliated with Elektron. Model:Cycles, Model:Samples and Syntakt are Elektron products.",
     // dynamic
@@ -321,7 +324,7 @@ const T = {
     mach_smp: "Model:Samples, on its own OS",
     mach_cos: "Model:Samples, already on the Cycles OS",
     mach_title: "Mods on a Model:Samples",
-    mach_text: "Whatever the machine, the page installs the Model:Cycles OS with the mods you tick; on a Model:Samples, Model-TG's Sampler plays your samples. The firmware is packed inside your Model:Samples' own firmware (its startup menu, updater and signature stay in place), so step 2 also asks for the official Model:Samples OS file.",
+    mach_text: "Whatever the machine, the page installs the Model:Cycles OS with the mods you tick; on a Model:Samples, tick the SAMPLE machine to play the samples already on the +Drive (not yet tried on a Model:Samples). The firmware is packed inside your Model:Samples' own firmware (its startup menu, updater and signature stay in place), so step 2 also asks for the official Model:Samples OS file.",
     mach_w_smp: "Choose this when the machine runs its Model:Samples OS (it starts as a Model:Samples).",
     mach_w_cos: "Choose this when it already runs the Model:Cycles OS installed from this page (here, or from the Samples OS tab): this is how you change mods later. That OS refuses firmwares built for a Model:Cycles: nothing is written.",
     mach_w1: "Tested on a real Model:Samples, both choices: on its own OS, and already on the Cycles OS to change mods.",
@@ -460,7 +463,7 @@ const T = {
     search_clear: "Effacer la recherche",
     found: "<b>{n}</b> mods sur {total} pour « {q} » · ",
     show_all: "tout afficher",
-    found_none: `Aucun mod pour « {q} ». Une idée de mod ? <a href="${DISCORD}" target="_blank" rel="noopener">Proposez-la sur Discord</a>. · `,
+    found_none: `Aucun mod pour « {q} ». Une idée de mod ? <a href="${REPO}/issues" target="_blank" rel="noopener">Ouvrez un ticket sur GitHub</a>. · `,
     restore_text: "Envoie votre fichier d'OS officiel <b>sans le modifier</b>, pour revenir au firmware d'origine. C'est aussi une bonne répétition avant un mod : elle vérifie le câble et l'installation sans rien changer.",
     tab_samples: "OS Samples",
     samples_title: "Transformer le Model:Cycles en Model:Samples",
@@ -524,7 +527,7 @@ const T = {
     download_hint: "à déposer sur <b>Elektron Transfer</b> (aussi rapide), ou à garder.",
     credits: "Crédits",
     credits_intro: "Ce flasher s'appuie sur ces projets, dont aucun ne contient de firmware :",
-    credits_license: `Modded-Cycles est publié sous <a href="${REPO}/blob/main/LICENSE" target="_blank" rel="noopener">licence MIT</a>. Le code tiers garde sa propre licence et le firmware d'Elektron n'est pas couvert : voir les <a href="${REPO}/blob/main/THIRD-PARTY-NOTICES.md" target="_blank" rel="noopener">mentions</a>.`,
+    credits_license: `model27 est construit sur <a href="${UPSTREAM}" target="_blank" rel="noopener">Modded-Cycles</a>, publié sous <a href="${UPSTREAM}/blob/main/LICENSE" target="_blank" rel="noopener">licence MIT</a> ; les changements de model27 sont sous la même licence. Le code tiers garde sa propre licence et le firmware d'Elektron n'est pas couvert : voir les <a href="${REPO}/blob/main/THIRD-PARTY-NOTICES.md" target="_blank" rel="noopener">mentions tierces</a>.`,
     privacy: "Votre fichier firmware ne quitte jamais votre ordinateur. Rien n'est envoyé en ligne, aucun firmware n'est fourni.",
     links: "Projet non affilié à Elektron. Model:Cycles, Model:Samples et Syntakt sont des produits Elektron.",
     no_webmidi: "Ce navigateur ne sait pas parler aux appareils MIDI. Ouvrez cette page dans <b>Chrome, Edge ou Opera</b> sur ordinateur (Firefox et Safari ne gèrent pas le Web MIDI). Vous pouvez quand même préparer le firmware ici.",
@@ -600,7 +603,7 @@ const T = {
     mach_smp: "Model:Samples, sous son OS",
     mach_cos: "Model:Samples, déjà sous l'OS Cycles",
     mach_title: "Des mods sur un Model:Samples",
-    mach_text: "Quelle que soit la machine, la page installe l'OS du Model:Cycles avec les mods cochés ; sur un Model:Samples, le Sampler de Model-TG joue vos samples. Le firmware est emballé dans le firmware de votre Model:Samples (son menu de démarrage, son updater et sa signature restent en place) : l'étape 2 demande donc aussi le fichier officiel de l'OS Model:Samples.",
+    mach_text: "Quelle que soit la machine, la page installe l'OS du Model:Cycles avec les mods cochés ; sur un Model:Samples, cochez la machine SAMPLE pour jouer les samples déjà sur le +Drive (pas encore essayé sur un Model:Samples). Le firmware est emballé dans le firmware de votre Model:Samples (son menu de démarrage, son updater et sa signature restent en place) : l'étape 2 demande donc aussi le fichier officiel de l'OS Model:Samples.",
     mach_w_smp: "Choisissez ceci quand la machine tourne sous son OS Model:Samples (elle démarre en Model:Samples).",
     mach_w_cos: "Choisissez ceci quand elle tourne déjà sous l'OS du Model:Cycles installé depuis cette page (ici, ou depuis l'onglet OS Samples) : c'est ainsi qu'on change de mods plus tard. Cet OS refuse les firmwares construits pour un Model:Cycles : rien n'est écrit.",
     mach_w1: "Testé sur un vrai Model:Samples, les deux choix : sous son OS, et déjà sous l'OS Cycles pour changer de mods.",
