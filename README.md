@@ -24,7 +24,7 @@ is being chosen, and nothing has been removed from the tools yet.
 
 - **The Model:Cycles workflow stays the Model:Cycles workflow.** A machine has PITCH, four knobs, DECAY, GATE and
   PUNCH, like the six original ones. A mod adds something small and leaves everything else as it is, bit for bit.
-- **Few engines, done right.** Knob ranges that mean something end to end, no clicks under a square LFO, a measured
+- **A few engines, worked out to the end.** Knob ranges that mean something end to end, no clicks under a square LFO, a measured
   cost, a test on a real machine before a mod is called tested.
 - **Mods that fit together.** Every mod declares what it touches, in a manifest; what can be ticked together is
   computed from those declarations, not from a hand-written list. That is the job of the companion draft, the
