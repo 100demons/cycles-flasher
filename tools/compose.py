@@ -13,8 +13,9 @@ composer takes the packages the user names, in that order, and:
      other from the window's start, variables one after the other from +0x36000 (above the moved tables, as MACRO),
      links each one there, and refuses a layout that crosses the stubs or a package's RAM claim;
   3. registers them all at once through gen_macro.added_machine (the tables of names, update/render, records and
-     descriptors, the bounds, the detours, the boot hook), then adds each package's own hooks and vtable entries
-     from its manifest;
+     descriptors, the bounds, the detours, the boot hook), checks the boot hook against the committed stub
+     template (tools/machines/registrar/registrar.json, notes/60 §4), then adds each package's own hooks and
+     vtable entries from its manifest;
   4. computes what the result cannot be installed with: every tweak of tweaks/ that writes other bytes to the same
      address or runs a payload in the composed payload or in a claimed RAM range, plus what the manifests declare;
   5. emits one tweak in Modded-Cycles' format, which tools/build.py and the web flasher apply like any other, and
@@ -59,6 +60,7 @@ BASE = mcb.BASE
 DEV = ROOT / "tweaks" / "model-cycles_OS1.13"
 MACHINES = HERE / "machines"
 BUILD = ROOT / "build"
+REGISTRAR = MACHINES / "registrar" / "registrar.json"
 LINK = """SECTIONS
 {{
   .text {code:#x} : {{ *(.text.{update}) *(.text.{render}) *(.text*) }}
@@ -216,6 +218,46 @@ def emit_bytes(path, data, check):
     return 0
 
 
+def load_registrar():
+    """The registrar's committed data (tools/gen_registrar.py, notes/60): the boot stub template, later the runtime."""
+    if not REGISTRAR.is_file():
+        sys.exit(f"!! {REGISTRAR} is missing: run tools/gen_registrar.py")
+    reg = json.loads(REGISTRAR.read_text(encoding="utf-8"))
+    if reg.get("schema") != "model27-registrar/0.1":
+        sys.exit(f"!! {REGISTRAR}: schema {reg.get('schema')!r}")
+    return reg
+
+
+def boot_stub(reg, src, dst, longs, segs):
+    """The boot stub for this build, from the template (B2b, notes/60 §4): the three immediates filled in, the
+    segment table (address, longs per segment, then 0, 0) appended. Checked against the room at gx.CAVE."""
+    st = reg["stub"]
+    if int(st["at"], 16) != gx.CAVE:
+        sys.exit(f"!! the stub template is for {st['at']}, the boot hook lives at {gx.CAVE:#x}")
+    code = bytearray.fromhex(st["hex"])
+    for key, v in (("src_at", src), ("dst_at", dst), ("longs_at", longs)):
+        struct.pack_into(">I", code, st[key], v)
+    table = b"".join(g7.be32(a) + g7.be32(n // 4) for a, n in segs) + bytes(8)
+    stub = bytes(code[:st["segs_at"]]) + table
+    if gx.CAVE + len(stub) > int(st["end_limit"], 16):
+        sys.exit(f"!! boot stub of {len(stub)} bytes ({len(segs)} segments) does not fit before {st['end_limit']}")
+    return stub
+
+
+def check_boot_stub(reg, writes, append):
+    """B2b's proof on every build: the stub the registrar assembled (the write at gx.CAVE) is the template's, byte
+    for byte. Returns the write."""
+    w = next((w for w in writes if w and w["off"] == gx.CAVE - BASE), None)
+    if not w:
+        sys.exit("!! no boot stub write at the freed sprite mask")
+    segs = [(int(a, 16), n) for a, n in append["pack"]]
+    want = boot_stub(reg, int(append["at"], 16), int(append["dest"], 16), append["size"] // 4, segs)
+    if bytes.fromhex(w["new"]) != want:
+        sys.exit("!! the boot stub from the template differs from the assembled one: regenerate registrar.json "
+                 "(tools/gen_registrar.py) or check stub.S")
+    return w
+
+
 def package_writes(m, img, syms):
     """The package's own hooks (jsr/jmp into its code) and vtable entries, each checked against the stock bytes."""
     writes = []
@@ -321,6 +363,7 @@ def compose(img, ids, relocator="python", compare_ld=False):
                 if lo < bss_cursor and pay < hi:
                     sys.exit(f"!! {m['id']}: the payload ({pay:#x}..{bss_cursor:#x}) runs into its RAM claim {lo:#x}..{hi:#x}")
         writes, append = gm.added_machine(img, None, machines, tmp, blobs, bss_cursor)
+    check_boot_stub(load_registrar(), writes, append)        # B2b: the template gives the same stub
     for m in mans:
         writes += package_writes(m, img, syms_of[m["id"]])
     writes.sort(key=lambda x: x["off"])

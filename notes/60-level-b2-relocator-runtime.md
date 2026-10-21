@@ -1,6 +1,6 @@
 # 60 — Level B, step 2: a relocator and a table-driven registrar, no toolchain at build time (plan)
 
-**Status: plan, 2026-10-21; B2a built the same day (§9), B2b and B2c not yet.** This is increment B2 of [notes/59](59-level-b-builder.md)
+**Status: plan, 2026-10-21; B2a (§9) and B2b (§10) built the same day, B2c not yet.** This is increment B2 of [notes/59](59-level-b-builder.md)
 (§3 the registrar runtime, §4 steps 4 and 6 of the composer, §7 item 2), written after B1 landed (`91edc68`:
 `tools/compose.py`, the manifests, the reference machine, `28-refmachine.json`). It says what B1 still needs the
 m68k toolchain for, measured in the code, how each of those uses becomes committed data plus Python, in which order
@@ -38,7 +38,7 @@ from `gs.PAY_ALONE` (`0x43000000`); sizes measured on 2026-10-21 with `m68k-elf-
 | ELF | ELF32, big endian, `e_machine` 68000, type REL. No `pyelftools` here; the reader is `struct` (about 80 lines) |
 | Detours (`gs.detours_asm`, `tg=None`, no lo-fi) | n = 1: 606 bytes; n = 2: 774; n = 3: 854; n = 6: 1 094. Room `STUBS..DATA` 2 048 bytes |
 | Per-build instructions in the detours | `map_state` (`cmp.l #last`), `cc_bounds` (`moveq #top`), `shown` (one compare per machine), `record_at` / `record_of` and `rec_i` (one compare and one `lea RECS + 0x60 i` per machine, `moveq #first_desc − 51`), `knob_vec` (`top`, `first`, `lea DATA + 12 nm`), `desc_machine` / `builder_row` (two compares per machine), `marks` (`moveq #nm`, only when nm > 7). Constant: `state_at`, `state_connect`, `drum_icons`, `small_icon`, `rec_build` |
-| Boot stub (`PACK`, 4 segments) | 104 bytes: 64 of code, 8 per segment, 8 of terminator. Immediates: `lea PAYLOAD_DST` at offset 2, `move.l #PAYLOAD_LONGS` at 8, `lea PAYLOAD_SRC` at 24; the segment table follows the code (`lea segs(%pc)`). Room: `STUB_END − CAVE` = 192 bytes, so 15 segments at most (today 4 or 5) |
+| Boot stub (`PACK`, 4 segments) | 104 bytes: 64 of code, 8 per segment, 8 of terminator. Immediates: `lea PAYLOAD_DST` at offset 2, `move.l #PAYLOAD_LONGS` at 8, `lea PAYLOAD_SRC` at 20; the segment table follows the code (`lea segs(%pc)`). Room: `STUB_END − CAVE` = 192 bytes, so 15 segments at most (today 4 or 5) |
 | Python | 3.14.2; neither `unicorn` nor `elftools` installed; no 3.12/3.13 on the path |
 | Patch points in One-Shot | `SAMPLE_MACHINE` in `pool.c:60` and `view.c:172`; `DESC_START` in `view.c:190` (and `DESC_LENGTH`); both `#ifndef` defaults 6 / 76 |
 
@@ -104,7 +104,7 @@ the same steps over the same object bytes.
 ## 4. B2b: the boot stub template
 
 `gen_registrar.py` assembles `stub.S` once with `PACK` and placeholder values, and commits the 64 bytes of code
-with the offsets of its three immediates (2: destination, 8: length in longs, 24: source) in
+with the offsets of its three immediates (2: destination, 8: length in longs, 20: source) in
 `tools/machines/registrar/registrar.json`. The composer copies the template, writes the three values, appends the
 segment table (`.long address, longs` per segment, then `0, 0`) and checks `CAVE + length ≤ STUB_END` (192 bytes,
 15 segments). Proof: for every B1 selection the result equals the stub B1 assembles, byte for byte (same source,
@@ -260,3 +260,18 @@ half-finished step never blocks a build.
 - **Not done**: the regenerated SAMPLE build has not been on a device (the manifest says so in `tests`); One-Shot 0.8 is committed upstream (`f28ef2f`, its own build byte for byte the 0.7 MAIN OS once the
   assembly sections got `.p2align 2`) and `gen_sampler.py` is pinned on it; the tag `v0.8` and the push are the
   maintainer's; the `.comment` check only reports, it does not refuse.
+
+## 10. B2b built (2026-10-21)
+
+- **`tools/gen_registrar.py`** assembles `stub.S` (`PACK`) once at `gx.CAVE` with three placeholder immediates and
+  an empty segment table, finds each placeholder once in the code, and commits
+  `tools/machines/registrar/registrar.json` (schema `model27-registrar/0.1`): the 64 bytes of code, the offsets
+  (`dst_at` 2, `longs_at` 8, `src_at` 20: the source is at 20, not 24 as §1 first said), `segs_at` 64, the
+  address and the limit `STUB_END`. `--check` compares with the committed file. Room: 15 segments.
+- **`compose.py`**: `boot_stub(reg, src, dst, longs, segs)` fills the template and appends the table (address,
+  longs, then `0, 0`), refusing a stub past `STUB_END`; `check_boot_stub` runs on **every build** and compares the
+  template's stub with the one `added_machine` assembled, byte for byte. So B2b's proof is permanent, not a
+  one-off: it ran for `sampler`, `refmachine`, both pairs, the pair with `arp` and `trig-hold`, and through both
+  generators' `--check`; a template with one wrong byte is refused (tried).
+- Until B2c, `added_machine` still assembles the stub itself and the template only has to agree; B2c's
+  `registrar_writes` takes the stub from `boot_stub` and the assembler goes.

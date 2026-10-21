@@ -93,6 +93,9 @@ tools/compose.py              Level B, increment B1: lays packages out, links th
 tools/relocate.py             Level B, increment B2a: places a package's committed object (m68k ELF, only R_68K_32)
                               at its address without the toolchain; compose.py uses it by default (notes/60)
 tools/machines/<id>/<id>.o    the package's committed object (ld -r of its sources), written and checked by its generator
+tools/gen_registrar.py        Level B, increment B2b: assembles the boot stub once with placeholders and commits it as a
+                              template with the offsets of its immediates; compose.py fills it (notes/60 §4)
+tools/machines/registrar/     registrar.json, the registrar's committed data: the stub template (B2b), later the runtime (B2c)
 tools/machines/refmachine/    the reference machine: the smallest added machine, proves the composer, never offered
 tools/emu/                    Unicorn emulation of the OS: test_<mod>.py proofs, mcengine.py, emac.py, syntakt.py
 tools/gen_flasher_tweaks.py   FEATURES list -> docs/flasher/tweaks.js (generated)
