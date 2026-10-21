@@ -1,6 +1,6 @@
 # AGENTS.md — docs/
 
-The GitHub Pages site, served from `main`: <https://18nelli18.github.io/Modded-Cycles/>. Static files, no build step,
+The GitHub Pages site, served from `main`, folder `docs/`: <https://durchgemacht.github.io/model-twentyseven/>. Static files, no build step,
 no framework. Read the root [`AGENTS.md`](../AGENTS.md) first.
 
 ```

@@ -21,7 +21,7 @@ build, the proofs and the licenses is inherited from Modded-Cycles and still app
 Firmware mods for the **Elektron Model:Cycles, OS 1.13** (ColdFire MCF54415, big-endian m68k). A mod is a *tweak*: a
 table of byte writes (`old` → `new`) applied to section 3 (the MAIN OS) of the user's **own** official `.syx`, plus,
 for some mods, code compiled or assembled into free space. Users pick mods in a web flasher
-(`docs/flasher/`; model27's own site is not published yet), which builds the firmware in
+(`docs/flasher/`, served by GitHub Pages at <https://durchgemacht.github.io/model-twentyseven/>), which builds the firmware in
 the browser and sends it over USB. A pure-Python toolchain (`tools/build.py`) does the same build on the command line.
 
 **Always the Model:Cycles OS, whatever the machine** (decision of 10/10/2026, notes/57). The Mods tab also flashes a

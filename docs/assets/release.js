@@ -8,8 +8,8 @@
  */
 window.MC_RELEASES = [
   { version: "0.1", date: "2026-10-21", changes: [
-    { en: "model27 begins: a downstream fork of Modded-Cycles 1.55, the last release with a mod picker, aimed at a short list of mods that work together, four-knob machines and the Cycles Mod Standard. The entries below this one are Modded-Cycles' own releases. Not published yet",
-      fr: "model27 begins: a downstream fork of Modded-Cycles 1.55, the last release with a mod picker, aimed at a short list of mods that work together, four-knob machines and the Cycles Mod Standard. The entries below this one are Modded-Cycles' own releases. Not published yet" },
+    { en: "model27 begins: a downstream fork of Modded-Cycles 1.55, the last release with a mod picker, aimed at a short list of mods that work together, four-knob machines and the Cycles Mod Standard. The entries below this one are Modded-Cycles' own releases. The first public beta",
+      fr: "model27 begins: a downstream fork of Modded-Cycles 1.55, the last release with a mod picker, aimed at a short list of mods that work together, four-knob machines and the Cycles Mod Standard. The entries below this one are Modded-Cycles' own releases. The first public beta" },
     { en: "First card: the SAMPLE machine, Cycles One-Shot 0.7 by durchgemacht (MIT): a one-shot sampler for samples on the +Drive, picked in the PRESET browser and saved with the sound, with the Model:Samples' filter and a waveform view. Tested on a Model:Cycles (2026-10-21); experimental here until flashed from this page",
       fr: "First card: the SAMPLE machine, Cycles One-Shot 0.7 by durchgemacht (MIT): a one-shot sampler for samples on the +Drive, picked in the PRESET browser and saved with the sound, with the Model:Samples' filter and a waveform view. Tested on a Model:Cycles (2026-10-21); experimental here until flashed from this page" },
     { en: "Only the cards on a short list are offered; the other Modded-Cycles 1.55 mods stay buildable from the command line, with their authors' credits, and come back one by one, once reviewed against the standard. The Official firmware and Samples OS tabs are unchanged",
