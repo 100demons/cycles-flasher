@@ -54,7 +54,7 @@ OUT = ROOT / "docs" / "flasher" / "tweaks.js"
 # variante (MACRO) porte versions[<cle>] (fichier, fichier avec Model-TG). Les deux listent leurs cles dans joined.
 # Pour ajouter une fonctionnalite : ecrire son tweak JSON, puis l'ajouter ici.
 CATS = ("pack", "sound", "seq", "live", "screen", "io")
-FEATURES = [
+ALL_FEATURES = [
     {
         "id": "usb6",
         "cat": "io",
@@ -312,6 +312,25 @@ FEATURES = [
         "with": {"model-tg": "35-acid-tg"},
     },
     {
+        "id": "sampler",
+        "cat": "sound",
+        "label": "SAMPLE machine (Cycles One-Shot)",
+        "desc": "One extra machine after Chord: a one-shot sampler for samples on the +Drive. Pick the sample in the "
+                "PRESET browser (FUNC + MACHINE); it is saved with the sound. COLOR = Start, SHAPE = Length, "
+                "SWEEP = the Model:Samples' filter (lowpass / off / highpass), CONTOUR = Reso; the main screen "
+                "shows the waveform with the start and end marked.",
+        "status": "experimental",
+        "credit": {"kind": "by", "who": "durchgemacht", "repo": "durchgemacht/cycles-one-shot"},
+        "license": "LICENSE-One-Shot",
+        # the same payload window as the other added machines (no combined build with SAMPLE yet), the same sound
+        # record functions as Model-TG and the track filter, the same browser as sample preview: the tweak's
+        # conflicts are computed by tools/gen_sampler.py, the cards here mirror them
+        "excludes": ["macro", "acid", "syntakt", "model-tg", "track-filter", "sample-preview"],
+        "variants": [
+            {"file": "27-sampler", "label": None},
+        ],
+    },
+    {
         "id": "chord-keys",
         "cat": "live",
         "label": "Accords de gamme sur TRIG 1–16",
@@ -365,6 +384,15 @@ FEATURES = [
         "engines": True,
     },
 ]
+
+# model27 offers a short list of cards. The other definitions above stay as they are, for the command-line build
+# (every tweak of tweaks/ is still built by tools/build.py) and so that merges from upstream apply cleanly; a card
+# comes back into the flasher by adding its id here, once it has been reviewed against the Cycles Mod Standard.
+OFFERED = ("sampler",)
+FEATURES = [f for f in ALL_FEATURES if f["id"] in OFFERED]
+_missing = set(OFFERED) - {f["id"] for f in FEATURES}
+if _missing:
+    sys.exit(f"!! OFFERED names cards that do not exist: {sorted(_missing)}")
 
 
 def hosts(f):
