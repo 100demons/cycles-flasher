@@ -16,6 +16,7 @@
              "-nostdlib", "-fno-pic", "-fno-common", "-ffunction-sections", "-fdata-sections", "-Wall", "-Wextra",
              "-Werror"],
   "defines": {},
+  "objects": ["refmachine.o"],
   "patch_points": [],
   "symbols": {"update": "ref_update", "render": "ref_render"},
   "keep": []

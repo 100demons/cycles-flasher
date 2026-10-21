@@ -90,6 +90,9 @@ tools/machines/<id>/manifest.json   a machine as a package (Cycles Mod Standard,
                               hooks; tools/compose.py composes the chosen packages into one tweak at build time
 tools/compose.py              Level B, increment B1: lays packages out, links them, registers them together through
                               gen_macro.added_machine, computes the conflicts, builds the .syx (notes/59)
+tools/relocate.py             Level B, increment B2a: places a package's committed object (m68k ELF, only R_68K_32)
+                              at its address without the toolchain; compose.py uses it by default (notes/60)
+tools/machines/<id>/<id>.o    the package's committed object (ld -r of its sources), written and checked by its generator
 tools/machines/refmachine/    the reference machine: the smallest added machine, proves the composer, never offered
 tools/emu/                    Unicorn emulation of the OS: test_<mod>.py proofs, mcengine.py, emac.py, syntakt.py
 tools/gen_flasher_tweaks.py   FEATURES list -> docs/flasher/tweaks.js (generated)

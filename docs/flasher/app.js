@@ -28,10 +28,10 @@ const ELEKTRON_ST_DL = "https://www.elektron.se/support-downloads/syntakt";
 // same whole write or a mod applied on top of another through "requires").
 const REF_MAINOS = {
   // each card alone: each variant, each combination of real Syntakt engines
-  "sampler": "7e40344e29e29427692ae0231afa19737002c65a4ced6e5faa7546e74e4ee656",
+  "sampler": "6d48de5e76e2a7032bc35ab5988f1c30fe769061065cbe9957a0264114cc6c68",
 };
 const REF_MODS = {
-  "sampler": {"w": "4cf5c8211a31dca75b0c0a4d45fbf71ef9e71ec1e9a5a501c0c9d5ce6dc34136", "p": "0540b7770aee01ffc2f51ec5d6fb4d7f7a161df8fa20b162a9d063b8865e5cb3"},
+  "sampler": {"w": "7d982b13dcf9fe6c6be19c08c2588b60d30cae8610c6139788d1bbfb17f573e7", "p": "c2d489c8e6b9fe53d9fcf37454771a353386cf6e0ee12e32b5b3cd3ad93fd3c7"},
 };
 
 // "Samples OS" tab: official Model:Samples OS 1.13 inside the official Model:Cycles container

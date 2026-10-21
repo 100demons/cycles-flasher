@@ -5,12 +5,14 @@ added machine of the Model:Cycles.
   - 27-sampler.json: 7th machine, after the 6 stock ones.
 
 The code is Cycles One-Shot's (durchgemacht, MIT: tools/machines/sampler/LICENSE, copied next to the tweaks as
-LICENSE-One-Shot), taken as is from https://github.com/durchgemacht/cycles-one-shot at tag v0.7 (UPSTREAM_COMMIT
-below), with the same paths as there: src/ the sound core (6-tap polyphase interpolation at 96 kHz, the Model:Samples'
-filter), machine/ the bridge to the voice loop, the sample memory (loaded from the +Drive, chosen in the PRESET
-browser, saved with the sound), the waveform view and the hooks. Nothing of it is changed here; what differs from
-One-Shot's own build (its machine/build.py) is only the file name, the English name and description, and the
-"version" and "source" fields. The tweak carries, of the OS, only the short stock bytes ("old") that check the
+LICENSE-One-Shot), taken as is from https://github.com/durchgemacht/cycles-one-shot at tag v0.8 (UPSTREAM_COMMIT below; 0.8 made the
+patch points SAMPLE_MACHINE and DESC_START symbols behind CM_SYMBOLS in pool.h and view.c, and gave each assembly
+file a section of its own, for builders like this one), with the same paths as there: src/ the sound core
+(6-tap polyphase interpolation at 96 kHz, the Model:Samples' filter), machine/ the bridge to the voice loop, the
+sample memory (loaded from the +Drive, chosen in the PRESET browser, saved with the sound), the waveform view and
+the hooks. The build recipe is tools/machines/sampler/manifest.json; the compiled object sampler.o is committed next
+to it and placed by tools/relocate.py (notes/60). What differs from One-Shot's own build (its machine/build.py) is
+that and the file name, the English name and description, and the "version" and "source" fields. The tweak carries, of the OS, only the short stock bytes ("old") that check the
 official file; the descriptor table is copied at build time from YOUR file ("cycles" recipe, as for MACRO).
 
 The mechanics are MACRO's and ACID's (gen_macro.added_machine, notes/43, notes/54): same detours, same moved tables,
@@ -24,12 +26,14 @@ bytes to the same address, or whose payload runs in SAMPLE's payload window or i
 tweaks, Model-TG, the track filter), plus sample-preview by name (it plays sample files from the same browser and
 needs Model-TG). Rerun this generator when a tweak is added, so that the list stays current (--check says so).
 
-MACRO's and ACID's optional writes (usb_steady, voice_loop) are left out, as in One-Shot's own build: the tweak then
-gives the MAIN OS that One-Shot 0.7 built and tested on a Model:Cycles (2026-10-21), byte for byte.
+MACRO's and ACID's optional writes (usb_steady, voice_loop) are left out, as in One-Shot's own build. The MAIN OS
+differs from the one One-Shot's own build gives (the 0.7 MAIN OS, tested on a Model:Cycles on 2026-10-21; 0.8's own
+build is the same bytes) only where the patch points are read: move.l #symbol instead of moveq, three sites.
 
     python3 tools/gen_sampler.py --cycles model-cycles_OS1.13.syx [--check]
 
-The committed JSON is compiled with m68k-elf-gcc (Homebrew); another GCC can give other bytes, and --check says so.
+The committed object and JSON are compiled with m68k-elf-gcc 16.2 (Homebrew); another GCC can give other bytes, and
+--check says so (it names the compiler of the committed object).
 """
 import argparse
 import json
@@ -42,6 +46,7 @@ sys.path.insert(0, str(HERE))
 sys.path.insert(0, str(HERE / "emu"))
 
 import build                       # noqa: E402
+import compose                     # noqa: E402
 import gen_macro as gm             # noqa: E402
 import gen_sdvintage_exact as gx   # noqa: E402
 import gen_sdvintage_7th as g7     # noqa: E402
@@ -54,8 +59,8 @@ SRC = HERE / "machines" / "sampler"
 BASE = build.BASE
 
 UPSTREAM = "https://github.com/durchgemacht/cycles-one-shot"
-UPSTREAM_TAG, UPSTREAM_COMMIT = "v0.7", "9a322af78ea52a6e626e3e4f45e6ff9cfdada0ac"
-VERSION = "0.7"
+UPSTREAM_TAG, UPSTREAM_COMMIT = "v0.8", "f28ef2f81dd0a4872705c9fb6021462eb5f0bdbf"
+VERSION = "0.8"
 
 # The machine, as One-Shot's machine/build.py declares it: knobs COLOR, SHAPE, SWEEP, CONTOUR = (long name, short
 # name, default[, min, max]); Start and Length run to 120 as on the Model:Samples; decay = default of its Amp Decay;
@@ -64,21 +69,9 @@ MACHINE = dict(name="SAMPLE", image=4, decay=127,
                knobs=(("Start", "STRT", 0, 0, 120), ("Length", "LEN", 120, 0, 120), ("Cutoff", "FREQ", 64),
                       ("Reso", "RESO", 0)))
 POOL = (0x43800000, 0x46700000)
-SOURCES = ("src/smp_core.c", "src/smp_coeffs.c", "src/smp_filter.c", "src/smp_filter_tab.c", "src/smp_filter_cf.S",
-           "machine/sampler.c", "machine/pool.c", "machine/view.c", "machine/hooks.S")
-# One-Shot's own flags, so that the bytes are its (gen_acid.py adds -malign-int and -fomit-frame-pointer for ACID)
-CFLAGS = ["-std=c99", "-mcpu=54418", "-O2", "-ffreestanding", "-fno-builtin", "-fno-tree-loop-distribute-patterns",
-          "-nostdlib", "-fno-pic", "-fno-common", "-ffunction-sections", "-fdata-sections", "-Wall", "-Wextra",
-          "-Werror"]
-LINK = """SECTIONS
-{{
-  .text {code:#x} : {{ *(.text.sampler_update) *(.text.sampler_render) *(.text*) }}
-  .rodata : {{ *(.rodata*) }}
-  .data : {{ *(.data*) }}
-  .bss {bss:#x} (NOLOAD) : {{ *(.bss*) *(COMMON) }}
-  /DISCARD/ : {{ *(.comment) *(.note*) *(.eh_frame*) }}
-}}
-"""
+# The build recipe (sources, flags, defines, patch points, symbols to keep) is the manifest's,
+# tools/machines/sampler/manifest.json: this generator compiles it into the committed object sampler.o and places
+# that object with tools/relocate.py, exactly as tools/compose.py does for any build (notes/60 §2, §3).
 BSS_OFF = gm.BSS_OFF               # as MACRO: variables above the moved tables (gs.LAYOUT)
 # SAMPLE's hooks: (address, stock bytes, "jsr" or "jmp", symbol). A jmp replaces the first 8 bytes of a function
 # (lea -12(sp),sp ; movem.l a2-a4,(sp)), which the hook runs itself (machine/hooks.S).
@@ -96,43 +89,18 @@ EXTRA_CONFLICTS = {"sample-preview", "sample-preview-st"}
 ORDER = 27
 
 
-def compile_machine(tmp, code_at, bss_at, code_end, machine_index, desc_start):
-    """One-Shot's core, table, filter, bridge, sample memory, view and hooks, linked at code_at (code and data) and
-    bss_at (variables); the code must end before code_end. machine_index is SAMPLE's index among the machines and
-    desc_start its first descriptor, both from the registrar's layout. Returns (bytes from code_at to the end of
-    the data, symbols, end of the variables)."""
-    defs = [f"-DSAMPLE_MACHINE={machine_index}", f"-DDESC_START={desc_start}",
-            f"-DCUTOFF_OBJECT={g7.SNARE_DESC + 2}",     # added machines' knobs share SNARE's objects (notes/18)
-            f"-DPOOL_BASE={POOL[0]:#x}u", f"-DPOOL_LIMIT={POOL[1]:#x}u"]
-    objs = []
-    for rel in SOURCES:
-        src = SRC / rel
-        o = tmp / (src.stem + ".o")
-        gx.run([gx.CROSS + "gcc", *CFLAGS, *defs, f"-I{SRC / 'src'}", f"-I{SRC / 'machine'}", "-c", str(src),
-                "-o", str(o)])
-        objs.append(o)
-    ld, elf, out = tmp / "link.ld", tmp / "sampler.elf", tmp / "sampler.bin"
-    ld.write_text(LINK.format(code=code_at, bss=bss_at))
-    keep = [a for sym in [h[3] for h in HOOKS] + [v[2] for v in VIEWS] for a in ("-u", sym)]
-    gx.run([gx.CROSS + "ld", "-T", str(ld), "--gc-sections", "--no-warn-rwx-segments", "-e", "sampler_update",
-            "-u", "sampler_render", *keep, "-o", str(elf), *map(str, objs)])
-    secs = {}
-    for line in gx.run([gx.CROSS + "objdump", "-h", str(elf)]).splitlines():
-        f = line.split()
-        if len(f) > 4 and f[0].isdigit():
-            secs[f[1]] = (int(f[3], 16), int(f[2], 16))      # address, size
-    if set(secs) - {".text", ".rodata", ".data", ".bss"}:
-        raise SystemExit(f"!! unexpected sections: {sorted(secs)}")
-    gx.run([gx.CROSS + "objcopy", "-O", "binary", "-R", ".bss", str(elf), str(out)])
-    blob = out.read_bytes()
-    syms = {p[2]: int(p[0], 16) for p in (l.split() for l in gx.run([gx.CROSS + "nm", str(elf)]).splitlines())
-            if len(p) == 3}
-    if code_at + len(blob) > code_end:
-        raise SystemExit(f"!! code and tables too big: {len(blob)} bytes")
-    bss = secs.get(".bss", (bss_at, 0))
-    if bss[0] != bss_at:
-        raise SystemExit("!! BSS")
-    return blob, syms, (bss[0] + bss[1] + 3) & ~3
+def compile_machine(tmp, code_at, bss_at, code_end, machine_index, desc_start, check=False):
+    """One-Shot's core, table, filter, bridge, sample memory, view and hooks: compiled with the manifest's recipe
+    into the package's object (written, or with check compared with the committed one), then placed at code_at
+    (code and data) and bss_at (variables) by the relocator, with machine_index and desc_start resolved as the
+    patch-point symbols. Returns (bytes from code_at to the end of the data, symbols, end of the variables, check
+    result)."""
+    m = compose.load_manifest("sampler")
+    obj = compose.build_object(m, tmp)
+    bad = compose.emit_bytes(compose.object_path(m), obj, check)
+    blob, syms, bss_end = compose.place_package(m, code_at, bss_at, code_end,
+                                                {"machine_index": machine_index, "descriptor_base": desc_start}, obj)
+    return blob, syms, bss_end, bad
 
 
 def own_writes(img, syms):
@@ -181,14 +149,14 @@ def computed_conflicts(writes, ram):
     return ids
 
 
-def build_tweak(img):
+def build_tweak(img, check=False):
     """The tweak: SAMPLE registered through gen_macro.added_machine as the 7th machine, at the alone payload
     window, with its own hooks and view entries, and the conflicts computed from the folder's tweaks."""
     pay = gs.PAY_ALONE
     gs.set_base(pay)
     with tempfile.TemporaryDirectory() as d:
         tmp = pathlib.Path(d)
-        blob, syms, bss_end = compile_machine(tmp, pay, pay + BSS_OFF, gs.STUBS, 6, 76)
+        blob, syms, bss_end, bad = compile_machine(tmp, pay, pay + BSS_OFF, gs.STUBS, 6, 76, check)
         if bss_end > POOL[0]:
             raise SystemExit(f"!! the payload ends at {bss_end:#x}, inside the sample pool ({POOL[0]:#x}): move POOL")
         machine = dict(MACHINE, update=syms["sampler_update"], render=syms["sampler_render"])
@@ -212,8 +180,9 @@ def build_tweak(img):
             "Start + Length), SWEEP = Cutoff (-64 .. 63: lowpass below 0, off at 0, highpass above), CONTOUR = Reso;",
             "DECAY, GATE and PUNCH: the stock amp chain. On a SAMPLE track the main screen shows the sample's name",
             "and waveform with the start and end marked.",
-            "Code of Cycles One-Shot %s (durchgemacht, MIT, %s, tag %s), copied as is into tools/machines/sampler/."
+            "Code of Cycles One-Shot %s (durchgemacht, MIT, %s, tag %s), copied as is into tools/machines/sampler/,"
             % (VERSION, UPSTREAM, UPSTREAM_TAG),
+            "compiled once with CM_SYMBOLS into sampler.o and placed by tools/relocate.py (notes/60).",
             "Samples live in %#x..%#x (%d MB); the payload runs at %#x. Conflicts computed from the other tweaks:"
             % (POOL[0], POOL[1], (POOL[1] - POOL[0]) >> 20, pay),
             "other bytes at the same address, or a payload in SAMPLE's window or pool. Generated by",
@@ -233,7 +202,7 @@ def build_tweak(img):
     }
     build.apply_writes(img, [out])            # a bad "old" fails here, not in the user's build
     segs = sum(n for _, n in append["pack"])
-    return out, dict(code=len(blob), bss=bss_end - pay - BSS_OFF, image=segs, pay=pay, bss_end=bss_end)
+    return out, dict(code=len(blob), bss=bss_end - pay - BSS_OFF, image=segs, pay=pay, bss_end=bss_end, bad=bad)
 
 
 def main():
@@ -248,7 +217,8 @@ def main():
             raise SystemExit("!! not the official MAIN OS 1.13")
         if build.sha(img) != json.loads((DEV / "device.json").read_text(encoding="utf-8"))["section_sha256"]:
             raise SystemExit("!! not the official MAIN OS 1.13 (section 3 hash)")
-        tweak, info = build_tweak(img)
+        tweak, info = build_tweak(img, args.check)
+        bad += info["bad"]
         text = json.dumps(tweak, indent=1, ensure_ascii=False) + "\n"
         print(f"  {tweak['id']}: {len(tweak['writes'])} writes, code and tables {info['code']} bytes, variables "
               f"{info['bss']} bytes, {info['image']} bytes added to the image, payload {info['pay']:#x}..{info['bss_end']:#x}, "

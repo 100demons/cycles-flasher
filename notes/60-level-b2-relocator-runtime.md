@@ -1,6 +1,6 @@
 # 60 — Level B, step 2: a relocator and a table-driven registrar, no toolchain at build time (plan)
 
-**Status: plan, 2026-10-21. Nothing of it is built.** This is increment B2 of [notes/59](59-level-b-builder.md)
+**Status: plan, 2026-10-21; B2a built the same day (§9), B2b and B2c not yet.** This is increment B2 of [notes/59](59-level-b-builder.md)
 (§3 the registrar runtime, §4 steps 4 and 6 of the composer, §7 item 2), written after B1 landed (`91edc68`:
 `tools/compose.py`, the manifests, the reference machine, `28-refmachine.json`). It says what B1 still needs the
 m68k toolchain for, measured in the code, how each of those uses becomes committed data plus Python, in which order
@@ -222,3 +222,41 @@ half-finished step never blocks a build.
 - **Byte changes for users**: after B2c the SAMPLE tweak's detour bytes differ from the hardware-tested 0.7 build;
   `tests.hardware` of the sampler manifest and the flasher card's `HW_TESTED` go back to "not yet" until the
   maintainer flashes the regenerated build.
+
+## 9. B2a built (2026-10-21)
+
+- **`tools/relocate.py`** (about 200 lines, standard library): the ELF32 big-endian reader (`struct`), the
+  garbage collection from `update`, `render` and `keep`, the placement in the linker script's order at each
+  section's `sh_addralign`, the symbols, the `R_68K_32` loop with undefined symbols resolved from the patch points.
+  `python3 tools/relocate.py <object>` lists what an object holds.
+- **`tools/compose.py`**: `--relocator python` (default: the committed objects) or `ld` (B1's path, kept whole);
+  `--compare-ld` runs both for every package of the build and compares blob, symbols and BSS end. `patch_values`
+  takes `{"symbol": …}` (resolved like `--defsym`: by `ld` in the B1 path, by the relocator in B2) and still the
+  B1 `{"define": …}`; `build_object` compiles the manifest's recipe and joins it with `ld -r`; `place_package`
+  places an object; `emit_bytes` writes or checks a committed binary and names the compiler of the committed one
+  (`.comment`) when it differs.
+- **Packages**: `build.objects` in both manifests; `tools/machines/sampler/sampler.o` (39 592 bytes) and
+  `tools/machines/refmachine/refmachine.o` (2 388 bytes), written and checked by `gen_sampler.py` and
+  `gen_refmachine.py`, which now place the object with the relocator (so `build.py -t sampler` is the composer's
+  output by construction: MAIN OS `dd7bfd56…`, the same from `compose.py --machines sampler`).
+- **One-Shot** (four files, upstream `cycles-sampler/` and the copy here, for 0.8): `pool.h` and `view.c` take the
+  index and the first descriptor from the undefined symbols `cm_machine_index` and `cm_descriptor_base` when
+  `CM_SYMBOLS` is defined (the manifest defines it; One-Shot's own build and host tests keep the constants);
+  `smp_filter_cf.S` and `hooks.S` get sections of their own (`.text.smp_filter_cf`, `.text.smp_hooks`). The
+  second change was found by the comparison: **`ld -r` merges same-named input sections and puts the merged
+  `.text` first**, so the two assembly files' code, plain `.text` before, left file order and the relocator
+  differed from `ld` at `+0xec`. With their own sections the order is the file order again `[FAIT]`.
+- **Proof, §3 step 6**: `compare-ld` identical for `sampler` (30 523 bytes), `refmachine` (1 304 bytes),
+  `sampler,refmachine` and `refmachine,sampler` (both packages at their place in each). The placement rule, file
+  order and `sh_addralign` with the output group aligned to its largest input, is the whole rule `[FAIT]`
+  (§8's hypothesis).
+- **What changed for users**: `27-sampler.json` is regenerated: code 30 503 → 30 523 bytes (three `move.l #symbol`
+  for `moveq`, and the assembly files' alignment), the hooks' addresses move by 14 bytes, the `symbols` with them;
+  nothing else. `28-refmachine.json` is unchanged. `REGISTRY.md`, `docs/flasher/tweaks.js` and the reference
+  hashes in `app.js` are regenerated; `check_overlaps.py`, `registry.py --check`, `gen_flasher_tweaks.py --check`,
+  `ref_mainos.py --check` pass; One-Shot's host tests (`test_core`, `test_sampler`) pass.
+- **digiemu** (maintainer, 2026-10-21): the regenerated SAMPLE alone (`f938a482…`) and the pair `sampler+refmachine`
+  (`583fa4dc…`) run with the five test files in `/incoming`: "passt".
+- **Not done**: the regenerated SAMPLE build has not been on a device (the manifest says so in `tests`); One-Shot 0.8 is committed upstream (`f28ef2f`, its own build byte for byte the 0.7 MAIN OS once the
+  assembly sections got `.p2align 2`) and `gen_sampler.py` is pinned on it; the tag `v0.8` and the push are the
+  maintainer's; the `.comment` check only reports, it does not refuse.

@@ -5,8 +5,10 @@ Level B).
 A machine is a package: tools/machines/<id>/ with its sources and a manifest.json (schema cycles-mod/0.1). The
 composer takes the packages the user names, in that order, and:
 
-  1. compiles each one with the toolchain and the flags its manifest gives, with the values that depend on the
-     build passed as defines (its "patch_points": the machine index, 6 + i, and its first descriptor, 76 + 5 i);
+  1. places each package's committed object (tools/machines/<id>/<id>.o, written by its generator) at its address
+     with tools/relocate.py, the values that depend on the build resolved as symbols (its "patch_points": the
+     machine index, 6 + i, and its first descriptor, 76 + 5 i); or, with --relocator ld, compiles and links the
+     sources as B1 did (--compare-ld does both and compares them, notes/60 §3);
   2. lays them out in the added machines' payload window (0x43000000, gs.PAY_ALONE): code and tables one after the
      other from the window's start, variables one after the other from +0x36000 (above the moved tables, as MACRO),
      links each one there, and refuses a layout that crosses the stubs or a package's RAM claim;
@@ -25,9 +27,10 @@ build, not a mod.
 
     python3 tools/compose.py --cycles model-cycles_OS1.13.syx --machines sampler,refmachine \\
         [--with arp,trig-hold] [--out build/] [--emit path.json] [--compare tweaks/model-cycles_OS1.13/27-sampler.json] \\
-        [--tool path/to/elektron-firmware-tool]
+        [--tool path/to/elektron-firmware-tool] [--relocator python|ld] [--compare-ld]
 
-Needs the m68k toolchain (this increment links with ld); B2 replaces that with committed objects and a relocator.
+Runs with python3 alone (the relocator); --relocator ld and --compare-ld need the m68k toolchain, as the
+package generators do (they compile and commit the objects).
 """
 import argparse
 import hashlib
@@ -50,6 +53,7 @@ import gen_macro as gm             # noqa: E402
 import gen_sdvintage_exact as gx   # noqa: E402
 import gen_sdvintage_7th as g7     # noqa: E402
 import gen_syntakt_engines as gs   # noqa: E402
+import relocate                    # noqa: E402
 
 BASE = mcb.BASE
 DEV = ROOT / "tweaks" / "model-cycles_OS1.13"
@@ -90,16 +94,29 @@ def align4(x):
     return (x + 3) & ~3
 
 
-def compile_package(m, tmp, code_at, bss_at, code_end, values):
-    """Compiles the package's sources with its flags and the build's values for its patch points, links them at
-    code_at (code, tables, data) and bss_at (variables); the code must end before code_end. Returns (bytes from
-    code_at to the end of the data, symbols, end of the variables)."""
-    b, d = m["build"], m["_dir"]
-    defs = [f"-D{k}={v}" for k, v in b.get("defines", {}).items()]
-    for pp in b.get("patch_points", []):
+def patch_values(m, values):
+    """The build's values for the package's patch points: (defines for the compiler, symbols for the relocator).
+    A patch point is {"symbol": name, "kind": kind} (resolved like ld --defsym when the object is placed) or, the
+    B1 form, {"define": NAME, "kind": kind} (a compile-time constant: the object then carries one index for ever,
+    so a committed object cannot use it)."""
+    defines, symbols = [], {}
+    for pp in m["build"].get("patch_points", []):
         if pp["kind"] not in values:
             sys.exit(f"!! {m['id']}: patch point kind {pp['kind']!r} unknown")
-        defs.append(f"-D{pp['define']}={values[pp['kind']]}")
+        if "symbol" in pp:
+            symbols[pp["symbol"]] = values[pp["kind"]]
+        elif "define" in pp:
+            defines.append(f"-D{pp['define']}={values[pp['kind']]}")
+        else:
+            sys.exit(f"!! {m['id']}: a patch point needs 'symbol' or 'define'")
+    return defines, symbols
+
+
+def compile_objects(m, tmp, defines=()):
+    """Compiles the package's sources with its flags (and the given defines) into tmp; returns the objects in the
+    manifest's order."""
+    b, d = m["build"], m["_dir"]
+    defs = [f"-D{k}={v}" for k, v in b.get("defines", {}).items()] + list(defines)
     incs = [f"-I{d / i}" for i in b.get("include", [])]
     objs = []
     for rel in b["sources"]:
@@ -109,12 +126,40 @@ def compile_package(m, tmp, code_at, bss_at, code_end, values):
         o = tmp / f"{m['id']}-{src.stem}.o"
         gx.run([gx.CROSS + "gcc", *b["cflags"], *defs, *incs, "-c", str(src), "-o", str(o)])
         objs.append(o)
+    return objs
+
+
+def object_path(m):
+    objs = m["build"].get("objects", [])
+    if len(objs) != 1:
+        sys.exit(f"!! {m['id']}: build.objects must name one object (ld -r of the sources), has {objs}")
+    return m["_dir"] / objs[0]
+
+
+def build_object(m, tmp):
+    """The package's object as its generator commits it: the sources compiled with the manifest's recipe and
+    joined with ld -r (one relocatable file, every function and table still a section of its own, the patch
+    points still undefined symbols)."""
+    objs = compile_objects(m, tmp)
+    out = tmp / f"{m['id']}.o"
+    gx.run([gx.CROSS + "ld", "-r", "-o", str(out), *map(str, objs)])
+    return out.read_bytes()
+
+
+def compile_package(m, tmp, code_at, bss_at, code_end, values):
+    """The B1 path, with the toolchain: compiles the package's sources with its flags and the build's values for
+    its patch points, links them at code_at (code, tables, data) and bss_at (variables); the code must end before
+    code_end. Returns (bytes from code_at to the end of the data, symbols, end of the variables)."""
+    b = m["build"]
+    defines, symbols = patch_values(m, values)
+    objs = compile_objects(m, tmp, defines)
     upd, rnd = b["symbols"]["update"], b["symbols"]["render"]
     ld, elf, out = tmp / f"{m['id']}.ld", tmp / f"{m['id']}.elf", tmp / f"{m['id']}.bin"
     ld.write_text(LINK.format(update=upd, render=rnd, code=code_at, bss=bss_at))
     keep = [a for s_ in b.get("keep", []) for a in ("-u", s_)]
+    defsym = [a for k, v in symbols.items() for a in ("--defsym", f"{k}={v}")]
     gx.run([gx.CROSS + "ld", "-T", str(ld), "--gc-sections", "--no-warn-rwx-segments", "-e", upd, "-u", rnd, *keep,
-            "-o", str(elf), *map(str, objs)])
+            *defsym, "-o", str(elf), *map(str, objs)])
     secs = {}
     for line in gx.run([gx.CROSS + "objdump", "-h", str(elf)]).splitlines():
         f = line.split()
@@ -135,6 +180,40 @@ def compile_package(m, tmp, code_at, bss_at, code_end, values):
     if bss[0] != bss_at:
         sys.exit(f"!! {m['id']}: variables at {bss[0]:#x}, expected {bss_at:#x}")
     return blob, syms, align4(bss[0] + bss[1])
+
+
+def place_package(m, code_at, bss_at, code_end, values, obj=None):
+    """The B2 path, no toolchain: places the package's committed object (or obj, bytes) at code_at and bss_at with
+    tools/relocate.py, the patch points resolved to the build's values. Same result as compile_package."""
+    b = m["build"]
+    defines, symbols = patch_values(m, values)
+    if defines:
+        sys.exit(f"!! {m['id']}: patch points as defines cannot be applied to a committed object: use symbols")
+    if obj is None:
+        path = object_path(m)
+        if not path.is_file():
+            sys.exit(f"!! {m['id']}: {path} is missing: run the package's generator (it writes the object)")
+        obj = path.read_bytes()
+    return relocate.place(obj, b["symbols"]["update"], b["symbols"]["render"], b.get("keep", []), code_at, bss_at,
+                          code_end, symbols, m["id"])
+
+
+def emit_bytes(path, data, check):
+    """Writes a binary file, or with check compares it with the committed one (like gen_macro.emit for text)."""
+    if check:
+        ok = path.exists() and path.read_bytes() == data
+        why = ""
+        if not ok and path.exists():
+            try:
+                why = (f" (committed object: {relocate.Elf(path.read_bytes(), path.name).comment()}; here: "
+                       f"{relocate.Elf(data, 'new').comment()})")
+            except SystemExit:
+                pass
+        print(f"    {path.name} {'is up to date' if ok else 'DOES NOT MATCH' + why}")
+        return not ok
+    path.write_bytes(data)
+    print(f"    wrote {path}")
+    return 0
 
 
 def package_writes(m, img, syms):
@@ -191,8 +270,10 @@ def computed_conflicts(writes, ram, declared):
     return ids
 
 
-def compose(img, ids):
-    """Builds the tweak for the machines named in ids, in that order. Returns (tweak, info)."""
+def compose(img, ids, relocator="python", compare_ld=False):
+    """Builds the tweak for the machines named in ids, in that order. relocator: "python" places each
+    package's committed object with tools/relocate.py (no toolchain), "ld" compiles and links it as B1 did;
+    compare_ld does both and compares them byte for byte (the proof of the relocator). Returns (tweak, info)."""
     if not ids:
         sys.exit("!! name at least one machine")
     if len(ids) != len(set(ids)):
@@ -207,8 +288,23 @@ def compose(img, ids):
         code_cursor, bss_cursor = pay, pay + gm.BSS_OFF
         for i, m in enumerate(mans):
             code_at, bss_at = align4(code_cursor), align4(bss_cursor)
-            blob, syms, bss_end = compile_package(m, tmp, code_at, bss_at, gs.STUBS,
-                                                  {"machine_index": first + i, "descriptor_base": 76 + 5 * i})
+            values = {"machine_index": first + i, "descriptor_base": 76 + 5 * i}
+            if relocator == "ld":
+                blob, syms, bss_end = compile_package(m, tmp, code_at, bss_at, gs.STUBS, values)
+            else:
+                blob, syms, bss_end = place_package(m, code_at, bss_at, gs.STUBS, values)
+            if compare_ld:
+                if relocator == "ld":
+                    b2, s2, e2 = place_package(m, code_at, bss_at, gs.STUBS, values)
+                else:
+                    b2, s2, e2 = compile_package(m, tmp, code_at, bss_at, gs.STUBS, values)
+                same = blob == b2 and bss_end == e2 and all(s2.get(k) == v for k, v in syms.items() if k in s2)
+                print(f"  compare-ld {m['id']:12s} {'identical' if same else 'DIFFERENT'}: relocator {len(blob)} bytes, "
+                      f"ld {len(b2)} bytes, variables end {bss_end:#x} / {e2:#x}")
+                if not same:
+                    i_ = next((k for k in range(min(len(blob), len(b2))) if blob[k] != b2[k]), min(len(blob), len(b2)))
+                    bad = {k: (f"{v:#x}", f"{s2[k]:#x}") for k, v in syms.items() if k in s2 and s2[k] != v}
+                    sys.exit(f"!! {m['id']}: relocator and ld differ, first byte at +{i_:#x}; symbols {bad}")
             mc = m["_machine"]
             knobs = tuple((k["long"], k["short"], k["default"]) + ((k["min"], k["max"]) if "min" in k else ())
                           for k in mc["knobs"])
@@ -335,13 +431,16 @@ def main():
     ap.add_argument("--emit", help="also write the composed tweak JSON here")
     ap.add_argument("--compare", help="a committed tweak JSON to compare writes and payload with")
     ap.add_argument("--tool", help="elektron-firmware-tool, for an independent check")
+    ap.add_argument("--relocator", choices=("python", "ld"), default="python",
+                    help="python: place the committed objects with tools/relocate.py (default); ld: compile and link (B1)")
+    ap.add_argument("--compare-ld", action="store_true", help="do both and compare them byte for byte")
     args = ap.parse_args()
     raw = pathlib.Path(args.cycles).read_bytes()
     img = g7.cycles_main(args.cycles)
     if len(img) != gx.IMAGE_LEN:
         sys.exit("!! not the official MAIN OS 1.13")
     ids = [i.strip() for i in args.machines.split(",") if i.strip()]
-    tweak, info = compose(img, ids)
+    tweak, info = compose(img, ids, args.relocator, args.compare_ld)
     for p in info["packages"]:
         print(f"  {p['id']:12s} machine {p['index']}, descriptors {p['desc']}..{p['desc'] + 4}, code {p['code']} bytes at "
               f"{p['code_at']:#x}, variables {p['bss']} bytes at {p['bss_at']:#x}")
