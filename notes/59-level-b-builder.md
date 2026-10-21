@@ -167,6 +167,7 @@ The composer never needs the Braids clone or any source: it reads committed `.o`
 2. **B2, no toolchain at build time**: the registrar runtime (§3) as a package; the ELF reader and `R_68K_32`
    relocator in Python; committed `.o` files with `--check`. Done when B1's images are reproduced in behaviour
    (emulation proof, §3) and the composer runs with `python3` alone.
+   Detailed plan, measurements and proofs: [notes/60](60-level-b2-relocator-runtime.md) (2026-10-21).
 3. **B3, the web flasher** (§5). Done when `webbuild_check.sh` shows JavaScript and Python composing the same bytes
    for every card alone and every pair, and the page flashes a composed selection.
 4. **B4, registry and dispatchers** (§6), when a second package needs a shared hook or a stable id.
