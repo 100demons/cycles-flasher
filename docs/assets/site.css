@@ -5,32 +5,36 @@
 
 :root{
   color-scheme:light;
-  --paper:#e3e2de;
-  --casing:#cfcecb;
-  --well:#c5c4c0;
-  --line:#b9b8b3;
-  --line-2:#a3a29d;
-  --ink:#1c1c1b;
-  --ink-2:#383836;
-  --muted:#5b5a56;
-  --ctl:#46474b;          /* page controls shaped like the unit's keys */
-  --ctl-ink:#e8e7e3;
-  --ctl-edge:#2e2f32;
+  --paper:#f7f6f2;
+  --casing:#ebe9e3;
+  --well:#e2e0d9;
+  --line:#d9d6ce;
+  --line-2:#b8b5ac;
+  --ink:#1e2130;
+  --ink-2:#3f4356;
+  --muted:#6c7085;
+  --ctl:#2a2d3d;          /* page controls shaped like the unit's keys */
+  --ctl-ink:#f1f0ea;
+  --ctl-edge:#181a26;
   --mc-casing:#cfcecb;    /* the drawn unit, the same in both themes */
   --mc-well:#c5c4c0;
   --mc-key:#46474b;
   --mc-key-ink:#e8e7e3;
-  --red:#ec5a36;
-  --red-ink:#a8381a;
-  --lcd:#b2b6e2;
-  --lcd-ink:#1f2457;
+  --red:#ff7a3d;
+  --red-ink:#c24f14;
+  --accent-ink:#2a1708;   /* text on the accent */
+  --accent-glow:rgba(255,122,61,.28);
+  --accent-2:#7a5cff;     /* violet: experimental tags, section numbers */
+  --accent-2-bg:#ebe6ff;
+  --lcd:#bfeef6;
+  --lcd-ink:#0f4a57;
   --ok:#2b6a3b;
   --warn:#875300;
   --bad:#a3291b;
   --f:"Familjen Grotesk",ui-sans-serif,system-ui,-apple-system,"Segoe UI",Helvetica,Arial,sans-serif;
   --f-lcd:"Tiny5",ui-monospace,monospace;
   --f-code:ui-monospace,SFMono-Regular,Menlo,Consolas,monospace;
-  --r:6px;
+  --r:10px;
   --wrap:1180px;
   --gut:24px;
 }
@@ -38,17 +42,25 @@
 @media (prefers-color-scheme:dark){
   :root:not([data-theme="light"]){
     color-scheme:dark;
-    --paper:#1b1b1b;
-    --casing:#2b2b2a;
-    --line:#3b3b39;
-    --line-2:#5c5c59;
-    --ink:#ecebe7;
-    --ink-2:#c8c7c2;
-    --muted:#9b9a95;
-    --ctl:#cfcecb;
-    --ctl-ink:#1c1c1b;
-    --ctl-edge:#7d7c78;
-    --red-ink:#ff8a66;
+    --paper:#15161d;
+    --casing:#1f2130;
+    --well:#262838;
+    --line:#2e3142;
+    --line-2:#4a4e63;
+    --ink:#f1f0ea;
+    --ink-2:#c8c9d4;
+    --muted:#9a9db0;
+    --ctl:#e6e4dc;
+    --ctl-ink:#15161d;
+    --ctl-edge:#a8a69e;
+    --red:#ff8f5a;
+    --red-ink:#ffb08a;
+    --accent-ink:#2a1708;
+    --accent-glow:rgba(255,143,90,.28);
+    --accent-2:#a695ff;
+    --accent-2-bg:#2b2452;
+    --lcd:#163f49;
+    --lcd-ink:#bfeef6;
     --ok:#71d08c;
     --warn:#e9b44f;
     --bad:#ff7b6b;
@@ -56,17 +68,25 @@
 }
 :root[data-theme="dark"]{
   color-scheme:dark;
-  --paper:#1b1b1b;
-  --casing:#2b2b2a;
-  --line:#3b3b39;
-  --line-2:#5c5c59;
-  --ink:#ecebe7;
-  --ink-2:#c8c7c2;
-  --muted:#9b9a95;
-  --ctl:#cfcecb;
-  --ctl-ink:#1c1c1b;
-  --ctl-edge:#7d7c78;
-  --red-ink:#ff8a66;
+  --paper:#15161d;
+  --casing:#1f2130;
+  --well:#262838;
+  --line:#2e3142;
+  --line-2:#4a4e63;
+  --ink:#f1f0ea;
+  --ink-2:#c8c9d4;
+  --muted:#9a9db0;
+  --ctl:#e6e4dc;
+  --ctl-ink:#15161d;
+  --ctl-edge:#a8a69e;
+  --red:#ff8f5a;
+  --red-ink:#ffb08a;
+  --accent-ink:#2a1708;
+  --accent-glow:rgba(255,143,90,.28);
+  --accent-2:#a695ff;
+  --accent-2-bg:#2b2452;
+  --lcd:#163f49;
+  --lcd-ink:#bfeef6;
   --ok:#71d08c;
   --warn:#e9b44f;
   --bad:#ff7b6b;
@@ -82,7 +102,7 @@ img,svg{display:block;max-width:100%}
 p{margin:0 0 1em}
 a{color:inherit;text-decoration-thickness:1px;text-underline-offset:.2em;text-decoration-color:var(--line-2)}
 a:hover{text-decoration-color:var(--red)}
-::selection{background:var(--red);color:#1c1c1b}
+::selection{background:var(--red);color:var(--accent-ink)}
 :focus-visible{outline:2px solid var(--ink);outline-offset:3px}
 code{font:.86em/1 var(--f-code);background:var(--casing);padding:.15em .35em;border-radius:3px;white-space:nowrap}
 h1,h2,h3{margin:0;font-weight:700;letter-spacing:-.02em;line-height:1.05}
@@ -117,7 +137,7 @@ h3{font-size:20px;letter-spacing:-.01em}
 .btn{display:inline-flex;align-items:center;gap:10px;padding:14px 22px;border:0;border-radius:var(--r);
   background:var(--ctl);color:var(--ctl-ink);font:600 17px/1.1 var(--f);text-decoration:none;cursor:pointer;
   box-shadow:0 2px 0 var(--ctl-edge);transition:background .1s,color .1s}
-.btn:hover{background:var(--red);color:#1c1c1b}
+.btn:hover{background:var(--red);color:var(--accent-ink)}
 .btn:active{transform:translateY(1px);box-shadow:0 1px 0 var(--ctl-edge)}
 
 /* footer */
@@ -142,9 +162,9 @@ h3{font-size:20px;letter-spacing:-.01em}
 .key .ul{fill:var(--mc-key-ink)}
 .ico{fill:none;stroke:var(--mc-key-ink);stroke-width:1.7;stroke-linecap:round;stroke-linejoin:round}
 .key.on .key-cap,.key.lit .key-cap{fill:var(--red)}
-.key.on .kt,.key.lit .kt,.key.on .pt,.key.lit .pt{fill:#2b1710}
-.key.on .ul,.key.lit .ul{fill:#2b1710}
-.key.lit .ico{stroke:#2b1710}
+.key.on .kt,.key.lit .kt,.key.on .pt,.key.lit .pt{fill:var(--accent-ink)}
+.key.on .ul,.key.lit .ul{fill:var(--accent-ink)}
+.key.lit .ico{stroke:var(--accent-ink)}
 .kn-ring{fill:#3c3d41}
 .kn-cap{fill:#56575b}
 .knob.big .kn-ring{fill:#495b5f}

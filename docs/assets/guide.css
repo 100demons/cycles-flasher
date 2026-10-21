@@ -14,7 +14,7 @@
 .doc section{padding:0 0 72px}
 .doc section+section{padding-top:28px;border-top:1px solid var(--ink)}
 .doc h2{margin:0 0 18px}
-.doc h2 .n{color:var(--muted);font-weight:400;margin-right:.35em}
+.doc h2 .n{color:var(--accent-2);font-weight:400;margin-right:.35em}
 .doc h3{margin:36px 0 10px}
 .doc p,.doc li{color:var(--ink-2)}
 .doc p{max-width:64ch}
@@ -106,7 +106,7 @@
 .load .slot{display:flex;flex-direction:column;align-items:center;gap:7px;width:84px;padding:0;background:none;border:0;cursor:pointer;font:inherit;font-size:13px;color:var(--muted)}
 .load .slot .k{width:58px;height:46px;font-size:14px}
 .load .slot[data-slot="off"] .k{background:var(--casing);color:var(--muted);box-shadow:inset 0 0 0 1px var(--line-2)}
-.load .slot[data-slot="syn"] .k{background:var(--red);color:#2b1710}
+.load .slot[data-slot="syn"] .k{background:var(--red);color:var(--accent-ink)}
 .load .slot em{font-style:normal;display:none}
 .load .slot[data-slot="off"] .e-off,.load .slot[data-slot="orig"] .e-orig,.load .slot[data-slot="syn"] .e-syn{display:block}
 .load .slot[data-slot="syn"] em{color:var(--ink)}
@@ -134,7 +134,7 @@
 .hold-key{flex:none;padding:0;background:none;border:0;cursor:pointer;touch-action:none;-webkit-user-select:none;user-select:none;-webkit-touch-callout:none}
 .hold-key .k{width:58px;height:46px;font-size:14px}
 .hold-key[aria-pressed="false"] .k{background:var(--casing);color:var(--muted);box-shadow:inset 0 0 0 1px var(--line-2)}
-.hold-key[aria-pressed="true"] .k{background:var(--red);color:#2b1710}
+.hold-key[aria-pressed="true"] .k{background:var(--red);color:var(--accent-ink)}
 .hold-key.down .k{transform:translateY(2px);box-shadow:none}
 .hold .bar .fill i{width:0;border:0;background:var(--ink-2)}
 [data-hold-st="shown"] .bar .fill i,[data-hold-st="kept"] .bar .fill i{background:var(--red)}
