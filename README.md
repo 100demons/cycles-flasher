@@ -9,8 +9,8 @@ you tick what you want, the page builds the firmware from **your own copy** of t
 sends it to the Model:Cycles over USB. Modded-Cycles itself went on to a single OS with 2.0; model27 goes the other
 way, towards fewer, smaller, well-fitting mods.
 
-**Status: beta.** The web flasher runs at [https://durchgemacht.github.io/model-twentyseven/flasher/](https://durchgemacht.github.io/model-twentyseven/flasher/) (it goes live with this
-repository's GitHub Pages) and offers one card for now, the SAMPLE machine; the [guide](https://durchgemacht.github.io/model-twentyseven/guide/) explains it.
+**Status: beta.** The web flasher runs at [https://durchgemacht.github.io/model27/flasher/](https://durchgemacht.github.io/model27/flasher/) (it goes live with this
+repository's GitHub Pages) and offers one card for now, the SAMPLE machine; the [guide](https://durchgemacht.github.io/model27/guide/) explains it.
 The command-line build works for every Modded-Cycles 1.55 mod still in the repository; the short list for the beta
 is being chosen, and nothing has been removed from the tools yet.
 
@@ -42,7 +42,7 @@ is being chosen, and nothing has been removed from the tools yet.
 
 ## Install from the browser
 
-1. **Open the [web flasher](https://durchgemacht.github.io/model-twentyseven/flasher/)** in Chrome, Edge or Opera on a desktop computer (it needs Web MIDI).
+1. **Open the [web flasher](https://durchgemacht.github.io/model27/flasher/)** in Chrome, Edge or Opera on a desktop computer (it needs Web MIDI).
 2. **Tick SAMPLE.**
 3. **Drop your official OS file**, `model-cycles_OS1.13.syx`, from the
    [Elektron download](https://www.elektron.se/support-downloads/modelcycles) (unzip it first).
