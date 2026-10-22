@@ -1,6 +1,6 @@
 # 60 — Level B, step 2: a relocator and a table-driven registrar, no toolchain at build time (plan)
 
-**Status: plan, 2026-10-21; B2a (§9), B2b (§10) and B2c (§11, 2026-10-22) built: the composer runs with `python3` alone; tested on the Model:Cycles on 2026-10-22, the pair (§12) and SAMPLE alone from the page (§13).** This is increment B2 of [notes/59](59-level-b-builder.md)
+**Status: plan, 2026-10-21; B2a (§9), B2b (§10) and B2c (§11, 2026-10-22) built: the composer runs with `python3` alone; tested on the Model:Cycles on 2026-10-22, the pair (§12) and SAMPLE alone from the page (§13); proven in emulation with Unicorn (§14).** This is increment B2 of [notes/59](59-level-b-builder.md)
 (§3 the registrar runtime, §4 steps 4 and 6 of the composer, §7 item 2), written after B1 landed (`91edc68`:
 `tools/compose.py`, the manifests, the reference machine, `28-refmachine.json`). It says what B1 still needs the
 m68k toolchain for, measured in the code, how each of those uses becomes committed data plus Python, in which order
@@ -362,3 +362,28 @@ half-finished step never blocks a build.
   (the runtime's `marks`).
 - From this date the SAMPLE card is `tested`: `FEATURES` in `gen_flasher_tweaks.py` and `tweaks.js`, the guide's
   Tested line, release 0.2, the sampler manifest's `tests`.
+
+## 14. Proven in emulation with Unicorn (2026-10-22)
+
+- **`tools/emu/test_compose.py`** runs the OS's own code in Unicorn for SAMPLE alone, REF alone and both pairs, as
+  `compose.py` builds them with the registrar runtime:
+  - start-up: the bootstrap's aPLib depacker reads the grown OS back, the boot hook copies the packed payload into
+    place and clears the BSS;
+  - the registrar's mechanics, with the checks of `test_syntakt_machines.py` configured from the manifests: tables
+    built at boot, lookups, accessors and state per descriptor, the MACHINES page (a second row of marks from eight
+    machines), the setter and the wheel, records, a real machine change, the main screen's knobs, machines out of
+    range (KICK's record and knobs, no access outside memory), the small icon;
+  - the runtime against B1's per-build detours, input for input, over the OS functions they serve: the same results
+    everywhere (§5.4's behaviour proof);
+  - the voice loop: REF the same, sample for sample, as machine 6 alone and as machine 7 next to SAMPLE; SNARE on
+    another track the stock OS's; SAMPLE silent with no sample loaded; nothing outside memory.
+
+  Run by the maintainer on 2026-10-22: **ALL OK**. This closes §8's `[À FAIRE with Unicorn]` `[FAIT en émulation]`.
+- **The harness**: the emulator gets the payload as it lies in memory (`build.payload_runtime`) and the code ranges
+  from the composed tweak's parts, not `mcengine.PAYLOAD_CODE`'s fixed ones. SAMPLE's code holds 158 EMAC
+  instructions, 8 of them outside those fixed ranges when SAMPLE is alone and 15 when it comes after REF: without
+  their hooks they would be emulated wrongly. `emac.py` now finds `m68k-elf-objdump` as well as Debian's
+  `m68k-linux-gnu-objdump`, as the generators find their toolchain.
+- **Where it runs**: Unicorn 2.1.4 has wheels for Python 3.14 now (`pip install unicorn numpy`), but its JIT stops
+  with SIGILL in a sandbox that forbids generated code (`probe_chord_keys.py` says so too): the proof runs in a normal
+  terminal. Without Unicorn, `--dry` builds every selection and prints its layout.

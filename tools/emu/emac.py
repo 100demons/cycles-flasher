@@ -7,9 +7,13 @@ m68k-linux-gnu-objdump) et on l'execute ici : produit signe exact, precision de 
 (8 bits sous le LSB), saturation (OMC), chargement parallele des MAC-with-load.
 Formes utilisees par l'OS 1.13 : mac/msac.l Ry,Rx[,<ea>,Rw],ACCn ; movclr.l ; move.l ACC<->Rn ;
 move.l #imm,MACSR. Voir notes/14 §4."""
-import re, subprocess
+import re, shutil, subprocess
 from unicorn import UC_HOOK_CODE
 from unicorn import m68k_const as mk
+
+# the cross binutils as the generators find them: Debian's m68k-linux-gnu-, or m68k-elf- (Homebrew)
+OBJDUMP = next((c + "objdump" for c in ("m68k-linux-gnu-", "m68k-elf-") if shutil.which(c + "objdump")),
+               "m68k-linux-gnu-objdump")
 
 REG = {f"%d{i}": getattr(mk, f"UC_M68K_REG_D{i}") for i in range(8)}
 REG.update({f"%a{i}": getattr(mk, f"UC_M68K_REG_A{i}") for i in range(8)})
@@ -24,7 +28,7 @@ def s32(v):
 
 
 def disasm(binfile, base, start, stop, arch="m68k:isa-c:emac"):
-    out = subprocess.run(["m68k-linux-gnu-objdump", "-D", "-b", "binary", "-m", arch,
+    out = subprocess.run([OBJDUMP, "-D", "-b", "binary", "-m", arch,
                           f"--adjust-vma={base:#x}", f"--start-address={start:#x}",
                           f"--stop-address={stop:#x}", binfile],
                          capture_output=True, text=True, check=True).stdout

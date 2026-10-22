@@ -174,12 +174,15 @@ With the official files (download them from elektron.se into `firmware/`, which 
 ```sh
 python3 tools/gen_<mod>.py --cycles firmware/model-cycles_OS1.13.syx --check
 python3 tools/emu/test_<mod>.py --cycles firmware/model-cycles_OS1.13.syx
+python3 tools/emu/test_compose.py --cycles firmware/model-cycles_OS1.13.syx   # Level B: the composed machines
 python3 tools/ref_mainos.py --cycles firmware/model-cycles_OS1.13.syx --syntakt firmware/Syntakt_OS1.42.syx --check
 tools/webflash_smoke.sh firmware/model-cycles_OS1.13.syx firmware/model-samples_OS1.13.syx   # the REF_MAINOS sample,
                                                                      # each mod checked, and the Model:Samples flows
 ```
 
-Emulation needs `pip install unicorn numpy`. Code mods need the m68k toolchain (`m68k-linux-gnu-*` from the Debian/Ubuntu
+Emulation needs `pip install unicorn numpy` (wheels for Python 3.14 since Unicorn 2.1.4); Unicorn's JIT stops with
+SIGILL in a sandbox that forbids generated code, so an agent in such a sandbox hands the proof's command to the
+maintainer for a normal terminal. Code mods need the m68k toolchain (`m68k-linux-gnu-*` from the Debian/Ubuntu
 packages `binutils-m68k-linux-gnu gcc-m68k-linux-gnu`, or `m68k-elf-*`); some committed outputs were compiled with a
 specific GCC (SD VINTAGE v2 with `m68k-elf-gcc` 16.2, notes/16 §6), so `--check` can differ with another compiler.
 If a check cannot run (no network, no toolchain), say so instead of skipping it silently.

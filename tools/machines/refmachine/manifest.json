@@ -33,5 +33,5 @@
  "cost": {"emulation": {"status": "not measured"}, "device": {"status": "not measured"}},
  "stock_behaviour": {"changes": [], "fixes": [], "unchanged": ["other tracks and machines"]},
  "compat": {"built_against": ["model27"], "requires": [], "conflicts_declared": []},
- "tests": {"emulation": {"tool": "digiemu", "date": "2026-10-22", "build": "registered by the registrar runtime, alone and with sampler"}, "hardware": {"date": "2026-10-22", "by": "maintainer", "build": "registered by the registrar runtime as machine 7 next to sampler (the pair, notes/60 §12)"}, "status": "experimental"}
+ "tests": {"emulation": {"tool": "digiemu; tools/emu/test_compose.py (Unicorn, the OS's own code, notes/60 §14)", "date": "2026-10-22", "build": "registered by the registrar runtime, alone and with sampler"}, "hardware": {"date": "2026-10-22", "by": "maintainer", "build": "registered by the registrar runtime as machine 7 next to sampler (the pair, notes/60 §12)"}, "status": "experimental"}
 }
