@@ -12,10 +12,11 @@ composer takes the packages the user names, in that order, and:
   2. lays them out in the added machines' payload window (0x43000000, gs.PAY_ALONE): code and tables one after the
      other from the window's start, variables one after the other from +0x36000 (above the moved tables, as MACRO),
      links each one there, and refuses a layout that crosses the stubs or a package's RAM claim;
-  3. registers them all at once through gen_macro.added_machine (the tables of names, update/render, records and
-     descriptors, the bounds, the detours, the boot hook), checks the boot hook against the committed stub
-     template (tools/machines/registrar/registrar.json, notes/60 §4), then adds each package's own hooks and
-     vtable entries from its manifest;
+  3. registers them all at once (registrar_writes: the tables of names, update/render, records and descriptors,
+     the bounds, the jumps into the committed registrar runtime, its parameter block for this build, the boot
+     hook from the committed stub template; tools/machines/registrar/, notes/60 §4-5; --registrar b1 calls
+     gen_macro.added_machine instead and --compare-b1 compares the two), then adds each package's own hooks
+     and vtable entries from its manifest;
   4. computes what the result cannot be installed with: every tweak of tweaks/ that writes other bytes to the same
      address or runs a payload in the composed payload or in a claimed RAM range, plus what the manifests declare;
   5. emits one tweak in Modded-Cycles' format, which tools/build.py and the web flasher apply like any other, and
@@ -30,8 +31,9 @@ build, not a mod.
         [--with arp,trig-hold] [--out build/] [--emit path.json] [--compare tweaks/model-cycles_OS1.13/27-sampler.json] \\
         [--tool path/to/elektron-firmware-tool] [--relocator python|ld] [--compare-ld]
 
-Runs with python3 alone (the relocator); --relocator ld and --compare-ld need the m68k toolchain, as the
-package generators do (they compile and commit the objects).
+Runs with python3 alone (the relocator, the committed runtime and stub); --relocator ld, --compare-ld,
+--registrar b1 and --compare-b1 need the m68k toolchain, as the generators do (they compile and commit the
+objects, the runtime and the stub template).
 """
 import argparse
 import hashlib
@@ -54,7 +56,9 @@ import gen_macro as gm             # noqa: E402
 import gen_sdvintage_exact as gx   # noqa: E402
 import gen_sdvintage_7th as g7     # noqa: E402
 import gen_syntakt_engines as gs   # noqa: E402
+import gen_syntakt_machines as g8  # noqa: E402
 import relocate                    # noqa: E402
+import sprites                     # noqa: E402
 
 BASE = mcb.BASE
 DEV = ROOT / "tweaks" / "model-cycles_OS1.13"
@@ -258,6 +262,204 @@ def check_boot_stub(reg, writes, append):
     return w
 
 
+def parameter_block(reg, machines, first):
+    """The runtime's parameter block for this build (registrar.S): header and one entry per machine."""
+    rt = reg["runtime"]
+    n, nm = len(machines), first + len(machines)
+    regs = int(rt["regs_at"], 16)
+    if n > rt["max_machines"]:
+        sys.exit(f"!! {n} machines: the runtime's block holds {rt['max_machines']}")
+    out = bytearray()
+    out += bytes([n, first, first + n - 1, nm])
+    out += g7.be32(76 + 5 * n)                        # last
+    out += g7.be32(gs.DATA + 12 * nm)                 # knob_tab
+    out += g7.be32(regs + rt["regs_header"] + rt["entry_size"] * n)     # machines_end
+    for i, m in enumerate(machines):
+        e = bytearray(rt["entry_size"])
+        e[0:4] = bytes([first + i, m["image"], 76 + 5 * i, 76 + 5 * i - 51])
+        e[4:8] = g7.be32(gs.RECS + 0x60 * i)          # rec
+        e[8:12] = g7.be32(m.get("knob_hook", 0))      # knob_hook
+        out += e
+    if len(out) > rt["regs_header"] + rt["entry_size"] * rt["max_machines"]:
+        sys.exit("!! parameter block too big")
+    return bytes(out)
+
+
+def registrar_writes(img, machines, blobs, bss_end, reg):
+    """B2c: the registrar's writes and payload for the alone layout, without the toolchain: a port of
+    gen_macro.added_machine(tg=None) whose detours are the committed runtime (registrar.S, assembled once, reading
+    the parameter block) and whose boot stub comes from the committed template. machines: name, image, decay,
+    knobs, update, render (addresses); blobs: [(address, code and data)]; bss_end: end of the variables.
+    Returns (writes, append)."""
+    pay, first = gs.PAY_ALONE, 6
+    rt = reg["runtime"]
+    if int(rt["at"], 16) != gs.STUBS or int(rt["descn"], 16) != gs.DESCN or rt["marks_row"] != gs.MARKS_ROW:
+        sys.exit("!! registrar.json was generated for another layout: run tools/gen_registrar.py")
+    n = len(machines)
+    nm = first + n
+    top = nm - 1
+    gs.set_rows(n)
+    gs.check_room(n, nm)
+    u32 = lambda va: struct.unpack_from(">I", img, va - BASE)[0]
+    names_at, upd_at, rnd_at, map_at = gs.DATA, gs.DATA + 4 * nm, gs.DATA + 8 * nm, gs.DATA + 16 * nm
+    entries = {k: int(v, 16) for k, v in rt["entries"].items()}
+    code = bytes.fromhex(rt["hex"])
+    regs = int(rt["regs_at"], 16)
+    if gs.STUBS + len(code) > regs:
+        sys.exit("!! the runtime runs into its parameter block")
+    block = parameter_block(reg, machines, first)                   # two parts: the runtime, the block
+    if regs + len(block) > gs.DATA:
+        sys.exit("!! parameter block past DATA")
+
+    # --- data (as added_machine): names, update/render tables, machine -> record, strings
+    strings = [m["name"] for m in machines] + [k[i] for m in machines for k in m["knobs"] for i in (0, 1)]
+    at, addr = map_at + ((nm + 3) & ~3), {}
+    for s_ in strings:
+        if s_ not in addr:
+            addr[s_] = at
+            at += len(s_) + 1
+    names = [u32(g7.NAMES + 4 * i) for i in range(6)] + [addr[m["name"]] for m in machines]
+    upd = [u32(g7.UPDATE_TAB + 4 * i) for i in range(6)] + [m["update"] for m in machines]
+    rnd = [u32(g7.RENDER_TAB + 4 * i) for i in range(6)] + [m["render"] for m in machines]
+    data = bytearray()
+    for t in (names, upd, rnd, range(1, nm + 1)):
+        data += b"".join(g7.be32(x) for x in t)
+    data += img[gs.MAP - BASE:gs.MAP - BASE + 6] + bytes(range(6, nm)) + bytes(((nm + 3) & ~3) - nm)
+    for s_ in addr:
+        data += s_.encode("ascii") + b"\0"
+    if gs.DATA + len(data) > gs.DESCN:
+        sys.exit("!! data past DESCN")
+
+    # --- 5 descriptors per machine, modelled on SNARE's
+    new = bytearray()
+    for m in machines:
+        for k, (long_, short, default, *rng) in enumerate(m["knobs"]):
+            e = bytearray(img[g7.DESC + (g7.SNARE_DESC + k) * g7.DSTRIDE - BASE:][:g7.DSTRIDE])
+            e[0x00:0x04] = g7.be32(6)
+            if rng:
+                e[0x08:0x0c], e[0x0c:0x10] = g7.be32(rng[0] << 8), g7.be32(rng[1] << 8)
+            e[0x10:0x14] = g7.be32(default << 8)
+            e[0x2c:0x30] = g7.be32(addr[long_])
+            e[0x34:0x38] = g7.be32(addr[short])
+            new += e
+        e = bytearray(img[g7.DESC + (g7.SNARE_DESC + 4) * g7.DSTRIDE - BASE:][:g7.DSTRIDE])
+        e[0x10:0x14] = g7.be32(m["decay"] << 8)
+        new += e
+
+    # --- writes (as added_machine, tg=None)
+    writes = []
+
+    def w(va, old, new_):
+        if img[va - BASE:va - BASE + len(old)] != old:
+            sys.exit(f"!! {va:#x}: {old.hex()} expected, {img[va - BASE:va - BASE + len(old)].hex()} found")
+        writes.append({"off": va - BASE, "old": old.hex(), "new": new_.hex()})
+
+    def moveq(va, old, new_, reg_byte):
+        w(va, bytes([reg_byte, old]), bytes([reg_byte, new_]))
+
+    def jmp(va):
+        return bytes.fromhex("4ef9") + g7.be32(va)
+
+    red = sprites.redirect_write(gx.CAVE)
+    w(BASE + red["off"], bytes.fromhex(red["old"]), bytes.fromhex(red["new"]))
+    w(gx.HOOK, bytes.fromhex(gx.HOOK_OLD), jmp(gx.CAVE) + bytes.fromhex("4e71"))
+    moved = {g7.DESC: gs.DESCN, g7.DESC + 8: gs.DESCN + 8, g7.DESC + 0x20: gs.DESCN + 0x20, g7.ROWS: gs.ROWSN,
+             g7.CCROWS: gs.CCROWSN, g7.NAMES: names_at, g7.UPDATE_TAB: upd_at, g7.RENDER_TAB: rnd_at, gs.MAP: map_at}
+    want = {g7.DESC: 34, g7.DESC + 8: 1, g7.DESC + 0x20: 2, g7.ROWS: 5, g7.CCROWS: 2, gs.MAP: 1, g7.RENDER_TAB: 1}
+    for old, new_ in moved.items():
+        rs = g7.refs32(img, old)
+        if len(rs) != want.get(old, 1):
+            sys.exit(f"!! references to {old:#x}: {len(rs)}")
+        for va in rs:
+            w(va, g7.be32(old), g7.be32(new_))
+    jumps = g7.JUMPS + g8.JUMPS8
+    for va in g7.BOUNDS:
+        if va in {j[0] for j in jumps}:
+            continue
+        b0, b1 = img[va - BASE], img[va - BASE + 1]
+        if b0 & 0xf1 != 0x70 or b1 not in (75, 76):
+            sys.exit(f"!! {va:#x}")
+        moveq(va, b1, b1 + 5 * n, b0)
+    for va, reg_byte in ((0x400a7dba, 0x72), (0x400a7df4, 0x70), (0x4005a6a6, 0x72), (0x400147a4, 0x70),
+                         (0x400148aa, 0x72), (0x400148b2, 0x70), (0x400a25e0, 0x70)):
+        if img[va - BASE] != reg_byte or img[va - BASE + 1] not in (5, 6):
+            sys.exit(f"!! bound {va:#x}")
+        moveq(va, img[va - BASE + 1], top, reg_byte)
+    moveq(0x4005a572, 5, 6, 0x72)
+    w(0x4005a2b8, bytes.fromhex("487800c0"), bytes.fromhex("4878") + (32 * nm).to_bytes(2, "big"))
+    if nm > gs.MARKS_ROW:
+        w(0x400a26a2, bytes.fromhex("7850428545f9"), jmp(entries["marks"]))
+    else:
+        moveq(0x400a26e8, img[0x400a26e8 - BASE + 1], nm, 0x70)
+    for va in (0x4001b69c, 0x400a40a6, 0x400a4fb0):
+        moveq(va, 5, 1, 0x70)
+    for va, old, sym in jumps:
+        w(va, bytes.fromhex(old), jmp(entries[sym]))
+    for va, old, sym in g7.CALLS:
+        w(va, bytes.fromhex(old), bytes.fromhex("4eb9") + g7.be32(entries[sym]) + bytes.fromhex("4e71"))
+
+    # --- payload
+    parts = [{"dest": f"{at_:#x}", "hex": b_.hex()} for at_, b_ in blobs if at_ < gs.STUBS] + [
+        {"dest": f"{gs.STUBS:#x}", "hex": code.hex()},
+        {"dest": f"{regs:#x}", "hex": block.hex()},
+        {"dest": f"{gs.DATA:#x}", "hex": bytes(data).hex()},
+        {"dest": f"{gs.DESCN:#x}", "cycles": [f"{g7.DESC:#x}", f"{g7.DESC + g7.NDESC * g7.DSTRIDE:#x}"]},
+        {"dest": f"{gs.DESCN + g7.NDESC * g7.DSTRIDE:#x}", "hex": bytes(new).hex()},
+    ] + [{"dest": f"{at_:#x}", "hex": b_.hex()} for at_, b_ in blobs if at_ >= gs.STUBS]
+    lo_, hi_ = g7.DESC - BASE, g7.DESC - BASE + g7.NDESC * g7.DSTRIDE
+    final, orig = bytearray(img[lo_:hi_]), img[lo_:hi_]
+    alg = g7.ALG_DESC * g7.DSTRIDE + 0x0c
+    if struct.unpack_from(">I", final, alg)[0] != (first - 1) << 8:
+        sys.exit("!! maximum of the Algorithm parameter")
+    struct.pack_into(">I", final, alg, top << 8)
+    reloc = [[f"{gs.DESCN + k:#x}", orig[k:k + 4].hex(), final[k:k + 4].hex()]
+             for k in range(0, len(final), 4) if final[k:k + 4] != orig[k:k + 4]]
+    size = bss_end - pay
+    segs = gs.segments(parts, size)
+    at = BASE + gx.IMAGE_LEN
+    if at + sum(n_ for _, n_ in segs) > gs.END_LIMIT:
+        sys.exit(f"!! {sum(n_ for _, n_ in segs)} bytes added: the image would pass {gs.END_LIMIT:#x}")
+    stub = boot_stub(reg, at, pay, size // 4, segs)
+    if len(stub) > sprites.zone(gx.CAVE)[1]:
+        sys.exit("!! boot stub too big for its mask")
+    if img[gx.CAVE - BASE:gx.CAVE - BASE + len(stub)] != b"\xff" * len(stub):
+        sys.exit("!! the boot stub's place is taken")
+    writes.append({"off": gx.CAVE - BASE, "old": "ff" * len(stub), "new": stub.hex()})
+    writes.sort(key=lambda x: x["off"])
+    for a_, b_ in zip(writes, writes[1:]):
+        if a_["off"] + len(a_["new"]) // 2 > b_["off"]:
+            sys.exit(f"!! writes overlap at {BASE + b_['off']:#x}")
+    return writes, {"at": f"{at:#x}", "dest": f"{pay:#x}", "size": size, "parts": parts, "reloc": reloc,
+                    "pack": [[f"{a_:#x}", n_] for a_, n_ in segs]}
+
+
+def compare_b1_(reg, writes, append, writes1, append1):
+    """B2c's proof: the runtime's build against added_machine's (B1): the same writes except the sites that jump
+    into the detours (g7.JUMPS, g8.JUMPS8, g7.CALLS, the marks jump) and the boot stub (its segment table), the
+    same payload parts except the STUBS part, the same reloc, size, source and destination. Exits on a difference."""
+    sites = {va - BASE for va, _o, _s in g7.JUMPS + g8.JUMPS8 + g7.CALLS} | {0x400a26a2 - BASE, gx.CAVE - BASE}
+    w0 = {w["off"]: (w["old"], w["new"]) for w in writes if w["off"] not in sites}
+    w1 = {w["off"]: (w["old"], w["new"]) for w in writes1 if w["off"] not in sites}
+    if w0 != w1:
+        bad = sorted(set(w0) ^ set(w1) | {k for k in w0 if k in w1 and w0[k] != w1[k]})
+        sys.exit(f"!! compare-b1: writes differ at {[hex(BASE + k) for k in bad][:8]}")
+    s0 = {int(w["off"]) for w in writes} & sites
+    s1 = {int(w["off"]) for w in writes1} & sites
+    if s0 != s1:
+        sys.exit(f"!! compare-b1: different detour sites {[hex(BASE + k) for k in s0 ^ s1]}")
+    regs = reg["runtime"]["regs_at"]
+    p0 = [p for p in append["parts"] if p["dest"] not in (f"{gs.STUBS:#x}", regs)]
+    p1 = [p for p in append1["parts"] if p["dest"] != f"{gs.STUBS:#x}"]
+    if p0 != p1:
+        sys.exit("!! compare-b1: payload parts differ beyond the STUBS part and the parameter block")
+    for k in ("at", "dest", "size", "reloc"):
+        if append[k] != append1[k]:
+            sys.exit(f"!! compare-b1: append.{k} differs")
+    size_of = lambda ap, dest: len(bytes.fromhex(next(p["hex"] for p in ap["parts"] if p["dest"] == dest)))
+    print(f"  compare-b1: identical but the {len(s0)} detour sites, the runtime ({size_of(append, f'{gs.STUBS:#x}')} bytes "
+          f"for B1's {size_of(append1, f'{gs.STUBS:#x}')} of detours) and the parameter block ({size_of(append, regs)} bytes)")
+
+
 def package_writes(m, img, syms):
     """The package's own hooks (jsr/jmp into its code) and vtable entries, each checked against the stock bytes."""
     writes = []
@@ -312,10 +514,13 @@ def computed_conflicts(writes, ram, declared):
     return ids
 
 
-def compose(img, ids, relocator="python", compare_ld=False):
+def compose(img, ids, relocator="python", compare_ld=False, registrar="runtime", compare_b1=False):
     """Builds the tweak for the machines named in ids, in that order. relocator: "python" places each
     package's committed object with tools/relocate.py (no toolchain), "ld" compiles and links it as B1 did;
-    compare_ld does both and compares them byte for byte (the proof of the relocator). Returns (tweak, info)."""
+    compare_ld does both and compares them byte for byte (the proof of the relocator). registrar: "runtime" writes
+    the registrar's part itself from the committed runtime and stub template (B2c, no assembler), "b1" calls
+    gen_macro.added_machine (assembles the detours per build); compare_b1 does both and compares (notes/60 §5.4).
+    Returns (tweak, info)."""
     if not ids:
         sys.exit("!! name at least one machine")
     if len(ids) != len(set(ids)):
@@ -362,8 +567,16 @@ def compose(img, ids, relocator="python", compare_ld=False):
             for lo, hi in ram_claims(m):
                 if lo < bss_cursor and pay < hi:
                     sys.exit(f"!! {m['id']}: the payload ({pay:#x}..{bss_cursor:#x}) runs into its RAM claim {lo:#x}..{hi:#x}")
-        writes, append = gm.added_machine(img, None, machines, tmp, blobs, bss_cursor)
-    check_boot_stub(load_registrar(), writes, append)        # B2b: the template gives the same stub
+        reg = load_registrar()
+        if registrar == "b1" or compare_b1:
+            writes1, append1 = gm.added_machine(img, None, machines, tmp, blobs, bss_cursor)
+            check_boot_stub(reg, writes1, append1)              # B2b: the template gives the same stub
+        if registrar == "runtime":
+            writes, append = registrar_writes(img, machines, blobs, bss_cursor, reg)
+            if compare_b1:
+                compare_b1_(reg, writes, append, writes1, append1)
+        else:
+            writes, append = writes1, append1
     for m in mans:
         writes += package_writes(m, img, syms_of[m["id"]])
     writes.sort(key=lambda x: x["off"])
@@ -380,7 +593,8 @@ def compose(img, ids, relocator="python", compare_ld=False):
         "name": " + ".join(m["name"] for m in mans) if len(mans) > 1 else mans[0]["name"],
         "description": [
             f"Composed by tools/compose.py (notes/59): {', '.join(f'{p['id']} as machine {p['index']}' for p in info_pkgs)},",
-            "registered together through gen_macro.added_machine; each machine's code from tools/machines/<id>/",
+            "registered together through the registrar runtime (registrar.S, a parameter block per build) or, with",
+            "--registrar b1, gen_macro.added_machine; each machine's code from tools/machines/<id>/",
             "(manifest.json), compiled and linked at build time at its place in the payload (%#x..%#x)." % (pay, bss_cursor),
             "Conflicts computed from the other tweaks: other bytes at the same address, or a payload in this",
             "build's payload or in a claimed RAM range.",
@@ -477,13 +691,16 @@ def main():
     ap.add_argument("--relocator", choices=("python", "ld"), default="python",
                     help="python: place the committed objects with tools/relocate.py (default); ld: compile and link (B1)")
     ap.add_argument("--compare-ld", action="store_true", help="do both and compare them byte for byte")
+    ap.add_argument("--registrar", choices=("runtime", "b1"), default="runtime",
+                    help="runtime: the committed registrar runtime and stub template (default, no assembler); b1: gen_macro.added_machine")
+    ap.add_argument("--compare-b1", action="store_true", help="do both and compare them (notes/60 §5.4)")
     args = ap.parse_args()
     raw = pathlib.Path(args.cycles).read_bytes()
     img = g7.cycles_main(args.cycles)
     if len(img) != gx.IMAGE_LEN:
         sys.exit("!! not the official MAIN OS 1.13")
     ids = [i.strip() for i in args.machines.split(",") if i.strip()]
-    tweak, info = compose(img, ids, args.relocator, args.compare_ld)
+    tweak, info = compose(img, ids, args.relocator, args.compare_ld, args.registrar, args.compare_b1)
     for p in info["packages"]:
         print(f"  {p['id']:12s} machine {p['index']}, descriptors {p['desc']}..{p['desc'] + 4}, code {p['code']} bytes at "
               f"{p['code_at']:#x}, variables {p['bss']} bytes at {p['bss_at']:#x}")

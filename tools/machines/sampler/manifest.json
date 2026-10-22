@@ -72,7 +72,7 @@
   "conflicts_declared": [{"with": "sample-preview", "why": "plays sample files from the same browser and needs Model-TG"},
                          {"with": "sample-preview-st", "why": "the same, on Model-TG's base"}]
  },
- "tests": {"emulation": {"tool": "digiemu", "date": "2026-10-21", "build": "the composed object (patch points as symbols), alone and with refmachine"},
+ "tests": {"emulation": {"tool": "digiemu", "date": "2026-10-21", "build": "the composed object (patch points as symbols) registered by the registrar runtime, alone and with refmachine (2026-10-22)"},
            "hardware": {"date": "2026-10-21", "by": "author", "build": "One-Shot's own build (0.7 = 0.8 without CM_SYMBOLS); the composed object not yet"},
            "status": "experimental"}
 }

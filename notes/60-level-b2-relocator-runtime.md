@@ -1,6 +1,6 @@
 # 60 — Level B, step 2: a relocator and a table-driven registrar, no toolchain at build time (plan)
 
-**Status: plan, 2026-10-21; B2a (§9) and B2b (§10) built the same day, B2c not yet.** This is increment B2 of [notes/59](59-level-b-builder.md)
+**Status: plan, 2026-10-21; B2a (§9), B2b (§10) and B2c (§11, 2026-10-22) built: the composer runs with `python3` alone.** This is increment B2 of [notes/59](59-level-b-builder.md)
 (§3 the registrar runtime, §4 steps 4 and 6 of the composer, §7 item 2), written after B1 landed (`91edc68`:
 `tools/compose.py`, the manifests, the reference machine, `28-refmachine.json`). It says what B1 still needs the
 m68k toolchain for, measured in the code, how each of those uses becomes committed data plus Python, in which order
@@ -303,3 +303,35 @@ half-finished step never blocks a build.
   generators' `--check`; a template with one wrong byte is refused (tried).
 - Until B2c, `added_machine` still assembles the stub itself and the template only has to agree; B2c's
   `registrar_writes` takes the stub from `boot_stub` and the assembler goes.
+
+## 11. B2c built (2026-10-22)
+
+- **`tools/machines/registrar/registrar.S`**: the runtime, 826 bytes, assembled once at `STUBS` (`0x43033000`)
+  by `gen_registrar.py` and committed in `registrar.json` (`runtime`: code, the addresses of the eleven entries,
+  `regs_at`, the block's shape). The parameter block lives at `STUBS + 0x780` (`0x43033780`): header `n`, `first`,
+  `top`, `nm` (bytes), `last`, `knob_tab`, `machines_end` (longs), then 16 bytes per machine (`index`, `image`,
+  `first_desc`, `rec_param`, `rec`, `knob_hook`, 0): 32 bytes for one machine, 48 for two, 112 at most. The code
+  follows §5.1 and keeps §5.2's contracts: `find_machine` (d1 → a0, `cmp.b` against the entry) serves `shown`,
+  `record_at`, `record_of` and `knob_vec` (which saves a0 around it and its hook); `find_desc` (d0 → a0) serves
+  `desc_machine`; `builder_row` loops on a1; `map_state`, `cc_bounds`, `knob_vec`, `marks` read `last`, `top`,
+  `first`, `nm` and `knob_tab` from the block with `cmp.l` / `mvz.b` / `movea.l` from memory.
+- **`compose.registrar_writes`**: the port of `added_machine` (`tg=None`) in Python: data block, descriptors, the
+  moved references, the 43 bounds, the small bounds, the jumps and the call to the runtime's **fixed** entries, the
+  `marks` jump or `moveq`, the `Algorithm` maximum, `reloc`, `segments`, the stub from the template
+  (`boot_stub`), with `parameter_block` as one more payload part. `compose.py --registrar runtime` is the default;
+  `--registrar b1` keeps `added_machine`; `--compare-b1` does both and compares. `gen_macro.added_machine` is
+  untouched (MACRO, ACID, the Syntakt generators). `gen_sampler.py` and `gen_refmachine.py` go through the
+  runtime now, so `27-sampler.json` and `28-refmachine.json` carry it.
+- **Proof, §5.4 step 1**: `compare-b1` for `sampler`, `refmachine`, `sampler,refmachine`, `refmachine,sampler` and
+  the pair with `arp` and `trig-hold`: the same writes but the 11 (12 with `marks`) detour sites, the same payload
+  parts but the `STUBS` part (runtime for detours) and the new block part, the same `reloc`, size, source and
+  destination. `build.py -t sampler` gives the composer's MAIN OS (`ccdadb37…`). Every checker passes
+  (`check_overlaps.py`, `registry.py`, `gen_flasher_tweaks.py`, `ref_mainos.py`, `webbuild_check` by hand).
+- **Cost**: the image grows by 252 bytes for one machine (36 096 added instead of 35 844: 826 bytes of runtime
+  for 606 of detours, the block, one more segment) and shrinks for six; the stub has one more segment. The
+  runtime leaves 1 096 bytes before the block.
+- **digiemu** (maintainer, 2026-10-22): the runtime builds `sampler` (`019cce6d…`), `refmachine` (`e92870d5…`) and
+  `sampler+refmachine` (`e4000e20…`) run: "funktioniert".
+- **Not done**: the device for the runtime build; the emulation proof with Unicorn (§8); the `.comment` check only
+  reports. `compose.py` now needs neither compiler nor assembler: `python3 tools/compose.py --cycles … --machines …`
+  is the whole build.

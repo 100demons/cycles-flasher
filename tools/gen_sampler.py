@@ -15,8 +15,9 @@ to it and placed by tools/relocate.py (notes/60). What differs from One-Shot's o
 that and the file name, the English name and description, and the "version" and "source" fields. The tweak carries, of the OS, only the short stock bytes ("old") that check the
 official file; the descriptor table is copied at build time from YOUR file ("cycles" recipe, as for MACRO).
 
-The mechanics are MACRO's and ACID's (gen_macro.added_machine, notes/43, notes/54): same detours, same moved tables,
-same place in the payload (0x43000000). SAMPLE's own hooks follow: the browser's file open, the sound record save
+The mechanics are MACRO's and ACID's (notes/43, notes/54): the same moved tables, the same place in the payload
+(0x43000000), the same detours, but assembled once as the registrar runtime and fed a parameter block per build
+(compose.registrar_writes, notes/60) instead of gen_macro.added_machine assembling them for each tweak. SAMPLE's own hooks follow: the browser's file open, the sound record save
 (two versions) and load, the screen's redraw, and the draw methods of the main screen and of the knob view (vtable
 entries). The sample pool is the RAM from 8 MB above the payload window to Model-TG's window
 (0x43800000..0x46700000, 47 MB; POOL below): a combined build whose payload ends above POOL[0] must move it.
@@ -150,7 +151,8 @@ def computed_conflicts(writes, ram):
 
 
 def build_tweak(img, check=False):
-    """The tweak: SAMPLE registered through gen_macro.added_machine as the 7th machine, at the alone payload
+    """The tweak: SAMPLE registered as the 7th machine through the registrar runtime (compose.registrar_writes,
+    notes/60 §5: the committed runtime and stub template, a parameter block for this build), at the alone payload
     window, with its own hooks and view entries, and the conflicts computed from the folder's tweaks."""
     pay = gs.PAY_ALONE
     gs.set_base(pay)
@@ -160,7 +162,7 @@ def build_tweak(img, check=False):
         if bss_end > POOL[0]:
             raise SystemExit(f"!! the payload ends at {bss_end:#x}, inside the sample pool ({POOL[0]:#x}): move POOL")
         machine = dict(MACHINE, update=syms["sampler_update"], render=syms["sampler_render"])
-        writes, append = gm.added_machine(img, None, [machine], tmp, [(pay, blob)], bss_end)
+    writes, append = compose.registrar_writes(img, [machine], [(pay, blob)], bss_end, compose.load_registrar())
     writes += own_writes(img, syms)
     writes.sort(key=lambda x: x["off"])
     for a_, b_ in zip(writes, writes[1:]):
@@ -172,7 +174,8 @@ def build_tweak(img, check=False):
         "order": ORDER,
         "name": "SAMPLE machine: one-shot sampler for samples on the +Drive (Cycles One-Shot %s)" % VERSION,
         "description": [
-            "7th machine after the 6 stock ones, registered like MACRO and ACID (gen_macro.added_machine). Plays a",
+            "7th machine after the 6 stock ones, registered like MACRO and ACID through the registrar runtime",
+            "(tools/machines/registrar/, notes/60) with a parameter block for this build. Plays a",
             "sample from the +Drive once per trig: 6-tap polyphase interpolation at 96 kHz, the stock decimator, the",
             "amp chain set up like TONE, then the Model:Samples' filter. The sample is chosen for a SAMPLE track in",
             "the PRESET browser (FUNC + MACHINE) and saved with the sound; stereo files play as mono, other rates at",

@@ -88,14 +88,16 @@ tools/gen_*.py                one generator per mod: writes its tweak JSON, --ch
 tools/machines/<mod>/         C and assembly sources compiled into the firmware
 tools/machines/<id>/manifest.json   a machine as a package (Cycles Mod Standard, notes/59): sources, flags, patch points,
                               hooks; tools/compose.py composes the chosen packages into one tweak at build time
-tools/compose.py              Level B, increment B1: lays packages out, links them, registers them together through
-                              gen_macro.added_machine, computes the conflicts, builds the .syx (notes/59)
+tools/compose.py              Level B: lays packages out, places their committed objects (relocate.py), registers them
+                              together through the registrar runtime, computes the conflicts, builds the .syx with
+                              python3 alone (notes/59, notes/60); --registrar b1 / --relocator ld keep the toolchain paths
 tools/relocate.py             Level B, increment B2a: places a package's committed object (m68k ELF, only R_68K_32)
                               at its address without the toolchain; compose.py uses it by default (notes/60)
 tools/machines/<id>/<id>.o    the package's committed object (ld -r of its sources), written and checked by its generator
-tools/gen_registrar.py        Level B, increment B2b: assembles the boot stub once with placeholders and commits it as a
-                              template with the offsets of its immediates; compose.py fills it (notes/60 §4)
-tools/machines/registrar/     registrar.json, the registrar's committed data: the stub template (B2b), later the runtime (B2c)
+tools/gen_registrar.py        Level B, increments B2b and B2c: assembles the boot stub (a template with the offsets of its
+                              immediates) and the registrar runtime (registrar.S) once, and commits both (notes/60 §4, §5)
+tools/machines/registrar/     registrar.S, the runtime: the detours of the added machines reading a parameter block the
+                              composer fills per build; registrar.json, its committed code, entries and the stub template
 tools/machines/refmachine/    the reference machine: the smallest added machine, proves the composer, never offered
 tools/emu/                    Unicorn emulation of the OS: test_<mod>.py proofs, mcengine.py, emac.py, syntakt.py
 tools/gen_flasher_tweaks.py   FEATURES list -> docs/flasher/tweaks.js (generated)
