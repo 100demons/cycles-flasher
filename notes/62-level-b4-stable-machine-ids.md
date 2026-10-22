@@ -1,6 +1,6 @@
 # 62 — Level B, step 4: stable machine ids (plan)
 
-**Status: plan, 2026-10-22.** This is the part of increment B4 of [notes/59](59-level-b-builder.md) (§6, §7 item 4)
+**Status: plan, 2026-10-22; decided the same day: option C, today's numbering stays, no stable ids (§9).** This is the part of increment B4 of [notes/59](59-level-b-builder.md) (§6, §7 item 4)
 that has to come before a second machine card: every machine package gets a permanent number, so that a saved sound
 finds its machine whatever else the build holds. The dispatcher tables and the machine shortcuts, the other half of
 B4, are only an outlook here (§8): they wait until the second machine is known. Addresses are VAs of OS 1.13. The
@@ -9,6 +9,9 @@ measurements were made on 2026-10-22 with the official `model-cycles_OS1.13.syx`
 
 ## 0. In short
 
+- **Decided (§9): option C.** The maintainer takes a machine that changes with the selection as a happy
+  accident, not a fault: who wants the same sounds keeps one project per build. No registry, no placeholder; what
+  the plan below measured stays as a record, should the question come back.
 - **The problem.** The composer numbers the added machines 6, 7, … in the order it gets them. A sound stores the
   number of its machine, and so does a pattern's machine lock. With one machine card SAMPLE is always 6. With a
   second card X, X is 6 alone and 7 next to SAMPLE, so a sound saved with X alone plays SAMPLE after the next flash.
@@ -167,6 +170,8 @@ and a slot of the id space for every registered machine (§4.6).
 
 ## 6. Order of work
 
+*Not carried out: option C was chosen (§9).*
+
 | Step | Work | Done when |
 |---|---|---|
 | **B4a** | `numbers.json`, the placeholder package, `compose.py` (sort, fill, shared placeholder code, `--id`), its checks; `28-refmachine.json` regenerated | the Python proofs of §5; the emulation proof by the maintainer |
@@ -179,6 +184,9 @@ registered machine, so B4 needs no new release on its own. The release that brin
 its id, and under F2 the new bytes of SAMPLE alone too.
 
 ## 7. Decisions for the maintainer
+
+*Answered in §9: option C makes points 1 to 4 moot (no registry, no placeholder; REF stays as it is). Point 5
+remains as the size of the layout, for when more than six machines come.*
 
 1. **Which ids a build fills:** F1 or F2 (§4.3). The recommendation is F2.
 2. **The placeholder's look:** its name (`----`), its picture on the MACHINES page, its DECAY default.
@@ -206,3 +214,24 @@ These wait until the second machine is known, because what it needs decides what
     Start with "key held + machine knob"; key-only combinations would need a second dispatcher in the key path.
   - Global shortcuts such as Control All Config's TRACK + TRIG 1–6 stay exclusive. No tool checks gestures yet, by
     combination and scope (standard step 4).
+
+## 9. Decision (2026-10-22): option C, today's numbering stays
+
+- **The maintainer's view.** A project loaded on a build with other machines ticked may play other machines on some
+  tracks: a happy accident, not a fault. Who wants the same sounds keeps one project per build. That is option C of
+  the standard (§2): today's rule, documented.
+- **So nothing is built.** No registry, no placeholder machine, no change to the composer or the page: machines keep
+  the numbers 6, 7, … in card order, SAMPLE first (§1.3).
+- **Nothing worse than another machine can happen** (`registrar.S`, code reading). A number above `top` plays CHORD
+  and shows "Error" (§1.2); the registrar gives it KICK's knobs (`knob_vec`) and KICK's record (`record_at`), so the OS
+  never reads outside its tables. Otherwise the other machine plays with the same knob values (§1.1).
+- **To do with the second machine card:** one sentence in the guide, along the lines of "a project remembers each
+  track's machine slot; with other machines ticked a track may play another machine, and one project per build
+  avoids that".
+- **REF stays** as it is, never on the page: it is the second package of the composer's tests (`webcompose_check.sh`,
+  `tools/emu/test_compose.py`, the pair tested on the device, notes/60 §12) and the template for a new machine.
+- **What remains of B4** (notes/59 §6), all with the second machine: the dispatcher tables and the machine shortcuts
+  (§8), and a layout for more than six added machines. The MACHINES page holds eight (two rows of seven marks, with
+  the six stock machines); the maintainer notes that the page could be reworked later to hold more.
+- **The prototype** (§3) and the design (§4) stay in this note as a measurement, should portable projects become a
+  wish later.

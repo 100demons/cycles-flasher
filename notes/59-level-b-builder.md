@@ -155,7 +155,8 @@ The composer never needs the Braids clone or any source: it reads committed `.o`
 - **Stable machine ids** (standard §5.1): the registry file names a permanent id per package; the composer orders
   by id and fills the gaps with a placeholder entry (a silent machine named `----`), so that a sound saved with
   SAMPLE as machine 6 stays SAMPLE whatever else is ticked. Until B4, ids are the order given (B1) with SAMPLE
-  first, which keeps SAMPLE at 6 in every selection.
+  first, which keeps SAMPLE at 6 in every selection. *Decided 2026-10-22 ([notes/62](62-level-b4-stable-machine-ids.md)
+  §9): not built; the order given stays, and a project belongs to its build.*
 - **Shared hooks** (`sound.record`, `screen.tick`, `view.*`, `browser.open`): today only SAMPLE uses them among the
   offered packages. The first second package that needs one brings the dispatcher table of the standard §3.3 (a
   fixed table of callbacks in the runtime's payload, walked by code assembled once).
@@ -177,7 +178,7 @@ The composer never needs the Braids clone or any source: it reads committed `.o`
    Detailed plan, measurements and proofs: [notes/61](61-level-b3-web-flasher.md) (2026-10-22).
 4. **B4, registry and dispatchers** (§6), when a second package needs a shared hook or a stable id.
    Plan for the stable ids, measurements and the dispatchers as an outlook: [notes/62](62-level-b4-stable-machine-ids.md)
-   (2026-10-22).
+   (2026-10-22); decided the same day: option C, no stable ids (§9 there).
 
 Hardware tests follow every increment, by the maintainer, before anything is called tested.
 
