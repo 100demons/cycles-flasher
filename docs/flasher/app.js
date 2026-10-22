@@ -125,7 +125,7 @@ const PARTLY = false;           // true: an unticked engine card tested with som
 // ---------------------------------------------------------------------------
 const T = {
   en: {
-    title: "Demo Engines for Model Cycles 🫥 — Flasher",
+    title: "Model Cycles Engines — Flasher",
     tagline: "Install mods on your Elektron Model:Cycles or Model:Samples, right from your browser.",
     s1: "What do you want to install?",
     tab_mods: "Mods",
