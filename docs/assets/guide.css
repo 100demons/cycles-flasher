@@ -168,3 +168,7 @@
   .usb{grid-template-columns:auto minmax(0,1fr) minmax(0,120px)}
   .load .slot{width:calc(33.33% - 7px)}
 }
+
+/* stark section numbers, like the flasher's steps */
+.doc h2 .n{display:inline-grid;place-items:center;width:24px;height:24px;background:var(--ink);color:var(--paper);
+  font:500 12px/1 var(--f-code);margin-right:.5em;vertical-align:2px}

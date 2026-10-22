@@ -31,10 +31,10 @@
   --ok:#2b6a3b;
   --warn:#875300;
   --bad:#a3291b;
-  --f:"Familjen Grotesk",ui-sans-serif,system-ui,-apple-system,"Segoe UI",Helvetica,Arial,sans-serif;
+  --f:"Inter",ui-sans-serif,system-ui,-apple-system,"Segoe UI",Helvetica,Arial,sans-serif;
   --f-lcd:"Tiny5",ui-monospace,monospace;
-  --f-code:ui-monospace,SFMono-Regular,Menlo,Consolas,monospace;
-  --r:10px;
+  --f-code:"IBM Plex Mono",ui-monospace,SFMono-Regular,Menlo,Consolas,monospace;
+  --r:0px;
   --wrap:1180px;
   --gut:24px;
 }
@@ -204,3 +204,13 @@ h3{font-size:20px;letter-spacing:-.01em}
 @media (prefers-reduced-motion:reduce){
   *{transition:none !important;animation:none !important}
 }
+
+
+/* --- stark, utilitarian pass: square controls, plain type, no depth --- */
+.btn{border-radius:0;border:1px solid var(--ink);background:var(--ink);color:var(--paper);box-shadow:none}
+.btn:hover{background:var(--paper);color:var(--ink)}
+.btn:active{transform:none;box-shadow:none}
+.btn.secondary{border:1px solid var(--ink);box-shadow:none}
+.theme-btn{border-radius:0}
+code{border-radius:0}
+h1,h2,h3{letter-spacing:-.025em}
