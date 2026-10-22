@@ -54,8 +54,10 @@
   "conflicts_declared": []
  },
  "tests": {
-  "emulation": {"tool": "tools/emu/test_lixr.py (notes 75), not yet run in this fork", "date": null},
-  "hardware": {"date": null, "by": null},
-  "status": "experimental"
+  "emulation": {"tool": "tools/emu/test_lixr.py in the real OS voice loop (Unicorn), on the composed alone build",
+                "date": "2026-10-22", "build": "36-lixr.json composed as machine 6"},
+  "hardware": {"date": "2026-10-22", "by": "owner (100demons)",
+               "build": "the .syx built from this branch on their Model:Cycles: LiXR alone and SAMPLE + LiXR"},
+  "status": "tested"
  }
 }

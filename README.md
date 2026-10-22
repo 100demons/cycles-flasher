@@ -10,7 +10,7 @@ sends it to the Model:Cycles over USB. Modded-Cycles itself went on to a single 
 way, towards fewer, smaller, well-fitting mods.
 
 **Status: beta.** The web flasher runs at [https://durchgemacht.github.io/model27/flasher/](https://durchgemacht.github.io/model27/flasher/) (it goes live with this
-repository's GitHub Pages) and offers two cards for now, the SAMPLE machine and Control All Config; the [guide](https://durchgemacht.github.io/model27/guide/) explains them.
+repository's GitHub Pages) and offers three cards for now, the SAMPLE machine, the LiXR machine and Control All Config; the [guide](https://durchgemacht.github.io/model27/guide/) explains them.
 The command-line build works for every Modded-Cycles 1.55 mod still in the repository; the short list for the beta
 is being chosen, and nothing has been removed from the tools yet.
 
@@ -32,7 +32,8 @@ is being chosen, and nothing has been removed from the tools yet.
 
 ## What goes in first
 
-- The maintainer's own mods: the **SAMPLE** machine of [Cycles One-Shot](https://github.com/durchgemacht/cycles-one-shot)
+- The maintainer's own mods: the **LiXR** machine (a fixed-point drum voice with feedback FM and a decimator in
+  place of the filter), the **SAMPLE** machine of [Cycles One-Shot](https://github.com/durchgemacht/cycles-one-shot)
   (a one-shot sampler for samples on the +Drive) and
   [Control All Config](https://github.com/durchgemacht/cycles-control-all-config), which is already here.
 - Then one or two mods by other authors, each with its author's agreement.
@@ -43,7 +44,7 @@ is being chosen, and nothing has been removed from the tools yet.
 ## Install from the browser
 
 1. **Open the [web flasher](https://durchgemacht.github.io/model27/flasher/)** in Chrome, Edge or Opera on a desktop computer (it needs Web MIDI).
-2. **Tick SAMPLE.**
+2. **Tick SAMPLE and/or LiXR.** They can be ticked together: SAMPLE takes the 7th machine and LiXR the 8th.
 3. **Drop your official OS file**, `model-cycles_OS1.13.syx`, from the
    [Elektron download](https://www.elektron.se/support-downloads/modelcycles) (unzip it first).
 4. **Connect the Model:Cycles over USB and press Flash.** Close Elektron Transfer first and leave the machine on its

@@ -339,6 +339,25 @@ ALL_FEATURES = [
         "package": "sampler",
     },
     {
+        "id": "lixr",
+        "cat": "sound",
+        "label": "LiXR machine",
+        "desc": "One extra machine after Chord: a fixed-point drum voice in the spirit of the Sonic Potions LXR "
+                "drum voices. One tableless oscillator morphs from sine through triangle to saw and rectangle, "
+                "with a noise and transient layer on top; feedback FM shapes it, a pitch envelope gives the "
+                "attack, and a sample-rate decimator takes the place of the filter. COLOR = waveform (sine on "
+                "the left, triangle in the centre, saw and rectangle on the right, noise and clap past 0.65), "
+                "SHAPE = feedback FM, SWEEP = pitch-envelope depth and decay, RATE (where CONTOUR sits) = "
+                "decimator rate; DECAY, GATE, PUNCH, FINE and PITCH work as on Tone.",
+        # tested on the Model:Cycles on 2026-10-22, alone and next to SAMPLE, on the builds of commit 20db5b5
+        "status": "tested",
+        "credit": {"kind": "own", "who": "100demons"},
+        # composed in the page from its package (notes/61): alone it gives 36-lixr.json byte for byte. It is a
+        # pure machine (update/render, no hook), so its conflicts are only the shared boot hook and the payload
+        # window of the other added machines (tools/gen_lixr.py)
+        "package": "lixr",
+    },
+    {
         "id": "chord-keys",
         "cat": "live",
         "label": "Accords de gamme sur TRIG 1–16",
@@ -396,7 +415,7 @@ ALL_FEATURES = [
 # model27 offers a short list of cards. The other definitions above stay as they are, for the command-line build
 # (every tweak of tweaks/ is still built by tools/build.py) and so that merges from upstream apply cleanly; a card
 # comes back into the flasher by adding its id here, once it has been reviewed against the Cycles Mod Standard.
-OFFERED = ("sampler", "control-all-config")
+OFFERED = ("sampler", "lixr", "control-all-config")
 FEATURES = [f for f in ALL_FEATURES if f["id"] in OFFERED]
 _missing = set(OFFERED) - {f["id"] for f in FEATURES}
 if _missing:

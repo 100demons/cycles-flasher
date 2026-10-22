@@ -374,6 +374,25 @@ les vérifications restantes sur la machine sont détaillés dans [la note 42](n
 Les accords étendus restent limités à quatre notes ; l'enregistrement conserve la fondamentale et le réglage
 du degré s'applique à la relecture, sans enregistrer une extension différente par trig.
 
+### Machine LiXR
+
+`tweaks/model-cycles_OS1.13/36-lixr.json` (7e machine seule, 8e avec SAMPLE) est produit par `tools/gen_lixr.py`, qui
+compile `tools/machines/lixr/` en `lixr.o` (virgule fixe, code propre, licence MIT ; [note 75](notes/75-lixr.md)) puis
+laisse `tools/compose.py` le placer et l'enregistrer. Machine pure : `update`/`render`, quatre potards, aucun crochet ;
+les conflits sont ceux que le composeur calcule contre les autres tweaks. La preuve rapide tourne dans la boucle des
+voix réelle (Unicorn), et la page compose le même tweak et la même image (`tools/webcompose_check.sh`).
+```sh
+python3 tools/gen_lixr.py --cycles model-cycles_OS1.13.syx [--check]
+python3 tools/compose.py --cycles model-cycles_OS1.13.syx --machines lixr
+python3 tools/compose.py --cycles model-cycles_OS1.13.syx --machines sampler,lixr
+python3 tools/emu/test_lixr.py --cycles model-cycles_OS1.13.syx
+```
+
+| `-t` / composition | MAIN OS patché (SHA-256) |
+|---|---|
+| `lixr` | `64598fe9a731343a96d8df7c33d1f4a8227ffffb8de26c45eefb1cfaec51d8c0` |
+| `sampler,lixr` | `1e09cf7dc2eb9bcbcd2308282d3c436151f0e8f5a3224562b1390a8ac8ecd214` |
+
 ### Machine MACRO (les modèles de Braids)
 
 `tweaks/model-cycles_OS1.13/25-macro.json` (7e machine) et `32-macro-tg.json` (avec Model-TG : 8e machine, par-dessus

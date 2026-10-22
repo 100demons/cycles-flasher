@@ -7,9 +7,9 @@
  * The optional official files are told apart by their names. The Model:Cycles OS checks each combination of the
  * REF_MAINOS sample against its reference hash, and each mod against REF_MODS (app.js, notes/49); with the
  * Model:Samples OS, the "Samples OS" tab and the Mods tab on a Model:Samples are checked end to end
- * (REF_SAMPLES_ON_CYCLES, tools/mods_for_samples.py). model27 offers two cards, SAMPLE and Control All Config
- * (OFFERED in tools/gen_flasher_tweaks.py); SAMPLE is a machine card, composed in the page from its package
- * (composer.js, notes/61). The checks of Modded-Cycles' other cards are in this file's history. */
+ * (REF_SAMPLES_ON_CYCLES, tools/mods_for_samples.py). model27 offers three cards, SAMPLE, LiXR and Control All Config
+ * (OFFERED in tools/gen_flasher_tweaks.py); SAMPLE and LiXR are machine cards, composed in the page from their
+ * packages (composer.js, notes/61). The checks of Modded-Cycles' other cards are in this file's history. */
 const fs = require("fs");
 const path = require("path");
 const zlib = require("zlib");
@@ -223,12 +223,14 @@ async function main() {
       "MCBuilder + MCComposer + MCFlasher present");
     const ids = w.MC_TWEAKS.tweaks.map((x) => x.id), cards = w.MC_TWEAKS.features;
     const smp = cards.find((f) => f.id === "sampler") || {};
-    check(ids.join() === "control-all-config" && cards.map((f) => f.id).join() === "control-all-config,sampler"
-      && smp.package === "sampler" && !smp.variants && Object.keys(w.MC_TWEAKS.packages).join() === "sampler"
+    const lix = cards.find((f) => f.id === "lixr") || {};
+    check(ids.join() === "control-all-config" && cards.map((f) => f.id).join() === "control-all-config,sampler,lixr"
+      && smp.package === "sampler" && !smp.variants && lix.package === "lixr" && !lix.variants
+      && Object.keys(w.MC_TWEAKS.packages).join() === "sampler,lixr"
       && w.MC_TWEAKS.registrar && w.MC_TWEAKS.registrar.schema === "model27-registrar-frame/0.1"
       && !cards.some((f) => f.engines || f.needs) && !w.MC_TWEAKS.tweaks.some((x) => x.append && x.append.syntakt),
-      "MC_TWEAKS: model27's two cards, Control All Config (its tweak) and SAMPLE (a machine card: its package and the " +
-      "registrar's frame, composed in the page), nothing that needs the Syntakt OS: " + ids.join());
+      "MC_TWEAKS: model27's three cards, Control All Config (its tweak) and SAMPLE + LiXR (machine cards: their " +
+      "packages and the registrar's frame, composed in the page), nothing that needs the Syntakt OS: " + ids.join());
     check(/build \d{4}-/.test(text(doc, "build-stamp")), "version stamp shown");
     const srcs = [...doc.querySelectorAll("script[src]")].map((x) => x.getAttribute("src"));
     check(["builder.js", "composer.js", "tweaks.js", "flasher.js", "app.js"].every((f) => srcs.some((x) => x.startsWith(f + "?")))
@@ -237,7 +239,7 @@ async function main() {
     // display order: by section (Sounds & machines, then Live playing), FEATURES order inside a section; the build
     // keeps FEATURES order (checked in 1b)
     const feats = [...doc.querySelectorAll("#features input[type=checkbox]")].map((c) => c.id);
-    check(feats.join() === "feat-sampler,feat-control-all-config", "2 feature rows, by section: " + JSON.stringify(feats));
+    check(feats.join() === "feat-sampler,feat-lixr,feat-control-all-config", "3 feature rows, by section: " + JSON.stringify(feats));
     check(cards.every((f) => doc.querySelector(`#cat-${f.cat || "other"} #mod-${f.id} #feat-${f.id}`)),
       "every feature has a row in its section (cat)");
     const tagOfFeat = (f) => (f.status === "tested" ? "Tested" : "Experimental");
@@ -259,7 +261,8 @@ async function main() {
       "credits section links Modded-Cycles' MIT license and model27's third-party notices: " + JSON.stringify(lic));
     const box = (id) => doc.getElementById(id);
     const chosen = () => w.MCFlasherApp.chosenTweaks().map((x) => x.id).join();
-    // the two cards go together: no exclusion between them, both stay ticked, FEATURES order in the build
+    // the cards go together: no exclusion between them, all stay ticked, FEATURES order in the build; the two
+    // machine cards compose into one tweak whose id is their packages joined by "+"
     box("feat-sampler").click(); await wait(5);
     const smpAlone = chosen();
     box("feat-control-all-config").click(); await wait(5);
@@ -268,11 +271,23 @@ async function main() {
     box("feat-sampler").click(); await wait(5);
     const cacAlone = chosen();
     box("feat-control-all-config").click(); await wait(5);
-    check(smpAlone === "sampler" && both === "control-all-config,sampler" && bothOn && cacAlone === "control-all-config" && !chosen().length
-      && doc.querySelector('#features a[href$="#sampler"]') && doc.querySelector('#features a[href$="#control-all"]'),
-      `SAMPLE alone ${smpAlone}; with Control All Config ${both}, both ticked, no clash; Control All Config alone ${cacAlone}; guide links`);
+    box("feat-sampler").click(); await wait(5);
+    box("feat-lixr").click(); await wait(5);
+    const machines = chosen();
+    box("feat-control-all-config").click(); await wait(5);
+    const all = chosen();
+    box("feat-sampler").click(); box("feat-lixr").click(); box("feat-control-all-config").click(); await wait(5);
+    check(smpAlone === "sampler" && both === "control-all-config,sampler" && bothOn && cacAlone === "control-all-config"
+      && machines === "sampler+lixr" && all === "control-all-config,sampler+lixr" && !chosen().length
+      && doc.querySelector('#features a[href$="#sampler"]') && doc.querySelector('#features a[href$="#lixr"]')
+      && doc.querySelector('#features a[href$="#control-all"]'),
+      `SAMPLE alone ${smpAlone}; with Control All Config ${both}, both ticked, no clash; Control All Config alone ${cacAlone}; ` +
+      `SAMPLE + LiXR ${machines}, all three ${all}; guide links`);
     box("feat-sampler").click(); await wait(30);
-    check(doc.querySelectorAll('input[name="var-sampler"]').length === 0, "SAMPLE: a machine card, no sub-choice");
+    box("feat-lixr").click(); await wait(30);
+    check(doc.querySelectorAll('input[name="var-sampler"]').length === 0
+      && doc.querySelectorAll('input[name="var-lixr"]').length === 0, "SAMPLE and LiXR: machine cards, no sub-choice");
+    box("feat-lixr").click(); await wait(5);
     check(!!doc.getElementById("tab-samples") && doc.getElementById("panel-samples").hidden && doc.getElementById("drop2-wrap").hidden,
       "Samples OS tab present, its panel and second drop zone hidden in Mods");
     check(/Load your official OS file/.test(text(doc, "missing")), "flash button says what is missing: " + text(doc, "missing"));
@@ -283,8 +298,10 @@ async function main() {
     await wait(20);
     check(/Que voulez-vous installer/.test(text(doc, "h1s")) && doc.documentElement.lang === "fr", "FR switch translates the page");
     check(/Control All : choix des pistes/.test(text(doc, "features")) && /SAMPLE machine \(Cycles One-Shot\)/.test(text(doc, "features"))
-      && /par durchgemacht/.test(text(doc, "features")) && /Testé/.test(text(doc, "features"))
-      && doc.querySelector('#features a[href$="#control-all"]') && doc.querySelector('#features a[href$="#sampler"]'),
+      && /Machine LiXR/.test(text(doc, "features")) && /par durchgemacht/.test(text(doc, "features")) && /par 100demons/.test(text(doc, "features"))
+      && /Testé/.test(text(doc, "features"))
+      && doc.querySelector('#features a[href$="#control-all"]') && doc.querySelector('#features a[href$="#sampler"]')
+      && doc.querySelector('#features a[href$="#lixr"]'),
       "FR switch translates the cards (SAMPLE's texts are in English only), their credits and tags, with their guide links");
     check(/Crédits/.test(text(doc, "credits")) && /boîte à outils/.test(text(doc, "credits")) && /publié sous licence MIT/.test(text(doc, "credits")),
       "FR switch translates the credits section");

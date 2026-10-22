@@ -7,6 +7,12 @@
  * of everything model27 builds on.
  */
 window.MC_RELEASES = [
+  { version: "0.5", date: "2026-10-22", changes: [
+    { en: "New card: the LiXR machine (MIT, by 100demons), a fixed-point drum voice with feedback FM, a pitch envelope, a noise and transient layer, and a sample-rate decimator in place of the filter. COLOR is the waveform, SHAPE the FM, SWEEP the pitch envelope, RATE the decimator; DECAY, GATE, PUNCH, FINE and PITCH work as on Tone",
+      fr: "Nouvelle carte : la machine LiXR (MIT, par 100demons), une voix de batterie en virgule fixe avec FM à rétroaction, enveloppe de hauteur, couche de bruit et de transitoire, et un décimateur de fréquence d'échantillonnage à la place du filtre. COLOR est la forme d'onde, SHAPE la FM, SWEEP l'enveloppe de hauteur, RATE le décimateur ; DECAY, GATE, PUNCH, FINE et PITCH marchent comme sur Tone" },
+    { en: "LiXR is ticked together with SAMPLE: the page composes both machines into one firmware (SAMPLE 7th, LiXR 8th). Tested on a Model:Cycles alone and next to SAMPLE (2026-10-22), and run in the emulator on the OS's own voice loop",
+      fr: "LiXR se coche avec SAMPLE : la page compose les deux machines en un seul firmware (SAMPLE 7e, LiXR 8e). Testée sur un Model:Cycles seule et à côté de SAMPLE (22/10/2026), et dans l'émulateur sur la boucle de voix de l'OS" },
+  ] },
   { version: "0.4", date: "2026-10-22", changes: [
     { en: "Control All Config is tested as this page builds it: flashed from this page and tried on a Model:Cycles, alone and with SAMPLE (2026-10-22). Its card now shows Tested" },
   ] },

@@ -11,8 +11,8 @@
 <link rel="preconnect" href="https://fonts.googleapis.com">
 <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
 <link rel="stylesheet" href="https://fonts.googleapis.com/css2?family=Familjen+Grotesk:wght@400..700&family=Tiny5&display=swap">
-<link rel="stylesheet" href="../assets/site.css?v=2026-10-22-05">
-<link rel="stylesheet" href="../assets/guide.css?v=2026-10-22-05">
+<link rel="stylesheet" href="../assets/site.css?v=2026-10-22-06">
+<link rel="stylesheet" href="../assets/guide.css?v=2026-10-22-06">
 <script>try{var l=localStorage.getItem("mc-lang"),t=localStorage.getItem("mc-theme")}catch(e){}document.documentElement.lang=l||(/^fr\b/i.test(navigator.language||"")?"fr":"en");if(t)document.documentElement.setAttribute("data-theme",t)</script>
 </head>
 <body data-page="guide">
@@ -109,14 +109,44 @@
           <div><dt>Sound</dt><dd>one voice per track, one shot per trig. No clicks at the edges: 4 ms fades at the end of what a trig plays, and at its start when Start lies inside the sample. The filter fades rather than switches across the centre, so a square LFO on Cutoff does not click; at Cutoff 0 the track is untouched, bit for bit. Stereo files play as mono; files at other rates keep their pitch.</dd></div>
           <div><dt>Samples</dt><dd>the sample memory is 47 MB of RAM the Model:Cycles' OS leaves unused. Samples load in the background when a project, kit or sound names them, and unload when nothing does.</dd></div>
           <div><dt>Limits</dt><dd>no looping and no reverse yet. The filter runs before Volume + Dist, where the Model:Samples has it after: with DIST above 0, the distortion acts on the filtered signal.</dd></div>
-          <div><dt>Other mods</dt><dd>goes with the sequencer, screen, MIDI and USB mods. Not with MACRO, ACID, the Syntakt engines, Model-TG, the per-track filter or sample preview for now: the other machines take the same place in the firmware and there is no combined build with SAMPLE yet; Model-TG and the per-track filter change the same sound record functions.</dd></div>
+          <div><dt>Other mods</dt><dd>goes with LiXR, Control All Config and the sequencer, screen, MIDI and USB mods. Not with MACRO, ACID, the Syntakt engines, Model-TG, the per-track filter or sample preview for now: those machines are not offered on this page yet, and Model-TG and the per-track filter change the same sound record functions.</dd></div>
           <div><dt>Tested</dt><dd>One-Shot 0.7 on a Model:Cycles (2026-10-21): samples open and play, pitch, Start and Length, the filter, several SAMPLE tracks, saved projects, sound locks, the waveform view. This page builds One-Shot 0.8 composed from its compiled object by model27's registrar runtime, which differs from that firmware in how the machine is registered (a runtime reading a parameter block instead of detours assembled per build) and at three instructions (the machine's index read as a symbol). Flashed from this page, that build was tested in the digiemu emulator and on a Model:Cycles (2026-10-22); the same runtime also ran there with a second machine next to SAMPLE.</dd></div>
         </dl>
         <p class="note"><b>Before flashing another choice or the official firmware,</b> set your SAMPLE tracks back to an original machine (Kick to Chord): the official OS doesn't have SAMPLE, and a project that still names it can freeze its MACHINES page.</p>
       </section>
 
+      <section id="lixr">
+        <h2><span class="n">4</span><span data-l="en">LiXR machine</span><span data-l="fr">Machine LiXR</span></h2>
+        <p class="by"><span data-l="en">By 100demons · MIT license</span><span data-l="fr">Par 100demons · licence MIT</span></p>
+        <p class="lede"><span data-l="en">One extra machine, LiXR, is a drum voice in the spirit of the Sonic Potions LXR drum voices. It is new code, built from the Model:Cycles' own fixed-point maths: one tableless oscillator, feedback FM, a noise and transient layer, a pitch envelope, and a sample-rate decimator where the stock machines have their filter.</span><span data-l="fr">Une machine en plus, LiXR, est une voix de batterie pensée dans l'esprit des voix de batterie du Sonic Potions LXR. C'est du code nouveau, bâti sur le calcul en virgule fixe du Model:Cycles : un oscillateur sans table, une FM à rétroaction, une couche de bruit et de transitoire, une enveloppe de hauteur, et un décimateur de fréquence d'échantillonnage là où les machines d'origine ont leur filtre.</span></p>
+        <ol>
+          <li><span data-l="en">In the flasher, tick <b>LiXR machine</b>. It can be ticked with <b>SAMPLE</b>: SAMPLE then takes the 7th machine and LiXR the 8th, and both play.</span><span data-l="fr">Dans le flasher, cochez <b>Machine LiXR</b>. Elle se coche avec <b>SAMPLE</b> : SAMPLE prend alors la 7e machine et LiXR la 8e, et les deux jouent.</span></li>
+          <li><span data-l="en">On the machine, press <b>MACHINES</b> and pick <b>LiXR</b>, the machine after Chord (after SAMPLE if you ticked it). Its icon is Tone's.</span><span data-l="fr">Sur la machine, appuyez sur <b>MACHINES</b> et choisissez <b>LiXR</b>, la machine après Chord (après SAMPLE si vous l'avez cochée). Son icône est celle de Tone.</span></li>
+          <li><span data-l="en">Shape it with the four knobs (table below). <b>PITCH</b>, the keys and <b>FINE</b> set the note; <b>DECAY</b>, <b>GATE</b> and <b>PUNCH</b> work as on Tone. A trigless trig or a p-lock on any knob works as on every machine.</span><span data-l="fr">Façonnez-la avec les quatre potards (tableau ci-dessous). <b>PITCH</b>, les touches et <b>FINE</b> règlent la note ; <b>DECAY</b>, <b>GATE</b> et <b>PUNCH</b> marchent comme sur Tone. Un trigless trig ou un p-lock sur n'importe quel potard marche comme sur toute machine.</span></li>
+        </ol>
+        <div class="tbl">
+          <table>
+            <thead><tr><th>Knob</th><th>Name on screen</th><th>What it does</th></tr></thead>
+            <tbody>
+              <tr><th>COLOR</th><td>Color (COLR)</td><td>the waveform: sine on the left, triangle in the centre, saw then rectangle on the right; past 0.65 it adds noise, and past 0.85 a clap-like burst. SHAPE reduces the noise.</td></tr>
+              <tr><th>SHAPE</th><td>Shape (SHPE)</td><td>feedback FM: from none to a quarter cycle of modulation, on a square law, so the last part of the range is the wild one.</td></tr>
+              <tr><th>SWEEP</th><td>Sweep (SWEP)</td><td>the pitch envelope: depth (0 to 48 semitones) and decay time together, from a click to a long fall.</td></tr>
+              <tr><th>CONTOUR</th><td>Rate (RATE)</td><td>the decimator: lowers the sample rate, from clean at 0 to a coarse, aliased buzz at 127.</td></tr>
+            </tbody>
+          </table>
+        </div>
+        <dl class="facts">
+          <div><dt><span data-l="en">Sound</span><span data-l="fr">Son</span></dt><dd><span data-l="en">one voice per track, one note per trig, through the stock amp chain: the same DECAY, GATE, PUNCH, FINE, pan, level and distortion as Tone. The oscillator is tableless (no wavetable), and the decimator replaces the filter, so a LiXR track has no cutoff or resonance.</span><span data-l="fr">une voix par piste, une note par trig, à travers la chaîne d'ampli d'origine : les mêmes DECAY, GATE, PUNCH, FINE, pan, niveau et distorsion que Tone. L'oscillateur est sans table (pas de table d'ondes), et le décimateur remplace le filtre : une piste LiXR n'a donc ni cutoff ni résonance.</span></dd></div>
+          <div><dt><span data-l="en">Processor</span><span data-l="fr">Processeur</span></dt><dd><span data-l="en">about as heavy as a stock Tone voice: 6,335 to 6,499 instructions per block, against 6,572 for TONE (measured in the OS's own voice loop).</span><span data-l="fr">à peu près aussi gourmande qu'une voix Tone d'origine : 6 335 à 6 499 instructions par bloc, contre 6 572 pour TONE (mesuré dans la boucle de voix de l'OS).</span></dd></div>
+          <div><dt><span data-l="en">Limits</span><span data-l="fr">Limites</span></dt><dd><span data-l="en">no load governor of its own: several LiXR tracks playing at once can make the sound crackle, as with any stock machine pushed hard. There is no filter, no looping and no sample playback.</span><span data-l="fr">pas de régulateur de charge propre : plusieurs pistes LiXR qui jouent en même temps peuvent faire craquer le son, comme toute machine d'origine poussée loin. Pas de filtre, pas de boucle, pas de lecture d'échantillon.</span></dd></div>
+          <div><dt><span data-l="en">Other mods</span><span data-l="fr">Autres mods</span></dt><dd><span data-l="en">goes with SAMPLE and Control All Config: the page composes the machines together. The other machines (MACRO, ACID, the Syntakt engines, Model-TG) are not offered on this page yet.</span><span data-l="fr">va avec SAMPLE et Control All Config : la page compose les machines ensemble. Les autres machines (MACRO, ACID, les moteurs du Syntakt, Model-TG) ne sont pas encore proposées sur cette page.</span></dd></div>
+          <div><dt><span data-l="en">Tested</span><span data-l="fr">Testé</span></dt><dd><span data-l="en">firmware built from this package on a Model:Cycles (2026-10-22), alone and next to SAMPLE; the same builds run in the emulator on the OS's own voice loop, with the stock machines unchanged.</span><span data-l="fr">firmware bâti à partir de ce paquet sur un Model:Cycles (22/10/2026), seule et à côté de SAMPLE ; les mêmes images tournent en émulation dans la boucle de voix de l'OS, machines d'origine inchangées.</span></dd></div>
+        </dl>
+        <p class="note"><span data-l="en"><b>Before flashing another choice or the official firmware,</b> set your LiXR tracks back to an original machine (Kick to Chord): the official OS doesn't have LiXR, and a project that still names it can freeze its MACHINES page.</span><span data-l="fr"><b>Avant de flasher un autre choix ou le firmware officiel,</b> remettez vos pistes LiXR sur une machine d'origine (Kick à Chord) : l'OS officiel n'a pas LiXR, et un projet qui la nomme encore peut figer sa page MACHINES.</span></p>
+      </section>
+
       <section id="control-all">
-        <h2><span class="n">4</span><span data-l="en">Control All, your choice of tracks</span><span data-l="fr">Control All : choix des pistes</span></h2>
+        <h2><span class="n">5</span><span data-l="en">Control All, your choice of tracks</span><span data-l="fr">Control All : choix des pistes</span></h2>
         <p class="by"><span data-l="en">By</span><span data-l="fr">Par</span> <a href="https://github.com/durchgemacht/cycles-control-all-config" target="_blank" rel="noopener">durchgemacht</a></p>
         <p class="lede"><span data-l="en">Leave single tracks out of Control All: with TRACK held, a knob changes only the tracks you chose.</span><span data-l="fr">Écartez des pistes de Control All : TRACK tenu, un potard ne change que les pistes que vous avez choisies.</span></p>
         <ol>
@@ -135,7 +165,7 @@
       </section>
 
       <section id="mods-on-samples">
-        <h2><span class="n">5</span><span data-l="en">Mods on a Model:Samples</span><span data-l="fr">Des mods sur un Model:Samples</span></h2>
+        <h2><span class="n">6</span><span data-l="en">Mods on a Model:Samples</span><span data-l="fr">Des mods sur un Model:Samples</span></h2>
         <p class="lede"><span data-l="en">A Model:Samples can run the Model:Cycles OS with the same mods as a Model:Cycles. Whatever the machine, the flasher always installs the Model:Cycles OS. With the <a href="#sampler">SAMPLE</a> machine ticked, it can play the samples already on the +Drive (not yet tried on a Model:Samples).</span><span data-l="fr">Un Model:Samples peut faire tourner l'OS du Model:Cycles avec les mêmes mods qu'un Model:Cycles. Quelle que soit la machine, le flasher installe toujours l'OS du Model:Cycles. Avec la machine <a href="#sampler">SAMPLE</a> cochée, il peut jouer les samples déjà sur le +Drive (pas encore essayé sur un Model:Samples).</span></p>
         <ol>
           <li><span data-l="en">Back up your samples and projects with Elektron Transfer, then close Transfer.</span><span data-l="fr">Sauvegardez vos samples et vos projets avec Elektron Transfer, puis fermez Transfer.</span></li>
@@ -159,7 +189,7 @@
       </section>
 
       <section id="samples">
-        <h2><span class="n">6</span><span data-l="en">Samples OS</span><span data-l="fr">OS Samples</span></h2>
+        <h2><span class="n">7</span><span data-l="en">Samples OS</span><span data-l="fr">OS Samples</span></h2>
         <p class="lede"><span data-l="en">The Model:Cycles starts as a Model:Samples: you load and play your own samples, managed with Elektron Transfer.</span><span data-l="fr">Le Model:Cycles démarre en Model:Samples : vous chargez et jouez vos propres samples, gérés avec Elektron Transfer.</span></p>
         <p><span data-l="en">The flasher puts the official Model:Samples OS inside your Model:Cycles firmware file:</span><span data-l="fr">Le flasher place l'OS officiel du Model:Samples dans le fichier firmware de votre Model:Cycles :</span></p>
         <dl class="layers fig">
@@ -193,13 +223,13 @@
       </section>
 
       <section id="stock">
-        <h2><span class="n">7</span><span data-l="en">Back to stock</span><span data-l="fr">Revenir à l'origine</span></h2>
+        <h2><span class="n">8</span><span data-l="en">Back to stock</span><span data-l="fr">Revenir à l'origine</span></h2>
         <p><span data-l="en">The <b>Official firmware</b> tab of the flasher sends your OS file unchanged, over USB, like a normal update. It is also a good rehearsal before a first mod: it checks the cable and the setup without changing anything.</span><span data-l="fr">L'onglet <b>Firmware officiel</b> du flasher renvoie votre fichier d'OS sans le modifier, par USB, comme une mise à jour normale. C'est aussi une bonne répétition avant un premier mod : elle vérifie le câble et l'installation sans rien changer.</span></p>
         <p><span data-l="en">With the SAMPLE machine, first set your SAMPLE tracks back to an original machine (Kick to Chord): the official OS doesn't have SAMPLE, and a project that still names it can freeze its MACHINES page.</span><span data-l="fr">Avec la machine SAMPLE, remettez d'abord vos pistes SAMPLE sur une machine d'origine (de Kick à Chord) : l'OS officiel n'a pas SAMPLE, et un projet qui la nomme encore peut geler sa page MACHINES.</span></p>
       </section>
 
       <section id="recovery">
-        <h2><span class="n">8</span><span data-l="en">Recovery</span><span data-l="fr">Secours</span></h2>
+        <h2><span class="n">9</span><span data-l="en">Recovery</span><span data-l="fr">Secours</span></h2>
         <p class="lede"><span data-l="en">If the Model:Cycles no longer starts, its startup menu can always reinstall the OS: it lives in an area that updates never write.</span><span data-l="fr">Si le Model:Cycles ne démarre plus, son menu de démarrage peut toujours réinstaller l'OS : il vit dans une zone que les mises à jour n'écrivent jamais.</span></p>
         <figure class="fig">
           <div data-device data-scenes="func @logo | func,mainvol | s4 @READY TO/>RECEIVE" data-ms="1300"></div>
@@ -213,7 +243,7 @@
       </section>
 
       <section id="trouble">
-        <h2><span class="n">9</span><span data-l="en">Troubleshooting</span><span data-l="fr">Dépannage</span></h2>
+        <h2><span class="n">10</span><span data-l="en">Troubleshooting</span><span data-l="fr">Dépannage</span></h2>
         <div class="faq">
           <details>
             <summary><span data-l="en">Nothing happens on the Model:Cycles screen</span><span data-l="fr">Rien ne se passe sur l'écran du Model:Cycles</span></summary>
@@ -280,8 +310,8 @@
   </div>
 </footer>
 
-<script src="../assets/release.js?v=2026-10-22-05"></script>
-<script src="../assets/cycles.js?v=2026-10-22-05"></script>
-<script src="../assets/site.js?v=2026-10-22-05"></script>
+<script src="../assets/release.js?v=2026-10-22-06"></script>
+<script src="../assets/cycles.js?v=2026-10-22-06"></script>
+<script src="../assets/site.js?v=2026-10-22-06"></script>
 </body>
 </html>
