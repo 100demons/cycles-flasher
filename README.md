@@ -1,13 +1,13 @@
-# model27
+# Demo Engines for Model Cycles
 
-**A small, curated firmware for the Elektron Model:Cycles: four-knob machines, a short list of mods that work
-together, and a standard so that mods from different people fit.**
+**A demonstration zone for Model:Cycles engines: four-knob machines, patched in your browser from your own
+official OS file.**
 
-model27 is a downstream fork of [Modded-Cycles](https://github.com/18nelli18/Modded-Cycles). It starts from
-Modded-Cycles release 1.55, the last version with a mod picker, plus the Control All Config mod, and keeps the picker:
-you tick what you want, the page builds the firmware from **your own copy** of the official OS in your browser, and
-sends it to the Model:Cycles over USB. Modded-Cycles itself went on to a single OS with 2.0; model27 goes the other
-way, towards fewer, smaller, well-fitting mods.
+It is built on model27 by durchgemacht, itself a downstream fork of
+[Modded-Cycles](https://github.com/18nelli18/Modded-Cycles). This is not a complete, curated build: it shows what
+the engines can do. You tick what you want, the page builds the firmware from **your own copy** of the official OS in
+your browser, and sends it to the Model:Cycles over USB. Every engine and tool keeps its author's name, on the cards,
+in the credits and in the third-party notices.
 
 **Status: beta.** The web flasher runs at [https://100demons.github.io/cycles/flasher/](https://100demons.github.io/cycles/flasher/) and offers the LiXR machine for now; the [guide](https://100demons.github.io/cycles/guide/) explains it.
 The engines are also published one by one, with their sources and a ready-made package, in
