@@ -23,10 +23,10 @@
 code{font-size:.82em}
 
 /* mode tabs */
-.seg{display:flex;flex-wrap:wrap;gap:6px 22px;margin:0 0 20px}
-.seg button{font:inherit;font-size:16px;background:none;border:0;padding:0;color:var(--muted);cursor:pointer}
-.seg button:hover{color:var(--ink)}
-.seg button[aria-selected="true"],.seg button[aria-checked="true"]{color:var(--ink);font-weight:700;text-decoration:underline;text-decoration-color:var(--ink);text-decoration-thickness:2px;text-underline-offset:.25em}
+.seg{display:flex;flex-wrap:wrap;gap:8px;margin:0 0 20px}
+.seg button{font:inherit;font-size:15px;line-height:1.2;background:var(--paper);border:1px solid var(--line-2);border-radius:5px;padding:9px 13px;color:var(--ink-2);cursor:pointer}
+.seg button:hover{background:var(--casing);border-color:var(--ink);color:var(--ink)}
+.seg button[aria-selected="true"],.seg button[aria-checked="true"]{background:var(--ink);border-color:var(--ink);color:var(--paper);font-weight:600;text-decoration:none}
 
 /* key-shaped checkboxes: charcoal, red when on */
 .mod-row>input,.variants input,.check input{appearance:none;-webkit-appearance:none;flex:none;margin:0;width:22px;height:22px;border-radius:5px;
@@ -383,3 +383,6 @@ button.btn{border:1px solid var(--ink)}
 .chip .cx,.led{border-radius:50%}
 .bar i{box-shadow:0 2px 0 var(--ctl-edge)}
 .foot{margin-top:24px}
+
+#refresh{border:1px solid var(--ink);background:var(--paper);color:var(--ink);box-shadow:none;padding:10px 16px}
+#refresh:hover{background:var(--ink);color:var(--paper)}

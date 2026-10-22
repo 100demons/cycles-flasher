@@ -34,6 +34,7 @@
   --f:"Inter",ui-sans-serif,system-ui,-apple-system,"Segoe UI",Helvetica,Arial,sans-serif;
   --f-lcd:"Tiny5",ui-monospace,monospace;
   --f-code:"IBM Plex Mono",ui-monospace,SFMono-Regular,Menlo,Consolas,monospace;
+  --link:#0969da;
   --r:0px;
   --wrap:1180px;
   --gut:24px;
@@ -43,6 +44,7 @@
   :root:not([data-theme="light"]){
     color-scheme:dark;
     --paper:#1a1a1a;
+    --link:#58a6ff;
     --casing:#232323;
     --well:#2c2c2c;
     --line:#343434;
@@ -69,6 +71,7 @@
 :root[data-theme="dark"]{
   color-scheme:dark;
   --paper:#1a1a1a;
+  --link:#58a6ff;
   --casing:#232323;
   --well:#2c2c2c;
   --line:#343434;
@@ -224,3 +227,8 @@ h1,h2,h3{letter-spacing:-.025em}
 .btn.secondary:hover{background:var(--casing);color:var(--ink)}
 .theme-btn{border-radius:5px}
 code{border-radius:4px}
+
+
+/* links: GitHub's blue, in both themes */
+a{color:var(--link)}
+.mods a,.cats a{color:var(--ink)}
