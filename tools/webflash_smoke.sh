@@ -6,13 +6,14 @@
 #
 #   tools/webflash_smoke.sh                               # synthetic OS only
 #   tools/webflash_smoke.sh model-cycles_OS1.13.syx       # + the REF_MAINOS sample vs its reference hashes, each mod checked
-#   tools/webflash_smoke.sh model-cycles_OS1.13.syx model-samples_OS1.13.syx   # + the "Samples OS" tab
-#   tools/webflash_smoke.sh model-cycles_OS1.13.syx Syntakt_OS1.42.syx         # + the Syntakt engines (1.41 too)
+#   tools/webflash_smoke.sh model-cycles_OS1.13.syx model-samples_OS1.13.syx   # + the "Samples OS" tab and the mods
+#                                                                             #   on a Model:Samples
 #   SMOKE_JOBS=4 tools/webflash_smoke.sh ...                                  # real-OS combinations in 4 parallel parts
 # (official files are told apart by their names; any order)
 #
-# jsdom is installed in a temporary folder (npm): nothing is added to the repository.
-# Needs node, npm and network access (registry.npmjs.org).
+# jsdom 29 is installed in a temporary folder (npm): nothing is added to the repository.
+# Needs node, npm and network access (registry.npmjs.org). Where ~/.npm is not writable (a sandbox), point npm's cache
+# at the temporary folder: npm_config_cache="$TMPDIR/npm-cache" tools/webflash_smoke.sh ...
 set -euo pipefail
 cd "$(dirname "$0")/.."
 command -v node >/dev/null || { echo "node is required"; exit 1; }
@@ -20,11 +21,11 @@ command -v npm >/dev/null || { echo "npm is required"; exit 1; }
 REAL=()
 for f in "$@"; do REAL+=("$(cd "$(dirname "$f")" && pwd)/$(basename "$f")"); done
 
-tmp="$(mktemp -d)"
+tmp="$(mktemp -d "${TMPDIR:-/tmp}/smoke.XXXXXX")"
 trap 'rm -rf "$tmp"' EXIT
 
 python3 tools/webbuild_synth.py "$tmp" >/dev/null       # makes synth.syx + meta.json
-( cd "$tmp" && npm init -y >/dev/null 2>&1 && npm install jsdom >/dev/null 2>&1 )
+( cd "$tmp" && npm init -y >/dev/null 2>&1 && npm install jsdom@29 >/dev/null 2>&1 )
 JOBS="${SMOKE_JOBS:-1}"                                 # SMOKE_JOBS=4 : the real-OS combinations in 4 parallel parts
 if [ "$JOBS" -le 1 ] || [ ${#REAL[@]} -eq 0 ]; then
   NODE_PATH="$tmp/node_modules" node tools/webflash_smoke.js "$tmp" ${REAL[@]+"${REAL[@]}"}

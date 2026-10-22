@@ -73,8 +73,9 @@ the release entry ("Tested on a Model:Cycles"), and the stamp again.
 python3 tools/gen_flasher_tweaks.py --check
 tools/webbuild_check.sh        # builder.js == tools/build.py, byte for byte
 tools/webflash_check.sh        # flasher.js validates .syx like tools/mtlib/syx.py
-tools/webflash_smoke.sh [model-cycles_OS1.13.syx Syntakt_OS1.42.syx]   # the page in jsdom; with the real files,
-                                                                         # the REF_MAINOS sample, each mod checked
+tools/webflash_smoke.sh [model-cycles_OS1.13.syx model-samples_OS1.13.syx]   # the page in jsdom; with the real
+                                                                         # files, the REF_MAINOS sample, each mod checked,
+                                                                         # and the Model:Samples flows
 ```
 
 `builder.js` and `tools/build.py` must stay equivalent: a change to how one reads a tweak goes into the other in the

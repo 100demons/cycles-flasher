@@ -5,7 +5,7 @@ set -euo pipefail
 cd "$(dirname "$0")/.."
 command -v node >/dev/null || { echo "node est requis pour ce test"; exit 1; }
 
-tmp="$(mktemp -d)"
+tmp="$(mktemp -d "${TMPDIR:-/tmp}/webflash.XXXXXX")"
 trap 'rm -rf "$tmp"' EXIT
 
 python3 - "$tmp" <<'PYEOF' > "$tmp/meta"

@@ -5,7 +5,7 @@ const meta = JSON.parse(fs.readFileSync(path.join(dir, "meta.json")));
 const raw = new Uint8Array(fs.readFileSync(path.join(dir, "synth.syx")));
 const tweaks = {};
 for (const f of ["01-latching-mute", "02-trig-preview", "03-browser-scroll",
-                 "10-6ch-multiout", "11-6ch-usbup", "20-sdvintage-snare"]) {
+                 "10-6ch-multiout", "11-6ch-usbup", "20-sdvintage-snare", "49-control-all-config"]) {
   const t = JSON.parse(fs.readFileSync(`tweaks/model-cycles_OS1.13/${f}.json`));
   tweaks[t.id] = t;
 }

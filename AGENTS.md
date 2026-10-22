@@ -175,7 +175,8 @@ With the official files (download them from elektron.se into `firmware/`, which 
 python3 tools/gen_<mod>.py --cycles firmware/model-cycles_OS1.13.syx --check
 python3 tools/emu/test_<mod>.py --cycles firmware/model-cycles_OS1.13.syx
 python3 tools/ref_mainos.py --cycles firmware/model-cycles_OS1.13.syx --syntakt firmware/Syntakt_OS1.42.syx --check
-tools/webflash_smoke.sh firmware/model-cycles_OS1.13.syx firmware/Syntakt_OS1.42.syx   # the REF_MAINOS sample, each mod checked
+tools/webflash_smoke.sh firmware/model-cycles_OS1.13.syx firmware/model-samples_OS1.13.syx   # the REF_MAINOS sample,
+                                                                     # each mod checked, and the Model:Samples flows
 ```
 
 Emulation needs `pip install unicorn numpy`. Code mods need the m68k toolchain (`m68k-linux-gnu-*` from the Debian/Ubuntu

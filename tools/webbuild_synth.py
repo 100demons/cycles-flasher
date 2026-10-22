@@ -13,12 +13,13 @@ SECT_LEN = 1744192
 DEV = json.loads(pathlib.Path("tweaks/model-cycles_OS1.13/device.json").read_text())
 TWEAKS = {}
 for f in ("01-latching-mute", "02-trig-preview", "03-browser-scroll",
-          "10-6ch-multiout", "11-6ch-usbup", "20-sdvintage-snare"):
+          "10-6ch-multiout", "11-6ch-usbup", "20-sdvintage-snare", "49-control-all-config"):
     TWEAKS[f] = json.loads(pathlib.Path(f"tweaks/model-cycles_OS1.13/{f}.json").read_text())
 BY_ID = {t["id"]: t for t in TWEAKS.values()}
 COMBOS = [["6ch-multiout"], ["6ch-usbup"], ["sdvintage-snare"], ["6ch-usbup", "sdvintage-snare"],
           ["latching-mute", "trig-preview", "browser-scroll"],
-          ["6ch-usbup", "latching-mute", "trig-preview", "browser-scroll"]]
+          ["6ch-usbup", "latching-mute", "trig-preview", "browser-scroll"],
+          ["control-all-config"]]          # model27's card without payload: the smoke test's build on this image
 KNOWN = DEV["cave_refs_ok"]
 
 # --- 1. MAIN OS synthetique -------------------------------------------------
