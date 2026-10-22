@@ -7,6 +7,10 @@
  * of everything model27 builds on.
  */
 window.MC_RELEASES = [
+  { version: "0.3", date: "2026-10-22", changes: [
+    { en: "Control All Config is back (under Live playing): hold TRACK and press TRIG 1–6 to leave that track out of Control All (TRACK held + knob), or to put it back. While TRACK is held, TRIG 1–6 light for the tracks that follow; the active track always follows. Not saved: after power-on every track follows again" },
+    { en: "By durchgemacht (MIT), the version of Modded-Cycles 1.56; goes with SAMPLE. Experimental here until flashed from this page. Known limit: TRACK + LEVEL/DATA (volume, pan) still moves all six tracks" },
+  ] },
   { version: "0.2", date: "2026-10-22", changes: [
     { en: "The SAMPLE machine is tested as this page builds it: flashed from this page and played on a Model:Cycles, and run in the emulator (2026-10-22). Its card now shows Tested" },
     { en: "SAMPLE now comes from Cycles One-Shot 0.8, the same sampler as 0.7, built the way every further machine will be: model27 places its code and registers it in the firmware when it builds, so machines can be added one by one instead of as pre-built combinations. Nothing changes in how SAMPLE plays; tested on a Model:Cycles next to a second test machine too" },

@@ -10,7 +10,7 @@ sends it to the Model:Cycles over USB. Modded-Cycles itself went on to a single 
 way, towards fewer, smaller, well-fitting mods.
 
 **Status: beta.** The web flasher runs at [https://durchgemacht.github.io/model27/flasher/](https://durchgemacht.github.io/model27/flasher/) (it goes live with this
-repository's GitHub Pages) and offers one card for now, the SAMPLE machine; the [guide](https://durchgemacht.github.io/model27/guide/) explains it.
+repository's GitHub Pages) and offers two cards for now, the SAMPLE machine and Control All Config; the [guide](https://durchgemacht.github.io/model27/guide/) explains them.
 The command-line build works for every Modded-Cycles 1.55 mod still in the repository; the short list for the beta
 is being chosen, and nothing has been removed from the tools yet.
 

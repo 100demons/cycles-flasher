@@ -28,9 +28,13 @@ const ELEKTRON_ST_DL = "https://www.elektron.se/support-downloads/syntakt";
 // same whole write or a mod applied on top of another through "requires").
 const REF_MAINOS = {
   // each card alone: each variant, each combination of real Syntakt engines
+  "control-all-config": "eb70de0a330dc9c033db5c5fc5d8589c3356c94ad346a8d30840e03ecb90299d",
   "sampler": "ccdadb3775caea5dd27937bf1c24a71a55ce99735ed3a2213bd765e980612a02",
+  // every pair of cards the page lets you tick together
+  "control-all-config+sampler": "3f4f079a5f130f43cb6b6366c00f77c462272e10f6c71d9dbe291d0cd494563d",
 };
 const REF_MODS = {
+  "control-all-config": {"w": "b47aa26f4f855c750735a03eae7453847356c376f47a4010cf4f1a5bf316be5e"},
   "sampler": {"w": "c0ac93cb8802c754d0172dbf19fe7a13a976c6e29429e858aff19d2357bf19f3", "p": "e9d60c5b9a598bb03502dae3e894ed3135674f64d791815ee49c69a4e005cd47"},
 };
 
