@@ -1,6 +1,6 @@
 # 60 — Level B, step 2: a relocator and a table-driven registrar, no toolchain at build time (plan)
 
-**Status: plan, 2026-10-21; B2a (§9), B2b (§10) and B2c (§11, 2026-10-22) built: the composer runs with `python3` alone.** This is increment B2 of [notes/59](59-level-b-builder.md)
+**Status: plan, 2026-10-21; B2a (§9), B2b (§10) and B2c (§11, 2026-10-22) built: the composer runs with `python3` alone; the pair tested on the Model:Cycles (§12, 2026-10-22).** This is increment B2 of [notes/59](59-level-b-builder.md)
 (§3 the registrar runtime, §4 steps 4 and 6 of the composer, §7 item 2), written after B1 landed (`91edc68`:
 `tools/compose.py`, the manifests, the reference machine, `28-refmachine.json`). It says what B1 still needs the
 m68k toolchain for, measured in the code, how each of those uses becomes committed data plus Python, in which order
@@ -335,3 +335,19 @@ half-finished step never blocks a build.
 - **Not done**: the device for the runtime build; the emulation proof with Unicorn (§8); the `.comment` check only
   reports. `compose.py` now needs neither compiler nor assembler: `python3 tools/compose.py --cycles … --machines …`
   is the whole build.
+
+## 12. Tested on the Model:Cycles (2026-10-22)
+
+- **Flashed by the maintainer** on their Model:Cycles: the runtime build with both machines of §11, SAMPLE as
+  machine 6 and the reference machine as machine 7 (`sampler+refmachine`). Their report: "ich habe den build mit
+  beiden machines auf dem gerät getestet" (the build with both machines, tested on the device). No problem reported.
+- **What that build carries of B2**: both packages placed by the relocator from their committed objects (§9),
+  SAMPLE's index and first descriptor resolved as symbols (One-Shot 0.8), the boot stub from the template (§10), and
+  the registrar runtime with its parameter block for two machines (§11), the marks of the MACHINES page included
+  (eight machines: the runtime's `marks` entry).
+- **Not covered**: SAMPLE alone, the build the web flasher makes (MAIN OS `ccdadb37…`). It has the same objects,
+  runtime and stub; what differs are the 53 writes that depend on the number of machines ([notes/61](61-level-b3-web-flasher.md)
+  §1.3), the parameter block, and the marks, a `moveq #7` in the OS's own code instead of the runtime's `marks`
+  entry. The SAMPLE card stays `experimental` until that build is flashed from the page, as its guide line says.
+- Recorded in the manifests' `tests.hardware` (`sampler`, `refmachine`), in the guide's Tested line of SAMPLE and in
+  this note's row of `notes/README.md`.
