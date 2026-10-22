@@ -28,7 +28,7 @@ is being chosen, and nothing has been removed from the tools yet.
   cost, a test on a real machine before a mod is called tested.
 - **Mods that fit together.** Every mod declares what it touches, in a manifest; what can be ticked together is
   computed from those declarations, not from a hand-written list. That is the job of the companion draft, the
-  **[Cycles Mod Standard](https://github.com/durchgemacht/cycles-mod-standard)** (draft 0.1), written alongside.
+  **[Cycles Mod Standard](https://github.com/durchgemacht/cycles-mod-standard)** (draft 0.2), written alongside.
 
 ## What goes in first
 
