@@ -7,6 +7,10 @@
  * of everything model27 builds on.
  */
 window.MC_RELEASES = [
+  { version: "0.6", date: "2026-10-22", changes: [
+    { en: "The flasher now offers the LiXR machine only. SAMPLE and Control All Config are no longer offered here; they remain buildable from the command line, and their guide sections stay for reference",
+      fr: "Le flasher ne propose plus que la machine LiXR. SAMPLE et Control All Config n'y sont plus proposés ; ils restent constructibles en ligne de commande, et leurs sections du guide restent pour référence" },
+  ] },
   { version: "0.5", date: "2026-10-22", changes: [
     { en: "New card: the LiXR machine (MIT, by 100demons), a fixed-point drum voice with feedback FM, a pitch envelope, a noise and transient layer, and a sample-rate decimator in place of the filter. COLOR is the waveform, SHAPE the FM, SWEEP the pitch envelope, RATE the decimator; DECAY, GATE, PUNCH, FINE and PITCH work as on Tone",
       fr: "Nouvelle carte : la machine LiXR (MIT, par 100demons), une voix de batterie en virgule fixe avec FM à rétroaction, enveloppe de hauteur, couche de bruit et de transitoire, et un décimateur de fréquence d'échantillonnage à la place du filtre. COLOR est la forme d'onde, SHAPE la FM, SWEEP l'enveloppe de hauteur, RATE le décimateur ; DECAY, GATE, PUNCH, FINE et PITCH marchent comme sur Tone" },

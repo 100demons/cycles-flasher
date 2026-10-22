@@ -30,21 +30,10 @@ const ELEKTRON_ST_DL = "https://www.elektron.se/support-downloads/syntakt";
 // entry per set of them, the tweak tools/compose.py composes them into: the page's composer must give its bytes.
 const REF_MAINOS = {
   // each card alone: each variant, each combination of real Syntakt engines
-  "control-all-config": "eb70de0a330dc9c033db5c5fc5d8589c3356c94ad346a8d30840e03ecb90299d",
-  "sampler": "ccdadb3775caea5dd27937bf1c24a71a55ce99735ed3a2213bd765e980612a02",
   "lixr": "64598fe9a731343a96d8df7c33d1f4a8227ffffb8de26c45eefb1cfaec51d8c0",
-  // every pair of cards the page lets you tick together
-  "control-all-config+sampler": "3f4f079a5f130f43cb6b6366c00f77c462272e10f6c71d9dbe291d0cd494563d",
-  "control-all-config+lixr": "fdf54a3003c3554de5fc3178dd3e50f20089e34ffebc39a44907fce4dd47e73f",
-  "sampler+lixr": "1e09cf7dc2eb9bcbcd2308282d3c436151f0e8f5a3224562b1390a8ac8ecd214",
-  // the largest combinations: every compatible card ticked, from each card, both ways, with and without the Syntakt engines, with and without each of the machines that join them
-  "control-all-config+sampler+lixr": "a6810e501bf870c1a600e58b3a409124e8b83a1df5f16b4f8a51403fb81813f7",
 };
 const REF_MODS = {
-  "control-all-config": {"w": "b47aa26f4f855c750735a03eae7453847356c376f47a4010cf4f1a5bf316be5e"},
-  "sampler": {"w": "c0ac93cb8802c754d0172dbf19fe7a13a976c6e29429e858aff19d2357bf19f3", "p": "e9d60c5b9a598bb03502dae3e894ed3135674f64d791815ee49c69a4e005cd47"},
   "lixr": {"w": "8a6ab543006717bbfbe47a156cd3fb1e08459f09c762605acd4c6c678b2c29d6", "p": "70d2c2e589057476a55f4282f9ef44afe45f138c818edc173ab52605d9d20c39"},
-  "sampler+lixr": {"w": "b20a22d2995a245eddbe2114a65b172bd0ffa251dea3bb142903ee22db6abff7", "p": "14d83fdf8de50f635c05ffa9f30274a44a1fe82c47c7b6e5b10b74d40d0d0fe8"},
 };
 
 // "Samples OS" tab: official Model:Samples OS 1.13 inside the official Model:Cycles container
@@ -338,7 +327,7 @@ const T = {
     mach_smp: "Model:Samples, on its own OS",
     mach_cos: "Model:Samples, already on the Cycles OS",
     mach_title: "Mods on a Model:Samples",
-    mach_text: "Whatever the machine, the page installs the Model:Cycles OS with the mods you tick; on a Model:Samples, tick the SAMPLE machine to play the samples already on the +Drive (not yet tried on a Model:Samples). The firmware is packed inside your Model:Samples' own firmware (its startup menu, updater and signature stay in place), so step 2 also asks for the official Model:Samples OS file.",
+    mach_text: "Whatever the machine, the page installs the Model:Cycles OS with the mods you tick. The firmware is packed inside your Model:Samples' own firmware (its startup menu, updater and signature stay in place), so step 2 also asks for the official Model:Samples OS file.",
     mach_w_smp: "Choose this when the machine runs its Model:Samples OS (it starts as a Model:Samples).",
     mach_w_cos: "Choose this when it already runs the Model:Cycles OS installed from this page (here, or from the Samples OS tab): this is how you change mods later. That OS refuses firmwares built for a Model:Cycles: nothing is written.",
     mach_w1: "Tested on a real Model:Samples, both choices: on its own OS, and already on the Cycles OS to change mods.",
@@ -617,7 +606,7 @@ const T = {
     mach_smp: "Model:Samples, sous son OS",
     mach_cos: "Model:Samples, déjà sous l'OS Cycles",
     mach_title: "Des mods sur un Model:Samples",
-    mach_text: "Quelle que soit la machine, la page installe l'OS du Model:Cycles avec les mods cochés ; sur un Model:Samples, cochez la machine SAMPLE pour jouer les samples déjà sur le +Drive (pas encore essayé sur un Model:Samples). Le firmware est emballé dans le firmware de votre Model:Samples (son menu de démarrage, son updater et sa signature restent en place) : l'étape 2 demande donc aussi le fichier officiel de l'OS Model:Samples.",
+    mach_text: "Quelle que soit la machine, la page installe l'OS du Model:Cycles avec les mods cochés. Le firmware est emballé dans le firmware de votre Model:Samples (son menu de démarrage, son updater et sa signature restent en place) : l'étape 2 demande donc aussi le fichier officiel de l'OS Model:Samples.",
     mach_w_smp: "Choisissez ceci quand la machine tourne sous son OS Model:Samples (elle démarre en Model:Samples).",
     mach_w_cos: "Choisissez ceci quand elle tourne déjà sous l'OS du Model:Cycles installé depuis cette page (ici, ou depuis l'onglet OS Samples) : c'est ainsi qu'on change de mods plus tard. Cet OS refuse les firmwares construits pour un Model:Cycles : rien n'est écrit.",
     mach_w1: "Testé sur un vrai Model:Samples, les deux choix : sous son OS, et déjà sous l'OS Cycles pour changer de mods.",
@@ -783,7 +772,7 @@ const FEAT = {
     lixr: { label: "LiXR machine",
       short: "One extra machine: a fixed-point drum voice, feedback FM, a decimator instead of the filter.",
       desc: "An extra machine after Chord: a drum voice in the spirit of the Sonic Potions LXR drum voices, built from the Cycles' own fixed-point maths. One tableless oscillator moves from sine through triangle to saw and rectangle, with a noise and transient layer on top; feedback FM shapes it, a pitch envelope gives the attack, and a sample-rate decimator takes the place of the filter. COLOR = waveform (sine on the left, triangle in the centre, saw and rectangle on the right, noise and clap past 0.65), SHAPE = feedback FM, SWEEP = pitch-envelope depth and decay, RATE (where CONTOUR sits) = decimator rate; DECAY, GATE, PUNCH, FINE and PITCH work as on Tone.",
-      note: "About as heavy on the processor as a stock Tone voice (measured: 6,335 to 6,499 instructions per block, against 6,572 for TONE). No load governor: several LiXR tracks at once can make the sound crackle. A project using LiXR needs a firmware with LiXR at the same place: it comes after Chord, and after SAMPLE if you tick it. English only for now." },
+      note: "About as heavy on the processor as a stock Tone voice (measured: 6,335 to 6,499 instructions per block, against 6,572 for TONE). No load governor: several LiXR tracks at once can make the sound crackle. A project using LiXR needs a firmware with LiXR at the same place: it comes after Chord. English only for now." },
     "chord-keys": { label: "Chord Keys",
       short: "On a CHORD track, TRIG 1–16 play the chords of your scale.",
       clash: "both change the notes of the TRIG keys (Model-TG has its own Scale Lock)",
@@ -878,7 +867,7 @@ const FEAT = {
     lixr: { label: "Machine LiXR",
       short: "Une machine en plus : une voix de batterie en virgule fixe, FM à rétroaction, décimateur au lieu du filtre.",
       desc: "Une machine ajoutée après Chord : une voix de batterie pensée dans l'esprit des voix de batterie du Sonic Potions LXR, à partir du calcul en virgule fixe du Cycles. Un oscillateur sans table glisse du sinus au triangle, puis à la dent de scie et au carré, avec une couche de bruit et de transitoire ; une FM à rétroaction le façonne, une enveloppe de hauteur donne l'attaque, et un décimateur de fréquence d'échantillonnage remplace le filtre. COLOR = forme d'onde (sinus à gauche, triangle au centre, dent de scie et carré à droite, bruit et clap au-delà de 0,65), SHAPE = FM à rétroaction, SWEEP = profondeur et décroissance de l'enveloppe de hauteur, RATE (à la place de CONTOUR) = fréquence du décimateur ; DECAY, GATE, PUNCH, FINE et PITCH marchent comme sur Tone.",
-      note: "À peu près aussi gourmande en calcul qu'une voix Tone d'origine (mesuré : 6 335 à 6 499 instructions par bloc, contre 6 572 pour TONE). Pas de régulateur de charge : plusieurs pistes LiXR à la fois peuvent faire craquer le son. Un projet qui utilise LiXR demande un firmware où LiXR est à la même place : elle vient après Chord, et après SAMPLE si vous le cochez. Pour l'instant en anglais seulement." },
+      note: "À peu près aussi gourmande en calcul qu'une voix Tone d'origine (mesuré : 6 335 à 6 499 instructions par bloc, contre 6 572 pour TONE). Pas de régulateur de charge : plusieurs pistes LiXR à la fois peuvent faire craquer le son. Un projet qui utilise LiXR demande un firmware où LiXR est à la même place : elle vient après Chord. Pour l'instant en anglais seulement." },
     "chord-keys": { label: "Chord Keys",
       short: "Sur une piste CHORD, les TRIG 1–16 jouent les accords de votre gamme.",
       clash: "les deux changent les notes des boutons TRIG (Model-TG a son propre Scale Lock)",

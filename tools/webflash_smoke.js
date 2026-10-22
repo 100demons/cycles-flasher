@@ -222,15 +222,13 @@ async function main() {
     check(typeof w.MCBuilder === "object" && typeof w.MCComposer === "object" && typeof w.MCFlasher === "object",
       "MCBuilder + MCComposer + MCFlasher present");
     const ids = w.MC_TWEAKS.tweaks.map((x) => x.id), cards = w.MC_TWEAKS.features;
-    const smp = cards.find((f) => f.id === "sampler") || {};
     const lix = cards.find((f) => f.id === "lixr") || {};
-    check(ids.join() === "control-all-config" && cards.map((f) => f.id).join() === "control-all-config,sampler,lixr"
-      && smp.package === "sampler" && !smp.variants && lix.package === "lixr" && !lix.variants
-      && Object.keys(w.MC_TWEAKS.packages).join() === "sampler,lixr"
+    check(ids.length === 0 && cards.map((f) => f.id).join() === "lixr"
+      && lix.package === "lixr" && !lix.variants && Object.keys(w.MC_TWEAKS.packages).join() === "lixr"
       && w.MC_TWEAKS.registrar && w.MC_TWEAKS.registrar.schema === "model27-registrar-frame/0.1"
       && !cards.some((f) => f.engines || f.needs) && !w.MC_TWEAKS.tweaks.some((x) => x.append && x.append.syntakt),
-      "MC_TWEAKS: model27's three cards, Control All Config (its tweak) and SAMPLE + LiXR (machine cards: their " +
-      "packages and the registrar's frame, composed in the page), nothing that needs the Syntakt OS: " + ids.join());
+      "MC_TWEAKS: one card, LiXR (a machine card: its package and the registrar's frame, composed in the page), " +
+      "nothing that needs the Syntakt OS: " + cards.map((f) => f.id).join());
     check(/build \d{4}-/.test(text(doc, "build-stamp")), "version stamp shown");
     const srcs = [...doc.querySelectorAll("script[src]")].map((x) => x.getAttribute("src"));
     check(["builder.js", "composer.js", "tweaks.js", "flasher.js", "app.js"].every((f) => srcs.some((x) => x.startsWith(f + "?")))
@@ -239,7 +237,7 @@ async function main() {
     // display order: by section (Sounds & machines, then Live playing), FEATURES order inside a section; the build
     // keeps FEATURES order (checked in 1b)
     const feats = [...doc.querySelectorAll("#features input[type=checkbox]")].map((c) => c.id);
-    check(feats.join() === "feat-sampler,feat-lixr,feat-control-all-config", "3 feature rows, by section: " + JSON.stringify(feats));
+    check(feats.join() === "feat-lixr", "1 feature row: " + JSON.stringify(feats));
     check(cards.every((f) => doc.querySelector(`#cat-${f.cat || "other"} #mod-${f.id} #feat-${f.id}`)),
       "every feature has a row in its section (cat)");
     const tagOfFeat = (f) => (f.status === "tested" ? "Tested" : "Experimental");
@@ -247,12 +245,8 @@ async function main() {
     check(tags.join() === cards.map((f) => f.id + ":" + tagOfFeat(f)).join(), "rows tagged as tested or not: " + tags.join());
     check(doc.getElementById("drop3-wrap").hidden, "no Syntakt drop zone: no card needs the Syntakt OS");
     const credits = [...doc.querySelectorAll("#features .credit a")].map((a) => a.href);
-    const creditOf = (id) => [...doc.querySelectorAll(`label[for=feat-${id}] .credit a`)].map((a) => a.href);
-    check(credits.length === 4
-      && creditOf("sampler")[0] === "https://github.com/durchgemacht/cycles-one-shot" && /\/LICENSE-One-Shot\.txt$/.test(creditOf("sampler")[1])
-      && creditOf("control-all-config")[0] === "https://github.com/durchgemacht/cycles-control-all-config"
-      && /\/LICENSE-Control-All-Config\.txt$/.test(creditOf("control-all-config")[1]),
-      "each row credits its author, with a link to the MIT license of the code it carries: " + JSON.stringify(credits));
+    check(credits.length === 0 && /by 100demons/.test(text(doc, "features")),
+      "LiXR is the owner's own engine: credited by name, no outside license link: " + JSON.stringify(credits));
     const list = [...doc.querySelectorAll("#credits-list a")].map((a) => a.textContent);
     check(list.join() === "18nelli18/Modded-Cycles,scottmetoyer/ms-multi-output,drumkilla/elektron-model-tweaks,pichenettes/eurorack,RobinSchmidt/Open303,TinyGregAudio/Model-TG,mischa85/elektron-firmware-tool,dagargo/elektroid,mxldyn/octamax",
       "credits section lists Modded-Cycles first, then the 8 repositories it builds on");
@@ -261,32 +255,16 @@ async function main() {
       "credits section links Modded-Cycles' MIT license and model27's third-party notices: " + JSON.stringify(lic));
     const box = (id) => doc.getElementById(id);
     const chosen = () => w.MCFlasherApp.chosenTweaks().map((x) => x.id).join();
-    // the cards go together: no exclusion between them, all stay ticked, FEATURES order in the build; the two
-    // machine cards compose into one tweak whose id is their packages joined by "+"
-    box("feat-sampler").click(); await wait(5);
-    const smpAlone = chosen();
-    box("feat-control-all-config").click(); await wait(5);
-    const both = chosen();
-    const bothOn = box("feat-sampler").checked && box("feat-control-all-config").checked && !doc.querySelector("#features .say.clash");
-    box("feat-sampler").click(); await wait(5);
-    const cacAlone = chosen();
-    box("feat-control-all-config").click(); await wait(5);
-    box("feat-sampler").click(); await wait(5);
+    // LiXR is the only card: ticking it gives the composed tweak named after its package
     box("feat-lixr").click(); await wait(5);
-    const machines = chosen();
-    box("feat-control-all-config").click(); await wait(5);
-    const all = chosen();
-    box("feat-sampler").click(); box("feat-lixr").click(); box("feat-control-all-config").click(); await wait(5);
-    check(smpAlone === "sampler" && both === "control-all-config,sampler" && bothOn && cacAlone === "control-all-config"
-      && machines === "sampler+lixr" && all === "control-all-config,sampler+lixr" && !chosen().length
-      && doc.querySelector('#features a[href$="#sampler"]') && doc.querySelector('#features a[href$="#lixr"]')
-      && doc.querySelector('#features a[href$="#control-all"]'),
-      `SAMPLE alone ${smpAlone}; with Control All Config ${both}, both ticked, no clash; Control All Config alone ${cacAlone}; ` +
-      `SAMPLE + LiXR ${machines}, all three ${all}; guide links`);
-    box("feat-sampler").click(); await wait(30);
+    const lixrAlone = chosen();
+    check(lixrAlone === "lixr" && box("feat-lixr").checked && !doc.querySelector("#features .say.clash")
+      && doc.querySelector('#features a[href$="#lixr"]'),
+      "LiXR alone gives the composed tweak " + lixrAlone + "; guide link");
+    box("feat-lixr").click(); await wait(5);
+    check(!chosen().length, "unticking LiXR empties the selection");
     box("feat-lixr").click(); await wait(30);
-    check(doc.querySelectorAll('input[name="var-sampler"]').length === 0
-      && doc.querySelectorAll('input[name="var-lixr"]').length === 0, "SAMPLE and LiXR: machine cards, no sub-choice");
+    check(doc.querySelectorAll('input[name="var-lixr"]').length === 0, "LiXR: a machine card, no sub-choice");
     box("feat-lixr").click(); await wait(5);
     check(!!doc.getElementById("tab-samples") && doc.getElementById("panel-samples").hidden && doc.getElementById("drop2-wrap").hidden,
       "Samples OS tab present, its panel and second drop zone hidden in Mods");
@@ -297,15 +275,11 @@ async function main() {
     doc.querySelector('.lang button[data-lang="fr"]').click();
     await wait(20);
     check(/Que voulez-vous installer/.test(text(doc, "h1s")) && doc.documentElement.lang === "fr", "FR switch translates the page");
-    check(/Control All : choix des pistes/.test(text(doc, "features")) && /SAMPLE machine \(Cycles One-Shot\)/.test(text(doc, "features"))
-      && /Machine LiXR/.test(text(doc, "features")) && /par durchgemacht/.test(text(doc, "features")) && /par 100demons/.test(text(doc, "features"))
-      && /Testé/.test(text(doc, "features"))
-      && doc.querySelector('#features a[href$="#control-all"]') && doc.querySelector('#features a[href$="#sampler"]')
-      && doc.querySelector('#features a[href$="#lixr"]'),
-      "FR switch translates the cards (SAMPLE's texts are in English only), their credits and tags, with their guide links");
+    check(/Machine LiXR/.test(text(doc, "features")) && /par 100demons/.test(text(doc, "features"))
+      && /Testé/.test(text(doc, "features")) && doc.querySelector('#features a[href$="#lixr"]'),
+      "FR switch translates the LiXR card, its credit and tag, with its guide link");
     check(/Crédits/.test(text(doc, "credits")) && /boîte à outils/.test(text(doc, "credits")) && /publié sous licence MIT/.test(text(doc, "credits")),
       "FR switch translates the credits section");
-    box("feat-sampler").click(); await wait(5);
     doc.querySelector('.lang button[data-lang="en"]').click();
     await wait(20);
 
@@ -345,6 +319,9 @@ async function main() {
   // search, French
   if (MAIN) {
     const { w, doc, errors } = await load();
+    if (!w.MC_TWEAKS.features.some((f) => f.id === "control-all-config")) {
+      console.log("  skip  mod picker checks: Control All Config is not offered");
+    } else {
     const app = w.MCFlasherApp;
     const feats = w.MC_TWEAKS.features;
     const box = (id) => doc.getElementById(id);
@@ -436,6 +413,7 @@ async function main() {
     await clearAll();
     app.applyLang("en");
     check(errors.length === 0, "no JS error in the mod picker " + (errors.length ? JSON.stringify(errors) : ""));
+    }
   }
 
 
@@ -498,6 +476,9 @@ async function main() {
   if (SYNTH && MAIN) {
     const env5 = await load();
     const { w, doc, errors, sent } = env5;
+    if (!w.MC_TWEAKS.features.some((f) => f.id === "control-all-config")) {
+      console.log("  skip  flash flow on the synthetic OS: Control All Config is not offered");
+    } else {
     const raw = new Uint8Array(fs.readFileSync(path.join(SYNTH, "synth.syx")));
     const meta = JSON.parse(fs.readFileSync(path.join(SYNTH, "meta.json")));
     const app = w.MCFlasherApp;
@@ -608,6 +589,7 @@ async function main() {
     check(app.state.finished === "ok" && /Transfer complete/.test(text(doc, "result")) && /UPDATING FLASH/.test(text(doc, "result")),
       "success message shown");
     check(errors.length === 0, "no JS error during the flow " + (errors.length ? JSON.stringify(errors) : ""));
+    }
   }
 
   // 5b. The page's own rules against the sample (notes/49): each card alone and every pair of cards the page lets you
@@ -707,7 +689,7 @@ async function main() {
           `real OS: ${three} (not in the sample) builds, each mod checked: ${text(doc, "file-status").slice(0, 80)}`);
       } else console.log(`  skip three cards outside the sample: ${plain.length} plain cards offered`);
     }
-    if (MAIN) {
+    if (MAIN && w.MC_TWEAKS.features.some((f) => f.id === "sampler")) {
       // SAMPLE is composed in the page (composer.js, on the OS file's MAIN OS) into the tweak tools/compose.py makes
       await tickKey(w, doc, "sampler");
       const f = app.state.fw;
@@ -729,6 +711,9 @@ async function main() {
     // a mod whose writes or payload differ from the Python ones is refused (fresh page: builds are cached per key)
     const { w, doc, errors } = await load();
     const app = w.MCFlasherApp;
+    if (!w.MC_TWEAKS.features.some((f) => f.id === "control-all-config") || !w.MC_TWEAKS.features.some((f) => f.id === "sampler")) {
+      console.log("  skip  REF_MODS refusal checks: Control All Config / SAMPLE not offered");
+    } else {
     app.loadOs(new Uint8Array(fs.readFileSync(REAL_OS)), "model-cycles_OS1.13.syx");
     await wait(20);
     const cw = app.REF_MODS["control-all-config"].w, sp = app.REF_MODS["sampler"].p;
@@ -743,6 +728,7 @@ async function main() {
     app.REF_MODS["control-all-config"].w = cw;
     app.REF_MODS["sampler"].p = sp;
     check(errors.length === 0, "no JS error when a mod is refused");
+    }
   }
 
   // 7. "Samples OS" tab with both official files
@@ -908,6 +894,9 @@ async function main() {
     const env = await load({ devName: "Elektron Model:Samples", device: { id: 25, name: "Model Samples" } });
     const { w, doc, errors } = env;
     const app = w.MCFlasherApp;
+    if (!w.MC_TWEAKS.features.some((f) => f.id === "sampler")) {
+      console.log("  skip  Mods tab on a Model:Samples: SAMPLE is not offered");
+    } else {
     noRest(w);
     const cyc = new Uint8Array(fs.readFileSync(REAL_OS)), smp = new Uint8Array(fs.readFileSync(REAL_SMP));
     check(app.state.machine === "cyc" && doc.getElementById("mach-pane").hidden && doc.getElementById("drop2-wrap").hidden
@@ -979,6 +968,7 @@ async function main() {
       && /Emballé pour votre Model:Samples/.test(text(doc, "file-status")), "FR: machine picker and status translated");
     app.setMachine("cyc");                                         // remembered by the page: leave the default for the next sections
     check(errors.length === 0, "no JS error in the mods-on-Model:Samples flow " + (errors.length ? JSON.stringify(errors) : ""));
+    }
   }
 
   console.log(fail ? `\nFAILED (${fail})` : "\nALL OK");
