@@ -12,6 +12,10 @@ platform and ISA pitfalls: [`notes/03-plateforme-coldfire.md`](../notes/03-plate
 - Docstrings and comments in **French**, like the rest of the folder. The module docstring explains what the mod does,
   where its code lives, the note it comes from, and the command line to run it.
 - Addresses are ColdFire VAs of OS 1.13. Section 3 offset = `VA - 0x40000400` (`build.BASE`).
+- `compose.py` and `relocate.py` (Level B) have a JavaScript twin, `docs/flasher/composer.js`, which composes the
+  machine cards in the page (notes/61): a change to how a package is placed, registered (`frame`, `fill`) or its
+  conflicts computed goes into both in the same commit, and `tools/webcompose_check.sh model-cycles_OS1.13.syx`
+  must pass. A change to `registrar.S` or to `frame()` regenerates `frame.json` (`gen_registrar.py --cycles`).
 - Detect the cross toolchain as the existing generators do:
   `next((c for c in ("m68k-linux-gnu-", "m68k-elf-") if shutil.which(c + "gcc")), "m68k-linux-gnu-")`.
   Compiled code is built with `-mcpu=54418`. Pin the compiler version used in the note when output bytes depend on it.

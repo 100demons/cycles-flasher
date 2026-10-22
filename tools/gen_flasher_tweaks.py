@@ -9,6 +9,11 @@ n'invente rien.
 
     python3 tools/gen_flasher_tweaks.py           # (re)genere docs/flasher/tweaks.js
     python3 tools/gen_flasher_tweaks.py --check    # verifie qu'il est a jour (CI)
+
+model27, Level B (notes/61 §5): a machine card names its package instead of tweaks. tweaks.js then embeds the
+package as the page composes it (compose.web_package: the manifest's fields and the committed object laid out once)
+and the registrar's frame (tools/machines/registrar/frame.json), and no longer the machine's own tweak; the page
+composes the ticked machines into one tweak (docs/flasher/composer.js). Still the standard library only, no firmware.
 """
 import argparse
 import collections
@@ -53,6 +58,9 @@ OUT = ROOT / "docs" / "flasher" / "tweaks.js"
 # Une carte de moteurs porte combo[<cle>] (id, tg, tested, tg_tested, comme la combinaison elle-meme) ; une carte a
 # variante (MACRO) porte versions[<cle>] (fichier, fichier avec Model-TG). Les deux listent leurs cles dans joined.
 # Pour ajouter une fonctionnalite : ecrire son tweak JSON, puis l'ajouter ici.
+# package (model27, notes/61): an added machine composed in the page, by its package id under tools/machines/, in
+# place of variants. Its excludes are not written here: they are computed from its committed tweak alone (the
+# package's own generator writes it, its "conflicts") against the other cards offered, so they cannot drift.
 CATS = ("pack", "sound", "seq", "live", "screen", "io")
 ALL_FEATURES = [
     {
@@ -325,13 +333,10 @@ ALL_FEATURES = [
         "status": "tested",
         "credit": {"kind": "by", "who": "durchgemacht", "repo": "durchgemacht/cycles-one-shot"},
         "license": "LICENSE-One-Shot",
-        # the same payload window as the other added machines (no combined build with SAMPLE yet), the same sound
-        # record functions as Model-TG and the track filter, the same browser as sample preview: the tweak's
-        # conflicts are computed by tools/gen_sampler.py, the cards here mirror them
-        "excludes": ["macro", "acid", "syntakt", "model-tg", "track-filter", "sample-preview"],
-        "variants": [
-            {"file": "27-sampler", "label": None},
-        ],
+        # composed in the page from its package (notes/61): alone it gives 27-sampler.json byte for byte. Its
+        # excludes come from that tweak's conflicts (tools/gen_sampler.py): the payload window of the other added
+        # machines, the sound record functions of Model-TG and the track filter, the browser of sample preview
+        "package": "sampler",
     },
     {
         "id": "chord-keys",
@@ -539,10 +544,36 @@ def check_requires(features, by_id):
                                  f"mais {tid} ne demande pas {nw[g]} (champ « requires » de son JSON)")
 
 
+def card_tweaks(feat):
+    """The tweak ids a card of the page can build: its variants, its tweak with another card (with), its versions with
+    the cards it holds, each engine combination alone, with Model-TG and with the cards that join it."""
+    ids = [v["id"] for v in feat.get("variants", [])] + list(feat.get("with", {}).values())
+    for v in feat.get("versions", {}).values():
+        ids += [v["id"], v["tg"]]
+    for c in feat.get("combos", []):
+        ids += [c["id"], c["tg"]] + [x for k in feat.get("joined", []) for x in (c[k]["id"], c[k]["tg"])]
+    return ids
+
+
+def machine_excludes(features, by_id):
+    """A machine card's excludes (notes/61 §5): the other cards offered that build a tweak its committed tweak alone
+    conflicts with. Machine cards never exclude each other: the page composes them together."""
+    for feat in features:
+        if not feat.get("package"):
+            continue
+        alone = by_id.get(feat["package"])
+        if not alone:
+            sys.exit(f"!! {feat['id']}: no tweak {feat['package']!r} in tweaks/ (the package's generator writes it alone)")
+        clash = set(alone.get("conflicts", []))
+        ex = [g["id"] for g in features if not g.get("package") and clash & set(card_tweaks(g))]
+        if ex:
+            feat["excludes"] = ex
+
+
 def render():
     from crossflash import OFFICIAL            # empreintes des OS officiels, source unique (tools/crossflash.py)
     device = json.loads((DEV_DIR / "device.json").read_text(encoding="utf-8"))
-    tweaks, seen, features = [], {}, []
+    tweaks, seen, features, packages = [], {}, [], {}
     by_id = {}
     for p in sorted(DEV_DIR.glob("*.json")):
         if p.name != "device.json":
@@ -565,7 +596,15 @@ def render():
             print(f"attention : {f['id']} n'a pas de cat, il ira dans « Autres mods »", file=sys.stderr)
         if f.get("requires"):                   # carte qui doit etre cochee aussi (verifiee par check_requires)
             feat["requires"] = f["requires"]
-        if f.get("engines"):
+        if f.get("package"):                    # an added machine, composed in the page (notes/61)
+            import compose
+            bad = [k for k in ("variants", "excludes", "includes", "requires", "with", "joins", "versions", "engines")
+                   if f.get(k)]
+            if bad:
+                sys.exit(f"!! {f['id']}: a machine card takes no {', '.join(bad)} (its excludes are computed)")
+            feat["package"] = f["package"]
+            packages[f["package"]] = compose.web_package(f["package"])
+        elif f.get("engines"):
             feat["engines"], feat["combos"], keys = engine_feature(f, load)
             if keys:
                 feat["joined"] = keys
@@ -605,12 +644,17 @@ def render():
             feat["license"] = f["license"] + ".txt"
         features.append(feat)
     check_requires(features, by_id)
+    machine_excludes(features, by_id)
     tweaks, shared = share(tweaks)
     payload = {
         "device": {k: device[k] for k in ("device", "os", "section_sha256", "stock_syx_sha256", "cave_refs_ok")
                    if k in device},
         "tweaks": tweaks,
         "features": features,
+        # model27, Level B (notes/61): the packages of the machine cards and the registrar's frame they are composed in
+        "packages": packages,
+        "registrar": json.loads((HERE / "machines" / "registrar" / "frame.json").read_text(encoding="utf-8"))
+        if packages else None,
         # onglet « OS Samples » : l'OS Model:Samples officiel, mis dans le conteneur du Cycles (crossflash)
         "samples": {"syx_sha256": OFFICIAL["samples"]["syx"], "main_sha256": OFFICIAL["samples"]["main"],
                     "download": "https://www.elektron.se/support-downloads/modelsamples"},

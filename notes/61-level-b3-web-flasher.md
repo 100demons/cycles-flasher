@@ -1,6 +1,6 @@
 # 61 — Level B, step 3: the web flasher composes the machines (plan)
 
-**Status: plan, 2026-10-22; the maintainer's decisions (§9); B3a built (§10); B3b built (§11).** This is increment B3 of [notes/59](59-level-b-builder.md)
+**Status: plan, 2026-10-22; the maintainer's decisions (§9); B3a built (§10); B3b built (§11); B3c built (§12).** This is increment B3 of [notes/59](59-level-b-builder.md)
 (§5 the web flasher, §7 item 3), written after B2 landed (`74221c4`: the composer runs with `python3` alone,
 [notes/60](60-level-b2-relocator-runtime.md)) and after the maintainer tested the runtime build on their
 Model:Cycles (reported 2026-10-22). It measures what the page already does and what composing needs on top, decides
@@ -318,3 +318,57 @@ code; **no release entry** for B3.
   - `webbuild_check.sh`, `webflash_check.sh`, `gen_flasher_tweaks.py --check` and `test_compose.py --dry` pass;
   - no firmware byte changes, so the Unicorn proof (notes/60 §14) stands;
   - the page loads nothing new until B3c.
+
+## 12. B3c built (2026-10-22)
+
+- **`tools/gen_flasher_tweaks.py`**: the SAMPLE card is a machine card, `"package": "sampler"` in place of its
+  variant.
+  - `tweaks.js` embeds the package (`compose.web_package`) and the registrar's frame (the committed `frame.json`),
+    and no longer `27-sampler.json`. That tweak stays in `tweaks/` for `build.py -t sampler`, `check_overlaps.py`,
+    `registry.py` and as the composer's committed output.
+  - A machine card takes no hand-written `excludes`. `machine_excludes()` computes them from the package's tweak
+    alone (its `conflicts`) against the other cards offered; machine cards never exclude each other, since the page
+    composes them together.
+  - Today that gives no exclusion, because Control All Config goes with SAMPLE. The six ids copied by hand before
+    (MACRO, ACID, the Syntakt engines, Model-TG, the track filter, sample preview) are exactly what the same rule gives
+    over all of `ALL_FEATURES`, but none of those cards is offered. When one comes back into `OFFERED`, its exclusion
+    with SAMPLE comes back by itself.
+  - Size: `tweaks.js` is 112 650 bytes (92 850 before; the frame and the relocations take more room indented) and
+    37 906 bytes gzipped (37 195 before).
+- **`app.js`**:
+  - `chosenTweaks()` gives the ticked machine cards one entry, where the first of them is. Its id is their package
+    ids joined by `+`, and it stands for them (`{ id, machines }`): the build key, the selection and the Syntakt check
+    work as before, before any OS file is read.
+  - `makeCycles` composes it on the OS file (`composeMachines`): `MCBuilder.mainOsOf` once per file, then
+    `MCComposer.compose` with the page's tweaks for the conflicts. The log says what was composed.
+  - `selOf`, `chosenLabels` and the variant sub-choice know the machine card. SAMPLE alone keeps the key `sampler`.
+- **`ref_mainos.py`** composes each non-empty set of machine cards with `compose.compose`, in card order, and adds
+  each as one `REF_MODS` entry. `Cards` places them as `app.js` does. `REF_MODS["sampler"]` and the three
+  `REF_MAINOS` entries came out unchanged (`--check` passes with `app.js`'s blocks untouched): the page's composed
+  SAMPLE must give the bytes of `27-sampler.json`, and the whole MAIN OS `ccdadb37…`.
+- **`flasher/index.html`** loads `composer.js` after `builder.js`. The stamp is now `2026-10-22-05` on the three
+  pages.
+- **Rules**:
+  - `docs/AGENTS.md` describes the machine card and `composer.js`;
+  - `tools/AGENTS.md` says that `compose.py`/`relocate.py` and `composer.js` change together, with
+    `webcompose_check.sh`;
+  - the root `AGENTS.md` notes that `tweaks.js` embeds the packages.
+- **Proof** `[FAIT]`: `tools/webflash_smoke.sh` with the official Model:Cycles and Model:Samples files: 142 checks
+  ok, `ALL OK`.
+  - The page loads `composer.js` with the new stamp. SAMPLE is a machine card without a sub-choice, with the key
+    `sampler` alone and `control-all-config,sampler` with Control All Config.
+  - On the real OS, SAMPLE is composed in the page (machine 6, 123 writes, 36 096 bytes added to the OS). Its MAIN OS
+    is `REF_MAINOS["sampler"]` and its tweak passes `REF_MODS`. The three combinations of the sample build, and a
+    payload that differs from `REF_MODS` is refused.
+  - On a Model:Samples, SAMPLE gives the two files of `tools/mods_for_samples.py` (`00ac0d94…`, `d4c5f2ae…`).
+  - Also green: `gen_flasher_tweaks.py --check`, `ref_mainos.py --check`, `check_overlaps.py`, `registry.py
+    --check`, `webbuild_check.sh`, `webflash_check.sh`, `webcompose_check.sh` with the official file.
+- **Hardware**: SAMPLE's firmware is release 0.2's byte for byte (MAIN OS `ccdadb37…`), so the firmware needs no new
+  test. One flash of SAMPLE from the live page checks the page itself (§6).
+- **Limits**:
+  - The page composes only on the official OS 1.13, since `mainOsOf` refuses any other MAIN OS. A custom OS file is
+    sent as it is, as before.
+  - Two machine cards that hook the same OS address would not be kept apart by the cards. The composer refuses
+    their build ("writes overlap"), but the page lets you tick both.
+  - A second machine card therefore needs its pairs proven, as `sampler,refmachine` is
+    (`webcompose_check.sh`, notes/60 §12).

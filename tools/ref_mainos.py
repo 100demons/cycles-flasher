@@ -24,6 +24,11 @@ moteurs du Syntakt, notes/50 et notes/54 §11, ACID avec MACRO), et Model-TG ave
 version « tg »). Une sélection dont un tweak n'a pas le tweak qu'il demande (« requires » du tweak)
 est laissée de côté, car les deux builds la refusent.
 
+model27, Level B (notes/61 §5): the machine cards (« package ») have no tweak in tweaks.js; the page composes the
+ticked ones into one tweak, placed where the first of them is, its id their packages' ids joined by « + ». Here each
+non-empty set of them, in card order, is composed by tools/compose.py: REF_MODS gets one entry per set, so whatever
+the page composes is checked against the Python composer, and the sample's combinations are built with them.
+
     python3 tools/ref_mainos.py --cycles model-cycles_OS1.13.syx --syntakt Syntakt_OS1.42.syx [--check]
 """
 import argparse
@@ -42,6 +47,7 @@ sys.path.insert(0, str(HERE))
 sys.path.insert(0, str(HERE / "emu"))
 
 import build                       # noqa: E402
+import compose                     # noqa: E402
 import gen_flasher_tweaks          # noqa: E402
 
 ROOT = HERE.parent
@@ -80,7 +86,10 @@ class Cards:
         self.tweaks = {t["id"]: t for t in tweaks}
 
     def options(self, f):
-        """Choix d'une carte : ses variantes (ids de tweaks), ou ses combinaisons de moteurs."""
+        """Choix d'une carte : ses variantes (ids de tweaks), ses combinaisons de moteurs, ou son paquet (a machine
+        card, notes/61)."""
+        if f.get("package"):
+            return [f["package"]]
         return list(f["combos"]) if f.get("engines") else [v["id"] for v in f["variants"]]
 
     def biggest(self, f):
@@ -131,8 +140,13 @@ class Cards:
     def ids(self, sel):
         """Tweaks construits pour une sélection {carte: choix}, dans l'ordre des cartes (la clé de REF_MAINOS)."""
         out = []
+        machines = [f["package"] for f in self.features if f["id"] in sel and f.get("package")]
         for f in self.features:
             if f["id"] not in sel or self.root(f, sel):        # « joins » : dans la version de sa carte hôte
+                continue
+            if f.get("package"):                               # the machines: one composed tweak, where the first is
+                if f["package"] == machines[0]:
+                    out.append("+".join(machines))
                 continue
             o, k = sel[f["id"]], self.key(f, sel)
             if f.get("engines"):                               # avec MACRO, ACID : leur version (notes/50, 54 §11)
@@ -202,14 +216,23 @@ def blocks(cycles, syntakt):
         st_img = st.dsp_image(syntakt)
     known = tw["device"].get("cave_refs_ok")
 
+    # the machine cards: each non-empty set of them, in card order, composed as the page composes them (notes/61)
+    machines = [f["package"] for f in tw["features"] if f.get("package")]
+    composed = []
+    for r in range(1, len(machines) + 1):
+        for ids in itertools.combinations(machines, r):
+            with contextlib.redirect_stdout(io.StringIO()):
+                composed.append(compose.compose(stock, list(ids))[0])
+    by_id.update({t["id"]: t for t in composed})
+
     mods = []
-    for t in tw["tweaks"]:
+    for t in tw["tweaks"] + composed:
         ref = {"w": hashlib.sha256(writes_bytes(t)).hexdigest()}
         if t.get("append"):
             ref["p"] = hashlib.sha256(build.payload_image(t, build.payload_runtime(t, stock, st_img))).hexdigest()
         mods.append(f'  "{t["id"]}": {json.dumps(ref, separators=(", ", ": "))},')
 
-    cards = Cards(tw["features"], tw["tweaks"])
+    cards = Cards(tw["features"], tw["tweaks"] + composed)
     lines, seen, payloads = [], set(), {}
     last_group = None
     for group, sel in cards.sample():

@@ -105,7 +105,8 @@ tools/machines/registrar/     registrar.S, the runtime: the detours of the added
                               frame.json, what every build of n machines writes, filled per build by composer.js
 tools/machines/refmachine/    the reference machine: the smallest added machine, proves the composer, never offered
 tools/emu/                    Unicorn emulation of the OS: test_<mod>.py proofs, mcengine.py, emac.py, syntakt.py
-tools/gen_flasher_tweaks.py   FEATURES list -> docs/flasher/tweaks.js (generated)
+tools/gen_flasher_tweaks.py   FEATURES list -> docs/flasher/tweaks.js (generated); a machine card embeds its package and
+                              the registrar's frame, composed in the page (notes/61)
 tools/crossflash.py, tools/mods_for_samples.py   one OS in the other machine's container (notes/41, 57): Samples OS tab,
                               and the mods for a Model:Samples
 tools/check_overlaps.py       no firmware needed: mods that can be ticked together never write the same bytes, except

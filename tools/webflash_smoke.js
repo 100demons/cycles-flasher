@@ -8,7 +8,8 @@
  * REF_MAINOS sample against its reference hash, and each mod against REF_MODS (app.js, notes/49); with the
  * Model:Samples OS, the "Samples OS" tab and the Mods tab on a Model:Samples are checked end to end
  * (REF_SAMPLES_ON_CYCLES, tools/mods_for_samples.py). model27 offers two cards, SAMPLE and Control All Config
- * (OFFERED in tools/gen_flasher_tweaks.py); the checks of Modded-Cycles' other cards are in this file's history. */
+ * (OFFERED in tools/gen_flasher_tweaks.py); SAMPLE is a machine card, composed in the page from its package
+ * (composer.js, notes/61). The checks of Modded-Cycles' other cards are in this file's history. */
 const fs = require("fs");
 const path = require("path");
 const zlib = require("zlib");
@@ -57,6 +58,7 @@ function cardsOf(w, key) {
       for (const k of f.joined || [])          // MACRO, ACID with the engines (notes/50, notes/54 §11): all the cards
         own[c[k].id] = own[c[k].tg] = { f, engines: c.engines, also: cardsOfKey(k) };
     }
+    else if (f.package) own[f.package] = { f };   // a machine card (notes/61): a composed key names each package
     else {
       for (const v of f.variants) own[v.id] = { f, variant: v.id };
       for (const [k, v] of Object.entries(f.versions || {}))     // MACRO with ACID: both cards
@@ -217,14 +219,19 @@ async function main() {
   if (MAIN) {
     const { w, doc, errors } = await load();
     check(errors.length === 0, "loads without JS error " + (errors.length ? JSON.stringify(errors) : ""));
-    check(typeof w.MCBuilder === "object" && typeof w.MCFlasher === "object", "MCBuilder + MCFlasher present");
+    check(typeof w.MCBuilder === "object" && typeof w.MCComposer === "object" && typeof w.MCFlasher === "object",
+      "MCBuilder + MCComposer + MCFlasher present");
     const ids = w.MC_TWEAKS.tweaks.map((x) => x.id), cards = w.MC_TWEAKS.features;
-    check(ids.join() === "control-all-config,sampler" && cards.map((f) => f.id).join() === "control-all-config,sampler"
+    const smp = cards.find((f) => f.id === "sampler") || {};
+    check(ids.join() === "control-all-config" && cards.map((f) => f.id).join() === "control-all-config,sampler"
+      && smp.package === "sampler" && !smp.variants && Object.keys(w.MC_TWEAKS.packages).join() === "sampler"
+      && w.MC_TWEAKS.registrar && w.MC_TWEAKS.registrar.schema === "model27-registrar-frame/0.1"
       && !cards.some((f) => f.engines || f.needs) && !w.MC_TWEAKS.tweaks.some((x) => x.append && x.append.syntakt),
-      "MC_TWEAKS: model27's two cards, Control All Config and SAMPLE, one tweak each, nothing that needs the Syntakt OS: " + ids.join());
+      "MC_TWEAKS: model27's two cards, Control All Config (its tweak) and SAMPLE (a machine card: its package and the " +
+      "registrar's frame, composed in the page), nothing that needs the Syntakt OS: " + ids.join());
     check(/build \d{4}-/.test(text(doc, "build-stamp")), "version stamp shown");
     const srcs = [...doc.querySelectorAll("script[src]")].map((x) => x.getAttribute("src"));
-    check(["builder.js", "tweaks.js", "flasher.js", "app.js"].every((f) => srcs.some((x) => x.startsWith(f + "?")))
+    check(["builder.js", "composer.js", "tweaks.js", "flasher.js", "app.js"].every((f) => srcs.some((x) => x.startsWith(f + "?")))
       && srcs.every((x) => x.endsWith("?v=" + w.MC_BUILD)), "scripts loaded with ?v=<build> (no stale cache): " + srcs.join());
     check(doc.getElementById("compat").hidden, "no compatibility banner in a good browser");
     // display order: by section (Sounds & machines, then Live playing), FEATURES order inside a section; the build
@@ -265,7 +272,7 @@ async function main() {
       && doc.querySelector('#features a[href$="#sampler"]') && doc.querySelector('#features a[href$="#control-all"]'),
       `SAMPLE alone ${smpAlone}; with Control All Config ${both}, both ticked, no clash; Control All Config alone ${cacAlone}; guide links`);
     box("feat-sampler").click(); await wait(30);
-    check(doc.querySelectorAll('input[name="var-sampler"]').length === 0, "SAMPLE: a single variant, no sub-choice");
+    check(doc.querySelectorAll('input[name="var-sampler"]').length === 0, "SAMPLE: a machine card, no sub-choice");
     check(!!doc.getElementById("tab-samples") && doc.getElementById("panel-samples").hidden && doc.getElementById("drop2-wrap").hidden,
       "Samples OS tab present, its panel and second drop zone hidden in Mods");
     check(/Load your official OS file/.test(text(doc, "missing")), "flash button says what is missing: " + text(doc, "missing"));
@@ -593,7 +600,8 @@ async function main() {
     const { w, doc, errors } = await load();
     const app = w.MCFlasherApp, feats = w.MC_TWEAKS.features;
     const keyNow = () => app.chosenTweaks().map((x) => x.id).join("+");
-    const choices = (f) => (f.engines ? f.combos.map((c) => ({ engines: c.engines })) : f.variants.map((v) => ({ variant: v.id })));
+    const choices = (f) => (f.engines ? f.combos.map((c) => ({ engines: c.engines })) : f.package ? [{ package: f.package }]
+      : f.variants.map((v) => ({ variant: v.id })));
     const clear = async () => {
       for (let round = 0; round < 3; round++)
         for (const f of feats) {
@@ -646,10 +654,15 @@ async function main() {
     await wait(20);
     const needsSt = (key) => /sdvintage|syntakt/.test(key);
     const offered = Object.keys(app.REF_MAINOS).filter((k) => REAL_ST || !needsSt(k));
-    check(Object.keys(app.REF_MODS).length === w.MC_TWEAKS.tweaks.length
+    // the machine cards: one entry per non-empty set of them, in card order (the tweak tools/compose.py composes)
+    const mc = w.MC_TWEAKS.features.filter((f) => f.package).map((f) => f.package);
+    const sets = [...Array((1 << mc.length) - 1).keys()].map((k) => mc.filter((_, i) => ((k + 1) >> i) & 1).join("+"));
+    check(Object.keys(app.REF_MODS).length === w.MC_TWEAKS.tweaks.length + sets.length
       && w.MC_TWEAKS.tweaks.every((x) => app.REF_MODS[x.id] && /^[0-9a-f]{64}$/.test(app.REF_MODS[x.id].w)
-        && !!x.append === /^[0-9a-f]{64}$/.test(app.REF_MODS[x.id].p || "")),
-      `REF_MODS: the writes of each of the ${w.MC_TWEAKS.tweaks.length} tweaks, and the payload of those that append one`);
+        && !!x.append === /^[0-9a-f]{64}$/.test(app.REF_MODS[x.id].p || ""))
+      && sets.every((id) => app.REF_MODS[id] && /^[0-9a-f]{64}$/.test(app.REF_MODS[id].w) && /^[0-9a-f]{64}$/.test(app.REF_MODS[id].p)),
+      `REF_MODS: the writes of each of the ${w.MC_TWEAKS.tweaks.length} tweaks, and the payload of those that append one; ` +
+      `writes and payload of each of the ${sets.length} sets of machine cards (${sets.join(", ")})`);
     const seen = new Set();
     let idx = -1;
     const mine = () => ++idx % SHARD_N === SHARD_K;   // this part's share of the combinations
@@ -665,7 +678,7 @@ async function main() {
     if (MAIN) {
       // three cards together, not in the sample: built, each mod checked, no whole-firmware reference
       const plain = w.MC_TWEAKS.features.filter((f) => !f.engines && !f.excludes && !f.includes && !f.requires && !f.with)
-        .map((f) => f.variants[0].id);
+        .map((f) => f.package || f.variants[0].id);
       const three = [...Array(plain.length).keys()].flatMap((i) => [...Array(plain.length).keys()].flatMap((j) =>
         [...Array(plain.length).keys()].map((k) => (i < j && j < k ? [plain[i], plain[j], plain[k]].join("+") : null))))
         .find((k) => k && !app.REF_MAINOS[k]);
@@ -676,6 +689,15 @@ async function main() {
           && /Each mod checked against its reference build/.test(text(doc, "file-status")),
           `real OS: ${three} (not in the sample) builds, each mod checked: ${text(doc, "file-status").slice(0, 80)}`);
       } else console.log(`  skip three cards outside the sample: ${plain.length} plain cards offered`);
+    }
+    if (MAIN) {
+      // SAMPLE is composed in the page (composer.js, on the OS file's MAIN OS) into the tweak tools/compose.py makes
+      await tickKey(w, doc, "sampler");
+      const f = app.state.fw;
+      check(app.state.buildKey === "sampler" && f && f.kind === "built" && f.sha === app.REF_MAINOS["sampler"] && f.modsRef
+        && /Composed sampler: sampler as machine 6, 123 writes, 36096 bytes added to the OS\./.test(text(doc, "log")),
+        "real OS: SAMPLE composed in the page (machine 6, 123 writes, 36 096 bytes), its MAIN OS REF_MAINOS[\"sampler\"], " +
+        "its tweak checked against REF_MODS");
     }
     if (SHARD_N === 1)
       check(seen.size === offered.length && offered.every((k) => seen.has(k)),

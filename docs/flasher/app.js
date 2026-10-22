@@ -6,8 +6,9 @@
  * to CONFIG > UPGRADE, paced for the MIDI wire).
  * The firmware is built automatically as soon as the OS file and the mods are known.
  *
- * Uses window.MCBuilder (builder.js, JS port of tools/build.py), window.MC_TWEAKS
- * (tweaks.js, generated) and window.MCFlasher (flasher.js: verify + send).
+ * Uses window.MCBuilder (builder.js, JS port of tools/build.py), window.MCComposer (composer.js, JS port of
+ * tools/compose.py: the machine cards, notes/61), window.MC_TWEAKS (tweaks.js, generated) and window.MCFlasher
+ * (flasher.js: verify + send).
  */
 (function () {
 "use strict";
@@ -25,7 +26,8 @@ const ELEKTRON_ST_DL = "https://www.elektron.se/support-downloads/syntakt";
 // A listed combination whose MAIN OS differs is refused. REF_MODS: for every tweak, the hash of its writes (w) and of
 // its appended payload (p), checked on every build: each ticked mod must be byte for byte the Python one, whatever
 // the combination (tools/check_overlaps.py proves that mods ticked together never write the same bytes, except the
-// same whole write or a mod applied on top of another through "requires").
+// same whole write or a mod applied on top of another through "requires"). The machine cards (notes/61) have one
+// entry per set of them, the tweak tools/compose.py composes them into: the page's composer must give its bytes.
 const REF_MAINOS = {
   // each card alone: each variant, each combination of real Syntakt engines
   "control-all-config": "eb70de0a330dc9c033db5c5fc5d8589c3356c94ad346a8d30840e03ecb90299d",
@@ -992,7 +994,8 @@ function applyLang(lang) {
 // ---------------------------------------------------------------------------
 // Step 1 — features
 // ---------------------------------------------------------------------------
-// feature id -> { on: bool, variant: id } ; engine cards (real Syntakt engines): { on: bool, engines: [codes] }
+// feature id -> { on: bool, variant: id } ; engine cards (real Syntakt engines): { on: bool, engines: [codes] } ;
+// machine cards (an added machine composed in the page, f.package, notes/61): { on: bool }
 const selection = {};
 // display-only state of the picker (never saved): open Details drawers, folded sections, search, last swap (Undo)
 const pick = { open: new Set(), folded: new Set(), q: "", swap: null, selOpen: false };
@@ -1063,8 +1066,8 @@ const triedWith = (v, tg) => !!(v && (tg ? v.tg_tested : v.tested));
 const features = () => (window.MC_TWEAKS && window.MC_TWEAKS.features) || [];
 const featById = (id) => features().find((f) => f.id === id);
 function selOf(f) {
-  return selection[f.id] ||
-    (selection[f.id] = f.engines ? { on: false, engines: [] } : { on: false, variant: f.variants[0].id });
+  return selection[f.id] || (selection[f.id] = f.engines ? { on: false, engines: [] }
+    : f.package ? { on: false } : { on: false, variant: f.variants[0].id });
 }
 const label = (f) => featText(f.id, "label", f.label);
 // a mod without a short text shows the first sentence of its description (cut to 2 lines by the CSS)
@@ -1251,7 +1254,7 @@ function renderRow(f) {
     if (by) add(`<p class="say clash">${t("clash_row", { name: esc(t("quoted", { name: label(g) })), why: esc(clashWhy(by, g)) })}</p>`);
   }
   // several variants of one mod (none today): a sub-choice once ticked
-  if (!f.engines && f.variants.length > 1 && sel.on) add(renderVariants(f, sel));
+  if (f.variants && f.variants.length > 1 && sel.on) add(renderVariants(f, sel));
   if (f.engines && sel.on) add(renderEngines(f, sel, status));
   if (sel.on && featText(f.id, "note", "")) add(`<p class="say"><b>${esc(t("good_to_know"))}</b> ${esc(featText(f.id, "note", ""))}</p>`);
   add(renderDetails(f, sel, open));
@@ -1537,13 +1540,21 @@ function isOn(id) {
   return !!(selection[id] && selection[id].on);
 }
 
+// The ticked machine cards (f.package, notes/61) give one tweak, at the place of the first one: its id is their
+// packages' ids joined by "+" (SAMPLE alone: "sampler", the key and REF_MODS entry it always had). Until the build it
+// stands for them ({ id, machines }): makeCycles composes it on the OS file (composeMachines).
 function chosenTweaks() {
   const tw = window.MC_TWEAKS;
   if (!tw || !tw.features) return [];
   const out = [];
+  const machines = tw.features.filter((f) => f.package && isOn(f.id)).map((f) => f.package);
   for (const f of tw.features) {
     const sel = selection[f.id];
     if (!sel || !sel.on) continue;
+    if (f.package) {
+      if (f.package === machines[0]) out.push({ id: machines.join("+"), machines });
+      continue;
+    }
     if (joinedTo(f)) continue;                    // MACRO, ACID with the engines, ACID with MACRO: in its host's version
     const v = f.engines ? versionOf(f, comboOf(f, sel)) || {} : hostVersion(f);
     let id = v ? (isOn("model-tg") ? v.tg : v.id) : f.variants.length > 1 ? sel.variant : f.variants[0].id;
@@ -1560,10 +1571,22 @@ function chosenLabels() {
     if (!sel || !sel.on) continue;
     let l = featText(f.id, "label", f.label);
     if (f.engines) l += ` — ${(comboOf(f, sel) || {}).label || ""}`;
-    else if (f.variants.length > 1) l += ` — ${featText(sel.variant, "label", sel.variant)}`;
+    else if (f.variants && f.variants.length > 1) l += ` — ${featText(sel.variant, "label", sel.variant)}`;
     out.push(l);
   }
   return out;
+}
+
+// The ticked machines composed into one tweak (MCComposer.compose, the port of tools/compose.py, notes/61), on the
+// user's own MAIN OS, depacked once per OS file; the conflicts are computed against the tweaks of this page.
+const mainOsOfFile = new WeakMap();
+function composeMachines(raw, ids) {
+  const tw = window.MC_TWEAKS;
+  if (!mainOsOfFile.has(raw)) mainOsOfFile.set(raw, window.MCBuilder.mainOsOf(raw, tw.device));
+  const r = window.MCComposer.compose(mainOsOfFile.get(raw), tw.registrar, ids.map((id) => tw.packages[id]), tw.tweaks);
+  log(`Composed ${r.tweak.id}: ${r.info.packages.map((p) => `${p.id} as machine ${p.index}`).join(", ")}, ` +
+    `${r.tweak.writes.length} writes, ${r.info.image} bytes added to the OS.`, "is-ok");
+  return r.tweak;
 }
 
 // A mod whose engines are copied from the Syntakt OS (tweak "append", notes/17).
@@ -1764,7 +1787,8 @@ function prepareFirmware() {
     if (REF_MAINOS[key]) opts.expectMainOsSha = REF_MAINOS[key];
     opts.refMods = REF_MODS;                       // every mod, on every build (notes/49)
     if (syntakt) opts.syntakt = syntakt;
-    const r = window.MCBuilder.build(raw, window.MC_TWEAKS.device, tweaks, opts);
+    const built = tweaks.map((x) => (x.machines ? composeMachines(raw, x.machines) : x));
+    const r = window.MCBuilder.build(raw, window.MC_TWEAKS.device, built, opts);
     log(`Built ${key}: MAIN OS ${r.mainOsSha.slice(0, 12)}…, ${r.patchedBytes} bytes patched, ${r.raw.length} bytes.`, "is-ok");
     return { raw: r.raw, name: `model-cycles_OS1.13_${key}.syx`, kind: "built", mods: labels, sha: r.mainOsSha,
       ref: !!REF_MAINOS[key], modsRef: r.modsChecked, sixch: tweaks.some((x) => x.id.startsWith("6ch")),
