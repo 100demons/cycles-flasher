@@ -57,7 +57,7 @@
   "emulation": {"tool": "tools/emu/test_lixr.py in the real OS voice loop (Unicorn), on the composed alone build",
                 "date": "2026-10-22", "build": "36-lixr.json composed as machine 6"},
   "hardware": {"date": "2026-10-22", "by": "owner (100demons)",
-               "build": "the .syx built from this branch on their Model:Cycles: LiXR alone and SAMPLE + LiXR"},
+               "build": "built and flashed from the model27 web flasher on a Model:Cycles: LiXR alone and SAMPLE + LiXR"},
   "status": "tested"
  }
 }

@@ -11,6 +11,8 @@ way, towards fewer, smaller, well-fitting mods.
 
 **Status: beta.** The web flasher runs at [https://100demons.github.io/model27/flasher/](https://100demons.github.io/model27/flasher/) (it goes live with this
 repository's GitHub Pages) and offers three cards for now, the SAMPLE machine, the LiXR machine and Control All Config; the [guide](https://100demons.github.io/model27/guide/) explains them.
+The engines are also published one by one, with their sources and a ready-made package, in
+**[cycles-engines](https://github.com/100demons/cycles-engines)** for other developers to grab.
 The command-line build works for every Modded-Cycles 1.55 mod still in the repository; the short list for the beta
 is being chosen, and nothing has been removed from the tools yet.
 
@@ -65,11 +67,25 @@ python3 tools/build.py -i model-cycles_OS1.13.syx -t control-all-config,latching
 
 Details in [`BUILD.md`](BUILD.md) and [`FLASH.md`](FLASH.md) (both in French, inherited from Modded-Cycles).
 
+### Publishing an engine to `cycles-engines`
+
+The public engine catalogue is generated from this repository, so the two cannot drift:
+
+```sh
+# edit tools/machines/<id>/public.json (version, prose, changelog), then:
+python3 tools/export_engine.py <id> --to ../cycles-engines
+python3 tools/export_engine.py <id> --to ../cycles-engines --check   # writes nothing, exits 1 if out of step
+```
+
+It copies the sources, the committed object and the tweak, rewrites the manifest for `src/` and `addon/`, and
+generates the engine's `README.md`, `engine.json`, `CHANGELOG.md` and the catalogue's `index.json`. Commit this
+repository and `cycles-engines` together.
+
 <details>
 <summary><b>Going back to the official firmware</b></summary>
 
 Build nothing: send your official OS file the way you installed it. Before that, set any track that uses an added
-machine (MACRO, ACID, a Syntakt engine, SAMPLE or the Model-TG Sampler) back to one of the six original machines:
+machine (MACRO, ACID, a Syntakt engine, SAMPLE, LiXR or the Model-TG Sampler) back to one of the six original machines:
 a project that still names a machine the official OS does not have can freeze its MACHINES page.
 
 </details>
