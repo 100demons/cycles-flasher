@@ -1,7 +1,8 @@
 /* Web flasher page, on top of ../assets/site.css. Class names are the ones app.js renders. */
 
-.fl-head{display:grid;grid-template-columns:minmax(0,7fr) minmax(0,5fr);gap:16px 56px;align-items:end;padding:88px 0 56px}
-.fl-head p{font-size:19px;line-height:1.45;margin:0 0 10px;max-width:36ch}
+.fl-head{display:grid;grid-template-columns:1fr;gap:10px;padding:4px 0 26px}
+.fl-head h1{margin:0}
+.fl-head p{font-size:19px;line-height:1.55;margin:0 0 14px;max-width:70ch}
 .fl-head .ver{font-size:15px;color:var(--muted);margin:0}
 .fl>section,.fl>details,.fl>.alert{max-width:820px}
 
@@ -266,11 +267,11 @@ button.btn{border:0}
 .result p{margin:.35em 0;max-width:64ch}
 
 details>summary{cursor:pointer;font-weight:700}
-details.trouble{margin-top:24px}
+details.trouble{margin-top:8px}
 .trouble dl{margin:12px 0 0;max-width:64ch}
 .trouble dt{margin-top:12px;font-weight:700}
 .trouble dd{margin:3px 0 0;color:var(--ink-2)}
-.adv{padding:18px 0 0;border-top:1px solid var(--line)}
+.adv{padding:8px 0 0;border-top:0}
 .adv .field{display:flex;flex-wrap:wrap;align-items:center;gap:10px 14px;margin:14px 0 0}
 .adv .hint{margin:0}
 .adv input[type=number]{width:5.5em;padding:8px 10px;border:1px solid var(--line-2);border-radius:var(--r);background:var(--paper);color:var(--ink);font:16px var(--f)}
@@ -279,7 +280,7 @@ details.trouble{margin-top:24px}
   font:12.5px/1.6 var(--f-code);color:var(--ink-2);white-space:pre-wrap}
 #log .is-ok{color:var(--ok)} #log .is-bad{color:var(--bad)} #log .is-warn{color:var(--warn)}
 
-.credits{margin-top:56px;padding-top:22px;border-top:1px solid var(--ink);max-width:820px}
+.credits{margin-top:8px;padding-top:8px;border-top:0;max-width:820px}
 .credits h2{font-size:24px;margin:0 0 10px}
 .credits p{color:var(--muted);margin:0 0 10px}
 .credits ul{list-style:none;margin:0;padding:0;border-top:1px solid var(--line)}
@@ -340,7 +341,7 @@ details.trouble{margin-top:24px}
 .mach-credit{margin:0 0 14px}
 
 /* Credits: a closed disclosure, so the page ends on the flasher. */
-.credits details{border-top:1px solid var(--line);padding:18px 0}
+.credits details{border-top:0;padding:8px 0}
 .credits summary{cursor:pointer;font-weight:700;font-size:18px}
 .credits summary::marker{color:var(--muted)}
 .credits details[open] summary{margin-bottom:12px}
@@ -365,3 +366,5 @@ details.trouble{margin-top:24px}
 button.btn{border:1px solid var(--ink)}
 .btn.secondary{background:none;color:var(--ink);box-shadow:none}
 .btn.secondary:hover{background:var(--ink);color:var(--paper)}
+
+#step-flash{padding-bottom:8px}

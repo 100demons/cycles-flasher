@@ -125,7 +125,7 @@ const PARTLY = false;           // true: an unticked engine card tested with som
 // ---------------------------------------------------------------------------
 const T = {
   en: {
-    title: "Model:Cycles Flasher",
+    title: "Demo Engines for Model Cycles 🫥 — Flasher",
     tagline: "Install mods on your Elektron Model:Cycles or Model:Samples, right from your browser.",
     s1: "What do you want to install?",
     tab_mods: "Mods",
@@ -134,7 +134,7 @@ const T = {
     cats_label: "Sections",
     cat_lit: ", with ticked mods",
     cat_pack: "Packs", cat_pack_sub: "several mods in one",
-    cat_sound: "Sounds & machines", cat_sound_sub: "new machines, filters",
+    cat_sound: "Engines", cat_sound_sub: "",
     cat_seq: "Sequencer", cat_seq_sub: "trigs, tempo, arpeggios",
     cat_live: "Live playing", cat_live_sub: "mutes, chords, mixing",
     cat_screen: "Screen & browsing", cat_screen_sub: "browser, display, startup",
@@ -415,7 +415,7 @@ const T = {
     cats_label: "Rubriques",
     cat_lit: ", avec des mods cochés",
     cat_pack: "Packs", cat_pack_sub: "plusieurs mods en un",
-    cat_sound: "Sons et machines", cat_sound_sub: "nouvelles machines, filtres",
+    cat_sound: "Moteurs", cat_sound_sub: "",
     cat_seq: "Séquenceur", cat_seq_sub: "trigs, tempo, arpèges",
     cat_live: "Jeu en live", cat_live_sub: "mutes, accords, mixage",
     cat_screen: "Écran et navigation", cat_screen_sub: "navigateur, affichage, démarrage",
@@ -1200,9 +1200,8 @@ function renderFeatures() {
     g.hidden = !mods.some(matches);
     const n = lit.length ? t(lit.length > 1 ? "grp_on" : "grp_on1", { k: lit.length, n: mods.length })
       : esc(t(mods.length > 1 ? "grp_n" : "grp_n1", { n: mods.length }));
-    const sub = t("cat_" + c + "_sub");
+    const sub = (T[st.lang] || {})["cat_" + c + "_sub"] || "";
     g.innerHTML = `<h3><button type="button" class="grp-h" id="grp-h-${c}" aria-expanded="${!folded}" aria-controls="grp-${c}">` +
-      `<svg class="ic" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.6" stroke-linecap="round" stroke-linejoin="round" aria-hidden="true">${CAT_ICON[c]}</svg>` +
       `<span class="gt">${esc(t("cat_" + c))}</span>${sub ? `<span class="gs">${esc(sub)}</span>` : ""}<span class="gn">${n}</span>` +
       `<svg class="chev" width="14" height="14" viewBox="0 0 14 14" fill="none" stroke="currentColor" stroke-width="1.7" stroke-linecap="round" stroke-linejoin="round" aria-hidden="true"><path d="M3 5l4 4 4-4"/></svg>` +
       `</button></h3>` +

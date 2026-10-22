@@ -406,7 +406,7 @@ async function main() {
     // French
     app.applyLang("fr");
     await click(box("feat-control-all-config"));
-    check(/Jeu en live/.test(textOf(doc, "#cat-live .grp-h")) && /Sons et machines/.test(textOf(doc, "#cat-sound .grp-h"))
+    check(/Jeu en live/.test(textOf(doc, "#cat-live .grp-h")) && /Moteurs/.test(textOf(doc, "#cat-sound .grp-h"))
       && /Votre sélection/.test(text(doc, "mod-sel")) && /Détails/.test(textOf(doc, "#more-control-all-config"))
       && /1 mod/.test(textOf(doc, "#mod-sel .sel-c")) && /Rubriques/.test(box("cats").getAttribute("aria-label")),
       "FR: sections, selection bar, Details");

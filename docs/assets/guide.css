@@ -1,6 +1,7 @@
 /* Guide page. */
 
-.g-head{display:grid;grid-template-columns:minmax(0,7fr) minmax(0,5fr);gap:16px 56px;align-items:end;padding:88px 0 64px}
+.g-head{display:grid;grid-template-columns:minmax(0,7fr) minmax(0,5fr);gap:16px 56px;align-items:end;padding:6px 0 40px}
+.g-head h1{margin:0}
 .g-head p{font-size:20px;line-height:1.45;margin:0;max-width:34ch}
 
 .g-grid{display:grid;grid-template-columns:220px minmax(0,1fr);gap:64px;align-items:start}
