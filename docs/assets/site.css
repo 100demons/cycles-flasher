@@ -114,8 +114,9 @@ h3{font-size:20px;letter-spacing:-.01em}
 
 /* header */
 .top{display:flex;align-items:baseline;gap:28px;padding-top:22px;flex-wrap:wrap}
+[hidden]{display:none !important}
 .brand{font-weight:700;font-size:20px;letter-spacing:-.02em;text-decoration:none;margin-right:auto}
-.top nav{display:flex;gap:22px;flex-wrap:wrap;align-items:baseline}
+.top nav{display:flex;gap:22px;flex-wrap:wrap;align-items:baseline;margin-left:auto}
 .top nav a{text-decoration:none}
 .top nav a:hover,.top nav a[aria-current="page"]{text-decoration:underline;text-decoration-color:var(--red);text-decoration-thickness:2px}
 .lang{display:flex;gap:2px;align-items:baseline;color:var(--muted)}

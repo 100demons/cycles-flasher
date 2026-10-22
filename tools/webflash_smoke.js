@@ -248,11 +248,11 @@ async function main() {
     check(credits.length === 0 && /by 100demons/.test(text(doc, "features")),
       "LiXR is the owner's own engine: credited by name, no outside license link: " + JSON.stringify(credits));
     const list = [...doc.querySelectorAll("#credits-list a")].map((a) => a.textContent);
-    check(list.join() === "18nelli18/Modded-Cycles,scottmetoyer/ms-multi-output,drumkilla/elektron-model-tweaks,pichenettes/eurorack,RobinSchmidt/Open303,TinyGregAudio/Model-TG,mischa85/elektron-firmware-tool,dagargo/elektroid,mxldyn/octamax",
-      "credits section lists Modded-Cycles first, then the 8 repositories it builds on");
+    check(list.join() === "durchgemacht/model27,18nelli18/Modded-Cycles,scottmetoyer/ms-multi-output,drumkilla/elektron-model-tweaks,pichenettes/eurorack,RobinSchmidt/Open303,TinyGregAudio/Model-TG,mischa85/elektron-firmware-tool,dagargo/elektroid,mxldyn/octamax",
+      "credits section lists model27 by durchgemacht first, then Modded-Cycles and the 8 repositories it builds on");
     const lic = [...doc.querySelectorAll("#credits a")].map((a) => a.href).filter((h) => /LICENSE|NOTICES/.test(h));
-    check(lic.join() === "https://github.com/18nelli18/Modded-Cycles/blob/main/LICENSE,https://github.com/durchgemacht/model27/blob/main/THIRD-PARTY-NOTICES.md",
-      "credits section links Modded-Cycles' MIT license and model27's third-party notices: " + JSON.stringify(lic));
+    check(lic.join() === "https://github.com/18nelli18/Modded-Cycles/blob/main/LICENSE,https://github.com/100demons/cycles/blob/main/THIRD-PARTY-NOTICES.md",
+      "credits section links Modded-Cycles' MIT license and this repo's third-party notices: " + JSON.stringify(lic));
     const box = (id) => doc.getElementById(id);
     const chosen = () => w.MCFlasherApp.chosenTweaks().map((x) => x.id).join();
     // LiXR is the only card: ticking it gives the composed tweak named after its package
@@ -278,7 +278,7 @@ async function main() {
     check(/Machine LiXR/.test(text(doc, "features")) && /par 100demons/.test(text(doc, "features"))
       && /Testé/.test(text(doc, "features")) && doc.querySelector('#features a[href$="#lixr"]'),
       "FR switch translates the LiXR card, its credit and tag, with its guide link");
-    check(/Crédits/.test(text(doc, "credits")) && /boîte à outils/.test(text(doc, "credits")) && /publié sous licence MIT/.test(text(doc, "credits")),
+    check(/Crédits/.test(text(doc, "credits")) && /boîte à outils/.test(text(doc, "credits")) && /licence MIT/.test(text(doc, "credits")),
       "FR switch translates the credits section");
     doc.querySelector('.lang button[data-lang="en"]').click();
     await wait(20);

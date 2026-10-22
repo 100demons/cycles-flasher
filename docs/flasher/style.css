@@ -338,3 +338,9 @@ details.trouble{margin-top:24px}
 .mach-q{margin:0 0 8px;font-size:13px;font-weight:700;letter-spacing:.04em;text-transform:uppercase;color:var(--muted)}
 .mach-pane{margin:0 0 22px;padding:0 0 18px;border-bottom:1px solid var(--line)}
 .mach-credit{margin:0 0 14px}
+
+/* Credits: a closed disclosure, so the page ends on the flasher. */
+.credits details{border-top:1px solid var(--line);padding:18px 0}
+.credits summary{cursor:pointer;font-weight:700;font-size:18px}
+.credits summary::marker{color:var(--muted)}
+.credits details[open] summary{margin-bottom:12px}

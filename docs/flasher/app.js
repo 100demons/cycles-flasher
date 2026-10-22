@@ -14,7 +14,7 @@
 "use strict";
 
 const $ = (id) => document.getElementById(id);
-const REPO = "https://github.com/durchgemacht/model27";   // model27; the code comes from https://github.com/18nelli18/Modded-Cycles
+const REPO = "https://github.com/100demons/cycles";   // this demo site; the code comes from https://github.com/18nelli18/Modded-Cycles
 const UPSTREAM = "https://github.com/18nelli18/Modded-Cycles";
 const ELEKTRON_DL = "https://www.elektron.se/support-downloads/modelcycles";
 const ELEKTRON_SMP_DL = "https://www.elektron.se/support-downloads/modelsamples";
@@ -47,6 +47,9 @@ const REF_SAMPLES_BACK = "d63ce13dd1a5039d11b60d3f69d4e88e9d0f56fb2e7350c105ec64
 
 // Open-source work this flasher builds on (shown in the Credits section).
 const CREDITS = [
+  { who: "durchgemacht", repo: "durchgemacht/model27",
+    en: "model27 and its web flasher, build tools and guide, which this demo site is built on (MIT license)",
+    fr: "model27 et son flasher web, ses outils de build et son guide, dont ce site de démonstration est bâti (licence MIT)" },
   { who: "18nelli18 and the Modded-Cycles contributors", repo: "18nelli18/Modded-Cycles",
     en: "Modded-Cycles (MIT license): the tools, the build, this flasher, the notes and the mods model27 starts from; the authors of its mods are named on each card and in the guide",
     fr: "Modded-Cycles (licence MIT) : les outils, le build, ce flasher, les notes et les mods dont model27 est parti ; les auteurs de ses mods sont nommés sur chaque carte et dans le guide" },
@@ -249,7 +252,7 @@ const T = {
     download_hint: "to drop onto <b>Elektron Transfer</b> (just as fast), or to keep.",
     credits: "Credits",
     credits_intro: "This flasher stands on the shoulders of these projects, none of which includes firmware:",
-    credits_license: `model27 is built on <a href="${UPSTREAM}" target="_blank" rel="noopener">Modded-Cycles</a>, released under the <a href="${UPSTREAM}/blob/main/LICENSE" target="_blank" rel="noopener">MIT license</a>; model27's changes are under the same license. Third-party code keeps its own license and Elektron's firmware is not covered: see the <a href="${REPO}/blob/main/THIRD-PARTY-NOTICES.md" target="_blank" rel="noopener">third-party notices</a>.`,
+    credits_license: `This flasher comes from <a href="https://github.com/durchgemacht/model27" target="_blank" rel="noopener">model27</a> by durchgemacht, itself built on <a href="${UPSTREAM}" target="_blank" rel="noopener">Modded-Cycles</a> (<a href="${UPSTREAM}/blob/main/LICENSE" target="_blank" rel="noopener">MIT license</a>). Third-party code keeps its own license and Elektron's firmware is not covered: see the <a href="${REPO}/blob/main/THIRD-PARTY-NOTICES.md" target="_blank" rel="noopener">third-party notices</a>.`,
     privacy: "Your firmware file never leaves your computer. Nothing is uploaded, no firmware is provided.",
     links: "Not affiliated with Elektron. Model:Cycles, Model:Samples and Syntakt are Elektron products.",
     // dynamic
@@ -530,7 +533,7 @@ const T = {
     download_hint: "à déposer sur <b>Elektron Transfer</b> (aussi rapide), ou à garder.",
     credits: "Crédits",
     credits_intro: "Ce flasher s'appuie sur ces projets, dont aucun ne contient de firmware :",
-    credits_license: `model27 est construit sur <a href="${UPSTREAM}" target="_blank" rel="noopener">Modded-Cycles</a>, publié sous <a href="${UPSTREAM}/blob/main/LICENSE" target="_blank" rel="noopener">licence MIT</a> ; les changements de model27 sont sous la même licence. Le code tiers garde sa propre licence et le firmware d'Elektron n'est pas couvert : voir les <a href="${REPO}/blob/main/THIRD-PARTY-NOTICES.md" target="_blank" rel="noopener">mentions tierces</a>.`,
+    credits_license: `Ce flasher vient de <a href="https://github.com/durchgemacht/model27" target="_blank" rel="noopener">model27</a> de durchgemacht, lui-même bâti sur <a href="${UPSTREAM}" target="_blank" rel="noopener">Modded-Cycles</a> (<a href="${UPSTREAM}/blob/main/LICENSE" target="_blank" rel="noopener">licence MIT</a>). Le code tiers garde sa propre licence et le firmware d'Elektron n'est pas couvert : voir les <a href="${REPO}/blob/main/THIRD-PARTY-NOTICES.md" target="_blank" rel="noopener">mentions tierces</a>.`,
     privacy: "Votre fichier firmware ne quitte jamais votre ordinateur. Rien n'est envoyé en ligne, aucun firmware n'est fourni.",
     links: "Projet non affilié à Elektron. Model:Cycles, Model:Samples et Syntakt sont des produits Elektron.",
     no_webmidi: "Ce navigateur ne sait pas parler aux appareils MIDI. Ouvrez cette page dans <b>Chrome, Edge ou Opera</b> sur ordinateur (Firefox et Safari ne gèrent pas le Web MIDI). Vous pouvez quand même préparer le firmware ici.",
@@ -1534,7 +1537,7 @@ function renderCredits() {
   const box = $("credits-list");
   if (!box) return;
   box.innerHTML = CREDITS.map((c) =>
-    `<li><a href="https://github.com/${esc(c.repo)}" target="_blank" rel="noopener">${esc(c.repo)}</a>, ` +
+    `<li><strong>${esc(c.who)}</strong> — <a href="https://github.com/${esc(c.repo)}" target="_blank" rel="noopener">${esc(c.repo)}</a>, ` +
     `${esc(c[st.lang] || c.en)}</li>`).join("");
 }
 
