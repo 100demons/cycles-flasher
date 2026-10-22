@@ -93,7 +93,8 @@ tools/compose.py              Level B: lays packages out, places their committed
                               together through the registrar runtime, computes the conflicts, builds the .syx with
                               python3 alone (notes/59, notes/60); --registrar b1 / --relocator ld keep the toolchain paths
 tools/relocate.py             Level B, increment B2a: places a package's committed object (m68k ELF, only R_68K_32)
-                              at its address without the toolchain; compose.py uses it by default (notes/60)
+                              at its address without the toolchain; compose.py uses it by default (notes/60); layout()
+                              once, apply() per build, bundle() for the web flasher (B3a, notes/61)
 tools/machines/<id>/<id>.o    the package's committed object (ld -r of its sources), written and checked by its generator
 tools/gen_registrar.py        Level B, increments B2b and B2c: assembles the boot stub (a template with the offsets of its
                               immediates) and the registrar runtime (registrar.S) once, and commits both (notes/60 §4, §5)
@@ -163,6 +164,7 @@ python3 tools/check_overlaps.py                  # mods ticked together never wr
 python3 tools/registry.py --check                # REGISTRY.md (free space and hooks, notes/52) matches tweaks/
 python3 tools/relocate_6ch.py --check            # needs m68k binutils (below)
 tools/webbuild_check.sh                          # builder.js == build.py, byte for byte (node)
+tools/webcompose_check.sh                        # composer.js == compose.py / relocate.py, byte for byte (node)
 tools/webflash_check.sh                          # flasher.js validates .syx like mtlib (node)
 tools/webflash_smoke.sh                          # the flasher page in jsdom (node, npm, network)
 python3 -m py_compile tools/*.py tools/emu/*.py

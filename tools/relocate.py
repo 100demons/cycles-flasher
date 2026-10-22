@@ -22,6 +22,11 @@ place() returns what compose.compile_package returns, (bytes from code_at to the
 the variables), so the composer uses one or the other. With the same object the two give the same bytes: that is
 what compose.py --compare-ld checks, and the proof of this module.
 
+Steps 1 to 4 depend on the object only, not on where it goes, as long as code and variables start 4-aligned and no
+section asks for more (B3a, notes/61 §2): layout() does them once, from offset 0, and keeps each relocation as
+(position, base, addend); apply() writes step 5 at the build's addresses; place() is the two together. bundle() is a
+layout as the web flasher embeds it, and docs/flasher/composer.js places it the same way (tools/webcompose_check.sh).
+
     python3 tools/relocate.py tools/machines/refmachine/refmachine.o      # lists sections, symbols, relocations
 """
 import struct
@@ -117,11 +122,13 @@ def align(x, a):
     return (x + a - 1) & ~(a - 1)
 
 
-def place(obj, update, render, keep, code_at, bss_at, code_end, values, name="object"):
-    """Relocates the object (bytes) at code_at (code, tables, data) and bss_at (variables). update and render are
-    the entry symbols, keep the other symbols the composer's writes need (hooks, view methods); values maps an
-    undefined symbol (a patch point) to its value. The code must end before code_end. Returns (blob, symbols,
-    end of the variables), like compose.compile_package."""
+def layout(obj, update, render, keep, name="object"):
+    """What depends only on the object, done once: the garbage collection, the linker script's order and alignments,
+    the code and tables laid out from offset 0, the variables from offset 0. Returns a dict: code (bytes, each
+    relocated word zeroed), relocs [(position, base, addend)] with base "code", "bss", "abs" or the name of an undefined
+    symbol (a patch point), symbols {name: (base, offset)}, bss (the variables' size, rounded to 4) and align (the
+    largest alignment kept). A section aligned to more than 4 is refused: placed at offset 0, the object would not be
+    the same at every 4-aligned address. apply() places it; the web flasher embeds it (bundle(), notes/61 §2)."""
     elf = Elf(obj, name)
     roots = []
     for s_ in (update, render, *keep):
@@ -142,68 +149,105 @@ def place(obj, update, render, keep, code_at, bss_at, code_end, values, name="ob
                 todo.append(sym["shndx"])
     if any(s["shndx"] == SHN_COMMON for s in elf.symbols):
         raise ObjectError(f"!! {name}: COMMON symbols (compile with -fno-common)")
-    # --- placement, in the linker script's order
+    # --- placement, in the linker script's order, from offset 0
     secs = [(k, s) for k, s in elf.alloc_sections() if s["index"] in kept]
+    big = max([s["align"] for _k, s in secs] + [1])
+    if big > 4:
+        raise ObjectError(f"!! {name}: a section aligned to {big}: placed once at offset 0, the object would not be the "
+                          "same at every 4-aligned address")
     first = [s for s in secs if s[1]["index"] == elf.by_name[update]["shndx"]]
     second = [s for s in secs if s[1]["index"] == elf.by_name[render]["shndx"] and s not in first]
     rest_text = [s for s in secs if s[0] == "text" and s not in first and s not in second]
     groups = [("text", first + second + rest_text)] + [(k, [s for s in secs if s[0] == k]) for k in ("rodata", "data")]
-    addr, cur = {}, code_at
+    off, cur = {}, 0
     for _kind, group in groups:
         if not group:
             continue
         cur = align(cur, max(s["align"] for _k, s in group))
         for _k, s in group:
             cur = align(cur, s["align"])
-            addr[s["index"]] = cur
+            off[s["index"]] = ("code", cur)
             cur += s["size"]
-    code_stop = cur
-    if code_stop > code_end:
-        raise ObjectError(f"!! {name}: code and tables end at {code_stop:#x}, past {code_end:#x}")
-    bss = [s for k, s in secs if k == "bss"]
-    cur = align(bss_at, max([s["align"] for s in bss] + [1]))
-    for s in bss:
+    code = bytearray(cur)
+    cur = 0
+    for s in [s for k, s in secs if k == "bss"]:
         cur = align(cur, s["align"])
-        addr[s["index"]] = cur
+        off[s["index"]] = ("bss", cur)
         cur += s["size"]
-    bss_end = align(cur, 4)
-    # --- symbols
+    bss = align(cur, 4)
+    for k, s in secs:
+        if k != "bss":
+            lo = off[s["index"]][1]
+            code[lo:lo + s["size"]] = elf.data[s["off"]:s["off"] + s["size"]]
+    # --- relocations: where, relative to what, plus what
+    relocs = []
+    for k, s in secs:
+        for r_off, si, add in elf.relocs.get(s["index"], ()):
+            if k == "bss":
+                raise ObjectError(f"!! {name}: relocation in {s['name']}")
+            if r_off + 4 > s["size"]:
+                raise ObjectError(f"!! {name}: relocation at {r_off:#x} past the end of {s['name']}")
+            sym, pos = elf.symbols[si], off[s["index"]][1] + r_off
+            if sym["shndx"] == SHN_UNDEF:
+                relocs.append((pos, sym["name"], add))
+            elif sym["shndx"] == SHN_ABS:
+                relocs.append((pos, "abs", sym["value"] + add))
+            elif sym["shndx"] in off:
+                base, o = off[sym["shndx"]]
+                relocs.append((pos, base, o + sym["value"] + add))
+            else:
+                raise ObjectError(f"!! {name}: symbol {sym['name'] or si} in a section that was not placed")
+            code[pos:pos + 4] = bytes(4)
     symbols = {}
     for s_ in elf.symbols:
         if s_["type"] == STT_SECTION or not s_["name"]:
             continue
-        if s_["shndx"] in addr:
-            symbols[s_["name"]] = addr[s_["shndx"]] + s_["value"]
+        if s_["shndx"] in off:
+            base, o = off[s_["shndx"]]
+            symbols[s_["name"]] = (base, o + s_["value"])
         elif s_["shndx"] == SHN_ABS:
-            symbols[s_["name"]] = s_["value"]
+            symbols[s_["name"]] = ("abs", s_["value"])
+    return dict(name=name, code=bytes(code), relocs=relocs, symbols=symbols, bss=bss, align=big)
 
-    def value_of(si):
-        sym = elf.symbols[si]
-        if sym["shndx"] == SHN_UNDEF:
-            if sym["name"] in values:
-                return values[sym["name"]]
-            raise ObjectError(f"!! {name}: undefined symbol {sym['name']}: not one of this build's patch points "
+
+def apply(lay, code_at, bss_at, code_end, values):
+    """Places a layout at code_at (code, tables, data) and bss_at (variables), both 4-aligned, the patch points'
+    symbols resolved from values. The code must end before code_end. Returns (blob, symbols, end of the variables),
+    like compose.compile_package."""
+    name = lay["name"]
+    if code_at % 4 or bss_at % 4:
+        raise ObjectError(f"!! {name}: placed at {code_at:#x} / {bss_at:#x}: code and variables start 4-aligned")
+    if code_at + len(lay["code"]) > code_end:
+        raise ObjectError(f"!! {name}: code and tables end at {code_at + len(lay['code']):#x}, past {code_end:#x}")
+    bases = {"code": code_at, "bss": bss_at, "abs": 0}
+    blob = bytearray(lay["code"])
+    for pos, base, add in lay["relocs"]:
+        if base in bases:
+            v = bases[base] + add
+        elif base in values:
+            v = values[base] + add
+        else:
+            raise ObjectError(f"!! {name}: undefined symbol {base}: not one of this build's patch points "
                               f"({', '.join(sorted(values)) or 'none'})")
-        if sym["shndx"] == SHN_ABS:
-            return sym["value"]
-        if sym["shndx"] not in addr:
-            raise ObjectError(f"!! {name}: symbol {sym['name'] or si} in a section that was not placed")
-        return addr[sym["shndx"]] + sym["value"]
-    # --- the blob, relocated
-    blob = bytearray(code_stop - code_at)
-    for k, s in secs:
-        if k == "bss":
-            continue
-        lo = addr[s["index"]] - code_at
-        blob[lo:lo + s["size"]] = elf.data[s["off"]:s["off"] + s["size"]]
-    for k, s in secs:
-        for off, si, add in elf.relocs.get(s["index"], ()):
-            if k == "bss":
-                raise ObjectError(f"!! {name}: relocation in {s['name']}")
-            if off + 4 > s["size"]:
-                raise ObjectError(f"!! {name}: relocation at {off:#x} past the end of {s['name']}")
-            struct.pack_into(">I", blob, addr[s["index"]] - code_at + off, (value_of(si) + add) & 0xffffffff)
-    return bytes(blob), symbols, bss_end
+        struct.pack_into(">I", blob, pos, v & 0xffffffff)
+    symbols = {k: bases[b] + o for k, (b, o) in lay["symbols"].items()}
+    return bytes(blob), symbols, bss_at + lay["bss"]
+
+
+def place(obj, update, render, keep, code_at, bss_at, code_end, values, name="object"):
+    """Relocates the object (bytes) at code_at (code, tables, data) and bss_at (variables): layout() then apply().
+    update and render are the entry symbols, keep the other symbols the composer's writes need (hooks, view methods);
+    values maps an undefined symbol (a patch point) to its value. Returns (blob, symbols, end of the variables), like
+    compose.compile_package."""
+    return apply(layout(obj, update, render, keep, name), code_at, bss_at, code_end, values)
+
+
+def bundle(lay, names):
+    """A layout as the web flasher embeds it (JSON, notes/61 §2): the code in hex, the relocations, the symbols named
+    (the entries and what the hooks and views point at) and the variables' size. docs/flasher/composer.js places it
+    like apply()."""
+    return {"code": lay["code"].hex(), "relocs": [list(r) for r in lay["relocs"]],
+            "symbols": {k: list(lay["symbols"][k]) for k in names}, "bss": lay["bss"]}
 
 
 def main():

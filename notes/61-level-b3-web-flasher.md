@@ -1,6 +1,6 @@
 # 61 — Level B, step 3: the web flasher composes the machines (plan)
 
-**Status: plan, 2026-10-22. Nothing of it is built.** This is increment B3 of [notes/59](59-level-b-builder.md)
+**Status: plan, 2026-10-22; the maintainer's decisions (§9); B3a built (§10).** This is increment B3 of [notes/59](59-level-b-builder.md)
 (§5 the web flasher, §7 item 3), written after B2 landed (`74221c4`: the composer runs with `python3` alone,
 [notes/60](60-level-b2-relocator-runtime.md)) and after the maintainer tested the runtime build on their
 Model:Cycles (reported 2026-10-22). It measures what the page already does and what composing needs on top, decides
@@ -241,3 +241,26 @@ tests.
   3. *Hex or base64* for the packages' code in `tweaks.js`: hex, as everything else in the page (`fromHex`); base64
      would save 20 KB for SAMPLE.
   4. *A release entry*: none planned for B3, which changes nothing for users; the second machine card brings one.
+
+## 9. Decisions (2026-10-22)
+
+The maintainer took the four open points of §8 as recommended: **all three steps now**, one after the other, B3c only
+once B3a and B3b are proven against Python; **the reference machine stays off the page**; **hex** for the packages'
+code; **no release entry** for B3.
+
+## 10. B3a built (2026-10-22)
+
+- **`tools/relocate.py`**: `place()` is now `apply(layout(...))`. `layout()` does what depends only on the object
+  (garbage collection, the linker script's order, the alignments) from offset 0 and keeps each relocation as
+  (position, base, addend), the base being `code`, `bss`, `abs` or a patch point's symbol; it refuses a kept section
+  aligned to more than 4. `apply()` writes the relocations at the build's 4-aligned addresses. `bundle()` is a layout
+  as JSON for the page: the code in hex, the relocations, the symbols named, the variables' size.
+- **Unchanged output**: `compose.py --compare-ld` identical to `ld` for SAMPLE and for REF then SAMPLE; `compose.py
+  --machines sampler` still `27-sampler.json` (MAIN OS `ccdadb37…`); `gen_sampler.py` and `gen_refmachine.py`
+  `--check` up to date.
+- **`docs/flasher/composer.js`** (new, `window.MCComposer`): `place(bundle, codeAt, bssAt, values)`, `apply()`'s loop.
+  Not loaded by the page yet (B3c).
+- **Proof**: `tools/webcompose_check.sh` (no firmware; `tools/webcompose_synth.py` writes the reference, `tools/
+  webcompose_check.js` compares): REF and SAMPLE each at 23 placements (where the composer puts them alone and in
+  pairs, then random 4-aligned ones, the patch points at random values), the same bytes, entry symbols and end of the
+  variables as `relocate.place`, 23 out of 23 `[FAIT]`.
