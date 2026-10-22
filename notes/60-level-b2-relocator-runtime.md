@@ -1,6 +1,6 @@
 # 60 — Level B, step 2: a relocator and a table-driven registrar, no toolchain at build time (plan)
 
-**Status: plan, 2026-10-21; B2a (§9), B2b (§10) and B2c (§11, 2026-10-22) built: the composer runs with `python3` alone; the pair tested on the Model:Cycles (§12, 2026-10-22).** This is increment B2 of [notes/59](59-level-b-builder.md)
+**Status: plan, 2026-10-21; B2a (§9), B2b (§10) and B2c (§11, 2026-10-22) built: the composer runs with `python3` alone; tested on the Model:Cycles on 2026-10-22, the pair (§12) and SAMPLE alone from the page (§13).** This is increment B2 of [notes/59](59-level-b-builder.md)
 (§3 the registrar runtime, §4 steps 4 and 6 of the composer, §7 item 2), written after B1 landed (`91edc68`:
 `tools/compose.py`, the manifests, the reference machine, `28-refmachine.json`). It says what B1 still needs the
 m68k toolchain for, measured in the code, how each of those uses becomes committed data plus Python, in which order
@@ -351,3 +351,14 @@ half-finished step never blocks a build.
   entry. The SAMPLE card stays `experimental` until that build is flashed from the page, as its guide line says.
 - Recorded in the manifests' `tests.hardware` (`sampler`, `refmachine`), in the guide's Tested line of SAMPLE and in
   this note's row of `notes/README.md`.
+
+## 13. SAMPLE alone tested from the page (2026-10-22)
+
+- **Flashed by the maintainer from the web flasher** (stamp `2026-10-22-01`): SAMPLE alone. The page builds SAMPLE
+  alone only when its MAIN OS is `REF_MAINOS["sampler"]` (`ccdadb37…`), so what was flashed is B2c's SAMPLE alone,
+  the case §12 did not cover. Their report: "getestet in digiemu und auf dem device" (tested in digiemu and on the
+  device).
+- With §12, both cases of the runtime have run on the device: one machine (the marks as the OS's `moveq #7`) and two
+  (the runtime's `marks`).
+- From this date the SAMPLE card is `tested`: `FEATURES` in `gen_flasher_tweaks.py` and `tweaks.js`, the guide's
+  Tested line, release 0.2, the sampler manifest's `tests`.

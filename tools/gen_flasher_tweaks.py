@@ -319,7 +319,9 @@ ALL_FEATURES = [
                 "PRESET browser (FUNC + MACHINE); it is saved with the sound. COLOR = Start, SHAPE = Length, "
                 "SWEEP = the Model:Samples' filter (lowpass / off / highpass), CONTOUR = Reso; the main screen "
                 "shows the waveform with the start and end marked.",
-        "status": "experimental",
+        # tested on the Model:Cycles on 2026-10-22, flashed from this page alone and from the command line next to
+        # the reference machine (notes/60 §12-13)
+        "status": "tested",
         "credit": {"kind": "by", "who": "durchgemacht", "repo": "durchgemacht/cycles-one-shot"},
         "license": "LICENSE-One-Shot",
         # the same payload window as the other added machines (no combined build with SAMPLE yet), the same sound

@@ -7,6 +7,10 @@
  * of everything model27 builds on.
  */
 window.MC_RELEASES = [
+  { version: "0.2", date: "2026-10-22", changes: [
+    { en: "The SAMPLE machine is tested as this page builds it: flashed from this page and played on a Model:Cycles, and run in the emulator (2026-10-22). Its card now shows Tested" },
+    { en: "SAMPLE now comes from Cycles One-Shot 0.8, the same sampler as 0.7, built the way every further machine will be: model27 places its code and registers it in the firmware when it builds, so machines can be added one by one instead of as pre-built combinations. Nothing changes in how SAMPLE plays; tested on a Model:Cycles next to a second test machine too" },
+  ] },
   { version: "0.1", date: "2026-10-21", changes: [
     { en: "model27 begins: a downstream fork of Modded-Cycles 1.55, the last release with a mod picker, aimed at a short list of mods that work together, four-knob machines and the Cycles Mod Standard. The entries below this one are Modded-Cycles' own releases. The first public beta",
       fr: "model27 begins: a downstream fork of Modded-Cycles 1.55, the last release with a mod picker, aimed at a short list of mods that work together, four-knob machines and the Cycles Mod Standard. The entries below this one are Modded-Cycles' own releases. The first public beta" },
