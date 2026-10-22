@@ -150,15 +150,42 @@ Expected size: 700 to 800 bytes constant (the unrolled n = 6 version is 1 094; l
 runtime is not used: model27 does not offer Model-TG, and the TG variant stays in `gen_macro.added_machine` for
 the generators that still need it.
 
-### 5.2 Register contract per entry `[À FAIRE in B2c]`
+### 5.2 Register contract per entry `[FAIT, 2026-10-21]`
 
-Each generated detour clobbers a known set of registers because its caller's live registers were read when the
-detour was written (notes/18, 20, 43). A loop needs one more register than an unrolled compare; the runtime must
-not clobber more than today's detour does at that entry, or must save and restore (and then fix every
-`4(%sp)`-style argument offset). Before writing `registrar.S`, table for each entry: registers the generated
-detour uses today (from `detours_asm`: `shown` d0 d1; `record_at` / `record_of` d0 d1 a0; `desc_machine` d0 d1 a0;
-`builder_row` d0 d2 d5; `knob_vec` d0 d1 a1 (+ d2 d3 d5 read); `cc_bounds` d0 d1 d2; `map_state` d0 d1) and what
-the caller holds live after the detour returns or jumps on. That table goes into this note's §5.2 when done.
+Read in the OS 1.13 code (`m68k-elf-objdump -m m68k:isa-c` over section 3) at each site: what the generated detour
+touches today (`detours_asm`), and what the OS still reads after the detour returns or jumps on (a register is
+*free* when every path writes it before reading it, or the function restores it from the stack). Two kinds of
+entry: a **whole function** replaced from its first instruction (it ends with `rts`, the ABI's scratch registers
+d0, d1, a0, a1 are the caller's problem) and a **mid-function** detour that jumps back into the OS, where only
+what the following code has given up is free.
+
+| Entry | Site, kind | Today touches | Live after (must keep) | Free (may use) | Loop in B2c |
+|---|---|---|---|---|---|
+| `state_at` | `0x4004df40`, whole function, `rts` | d0 d1 | d0 = result | d0 d1 (a0 a1 by ABI; stock leaves them) | none: `cmp.l last,%d0` reads the block |
+| `state_connect` | `0x4004dfa2`, whole function, calls `0x400ddf60` | d0 d1, the callee's a0 a1 | d0 = result | d0 d1 a0 a1 | none |
+| `record_at`, `record_of` | `0x4004df5c`, `0x4004df76`, whole functions | d0 d1 a0 a1 (`rec_build` saves d2 a2; its `0x400f8f02` calls clobber a1) | d0 = result | d0 d1 a0 a1 | pointer a0, temp d1, end pointer from the block (`cmpa.l`) |
+| `cc_bounds` | `0x4005a8f0` → `0x4005a8fa` / `0x4005a91c` / `0x4005a928`, mid-function | d2 (written by the stock there too) | d0 (`lsl.l` at `0x4005a90a`), a0 (all exits); d2 restored at `0x4005a92a` | d1 (written at `0x4005a8fe`), d2, a1 (written at `0x4005a90c` / `0x4005a91c`) | none: `mvz.b top,%d2` |
+| `shown` (internal, `bsr` from the two below) | | d0 d1 | d0 = picture | d0 d1 a0 (see callers) | table lookup: `lea`, `mvz.b (%a0,%d0.l)`; no stack save needed |
+| `drum_icons` | `0x400a2638` → `0x400a2680`, mid-function | d0 d4 a1 a2 (the stock sets a2 there too) | d2 d3 a4 a5 | d0 d1 d4 d5 a0 a1 a2 a3 (d4 d5 a2 a3 reset at `0x400a26a2`, restored by the `movem` at `0x400a2706`) | via `shown` |
+| `small_icon` | `0x400a4dc4` → `0x400a4dde`, mid-function | d0 d1 a0 (after the push) | d0 = picture | d1 a0 a1, d2 (reloaded from the frame at `0x400a4dfc`) | via `shown`, after a0 is pushed |
+| `knob_vec` | `0x4001e8da` `jsr`+`nop`, back at `0x4001e8e2` | d0 d1 a1 (reads d2 d3 d5) | d0 = index, a1 = table, **a0** (`record_at` pointer loaded at `0x4001e8d4`), d2 d3 d5 a2 a3 a4 | d1, d4 (written at `0x4001e8e8` / `0x4001e922` before any read) | none: `mvz.b top,%d1`, `mvz.b first,%d1`, `movea.l knob_tab,%a1`; `knob_hook` call keeps the same set |
+| `desc_machine` | `0x4005a50a`, whole function | d0 d1 a0 | d0 = result | d0 d1 a0 | pointer a0, temp d1, end pointer from the block |
+| `builder_row` | `0x4005a340` → `0x4005a346` / `0x4005a384`, mid-function | d0 (sets d5 = result) | d5, **a0** (read at `0x4005a41c`), d2 d3 d4 d6 d7 a2 a3 a5 fp | d0, d1 (written at `0x4005a348` / `0x4005a386`), a1 (written at `0x4005a3ae` / `0x4005a3e0` / `0x4005a436` before read) | pointer **a1**, temps d0 d1 |
+| `marks` | `0x400a26a2` → `0x400a26f2`, mid-function | d0 d1 d4 d5 a2 a3 | d2 a4 | d0 d1 d4 d5 a0 a1 a2 a3 (restored by the `movem`) | none: `mvz.b nm,%d0` |
+| `rec_build` (internal) | | d0 d1 a0 a1, saves d2 a2 | | unchanged | unchanged |
+
+Conclusions for `registrar.S`:
+
+- **No entry needs a register the detour does not have today**, once the per-build constants move into the
+  block: `last` as a long for `cmp.l (abs).l,%d0`, `n`, `first`, `top` as bytes read with `mvz.b (abs).l,%dN`
+  (ISA_B and up; the MCF5441x is ISA_C), the pointers `knob_tab` and `machines_end` as longs. So no stack
+  saves, no changed argument offsets.
+- The loops use **a0** in the whole-function entries (`record_at`, `record_of`, `desc_machine`) and in `shown`,
+  and **a1** in `builder_row`, where a0 carries the OS's own pointer; `knob_vec` must not touch a0 either.
+- `d1` is free at every entry; `d2` only in `cc_bounds` and `small_icon`; the MACHINES page (`drum_icons`,
+  `marks`) frees d4, d5, a2, a3 as well.
+- `marks` is assembled in every build but reached only when `nm > 7` (the composer keeps writing the `moveq` at
+  `0x400a26e8` otherwise), so its register use is the same as today's.
 
 ### 5.3 The composer's own writes
 
@@ -210,8 +237,9 @@ half-finished step never blocks a build.
 
 - **Placement rules of `ld`** (order inside `*(.text*)`, alignment, `.data` after `.rodata`): `--compare-ld`
   settles them; until equal, B2a is not done. `[HYP]` file order and `sh_addralign` are the whole rule.
-- **Register contract** when unrolled compares become loops (§5.2): read the callers again; a wrong clobber
-  shows in digiemu as a wrong knob name or record, not as a crash, so the UI checks matter.
+- **Register contract** when unrolled compares become loops: tabled in §5.2 from the disassembly; every loop
+  fits in registers the detour already owns. A wrong clobber would show in digiemu as a wrong knob name or
+  record, not as a crash, so the UI checks of §5.4 still matter.
 - **Emulation harness**: `mcengine.PAYLOAD_CODE` is fixed (`0x43000000..0x43007298`, `0x43031000..0x43032000`) and
   SAMPLE's code runs to `0x43007727`; the harness must take the code ranges from the tweak's parts before it can
   place EMAC hooks in a composed image `[À FAIRE with Unicorn]`.
