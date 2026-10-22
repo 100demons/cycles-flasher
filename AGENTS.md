@@ -1,3 +1,22 @@
+## MAINTAINER RULES (added by the repo owner; these come first and override anything below)
+
+The owner is a synth designer, not a programmer. Explain in plain English, one step at a time. Say what a command does before running it.
+
+1. BRANCHES. Never commit to main. Work on a branch named add-<engine>, update-<engine>-<date> or fix-<topic>. main changes only after the owner says "merge".
+2. WHERE THINGS GO. This repo is a fork. Push only to `origin` (the owner's repo). Never push to, or open a pull request against, `upstream`, durchgemacht/model27 or 18nelli18/Modded-Cycles. When creating a pull request, always name the owner's repo explicitly (`gh pr create --repo <owner>/<repo> --base main`).
+3. NO ELEKTRON FIRMWARE. Never commit a .syx file, anything from firmware/ or build/, or anything built from an official OS. The safety hook (maintainer/check_safety.py) must pass before every commit. If it blocks something, explain why instead of working around it.
+4. NO SECRETS. Never commit keys, tokens, passwords or auth files.
+5. GENERATED FILES. Never hand-edit a generated file (tweak JSON, docs/flasher/tweaks.js, reference hashes). Edit the source or generator, then re-run the generators and the reference-hash tool described in BUILD.md / DEVELOPMENT.md, then the checks.
+6. FLASHING CODE. Do not edit the flashing or MIDI code (docs/flasher/app.js flashing parts, the builder, anything that sends data to the device) without explicit permission and a plain-English explanation of why. A mistake there can brick a synth.
+7. HONEST STATUS. New engines are labelled Experimental. Only the owner can say an engine is Tested, and only with the date of a real-hardware test.
+8. LICENSES AND CREDIT. Keep LICENSE, THIRD-PARTY-NOTICES.md and PROVENANCE.md accurate. The owner's own engines are MIT with the owner as author. Third-party code or algorithms may only be added after the owner approves and the license is checked. Warn about copyleft (GPL) code.
+9. BEFORE ANY PUSH. Show a plain-English summary: files added / changed / removed, what a user of the flasher will see differently, and anything risky. Wait for the owner's OK.
+10. KEEP A RECORD. After each task add a short user-facing line to the changelog.
+11. SMALL STEPS. Make small changes. If something is unclear or surprising, stop and ask.
+12. IGNORE pi-specific tooling (.pi/, subagents, slash commands like /new-mod, claude-bridge settings). They don't exist in opencode. The technical notes below are still valid reference.
+
+---
+
 # AGENTS.md — model27
 
 Guidance for coding agents working on this repository. Read this file first, then the `AGENTS.md` of every folder
