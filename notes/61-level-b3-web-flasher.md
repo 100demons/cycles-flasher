@@ -1,6 +1,6 @@
 # 61 — Level B, step 3: the web flasher composes the machines (plan)
 
-**Status: plan, 2026-10-22; the maintainer's decisions (§9); B3a built (§10); B3b built (§11); B3c built (§12).** This is increment B3 of [notes/59](59-level-b-builder.md)
+**Status: plan, 2026-10-22; the maintainer's decisions (§9); B3a built (§10); B3b built (§11); B3c built and checked in a real browser (§12).** This is increment B3 of [notes/59](59-level-b-builder.md)
 (§5 the web flasher, §7 item 3), written after B2 landed (`74221c4`: the composer runs with `python3` alone,
 [notes/60](60-level-b2-relocator-runtime.md)) and after the maintainer tested the runtime build on their
 Model:Cycles (reported 2026-10-22). It measures what the page already does and what composing needs on top, decides
@@ -364,7 +364,16 @@ code; **no release entry** for B3.
   - Also green: `gen_flasher_tweaks.py --check`, `ref_mainos.py --check`, `check_overlaps.py`, `registry.py
     --check`, `webbuild_check.sh`, `webflash_check.sh`, `webcompose_check.sh` with the official file.
 - **Hardware**: SAMPLE's firmware is release 0.2's byte for byte (MAIN OS `ccdadb37…`), so the firmware needs no new
-  test. One flash of SAMPLE from the live page checks the page itself (§6).
+  test.
+- **In a real browser** `[FAIT]` (maintainer, 2026-10-22): on the live page (stamp `2026-10-22-05`), with SAMPLE
+  ticked and the official file loaded, the page logged these lines.
+  - "Composed sampler: sampler as machine 6, 123 writes, 36096 bytes added to the OS."
+  - "Built sampler: MAIN OS ccdadb3775ca…, 36630 bytes patched, 935456 bytes."
+  - That is `compose.py --machines sampler`'s build: the same MAIN OS, the same 935 456-byte `.syx`, and 534 bytes
+    written plus 36 096 added.
+  - A build gets that far only once it passes `REF_MODS` and `REF_MAINOS["sampler"]`.
+  - What B3c changed is how the page builds, and this check shows it in a real browser. It stands for the flash of
+    §6: sending (`flasher.js`) is unchanged.
 - **Limits**:
   - The page composes only on the official OS 1.13, since `mainOsOf` refuses any other MAIN OS. A custom OS file is
     sent as it is, as before.
