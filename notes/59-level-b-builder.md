@@ -145,6 +145,10 @@ The composer never needs the Braids clone or any source: it reads committed `.o`
   `REF_MODS` becomes the hash of each package's bytes; `REF_MAINOS` keeps its sample (each card alone, every pair,
   the largest sets), built by `ref_mainos.py` through the composer.
 - Fast flashing, the Official firmware and Samples OS tabs: unchanged.
+- Refined by measurement in [notes/61](61-level-b3-web-flasher.md) (2026-10-22): the page gets each object placed
+  once at offset 0 with its relocations instead of an ELF reader, and the registrar as a frame per number of machines
+  instead of a port of its arithmetic; the composer goes into a `composer.js` of its own, checked against
+  `compose.py` by `tools/webcompose_check.sh`.
 
 ## 6. Registry and shared hooks (B4)
 
@@ -170,6 +174,7 @@ The composer never needs the Braids clone or any source: it reads committed `.o`
    Detailed plan, measurements and proofs: [notes/60](60-level-b2-relocator-runtime.md) (2026-10-21).
 3. **B3, the web flasher** (§5). Done when `webbuild_check.sh` shows JavaScript and Python composing the same bytes
    for every card alone and every pair, and the page flashes a composed selection.
+   Detailed plan, measurements and proofs: [notes/61](61-level-b3-web-flasher.md) (2026-10-22).
 4. **B4, registry and dispatchers** (§6), when a second package needs a shared hook or a stable id.
 
 Hardware tests follow every increment, by the maintainer, before anything is called tested.
