@@ -13,7 +13,12 @@ B2c (§5): the **registrar runtime**, registrar.S, the detours of the added mach
 last, the knob table, and one 16-byte entry per machine: index, picture, first descriptor, record). Its code and
 the addresses of its entries (the targets of the OS's jumps and call) are committed here too.
 
-    python3 tools/gen_registrar.py [--check]
+B3b (notes/61 §3), with --cycles: the **frame** of the registrar's part for n = 1 to 6 machines, what the composer
+writes whatever the machines are (compose.frame()), read from the official MAIN OS: tools/machines/registrar/
+frame.json, which the web flasher fills like compose.fill(). It carries positions, the short old bytes every tweak
+carries and model27's own values; the stock values fill() needs are read in the user's file.
+
+    python3 tools/gen_registrar.py [--cycles model-cycles_OS1.13.syx] [--check]
 """
 import argparse
 import json
@@ -25,11 +30,14 @@ HERE = pathlib.Path(__file__).resolve().parent
 sys.path.insert(0, str(HERE))
 sys.path.insert(0, str(HERE / "emu"))
 
+import compose                     # noqa: E402
 import gen_macro as gm             # noqa: E402
+import gen_sdvintage_7th as g7     # noqa: E402
 import gen_sdvintage_exact as gx   # noqa: E402
 import gen_syntakt_engines as gs   # noqa: E402
 
 OUT = HERE / "machines" / "registrar" / "registrar.json"
+FRAME = HERE / "machines" / "registrar" / "frame.json"
 SRC = HERE / "machines" / "registrar" / "registrar.S"
 REGS_OFF = 0x780                   # the parameter block: the last 128 bytes of STUBS..DATA
 ENTRY, MAX_MACHINES = 16, 6        # one entry per added machine; gs.check_room allows 6 (109 descriptors)
@@ -74,7 +82,8 @@ def runtime(tmp):
 
 def main():
     ap = argparse.ArgumentParser(description=__doc__, formatter_class=argparse.RawDescriptionHelpFormatter)
-    ap.add_argument("--check", action="store_true", help="checks that the committed file matches")
+    ap.add_argument("--cycles", help="official model-cycles_OS1.13.syx: also writes frame.json (B3b)")
+    ap.add_argument("--check", action="store_true", help="checks that the committed files match")
     args = ap.parse_args()
     with tempfile.TemporaryDirectory() as d:
         code, offs, segs_at = stub_template(pathlib.Path(d))
@@ -114,7 +123,16 @@ def main():
     print(f"  runtime: {len(rt)} bytes at {gs.STUBS:#x}, parameter block at {regs:#x} "
           f"({16 + ENTRY * MAX_MACHINES} bytes for {MAX_MACHINES} machines), {len(entries)} entries")
     OUT.parent.mkdir(parents=True, exist_ok=True)
-    if gm.emit(OUT, text, args.check):
+    bad = gm.emit(OUT, text, args.check)
+    if args.cycles:
+        img = g7.cycles_main(args.cycles)
+        if len(img) != gx.IMAGE_LEN:
+            raise SystemExit("!! not the official MAIN OS 1.13")
+        frs = compose.frames(img, data)
+        print(f"  frame: {len(frs['writes'])} writes for every n, "
+              f"{', '.join(f'{len(v["writes"])} for n = {n}' for n, v in frs['by_n'].items())}")
+        bad |= gm.emit(FRAME, json.dumps(frs, indent=1) + "\n", args.check)
+    if bad:
         raise SystemExit(1)
 
 

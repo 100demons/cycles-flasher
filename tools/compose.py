@@ -204,6 +204,29 @@ def place_package(m, code_at, bss_at, code_end, values, obj=None):
                           code_end, symbols, m["id"])
 
 
+def web_package(mid):
+    """A package as the web flasher reads it (B3b, notes/61 §5): what compose() reads in its manifest (the machine,
+    the hooks and vtable entries, the RAM claims, the patch points, the entry and kept symbols, order, version, the
+    declared conflicts) and its committed object laid out once (relocate.layout, relocate.bundle).
+    docs/flasher/composer.js composes from it what compose() composes from the manifest and the object."""
+    m = load_manifest(mid)
+    b = m["build"]
+    upd, rnd, keep = b["symbols"]["update"], b["symbols"]["render"], b.get("keep", [])
+    pps = b.get("patch_points", [])
+    if any("symbol" not in pp for pp in pps):
+        sys.exit(f"!! {mid}: patch points as defines cannot be applied to a committed object: use symbols")
+    path = object_path(m)
+    if not path.is_file():
+        sys.exit(f"!! {mid}: {path} is missing: run the package's generator (it writes the object)")
+    lay = relocate.layout(path.read_bytes(), upd, rnd, keep, mid)
+    uses = [{k: v for k, v in u.items() if k != "why"} for u in m["uses"]
+            if u["point"] in ("machine", "memory.ram") or "hook" in u or "vtable" in u]
+    return {"id": mid, "name": m["name"], "order": m["order"], "version": m["version"],
+            "symbols": {"update": upd, "render": rnd}, "keep": keep, "patch_points": pps, "uses": uses,
+            "conflicts_declared": [c["with"] for c in m.get("compat", {}).get("conflicts_declared", [])],
+            "bundle": relocate.bundle(lay, [upd, rnd, *keep])}
+
+
 def emit_bytes(path, data, check):
     """Writes a binary file, or with check compares it with the committed one (like gen_macro.emit for text)."""
     if check:
@@ -262,22 +285,22 @@ def check_boot_stub(reg, writes, append):
     return w
 
 
-def parameter_block(reg, machines, first):
+def parameter_block(fr, machines):
     """The runtime's parameter block for this build (registrar.S): header and one entry per machine."""
-    rt = reg["runtime"]
-    n, nm = len(machines), first + len(machines)
-    regs = int(rt["regs_at"], 16)
+    lay, rt = fr["layout"], fr["runtime"]
+    n, first = len(machines), lay["first"]
+    nm, regs = first + n, rt["regs_at"]
     if n > rt["max_machines"]:
         sys.exit(f"!! {n} machines: the runtime's block holds {rt['max_machines']}")
     out = bytearray()
     out += bytes([n, first, first + n - 1, nm])
     out += g7.be32(76 + 5 * n)                        # last
-    out += g7.be32(gs.DATA + 12 * nm)                 # knob_tab
+    out += g7.be32(lay["data"] + 12 * nm)             # knob_tab
     out += g7.be32(regs + rt["regs_header"] + rt["entry_size"] * n)     # machines_end
     for i, m in enumerate(machines):
         e = bytearray(rt["entry_size"])
         e[0:4] = bytes([first + i, m["image"], 76 + 5 * i, 76 + 5 * i - 51])
-        e[4:8] = g7.be32(gs.RECS + 0x60 * i)          # rec
+        e[4:8] = g7.be32(lay["recs"] + 0x60 * i)      # rec
         e[8:12] = g7.be32(m.get("knob_hook", 0))      # knob_hook
         out += e
     if len(out) > rt["regs_header"] + rt["entry_size"] * rt["max_machines"]:
@@ -285,68 +308,24 @@ def parameter_block(reg, machines, first):
     return bytes(out)
 
 
-def registrar_writes(img, machines, blobs, bss_end, reg):
-    """B2c: the registrar's writes and payload for the alone layout, without the toolchain: a port of
-    gen_macro.added_machine(tg=None) whose detours are the committed runtime (registrar.S, assembled once, reading
-    the parameter block) and whose boot stub comes from the committed template. machines: name, image, decay,
-    knobs, update, render (addresses); blobs: [(address, code and data)]; bss_end: end of the variables.
-    Returns (writes, append)."""
+def frame(img, reg, n):
+    """The registrar's part of a build of n added machines that does not depend on which machines (B3b, notes/61 §3):
+    the writes (moved table references, bounds, the jumps and the call into the runtime's fixed entries, the MACHINES
+    page's marks), the reloc of the Algorithm parameter's maximum, and the layout, the runtime, the stub template and
+    the stock addresses fill() reads. A port of gen_macro.added_machine(tg=None) whose detours are the committed runtime
+    (registrar.S); tools/gen_registrar.py --cycles commits it for n = 1 to 6 (frame.json) for the web flasher."""
     pay, first = gs.PAY_ALONE, 6
     rt = reg["runtime"]
     if int(rt["at"], 16) != gs.STUBS or int(rt["descn"], 16) != gs.DESCN or rt["marks_row"] != gs.MARKS_ROW:
         sys.exit("!! registrar.json was generated for another layout: run tools/gen_registrar.py")
-    n = len(machines)
+    if not 1 <= n <= rt["max_machines"]:
+        sys.exit(f"!! {n} machines: the runtime holds 1 to {rt['max_machines']}")
     nm = first + n
     top = nm - 1
     gs.set_rows(n)
     gs.check_room(n, nm)
-    u32 = lambda va: struct.unpack_from(">I", img, va - BASE)[0]
     names_at, upd_at, rnd_at, map_at = gs.DATA, gs.DATA + 4 * nm, gs.DATA + 8 * nm, gs.DATA + 16 * nm
     entries = {k: int(v, 16) for k, v in rt["entries"].items()}
-    code = bytes.fromhex(rt["hex"])
-    regs = int(rt["regs_at"], 16)
-    if gs.STUBS + len(code) > regs:
-        sys.exit("!! the runtime runs into its parameter block")
-    block = parameter_block(reg, machines, first)                   # two parts: the runtime, the block
-    if regs + len(block) > gs.DATA:
-        sys.exit("!! parameter block past DATA")
-
-    # --- data (as added_machine): names, update/render tables, machine -> record, strings
-    strings = [m["name"] for m in machines] + [k[i] for m in machines for k in m["knobs"] for i in (0, 1)]
-    at, addr = map_at + ((nm + 3) & ~3), {}
-    for s_ in strings:
-        if s_ not in addr:
-            addr[s_] = at
-            at += len(s_) + 1
-    names = [u32(g7.NAMES + 4 * i) for i in range(6)] + [addr[m["name"]] for m in machines]
-    upd = [u32(g7.UPDATE_TAB + 4 * i) for i in range(6)] + [m["update"] for m in machines]
-    rnd = [u32(g7.RENDER_TAB + 4 * i) for i in range(6)] + [m["render"] for m in machines]
-    data = bytearray()
-    for t in (names, upd, rnd, range(1, nm + 1)):
-        data += b"".join(g7.be32(x) for x in t)
-    data += img[gs.MAP - BASE:gs.MAP - BASE + 6] + bytes(range(6, nm)) + bytes(((nm + 3) & ~3) - nm)
-    for s_ in addr:
-        data += s_.encode("ascii") + b"\0"
-    if gs.DATA + len(data) > gs.DESCN:
-        sys.exit("!! data past DESCN")
-
-    # --- 5 descriptors per machine, modelled on SNARE's
-    new = bytearray()
-    for m in machines:
-        for k, (long_, short, default, *rng) in enumerate(m["knobs"]):
-            e = bytearray(img[g7.DESC + (g7.SNARE_DESC + k) * g7.DSTRIDE - BASE:][:g7.DSTRIDE])
-            e[0x00:0x04] = g7.be32(6)
-            if rng:
-                e[0x08:0x0c], e[0x0c:0x10] = g7.be32(rng[0] << 8), g7.be32(rng[1] << 8)
-            e[0x10:0x14] = g7.be32(default << 8)
-            e[0x2c:0x30] = g7.be32(addr[long_])
-            e[0x34:0x38] = g7.be32(addr[short])
-            new += e
-        e = bytearray(img[g7.DESC + (g7.SNARE_DESC + 4) * g7.DSTRIDE - BASE:][:g7.DSTRIDE])
-        e[0x10:0x14] = g7.be32(m["decay"] << 8)
-        new += e
-
-    # --- writes (as added_machine, tg=None)
     writes = []
 
     def w(va, old, new_):
@@ -397,15 +376,7 @@ def registrar_writes(img, machines, blobs, bss_end, reg):
         w(va, bytes.fromhex(old), jmp(entries[sym]))
     for va, old, sym in g7.CALLS:
         w(va, bytes.fromhex(old), bytes.fromhex("4eb9") + g7.be32(entries[sym]) + bytes.fromhex("4e71"))
-
-    # --- payload
-    parts = [{"dest": f"{at_:#x}", "hex": b_.hex()} for at_, b_ in blobs if at_ < gs.STUBS] + [
-        {"dest": f"{gs.STUBS:#x}", "hex": code.hex()},
-        {"dest": f"{regs:#x}", "hex": block.hex()},
-        {"dest": f"{gs.DATA:#x}", "hex": bytes(data).hex()},
-        {"dest": f"{gs.DESCN:#x}", "cycles": [f"{g7.DESC:#x}", f"{g7.DESC + g7.NDESC * g7.DSTRIDE:#x}"]},
-        {"dest": f"{gs.DESCN + g7.NDESC * g7.DSTRIDE:#x}", "hex": bytes(new).hex()},
-    ] + [{"dest": f"{at_:#x}", "hex": b_.hex()} for at_, b_ in blobs if at_ >= gs.STUBS]
+    writes.sort(key=lambda x: x["off"])
     lo_, hi_ = g7.DESC - BASE, g7.DESC - BASE + g7.NDESC * g7.DSTRIDE
     final, orig = bytearray(img[lo_:hi_]), img[lo_:hi_]
     alg = g7.ALG_DESC * g7.DSTRIDE + 0x0c
@@ -414,23 +385,140 @@ def registrar_writes(img, machines, blobs, bss_end, reg):
     struct.pack_into(">I", final, alg, top << 8)
     reloc = [[f"{gs.DESCN + k:#x}", orig[k:k + 4].hex(), final[k:k + 4].hex()]
              for k in range(0, len(final), 4) if final[k:k + 4] != orig[k:k + 4]]
-    size = bss_end - pay
+    return {"n": n,
+            "layout": {"pay": pay, "bss_off": gm.BSS_OFF, "first": first, "stubs": gs.STUBS, "data": gs.DATA,
+                       "descn": gs.DESCN, "recs": gs.RECS, "end_limit": gs.END_LIMIT, "image_end": BASE + gx.IMAGE_LEN,
+                       "cave": gx.CAVE, "stub_room": sprites.zone(gx.CAVE)[1], "ndesc": g7.NDESC, "dstride": g7.DSTRIDE},
+            "stock": {"names": g7.NAMES, "update": g7.UPDATE_TAB, "render": g7.RENDER_TAB, "map": gs.MAP,
+                      "desc": g7.DESC, "snare_desc": g7.DESC + g7.SNARE_DESC * g7.DSTRIDE},
+            "runtime": {"at": gs.STUBS, "hex": rt["hex"], "regs_at": int(rt["regs_at"], 16),
+                        "regs_header": rt["regs_header"], "entry_size": rt["entry_size"],
+                        "max_machines": rt["max_machines"]},
+            "stub": reg["stub"],
+            "writes": writes, "reloc": reloc}
+
+
+def frames(img, reg):
+    """frame.json: the frames of n = 1 to the runtime's maximum, the writes they share listed once (B3b)."""
+    per = {n: frame(img, reg, n) for n in range(1, reg["runtime"]["max_machines"] + 1)}
+    for f in per.values():
+        if any(f[k] != per[1][k] for k in ("layout", "stock", "runtime", "stub")):
+            sys.exit("!! the frames differ beyond their writes and reloc")
+    common = [w for w in per[1]["writes"] if all(w in f["writes"] for f in per.values())]
+    out = {"schema": "model27-registrar-frame/0.1",
+           "description": [
+               "The registrar's part of a build that depends on the number of machines only (notes/61 §3): for n = 1 to",
+               "6, the writes (moved tables, bounds, the jumps and the call into the runtime, the marks), the reloc of the",
+               "Algorithm parameter's maximum; once, the layout, the runtime, the boot stub template and the stock",
+               "addresses whose values fill() reads in the user's own MAIN OS. Written by tools/gen_registrar.py --cycles",
+               "from compose.frame(); docs/flasher/composer.js fills it like compose.fill()."],
+           "layout": per[1]["layout"], "stock": per[1]["stock"], "runtime": per[1]["runtime"], "stub": per[1]["stub"],
+           "writes": common,
+           "by_n": {str(n): {"writes": [w for w in f["writes"] if w not in common], "reloc": f["reloc"]}
+                    for n, f in per.items()}}
+    for n, f in per.items():                  # the split loses nothing: frame_of() gives each frame back
+        back = frame_of(out, n)
+        if back["writes"] != f["writes"] or back["reloc"] != f["reloc"]:
+            sys.exit(f"!! frame.json would not give back the frame of {n} machines")
+    return out
+
+
+def frame_of(frs, n):
+    """One n's frame out of frame.json (the composer.js way of reading it)."""
+    if str(n) not in frs["by_n"]:
+        sys.exit(f"!! no frame for {n} machines")
+    fr = {k: frs[k] for k in ("layout", "stock", "runtime", "stub")}
+    fr.update(n=n, writes=sorted(frs["writes"] + frs["by_n"][str(n)]["writes"], key=lambda x: x["off"]),
+              reloc=frs["by_n"][str(n)]["reloc"])
+    return fr
+
+
+def fill(fr, img, machines, blobs, bss_end):
+    """The rest of the registrar's part, what depends on the machines (B3b, notes/61 §3): the data block (names,
+    update and render addresses, the strings), five descriptors per machine (SNARE's, read in the official image, with
+    the knob fields set), the parameter block, the payload parts in their order, the segments and the boot stub.
+    machines: name, image, decay, knobs, update, render (addresses); blobs: [(address, code and data)]; bss_end: end of
+    the variables. docs/flasher/composer.js does the same from frame.json. Returns (writes, append)."""
+    lay, stock, rt = fr["layout"], fr["stock"], fr["runtime"]
+    n, first = len(machines), lay["first"]
+    if n != fr["n"]:
+        sys.exit(f"!! a frame for {fr['n']} machines, {n} given")
+    for m in machines:
+        if len(m["knobs"]) != 4:
+            sys.exit(f"!! {m['name']}: {len(m['knobs'])} knobs; a machine has 4 and DECAY, five descriptors")
+    nm = first + n
+    u32 = lambda va: struct.unpack_from(">I", img, va - BASE)[0]
+    map_at = lay["data"] + 16 * nm
+    # --- data (as added_machine): names, update/render tables, machine -> record, strings
+    strings = [m["name"] for m in machines] + [k[i] for m in machines for k in m["knobs"] for i in (0, 1)]
+    at, addr = map_at + ((nm + 3) & ~3), {}
+    for s_ in strings:
+        if s_ not in addr:
+            addr[s_] = at
+            at += len(s_) + 1
+    names = [u32(stock["names"] + 4 * i) for i in range(first)] + [addr[m["name"]] for m in machines]
+    upd = [u32(stock["update"] + 4 * i) for i in range(first)] + [m["update"] for m in machines]
+    rnd = [u32(stock["render"] + 4 * i) for i in range(first)] + [m["render"] for m in machines]
+    data = bytearray()
+    for t in (names, upd, rnd, range(1, nm + 1)):
+        data += b"".join(g7.be32(x) for x in t)
+    data += img[stock["map"] - BASE:stock["map"] - BASE + first] + bytes(range(first, nm)) + bytes(((nm + 3) & ~3) - nm)
+    for s_ in addr:
+        data += s_.encode("ascii") + b"\0"
+    if lay["data"] + len(data) > lay["descn"]:
+        sys.exit("!! data past DESCN")
+    # --- 5 descriptors per machine, modelled on SNARE's
+    ds, new = lay["dstride"], bytearray()
+    for m in machines:
+        for k, (long_, short, default, *rng) in enumerate(m["knobs"]):
+            e = bytearray(img[stock["snare_desc"] + k * ds - BASE:][:ds])
+            e[0x00:0x04] = g7.be32(6)
+            if rng:
+                e[0x08:0x0c], e[0x0c:0x10] = g7.be32(rng[0] << 8), g7.be32(rng[1] << 8)
+            e[0x10:0x14] = g7.be32(default << 8)
+            e[0x2c:0x30] = g7.be32(addr[long_])
+            e[0x34:0x38] = g7.be32(addr[short])
+            new += e
+        e = bytearray(img[stock["snare_desc"] + 4 * ds - BASE:][:ds])
+        e[0x10:0x14] = g7.be32(m["decay"] << 8)
+        new += e
+    # --- payload: the packages, the runtime, its parameter block, the data, the descriptors
+    regs, code = rt["regs_at"], bytes.fromhex(rt["hex"])
+    if lay["stubs"] + len(code) > regs:
+        sys.exit("!! the runtime runs into its parameter block")
+    block = parameter_block(fr, machines)
+    if regs + len(block) > lay["data"]:
+        sys.exit("!! parameter block past DATA")
+    parts = [{"dest": f"{at_:#x}", "hex": b_.hex()} for at_, b_ in blobs if at_ < lay["stubs"]] + [
+        {"dest": f"{lay['stubs']:#x}", "hex": code.hex()},
+        {"dest": f"{regs:#x}", "hex": block.hex()},
+        {"dest": f"{lay['data']:#x}", "hex": bytes(data).hex()},
+        {"dest": f"{lay['descn']:#x}", "cycles": [f"{stock['desc']:#x}", f"{stock['desc'] + lay['ndesc'] * ds:#x}"]},
+        {"dest": f"{lay['descn'] + lay['ndesc'] * ds:#x}", "hex": bytes(new).hex()},
+    ] + [{"dest": f"{at_:#x}", "hex": b_.hex()} for at_, b_ in blobs if at_ >= lay["stubs"]]
+    size = bss_end - lay["pay"]
     segs = gs.segments(parts, size)
-    at = BASE + gx.IMAGE_LEN
-    if at + sum(n_ for _, n_ in segs) > gs.END_LIMIT:
-        sys.exit(f"!! {sum(n_ for _, n_ in segs)} bytes added: the image would pass {gs.END_LIMIT:#x}")
-    stub = boot_stub(reg, at, pay, size // 4, segs)
-    if len(stub) > sprites.zone(gx.CAVE)[1]:
+    at = lay["image_end"]
+    if at + sum(n_ for _, n_ in segs) > lay["end_limit"]:
+        sys.exit(f"!! {sum(n_ for _, n_ in segs)} bytes added: the image would pass {lay['end_limit']:#x}")
+    stub = boot_stub(fr, at, lay["pay"], size // 4, segs)
+    if len(stub) > lay["stub_room"]:
         sys.exit("!! boot stub too big for its mask")
-    if img[gx.CAVE - BASE:gx.CAVE - BASE + len(stub)] != b"\xff" * len(stub):
+    if img[lay["cave"] - BASE:lay["cave"] - BASE + len(stub)] != b"\xff" * len(stub):
         sys.exit("!! the boot stub's place is taken")
-    writes.append({"off": gx.CAVE - BASE, "old": "ff" * len(stub), "new": stub.hex()})
+    writes = [dict(w) for w in fr["writes"]] + [{"off": lay["cave"] - BASE, "old": "ff" * len(stub), "new": stub.hex()}]
     writes.sort(key=lambda x: x["off"])
     for a_, b_ in zip(writes, writes[1:]):
         if a_["off"] + len(a_["new"]) // 2 > b_["off"]:
             sys.exit(f"!! writes overlap at {BASE + b_['off']:#x}")
-    return writes, {"at": f"{at:#x}", "dest": f"{pay:#x}", "size": size, "parts": parts, "reloc": reloc,
-                    "pack": [[f"{a_:#x}", n_] for a_, n_ in segs]}
+    return writes, {"at": f"{at:#x}", "dest": f"{lay['pay']:#x}", "size": size, "parts": parts,
+                    "reloc": [list(r) for r in fr["reloc"]], "pack": [[f"{a_:#x}", n_] for a_, n_ in segs]}
+
+
+def registrar_writes(img, machines, blobs, bss_end, reg):
+    """B2c: the registrar's writes and payload for the alone layout, without the toolchain: frame() then fill()
+    (B3b: the split the web flasher follows). Returns (writes, append)."""
+    return fill(frame(img, reg, len(machines)), img, machines, blobs, bss_end)
 
 
 def compare_b1_(reg, writes, append, writes1, append1):
@@ -488,18 +576,28 @@ def ram_claims(m):
     return [(int(a, 16), int(b, 16)) for u in m["uses"] if u["point"] == "memory.ram" for a, b in [u["range"]]]
 
 
-def computed_conflicts(writes, ram, declared):
-    """Ids of the folder's tweaks this build cannot be installed with: other bytes at the same address, or a
-    payload in one of our RAM ranges. The same whole write is not a conflict (check_overlaps.py's rule)."""
+def folder_tweaks():
+    """The tweaks of tweaks/model-cycles_OS1.13/ that have an id: what the conflicts are computed against."""
+    out = []
+    for f in sorted(DEV.glob("*.json")):
+        if f.name == "device.json":
+            continue
+        t = json.loads(f.read_text(encoding="utf-8"))
+        if t.get("id"):
+            out.append(t)
+    return out
+
+
+def computed_conflicts(writes, ram, declared, tweaks=None):
+    """Ids of the tweaks (by default the folder's) this build cannot be installed with: other bytes at the same
+    address, or a payload in one of our RAM ranges. The same whole write is not a conflict (check_overlaps.py's
+    rule)."""
     mine = {}
     for w in writes:
         for i, b in enumerate(bytes.fromhex(w["new"])):
             mine[w["off"] + i] = b
     ids = set(declared)
-    for f in sorted(DEV.glob("*.json")):
-        if f.name == "device.json":
-            continue
-        t = json.loads(f.read_text(encoding="utf-8"))
+    for t in folder_tweaks() if tweaks is None else tweaks:
         tid = t.get("id")
         if not tid:
             continue
@@ -514,13 +612,13 @@ def computed_conflicts(writes, ram, declared):
     return ids
 
 
-def compose(img, ids, relocator="python", compare_ld=False, registrar="runtime", compare_b1=False):
+def compose(img, ids, relocator="python", compare_ld=False, registrar="runtime", compare_b1=False, against=None):
     """Builds the tweak for the machines named in ids, in that order. relocator: "python" places each
     package's committed object with tools/relocate.py (no toolchain), "ld" compiles and links it as B1 did;
     compare_ld does both and compares them byte for byte (the proof of the relocator). registrar: "runtime" writes
     the registrar's part itself from the committed runtime and stub template (B2c, no assembler), "b1" calls
     gen_macro.added_machine (assembles the detours per build); compare_b1 does both and compares (notes/60 §5.4).
-    Returns (tweak, info)."""
+    against: the tweaks the conflicts are computed against (default: the folder's). Returns (tweak, info)."""
     if not ids:
         sys.exit("!! name at least one machine")
     if len(ids) != len(set(ids)):
@@ -586,7 +684,7 @@ def compose(img, ids, relocator="python", compare_ld=False, registrar="runtime",
     ram = [(pay, bss_cursor)] + [r for m in mans for r in ram_claims(m)]
     declared = {c["with"] for m in mans for c in m.get("compat", {}).get("conflicts_declared", [])}
     tid = "+".join(ids)
-    conflicts = computed_conflicts(writes, ram, declared) - {tid}
+    conflicts = computed_conflicts(writes, ram, declared, against) - {tid}
     tweak = {
         "id": tid,
         "order": min(m["order"] for m in mans),

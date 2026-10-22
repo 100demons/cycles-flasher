@@ -91,15 +91,18 @@ tools/machines/<id>/manifest.json   a machine as a package (Cycles Mod Standard,
                               hooks; tools/compose.py composes the chosen packages into one tweak at build time
 tools/compose.py              Level B: lays packages out, places their committed objects (relocate.py), registers them
                               together through the registrar runtime, computes the conflicts, builds the .syx with
-                              python3 alone (notes/59, notes/60); --registrar b1 / --relocator ld keep the toolchain paths
+                              python3 alone (notes/59, notes/60); --registrar b1 / --relocator ld keep the toolchain paths;
+                              frame() per number of machines, fill() per build, web_package() for the web flasher (B3b)
 tools/relocate.py             Level B, increment B2a: places a package's committed object (m68k ELF, only R_68K_32)
                               at its address without the toolchain; compose.py uses it by default (notes/60); layout()
                               once, apply() per build, bundle() for the web flasher (B3a, notes/61)
 tools/machines/<id>/<id>.o    the package's committed object (ld -r of its sources), written and checked by its generator
 tools/gen_registrar.py        Level B, increments B2b and B2c: assembles the boot stub (a template with the offsets of its
-                              immediates) and the registrar runtime (registrar.S) once, and commits both (notes/60 §4, §5)
+                              immediates) and the registrar runtime (registrar.S) once, and commits both (notes/60 §4, §5);
+                              with --cycles, also the registrar's frame for 1 to 6 machines (B3b, notes/61 §3)
 tools/machines/registrar/     registrar.S, the runtime: the detours of the added machines reading a parameter block the
-                              composer fills per build; registrar.json, its committed code, entries and the stub template
+                              composer fills per build; registrar.json, its committed code, entries and the stub template;
+                              frame.json, what every build of n machines writes, filled per build by composer.js
 tools/machines/refmachine/    the reference machine: the smallest added machine, proves the composer, never offered
 tools/emu/                    Unicorn emulation of the OS: test_<mod>.py proofs, mcengine.py, emac.py, syntakt.py
 tools/gen_flasher_tweaks.py   FEATURES list -> docs/flasher/tweaks.js (generated)
@@ -164,7 +167,7 @@ python3 tools/check_overlaps.py                  # mods ticked together never wr
 python3 tools/registry.py --check                # REGISTRY.md (free space and hooks, notes/52) matches tweaks/
 python3 tools/relocate_6ch.py --check            # needs m68k binutils (below)
 tools/webbuild_check.sh                          # builder.js == build.py, byte for byte (node)
-tools/webcompose_check.sh                        # composer.js == compose.py / relocate.py, byte for byte (node)
+tools/webcompose_check.sh                        # composer.js places packages as relocate.py, byte for byte (node)
 tools/webflash_check.sh                          # flasher.js validates .syx like mtlib (node)
 tools/webflash_smoke.sh                          # the flasher page in jsdom (node, npm, network)
 python3 -m py_compile tools/*.py tools/emu/*.py
@@ -177,6 +180,8 @@ With the official files (download them from elektron.se into `firmware/`, which 
 python3 tools/gen_<mod>.py --cycles firmware/model-cycles_OS1.13.syx --check
 python3 tools/emu/test_<mod>.py --cycles firmware/model-cycles_OS1.13.syx
 python3 tools/emu/test_compose.py --cycles firmware/model-cycles_OS1.13.syx   # Level B: the composed machines
+python3 tools/gen_registrar.py --cycles firmware/model-cycles_OS1.13.syx --check   # registrar.json and frame.json
+tools/webcompose_check.sh firmware/model-cycles_OS1.13.syx    # composer.js composes as compose.py: tweaks, MAIN OS
 python3 tools/ref_mainos.py --cycles firmware/model-cycles_OS1.13.syx --syntakt firmware/Syntakt_OS1.42.syx --check
 tools/webflash_smoke.sh firmware/model-cycles_OS1.13.syx firmware/model-samples_OS1.13.syx   # the REF_MAINOS sample,
                                                                      # each mod checked, and the Model:Samples flows

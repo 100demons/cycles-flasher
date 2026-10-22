@@ -665,6 +665,19 @@ function payloadRuntime(ap, img, mainOs) {
   return out;
 }
 
+/* The MAIN OS (section 3, depacked) of an official .syx, checked against device.json: what composer.js reads the
+ * stock values in before it composes (notes/61 §3). One depack per OS file, not per build. Refused without the
+ * reference SHA-256: the composer's frame is for the official OS 1.13 only. */
+function mainOsOf(raw, device) {
+  const c = parseContainer(unwrap(raw).stream);
+  const s3 = c.sections.find((s) => s.id === 3);
+  if (!s3) throw new Error("section 3 (MAIN OS) absente");
+  const mainOs = aplibDepack(c.blob.subarray(s3.off, s3.off + s3.size)).data;
+  if (!device.section_sha256 || hex(sha256(mainOs)) !== device.section_sha256)
+    throw new Error("la section 3 ne correspond pas a l'image de reference (OS 1.13 attendu)");
+  return mainOs;
+}
+
 /* Construit le .syx modifie.
  * raw = Uint8Array du .syx officiel ; device = device.json ; chosen = [tweak] ;
  * opts = { expectMainOsSha, refMods, force, syntakt } ; syntakt = Uint8Array du Syntakt_OS1.42.syx, exigé par un tweak
@@ -883,8 +896,8 @@ function samplesBack(cycRaw, smpRaw) {
 // ---- Export node / navigateur ---------------------------------------------
 const API = { sha256, hmacSha256, writesBytes, unwrap, wrap, aplibDepack, aplibRepack, aplibPack, parseContainer, findKey,
               rebuildContainer, buildStream, contentChecksum, applyWrites, checkConflicts, checkCaves,
-              build, crossflash, cyclesForSamples, modsForSamples, samplesBack, syntaktSection, syntaktVersion, buildPayload,
-              hex, fromHex, PRODUCTS, BASE };
+              build, mainOsOf, crossflash, cyclesForSamples, modsForSamples, samplesBack, syntaktSection, syntaktVersion,
+              buildPayload, hex, fromHex, PRODUCTS, BASE };
 if (typeof module !== "undefined" && module.exports) module.exports = API;
 if (typeof window !== "undefined") window.MCBuilder = API;
 })();

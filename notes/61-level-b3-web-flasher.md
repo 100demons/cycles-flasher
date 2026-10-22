@@ -1,6 +1,6 @@
 # 61 — Level B, step 3: the web flasher composes the machines (plan)
 
-**Status: plan, 2026-10-22; the maintainer's decisions (§9); B3a built (§10).** This is increment B3 of [notes/59](59-level-b-builder.md)
+**Status: plan, 2026-10-22; the maintainer's decisions (§9); B3a built (§10); B3b built (§11).** This is increment B3 of [notes/59](59-level-b-builder.md)
 (§5 the web flasher, §7 item 3), written after B2 landed (`74221c4`: the composer runs with `python3` alone,
 [notes/60](60-level-b2-relocator-runtime.md)) and after the maintainer tested the runtime build on their
 Model:Cycles (reported 2026-10-22). It measures what the page already does and what composing needs on top, decides
@@ -264,3 +264,57 @@ code; **no release entry** for B3.
   webcompose_check.js` compares): REF and SAMPLE each at 23 placements (where the composer puts them alone and in
   pairs, then random 4-aligned ones, the patch points at random values), the same bytes, entry symbols and end of the
   variables as `relocate.place`, 23 out of 23 `[FAIT]`.
+
+## 11. B3b built (2026-10-22)
+
+- **`tools/compose.py`**: `registrar_writes()` is now `fill(frame(...))`. `frame(img, reg, n)` gives what depends on n
+  only: the writes, the reloc of the Algorithm parameter's maximum, the layout, the runtime, the stub template and the
+  stock addresses. `fill(frame, img, machines, blobs, bss_end)` gives the rest: the data block, the descriptors, the
+  parameter block, the payload parts, the segments and the boot stub. `frames()` gathers n = 1 to 6, the 61 shared
+  writes listed once, and checks that `frame_of()` gives each frame back.
+  - `web_package(mid)` is a package as the page reads it: from the manifest, the machine, hooks, vtable entries, RAM
+    claims, patch points, symbols, order, version and declared conflicts; from the object, its layout at offset 0
+    (`bundle()`).
+  - `computed_conflicts()` and `compose()` take the tweaks to compute the conflicts against (by default the folder's,
+    as before).
+  - `fill()` gained two checks: a machine has four knobs (with DECAY, five descriptors), and it reads the stock
+    tables for `first` machines instead of a literal 6 (the same value).
+- **`tools/machines/registrar/frame.json`** (new): 31 663 bytes as committed, 19 837 as compact JSON.
+  - Written by `gen_registrar.py --cycles …`; its `--check` now compares both `registrar.json` and `frame.json`.
+  - It holds the 61 writes shared by every n and, for each n, 54 writes (the 53 of §1.3 and the marks site) and one
+    reloc.
+  - Its 385 writes carry 978 `old` bytes in all, none longer than 8, and its 6 relocs 4 each; the runtime and the
+    stub template are `registrar.json`'s. That is positions, short old bytes and our own code and values, no Elektron
+    data.
+- **`builder.js`**: `mainOsOf(raw, device)` returns section 3 depacked, checked against `device.json` and refused
+  without its SHA-256. `build()` is unchanged.
+- **`composer.js`**: ports of the Python functions of the same names: `frameOf`, `fill`, `segments`, `bootStub`,
+  `parameterBlock`, `packageWrites`, `computedConflicts`, and `compose(mainOs, frames, packages, tweaks)`, which returns
+  `{ tweak, info }`. For a vtable entry the page checks its stock bytes; the Python composer still checks that it is
+  the method's only reference (§4, step 5).
+- **Proof**: `tools/webcompose_check.sh model-cycles_OS1.13.syx`, part 2 `[FAIT]`.
+  - Five selections were composed: `sampler`, `refmachine`, both pairs in both orders, and `sampler,refmachine` with
+    `arp` and `trig-hold`.
+    - In each, the tweak from `composer.js` equals the one from `compose.compose` in id, order, name, version,
+      conflicts, writes, append and symbols.
+    - `MCBuilder.build` gives the same MAIN OS as `compose.build_syx`. SAMPLE alone gives `ccdadb37…`, which is
+      `REF_MAINOS["sampler"]`; the others give `681b4b92…`, `d1765ab3…`, `88425970…` and `77d48896…`.
+  - The conflicts are computed against the folder's 285 tweaks plus six probes:
+    - the probes are a payload inside the composed payload, one inside SAMPLE's pool, one on the pool's last bytes, one
+      just past it, a write of the same bytes as the boot hook's, and a write of other bytes there;
+    - the probes are needed because the folder alone never decides the payload rule: each of its tweaks with a payload
+      in our ranges also writes bytes of ours.
+  - `fill` was compared for 1 to 6 synthetic machines, since the two packages reach n = 1 and 2 only. The machines have
+    shared and unique names, knob ranges, gaps of 0 to 92 bytes between their codes, and a table above the stubs. Each
+    gives the same writes and payload as `compose.fill`.
+  - Mutation test, run once and not part of the check: ten deliberate changes to `composer.js` each make the check
+    fail. They touch the parameter block (an entry's value, its size), a descriptor (its short name, a knob's range),
+    a hook's `jmp` padding, the segments' merge distance, the string table, and the conflicts (the payload rule, the
+    edge of a range, the same bytes).
+- **Unchanged**:
+  - `compose.py --compare` still matches `27-sampler.json` and `28-refmachine.json`;
+  - `--compare-ld` and `--compare-b1` are identical for the four selections;
+  - `gen_sampler.py`, `gen_refmachine.py` and `gen_registrar.py --check` are up to date;
+  - `webbuild_check.sh`, `webflash_check.sh`, `gen_flasher_tweaks.py --check` and `test_compose.py --dry` pass;
+  - no firmware byte changes, so the Unicorn proof (notes/60 §14) stands;
+  - the page loads nothing new until B3c.
