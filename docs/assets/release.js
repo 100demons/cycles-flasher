@@ -7,6 +7,9 @@
  * of everything model27 builds on.
  */
 window.MC_RELEASES = [
+  { version: "0.4", date: "2026-10-22", changes: [
+    { en: "Control All Config is tested as this page builds it: flashed from this page and tried on a Model:Cycles, alone and with SAMPLE (2026-10-22). Its card now shows Tested" },
+  ] },
   { version: "0.3", date: "2026-10-22", changes: [
     { en: "Control All Config is back (under Live playing): hold TRACK and press TRIG 1–6 to leave that track out of Control All (TRACK held + knob), or to put it back. While TRACK is held, TRIG 1–6 light for the tracks that follow; the active track always follows. Not saved: after power-on every track follows again" },
     { en: "By durchgemacht (MIT), the version of Modded-Cycles 1.56; goes with SAMPLE. Experimental here until flashed from this page. Known limit: TRACK + LEVEL/DATA (volume, pan) still moves all six tracks" },

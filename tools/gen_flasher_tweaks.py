@@ -124,7 +124,8 @@ ALL_FEATURES = [
         "label": "Control All : choix des pistes",
         "desc": "TRACK + TRIG 1-6 retire une piste de Control All (TRACK tenu + potard) ou l'y remet ; TRACK tenu, "
                 "les TRIG 1-6 montrent les pistes qui suivent. La piste active suit toujours. Choix en RAM.",
-        "status": "experimental",
+        # tested on the Model:Cycles on 2026-10-22, flashed from model27's page alone and with SAMPLE (notes/58 §9)
+        "status": "tested",
         "credit": {"kind": "by", "who": "durchgemacht", "repo": "durchgemacht/cycles-control-all-config"},
         "license": "LICENSE-Control-All-Config",
         "variants": [

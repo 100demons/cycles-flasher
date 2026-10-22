@@ -1114,7 +1114,7 @@ window.MC_TWEAKS = {
    "id": "control-all-config",
    "label": "Control All : choix des pistes",
    "desc": "TRACK + TRIG 1-6 retire une piste de Control All (TRACK tenu + potard) ou l'y remet ; TRACK tenu, les TRIG 1-6 montrent les pistes qui suivent. La piste active suit toujours. Choix en RAM.",
-   "status": "experimental",
+   "status": "tested",
    "credit": {
     "kind": "by",
     "who": "durchgemacht",

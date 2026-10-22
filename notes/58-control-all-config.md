@@ -192,3 +192,14 @@ Flasher `control-all-config` seul, puis avec Model-TG, les moteurs du Syntakt et
 5. TRIG 7-16, TRACK + RECORD / PLAY / STOP, la grille et le clavier : comme à l'origine. Éteindre et rallumer : toutes
    les pistes suivent.
 6. Limite connue : TRACK tenu + LEVEL/DATA (volume) bouge encore les six pistes, écartées comprises.
+
+## 9. Tested on the Model:Cycles in model27 (2026-10-22)
+
+- **Flashed by model27's maintainer, the mod's author, from model27's web flasher** (stamp `2026-10-22-03`,
+  release 0.3): `control-all-config` alone, then with SAMPLE. The page builds those two selections only when their
+  MAIN OS is the reference one (`REF_MAINOS`: `eb70de0a…` alone, `3f4f079a…` with SAMPLE), so what was flashed is
+  this note's tweak, unchanged since Modded-Cycles 1.56. Their report: "Control All Config läuft von der Seite,
+  allein und mit SAMPLE" (runs from the page, alone and with SAMPLE).
+- Not covered here: the combinations of §8 with Model-TG and the Syntakt engines, which model27 does not offer.
+- From this date the card is `tested` in model27: `FEATURES` in `gen_flasher_tweaks.py` and `tweaks.js`, the guide's
+  Tested line, release 0.4.
