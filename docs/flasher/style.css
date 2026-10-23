@@ -394,3 +394,7 @@ button.btn{border:1px solid var(--ink)}
 .make-firmware>summary{color:var(--bad);font-weight:700}
 .make-firmware ol{margin:12px 0 0;padding-left:1.4em;max-width:64ch}
 .make-firmware li{margin:.35em 0}
+
+.discord{display:inline-flex;align-items:center;gap:6px;text-decoration:none}
+.discord svg{flex:none}
+.discord:hover{text-decoration:underline}
