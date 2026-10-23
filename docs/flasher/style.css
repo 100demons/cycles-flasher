@@ -422,3 +422,11 @@ button.btn{border:1px solid var(--ink)}
 }
 
 .blurb-rule{color:var(--muted);letter-spacing:.18em;margin-top:-4px}
+
+/* progress: 16 random faces, grey until reached */
+.bar i{display:grid;place-items:center;font-style:normal;font-size:clamp(15px,2.6vw,22px);line-height:1;
+  background:var(--casing);border:1px solid var(--line-2);filter:grayscale(1);opacity:.35;
+  transition:opacity .12s,filter .12s,border-color .12s,background .12s}
+.bar i.on{background:var(--well);border-color:var(--ink);filter:none;opacity:1}
+.bar i.cur{background:var(--well);border-color:var(--ink);filter:none;opacity:1;animation:facecur .5s steps(1) infinite}
+@keyframes facecur{50%{opacity:.4;filter:grayscale(1)}}

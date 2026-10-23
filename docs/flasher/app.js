@@ -2237,7 +2237,14 @@ function pace() {
 // ---------------------------------------------------------------------------
 // Step 4 — flash
 // ---------------------------------------------------------------------------
-// Progress as 16 trig LEDs: the done steps lit, the current one blinking.
+// Progress as 16 faces: a random face per box, grey until its step is reached.
+const FACES = ["😀","😃","😄","😁","😆","😅","😂","🤣","🥲","😊","😇","🙂","🙃","😉","😌","😍","🥰","😎","🤓","🧐","🤔","🫡","🤗","🤫","🫠","😴","🤖","👾","💀","👻","🐵","🙈"];
+function seedFaces() {
+  $("barwrap").querySelectorAll("i").forEach((c) => {
+    c.textContent = FACES[Math.floor(Math.random() * FACES.length)];
+    c.setAttribute("aria-hidden", "true");
+  });
+}
 function leds(pct) {
   const cells = $("barwrap").querySelectorAll("i");
   const lit = Math.floor((pct / 100) * cells.length + 1e-9);
@@ -2260,6 +2267,7 @@ async function flash() {
   $("result").innerHTML = ""; $("result").className = "result";
   $("progress").hidden = false;
   $("bar").style.width = "0%";
+  seedFaces();
   leds(0);
   $("pct").textContent = "0 %";
   $("eta").textContent = "";
@@ -2437,6 +2445,7 @@ function init() {
   });
 
   $("build-stamp").textContent = "· build " + (window.MC_BUILD || "?");
+  seedFaces();
   wirePicker();
   applyLang(st.lang);
   update();
