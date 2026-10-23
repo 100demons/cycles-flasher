@@ -321,6 +321,28 @@ ALL_FEATURES = [
         "with": {"model-tg": "35-acid-tg"},
     },
     {
+        "id": "all",
+        "cat": "sound",
+        "label": "Feral + Blast + Blam + LiXR",
+        "desc": "Feral - 0.7 beta\n"
+                "Dangerous experimental Macro OSC: nyblcore, bytebeat, benjolin, rungler, chaotic maps, fourses, "
+                "rhythmicon, gendy, pulsar, wave scan, and even worse to come.\n\n"
+                "Blast - 0.8 beta\n"
+                "Tonal FM Macro OSC: melodic / '90s / Soundblaster / PC / Doom 2 . Think higher fidelity Sega "
+                "Genesis. [stock Yamaha OPL2]\n\n"
+                "Blam - 0.5 beta\n"
+                "Percussion FM Macro OSC: raw, slamming, digital. Extensive fixed FM ratios turn anything into bass "
+                "or lead. Modern sounds and oddly beautiful harmonics can be found. [mutated Yamaha OPL2]\n\n"
+                "LiXR - 0.1 alpha\n"
+                "Single percussion voice - Brutal Sonic Potions LXR imitation from Deepseek. Lots of range and can "
+                "make ripping techno kicks. Needs work, but it can slam.",
+        "status": "experimental",
+        "credit": {"kind": "own", "who": "100demons"},
+        "variants": [
+            {"file": "90-all", "label": None},
+        ],
+    },
+    {
         "id": "sampler",
         "cat": "sound",
         "label": "SAMPLE machine (Cycles One-Shot)",
@@ -447,7 +469,7 @@ ALL_FEATURES = [
 # model27 offers a short list of cards. The other definitions above stay as they are, for the command-line build
 # (every tweak of tweaks/ is still built by tools/build.py) and so that merges from upstream apply cleanly; a card
 # comes back into the flasher by adding its id here, once it has been reviewed against the Cycles Mod Standard.
-OFFERED = ("lixr", "feral9", "blast", "blam")
+OFFERED = ("all",)
 FEATURES = [f for f in ALL_FEATURES if f["id"] in OFFERED]
 _missing = set(OFFERED) - {f["id"] for f in FEATURES}
 if _missing:

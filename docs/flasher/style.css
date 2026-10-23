@@ -101,7 +101,7 @@ code{font-size:.82em}
 .by .need{color:var(--ink-2)}
 .st{grid-area:tag;justify-self:end}
 .st .tag{font-size:13.5px}
-.short{grid-area:short;font-size:15.5px;line-height:1.45;color:var(--ink-2);display:-webkit-box;-webkit-line-clamp:2;-webkit-box-orient:vertical;overflow:hidden}
+.short{grid-area:short;font-size:15.5px;line-height:1.45;color:var(--ink-2);display:block;white-space:pre-line}
 .more{position:absolute;top:8px;right:0;display:inline-flex;align-items:center;gap:7px;height:32px;padding:0 9px 0 11px;border:0;border-radius:var(--r);
   background:none;color:var(--muted);font:14.5px var(--f);cursor:pointer}
 .more:hover{background:var(--casing);color:var(--ink)}
@@ -150,7 +150,7 @@ code{font-size:.82em}
 
 /* the Details drawer: the full description and the facts, always in the page (hidden while closed) */
 .det{margin:2px 0 14px;padding:14px 16px 13px;border-radius:var(--r);background:var(--casing);font-size:15px;line-height:1.5;color:var(--ink-2)}
-.det>p{margin:0 0 10px;max-width:70ch}
+.det>p{margin:0 0 10px;max-width:70ch;white-space:pre-line}
 .facts{display:grid;grid-template-columns:max-content minmax(0,1fr);gap:5px 18px;margin:0;font-size:14.5px;line-height:1.45}
 .facts dt{color:var(--muted)}
 .facts dd{margin:0;color:var(--ink-2);max-width:62ch}

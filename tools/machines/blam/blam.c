@@ -150,9 +150,15 @@ BITMAP(blast_bm_c, 25, 22, BLAST_IMG_C, BLAST_MSK_C);
  * functions that return a pointer are declared to return u32: they return it in d0, where m68k-linux-gnu-gcc would
  * read a pointer from a0 (notes/42 par. 6).
  */
-#define COLOR_DESC  76                               /* BLAST: 76 COLOR, 77 SHAPE, 78 SWEEP, 79 CONTOUR */
-#define SHAPE_DESC  77
-#define SWEEP_DESC  78
+#ifndef COLOR_DESC
+#define COLOR_DESC 76
+#endif                               /* BLAST: 76 COLOR, 77 SHAPE, 78 SWEEP, 79 CONTOUR */
+#ifndef SHAPE_DESC
+#define SHAPE_DESC 77
+#endif
+#ifndef SWEEP_DESC
+#define SWEEP_DESC 78
+#endif
 #define UI_COLOR    (0x40a71754 + 100 * 51)          /* SNARE's COLOR, SHAPE and SWEEP interface objects (100 bytes) */
 #define UI_SHAPE    (0x40a71754 + 100 * 52)
 #define UI_SWEEP    (0x40a71754 + 100 * 53)
@@ -296,6 +302,9 @@ u32 blast_state_at(s32 desc)
 		: (desc == SHAPE_DESC ? (u32)ui_shape : (u32)ui_color);
 }
 
+#define MC_STR2(x) #x
+#define MC_STR(x) MC_STR2(x)
+
 __asm__(
 "	.text\n"
 /* state_connect (gen_syntakt_engines.detours_asm, at 0x4004dfa2: the text of a descriptor's value in the buffer
@@ -320,7 +329,7 @@ __asm__(
  * arguments, which 0x4000b834 pops). Otherwise: the three moved instructions, then on at 0x4000b830. */
 "	.globl	blast_turn_hook\n"
 "blast_turn_hook:\n"
-"	moveq	#78, %d1\n"
+"	moveq	#" MC_STR(SWEEP_DESC) ", %d1\n"
 "	cmp.l	%d1, %d2\n"
 "	bne.s	1f\n"
 "	move.l	%d0, -(%sp)\n"

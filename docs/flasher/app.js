@@ -30,19 +30,10 @@ const ELEKTRON_ST_DL = "https://www.elektron.se/support-downloads/syntakt";
 // entry per set of them, the tweak tools/compose.py composes them into: the page's composer must give its bytes.
 const REF_MAINOS = {
   // each card alone: each variant, each combination of real Syntakt engines
-  "lixr": "15f23a994aa715b278b92725315e2f702dba5483fce8560134eccf6560684d74",
-  "feral9": "2a7d4d8b3f48d57817318ea32cc204923791e553226df76726bcfe3baf0c3b4b",
-  "blast": "cf38327ab67913b3dbbd9379646111aa33d1d468de7ceda45f3a800c3a160a53",
-  "blam": "0c1eef2be6c93503bc7f04f1fb2175af9687454acf028f73183dff2ecbac8ec9",
-  // every pair of cards the page lets you tick together
-  "lixr+feral9": "7164711ef3765617658ede109c3cdc884f3a0d5515ecfbcd42d62e2a21c5bd35",
+  "all": "dbf035da5f9066b6e207c2598be9a0c02388017319dbb00c3193d1f408cff516",
 };
 const REF_MODS = {
-  "blast": {"w": "f9d9967cbeaca411c1e3f7e3589d3a50649d179519b12949c702b2e62c1efb02", "p": "9eb8ace296d0564194d6ca33fb3ed84d9bbcbf5af91014b982c7c89e8fa108e1"},
-  "blam": {"w": "ed07fb3a2ff09d3d5783c642ca78d3d3493bea1e5fe0ca9997a53a046b54e6b3", "p": "e13c75a58eecc4a15fee4f7ae6ad68842a6796fed4d1903e3f7c2aa6ac3a0ca4"},
-  "lixr": {"w": "fa627c88e153575615f39432b3a4ba69fa7b5fe5bcbba1e403456c99f4c80d90", "p": "dcbb0b8b611d2db57cd58f2c25e1e282012b87c4401a4ee896249cf15e9715cd"},
-  "feral9": {"w": "83ea8a19a46bbf3dc66451a55fae20b5fd0a0044a4bcccce5c35a2583ff9275e", "p": "2bba4f1fd7bd9107ed0fab2e5a3b837827e5ae0682292aaca33beb8e39d46025"},
-  "lixr+feral9": {"w": "21abbf0f7c762147c3824374338968dece9363c09bcb2643a53ad581c6c718f8", "p": "caaae4961e7e1003c8c38740e2a89b62d0c812b94707596f91d4c813e48d42c7"},
+  "all": {"w": "439a0a3cdbe86aeeb9b0f04555cbedcbeb980a63813317d101237f1fbefb1dca", "p": "e9682b3aab1b2d7b69fee6747c613ae71f7ceb782c3d1fcd81f0a79f04efd7ed"},
 };
 
 // "Samples OS" tab: official Model:Samples OS 1.13 inside the official Model:Cycles container
@@ -139,7 +130,7 @@ const T = {
     s1: "What do you want to install?",
     tab_mods: "Mods",
     tab_restore: "Official firmware",
-    mods_note: 'Tick what you want: mods combine, unless a line says otherwise. <span class="tag ok">Tested</span>: tried on a real Model:Cycles. <span class="tag exp">Experimental</span>: checked in the emulator, not on the machine yet.',
+    mods_note: 'Tick the card to build the one firmware.',
     cats_label: "Sections",
     cat_lit: ", with ticked mods",
     cat_pack: "Packs", cat_pack_sub: "several mods in one",
@@ -421,7 +412,7 @@ const T = {
     s1: "Que voulez-vous installer ?",
     tab_mods: "Mods",
     tab_restore: "Firmware officiel",
-    mods_note: 'Cochez ce que vous voulez : les mods se combinent, sauf mention contraire. <span class="tag ok">Testé</span> : essayé sur un vrai Model:Cycles. <span class="tag exp">Expérimental</span> : vérifié en émulation, pas encore sur la machine.',
+    mods_note: 'Cochez la carte pour construire le firmware.',
     cats_label: "Rubriques",
     cat_lit: ", avec des mods cochés",
     cat_pack: "Packs", cat_pack_sub: "plusieurs mods en un",
@@ -783,6 +774,10 @@ const FEAT = {
       "clash_sample-preview": "both read sample files from the same PRESET browser, and sample preview needs Model-TG",
       desc: "An extra machine after Chord: SAMPLE plays one sample from the +Drive per trig, the way the Model:Samples does (6-tap interpolation at 96 kHz, then the Cycles' own decimator and amp chain). Open the PRESET browser (FUNC + MACHINE) on a SAMPLE track and open a sample file: the sound takes its name and keeps the choice in the project, the kit and the preset; hold a step while you open one and the step gets it as a sound lock. COLOR = Start and SHAPE = Length (0 to 120 each; the trig ends at Start + Length), SWEEP = the Model:Samples' filter (lowpass to the left, off in the centre, highpass to the right, shown as -64 to 63), CONTOUR = Reso; DECAY, GATE and PUNCH as on Tone. The main screen shows the sample's name and waveform with the start and end marked. Stereo files play as mono, other sample rates keep their pitch.",
       note: "Needs samples on the +Drive in the Model:Samples' format, what Elektron Transfer and One-Shot's upload page write. No looping or reverse yet. A project using SAMPLE needs a firmware with SAMPLE: set SAMPLE tracks back to an original machine before flashing another choice or the official OS. English only for now." },
+    all: { label: "Feral + Blast + Blam + LiXR",
+      short: "Feral - 0.7 beta\nDangerous experimental Macro OSC: nyblcore, bytebeat, benjolin, rungler, chaotic maps, fourses, rhythmicon, gendy, pulsar, wave scan, and even worse to come.\n\nBlast - 0.8 beta\nTonal FM Macro OSC: melodic / '90s / Soundblaster / PC / Doom 2 . Think higher fidelity Sega Genesis. [stock Yamaha OPL2]\n\nBlam - 0.5 beta\nPercussion FM Macro OSC: raw, slamming, digital. Extensive fixed FM ratios turn anything into bass or lead. Modern sounds and oddly beautiful harmonics can be found. [mutated Yamaha OPL2]\n\nLiXR - 0.1 alpha\nSingle percussion voice - Brutal Sonic Potions LXR imitation from Deepseek. Lots of range and can make ripping techno kicks. Needs work, but it can slam.",
+      desc: "Feral - 0.7 beta\nDangerous experimental Macro OSC: nyblcore, bytebeat, benjolin, rungler, chaotic maps, fourses, rhythmicon, gendy, pulsar, wave scan, and even worse to come.\n\nBlast - 0.8 beta\nTonal FM Macro OSC: melodic / '90s / Soundblaster / PC / Doom 2 . Think higher fidelity Sega Genesis. [stock Yamaha OPL2]\n\nBlam - 0.5 beta\nPercussion FM Macro OSC: raw, slamming, digital. Extensive fixed FM ratios turn anything into bass or lead. Modern sounds and oddly beautiful harmonics can be found. [mutated Yamaha OPL2]\n\nLiXR - 0.1 alpha\nSingle percussion voice - Brutal Sonic Potions LXR imitation from Deepseek. Lots of range and can make ripping techno kicks. Needs work, but it can slam.",
+      note: "One build: Feral is machine 6, Blast machine 7, Blam machine 8 and LiXR machine 9." },
     lixr: { label: "LiXR - 0.1 alpha",
       short: "Single percussion voice - Brutal Sonic Potions LXR imitation from Deepseek. Lots of range and can make ripping techno kicks. Needs work, but it can slam.",
       desc: "Single percussion voice - Brutal Sonic Potions LXR imitation from Deepseek. Lots of range and can make ripping techno kicks. Needs work, but it can slam.",
@@ -894,6 +889,10 @@ const FEAT = {
       short: "Une machine en plus : une basse acide à la manière de la TB-303, avec un potard de saturation et le slide tiré de vos trigs.",
       desc: "Une machine ajoutée après Chord, toujours la dernière (après le Sampler avec Model-TG, puis les moteurs du Syntakt et MACRO si vous les cochez aussi) : une basse acide à la manière de la TB-303, d'après le modèle libre Open303 de Robin Schmidt. COLOR règle le cutoff, SHAPE la résonance, SWEEP l'env mod, CONTOUR la saturation (du son propre au fuzz, à volume à peu près égal) et DECAY la décroissance ; PUNCH passe l'onde de scie à carré. Un trig dont la longueur (LEN) dépasse le trig suivant glisse vers la note suivante au lieu de la rejouer ; un pad joué pendant qu'un autre est tenu glisse aussi.",
       note: "À peu près aussi gourmande en calcul que Tone. Allumez GATE pour que les notes tiennent toute leur longueur, comme sur l'original. Avec les moteurs du Syntakt, leur régulateur de charge veille aussi sur les pistes ACID : une piste qu'il a arrêtée rejoue sa note suivante, sans glisser. Un projet qui utilise ACID demande un firmware où ACID est à la même place : c'est la dernière machine, son numéro dépend donc de Model-TG, des moteurs du Syntakt cochés et de MACRO." },
+    all: { label: "Feral + Blast + Blam + LiXR",
+      short: "Feral - 0.7 beta\nDangerous experimental Macro OSC: nyblcore, bytebeat, benjolin, rungler, chaotic maps, fourses, rhythmicon, gendy, pulsar, wave scan, and even worse to come.\n\nBlast - 0.8 beta\nTonal FM Macro OSC: melodic / '90s / Soundblaster / PC / Doom 2 . Think higher fidelity Sega Genesis. [stock Yamaha OPL2]\n\nBlam - 0.5 beta\nPercussion FM Macro OSC: raw, slamming, digital. Extensive fixed FM ratios turn anything into bass or lead. Modern sounds and oddly beautiful harmonics can be found. [mutated Yamaha OPL2]\n\nLiXR - 0.1 alpha\nSingle percussion voice - Brutal Sonic Potions LXR imitation from Deepseek. Lots of range and can make ripping techno kicks. Needs work, but it can slam.",
+      desc: "Feral - 0.7 beta\nDangerous experimental Macro OSC: nyblcore, bytebeat, benjolin, rungler, chaotic maps, fourses, rhythmicon, gendy, pulsar, wave scan, and even worse to come.\n\nBlast - 0.8 beta\nTonal FM Macro OSC: melodic / '90s / Soundblaster / PC / Doom 2 . Think higher fidelity Sega Genesis. [stock Yamaha OPL2]\n\nBlam - 0.5 beta\nPercussion FM Macro OSC: raw, slamming, digital. Extensive fixed FM ratios turn anything into bass or lead. Modern sounds and oddly beautiful harmonics can be found. [mutated Yamaha OPL2]\n\nLiXR - 0.1 alpha\nSingle percussion voice - Brutal Sonic Potions LXR imitation from Deepseek. Lots of range and can make ripping techno kicks. Needs work, but it can slam.",
+      note: "One build: Feral is machine 6, Blast machine 7, Blam machine 8 and LiXR machine 9." },
     lixr: { label: "LiXR - 0.1 alpha",
       short: "Single percussion voice - Brutal Sonic Potions LXR imitation from Deepseek. Lots of range and can make ripping techno kicks. Needs work, but it can slam.",
       desc: "Single percussion voice - Brutal Sonic Potions LXR imitation from Deepseek. Lots of range and can make ripping techno kicks. Needs work, but it can slam.",
@@ -1158,8 +1157,6 @@ function statusOf(f) {
   if (tgCombo) return triedWith(versionOf(featById(withId), tgCombo), true) ? "tested" : "experimental";
   return f.status === "tested" ? "tested" : "experimental";
 }
-const tagHtml = (s) => s === "tested" ? `<span class="tag ok">${esc(t("tested"))}</span>`
-  : s === "part" ? `<span class="tag ok">${esc(t("part_tested"))}</span>` : `<span class="tag exp">${esc(t("experimental"))}</span>`;
 
 // Tick or untick a card: cards that can't go together turn the other one off, as before; a real clash (excludes) is
 // said on the row just ticked and in the selection bar, with Undo. A card that only works with another one
@@ -1261,7 +1258,7 @@ function renderFeatures() {
 }
 
 function renderRow(f) {
-  const sel = selOf(f), holder = includedBy(f), status = statusOf(f), on = sel.on || !!holder;
+  const sel = selOf(f), holder = includedBy(f), on = sel.on || !!holder;
   const d = document.createElement("div");
   d.className = "mod" + (on ? " on" : "") + (holder ? " incl" : "");
   d.id = "mod-" + f.id;
@@ -1278,7 +1275,6 @@ function renderRow(f) {
       `<input type="checkbox" id="feat-${f.id}"${on ? " checked" : ""}${holder ? " disabled" : ""}>` +
       `<span class="ttl"><span class="nm">${esc(label(f))}</span>${holder ? `<span class="incl">${esc(t("included", { name: label(holder) }))}</span>` : ""}</span>` +
       `<span class="by">${side.join("")}</span>` +
-      `<span class="st">${tagHtml(status)}</span>` +
       `<span class="short">${esc(shortOf(f))}</span>` +
     `</label>` +
     `<button type="button" class="more" id="more-${f.id}" aria-expanded="${open}" aria-controls="det-${f.id}" aria-label="${esc(t("details_of", { name: label(f) }))}">` +
@@ -1335,7 +1331,7 @@ function renderEngines(f, sel, status) {
     // the ticked engines by name, even when they are all ticked
     const names = sel.engines.map((k) => f.engines.find((e) => e.code === k).name).join(" + ") + plus +
       (tg ? " " + t("with_mod", { name: tgName }) : "");
-    html += `<p class="combo">${tagHtml(status)}<b>${esc(names)}.</b> ` +
+    html += `<p class="combo"><b>${esc(names)}.</b> ` +
       `${esc(t(status === "tested" ? "combo_tested" : "combo_new"))}</p>`;
     if (status !== "tested") {
       // the choices already tried on the machine; "Use this choice" only changes this card's engines

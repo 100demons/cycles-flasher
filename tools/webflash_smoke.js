@@ -222,37 +222,29 @@ async function main() {
     check(typeof w.MCBuilder === "object" && typeof w.MCComposer === "object" && typeof w.MCFlasher === "object",
       "MCBuilder + MCComposer + MCFlasher present");
     const ids = w.MC_TWEAKS.tweaks.map((x) => x.id), cards = w.MC_TWEAKS.features;
-    const lix = cards.find((f) => f.id === "lixr") || {};
-    const fe = cards.find((f) => f.id === "feral9") || {};
-    const bl = cards.find((f) => f.id === "blast") || {};
-    const bm = cards.find((f) => f.id === "blam") || {};
-    check(ids.join() === "blast,blam" && cards.map((f) => f.id).join() === "lixr,feral9,blast,blam"
-      && lix.package === "lixr" && !lix.variants && fe.package === "feral9" && !fe.variants
-      && Object.keys(w.MC_TWEAKS.packages).join() === "lixr,feral9"
-      && bl.variants && bl.variants[0].id === "blast" && bm.variants && bm.variants[0].id === "blam"
-      && (bl.excludes || []).includes("lixr") && (bm.excludes || []).includes("blast")
-      && w.MC_TWEAKS.registrar && w.MC_TWEAKS.registrar.schema === "model27-registrar-frame/0.1"
-      && !cards.some((f) => f.engines || f.needs) && !w.MC_TWEAKS.tweaks.some((x) => x.append && x.append.syntakt),
-      "MC_TWEAKS: LiXR and Feral packages, BLAST and BLAM prebuilt cards; " +
-      "nothing that needs the Syntakt OS: " + cards.map((f) => f.id).join());
+    const all = cards.find((f) => f.id === "all") || {};
+    check(ids.join() === "all" && cards.map((f) => f.id).join() === "all"
+      && all.variants && all.variants[0].id === "all"
+      && !all.package && !Object.keys(w.MC_TWEAKS.packages || {}).length && !w.MC_TWEAKS.registrar
+      && !cards.some((f) => f.engines || f.needs)
+      && !w.MC_TWEAKS.tweaks.some((x) => x.append && x.append.syntakt),
+      "MC_TWEAKS: one fixed all-four-machines card, no composer packages: " + cards.map((f) => f.id).join());
     check(/build \d{4}-/.test(text(doc, "build-stamp")), "version stamp shown");
     const srcs = [...doc.querySelectorAll("script[src]")].map((x) => x.getAttribute("src"));
     check(["builder.js", "composer.js", "tweaks.js", "flasher.js", "app.js"].every((f) => srcs.some((x) => x.startsWith(f + "?")))
       && srcs.every((x) => x.endsWith("?v=" + w.MC_BUILD)), "scripts loaded with ?v=<build> (no stale cache): " + srcs.join());
     check(doc.getElementById("compat").hidden, "no compatibility banner in a good browser");
-    // display order: by section (Sounds & machines, then Live playing), FEATURES order inside a section; the build
-    // keeps FEATURES order (checked in 1b)
     const feats = [...doc.querySelectorAll("#features input[type=checkbox]")].map((c) => c.id);
-    check(feats.join() === "feat-lixr,feat-feral9,feat-blast,feat-blam", "4 feature rows: " + JSON.stringify(feats));
+    check(feats.join() === "feat-all", "one feature row: " + JSON.stringify(feats));
+    check(!doc.querySelector("#features .tag"), "no Tested / Experimental tags on the cards");
+    check(/Dangerous experimental Macro OSC/.test(text(doc, "features")) && /Needs work, but it can slam\./.test(text(doc, "features")),
+      "the full four-engine blurb is on the card, in order");
     check(cards.every((f) => doc.querySelector(`#cat-${f.cat || "other"} #mod-${f.id} #feat-${f.id}`)),
       "every feature has a row in its section (cat)");
-    const tagOfFeat = (f) => (f.status === "tested" ? "Tested" : "Experimental");
-    const tags = cards.map((f) => f.id + ":" + doc.querySelector(`label[for=feat-${f.id}] .tag`).textContent);
-    check(tags.join() === cards.map((f) => f.id + ":" + tagOfFeat(f)).join(), "rows tagged as tested or not: " + tags.join());
     check(doc.getElementById("drop3-wrap").hidden, "no Syntakt drop zone: no card needs the Syntakt OS");
     const credits = [...doc.querySelectorAll("#features .credit a")].map((a) => a.href);
     check(credits.length === 0 && /by 100demons/.test(text(doc, "features")),
-      "LiXR is the owner's own engine: credited by name, no outside license link: " + JSON.stringify(credits));
+      "the four engines are credited to 100demons by name, no outside license link: " + JSON.stringify(credits));
     const list = [...doc.querySelectorAll("#credits-list a")].map((a) => a.textContent);
     check(list.join() === "durchgemacht/model27,18nelli18/Modded-Cycles,scottmetoyer/ms-multi-output,drumkilla/elektron-model-tweaks,pichenettes/eurorack,RobinSchmidt/Open303,TinyGregAudio/Model-TG,mischa85/elektron-firmware-tool,dagargo/elektroid,mxldyn/octamax",
       "credits section lists model27 by durchgemacht first, then Modded-Cycles and the 8 repositories it builds on");
@@ -261,32 +253,10 @@ async function main() {
       "credits section links Modded-Cycles' MIT license and this repo's third-party notices: " + JSON.stringify(lic));
     const box = (id) => doc.getElementById(id);
     const chosen = () => w.MCFlasherApp.chosenTweaks().map((x) => x.id).join();
-    // both are composed package cards and go together
-    box("feat-lixr").click(); await wait(5);
-    const lixrAlone = chosen();
-    check(lixrAlone === "lixr" && box("feat-lixr").checked && !doc.querySelector("#mod-lixr .say.clash")
-      && doc.querySelector('#features a[href$="#lixr"]'),
-      "LiXR alone gives the composed tweak " + lixrAlone + "; guide link");
-    box("feat-lixr").click(); await wait(5);
-    check(!chosen().length, "unticking LiXR empties the selection");
-    box("feat-feral9").click(); await wait(5);
-    const feralAlone = chosen();
-    check(feralAlone === "feral9" && box("feat-feral9").checked, "Feral alone gives its composed tweak: " + feralAlone);
-    box("feat-lixr").click(); await wait(5);
-    check(chosen() === "lixr+feral9" && box("feat-feral9").checked && box("feat-lixr").checked
-      && !doc.querySelector("#mod-feral9 .say.clash"), "LiXR and Feral compose together: " + chosen());
-    box("feat-lixr").click(); box("feat-feral9").click(); await wait(30);
-    check(doc.querySelectorAll('input[name="var-lixr"]').length === 0
-      && doc.querySelectorAll('input[name="var-feral9"]').length === 0, "LiXR and Feral: package cards, no sub-choice");
-    box("feat-blast").click(); await wait(5);
-    check(chosen() === "blast" && !box("feat-lixr").checked && !box("feat-feral9").checked,
-      "BLAST alone replaces the packages: " + chosen());
-    box("feat-blam").click(); await wait(5);
-    check(chosen() === "blam" && !box("feat-blast").checked, "BLAM alone replaces BLAST: " + chosen());
-    box("feat-blam").click(); await wait(5);
-    check(!chosen().length, "unticking BLAM empties the selection");
-    check(!!doc.getElementById("tab-samples") && doc.getElementById("panel-samples").hidden && doc.getElementById("drop2-wrap").hidden,
-      "Samples OS tab present, its panel and second drop zone hidden in Mods");
+    box("feat-all").click(); await wait(5);
+    check(chosen() === "all" && box("feat-all").checked, "the one card builds the all-four tweak: " + chosen());
+    box("feat-all").click(); await wait(5);
+    check(!chosen().length, "unticking the card empties the selection");
     check(/Load your official OS file/.test(text(doc, "missing")), "flash button says what is missing: " + text(doc, "missing"));
     check(doc.getElementById("flash").disabled, "flash button disabled without a file");
 
@@ -294,10 +264,10 @@ async function main() {
     doc.querySelector('.lang button[data-lang="fr"]').click();
     await wait(20);
     check(/Que voulez-vous installer/.test(text(doc, "h1s")) && doc.documentElement.lang === "fr", "FR switch translates the page");
-    check(/Machine LiXR/.test(text(doc, "features")) && /Machine Feral/.test(text(doc, "features")) && /Machine BLAST/.test(text(doc, "features")) && /Machine BLAM/.test(text(doc, "features"))
-      && /par 100demons/.test(text(doc, "features")) && /Testé/.test(text(doc, "features"))
-      && doc.querySelector('#features a[href$="#lixr"]'),
-      "FR switch translates both cards, their credit and tags, with the LiXR guide link");
+    check(/Feral - 0.7 beta/.test(text(doc, "features")) && /Blast - 0.8 beta/.test(text(doc, "features"))
+      && /Blam - 0.5 beta/.test(text(doc, "features")) && /LiXR - 0.1 alpha/.test(text(doc, "features"))
+      && /par 100demons/.test(text(doc, "features")),
+      "FR switch keeps the four engine titles and the credit");
     check(/Crédits/.test(text(doc, "credits")) && /boîte à outils/.test(text(doc, "credits")) && /licence MIT/.test(text(doc, "credits")),
       "FR switch translates the credits section");
     doc.querySelector('.lang button[data-lang="en"]').click();
