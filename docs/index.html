@@ -3,115 +3,14 @@
 <head>
 <meta charset="utf-8">
 <meta name="viewport" content="width=device-width, initial-scale=1">
-<title>Model Cycles Mods</title>
-<meta name="description" content="Demo engines for the Elektron Model:Cycles: four-knob machines patched in your browser from your own official OS file. An engine demonstration zone, not a complete curated build.">
-<meta name="theme-color" content="#f7f6f2" media="(prefers-color-scheme: light)">
-<meta name="theme-color" content="#15161d" media="(prefers-color-scheme: dark)">
-<link rel="icon" href="assets/icon.svg" type="image/svg+xml">
-<link rel="preconnect" href="https://fonts.googleapis.com">
-<link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
-<link rel="stylesheet" href="https://fonts.googleapis.com/css2?family=Inter:wght@400;500;600;700&family=IBM+Plex+Mono:wght@400;500&family=Tiny5&display=swap">
-<link rel="stylesheet" href="assets/site.css?v=2026-10-23-04">
-<script>try{var l=localStorage.getItem("mc-lang"),t=localStorage.getItem("mc-theme")}catch(e){}document.documentElement.lang=l||(/^fr\b/i.test(navigator.language||"")?"fr":"en");if(t)document.documentElement.setAttribute("data-theme",t)</script>
-<style>
-  .intro{display:grid;grid-template-columns:minmax(0,7fr) minmax(0,5fr);gap:20px 56px;align-items:end;padding:44px 0 36px}
-  .intro h1{font-size:clamp(40px,5vw,64px)}
-  .intro p{font-size:19px;line-height:1.45;max-width:34ch;margin:0 0 18px}
-  .act{display:flex;flex-wrap:wrap;align-items:center;gap:14px 26px}
-
-  .bench{display:grid;grid-template-columns:minmax(0,1.55fr) minmax(0,1fr);gap:56px;align-items:start}
-  .bench figure{margin:0;position:sticky;top:20px}
-  .bench [data-device]{max-width:calc((100vh - 275px) * 1.467)}
-  .bench figcaption{margin-top:18px;font-size:15px;color:var(--muted)}
-  .bench h2{margin:0 0 18px}
-  .mods{list-style:none;margin:0;padding:0;border-top:1px solid var(--line)}
-  .mods a{display:block;padding:16px 0 17px;border-bottom:1px solid var(--line);text-decoration:none}
-  .mods b{display:block;font-size:19px;letter-spacing:-.01em;margin-bottom:3px}
-  .mods span{display:block;color:var(--ink-2);font-size:16px;line-height:1.45}
-  .mods em{display:block;margin-top:6px;font-style:normal;font-size:14px;color:var(--muted)}
-  .mods a:hover b,.mods a:focus-visible b{text-decoration:underline;text-decoration-color:var(--red);text-decoration-thickness:2px;text-underline-offset:.18em}
-  .mods a:focus-visible{outline-offset:0}
-  .about{margin-top:48px;max-width:70ch}
-  .about p{font-size:17px;line-height:1.5}
-
-  .release{display:grid;grid-template-columns:minmax(0,7fr) minmax(0,5fr);gap:12px 56px;margin-top:120px;padding-top:28px;border-top:1px solid var(--ink)}
-  .release time{display:block;color:var(--muted);margin-top:10px}
-  .release p{margin:0 0 .6em;font-size:18px}
-  .release ul{margin:0;padding-left:1.1em}
-  .release li{margin:.3em 0}
-
-  @media (hover:none){.bench figcaption{display:none}}
-  @media (max-width:900px){
-    .intro{grid-template-columns:1fr;padding:36px 0 32px}
-    .bench{grid-template-columns:1fr;gap:32px}
-    .bench figure{position:static}
-    .bench [data-device]{max-width:none}
-    .release{grid-template-columns:1fr;margin-top:80px}
-  }
-</style>
+<title>Model Cycles Mods — Flasher</title>
+<meta name="description" content="Install the demo engines on the Elektron Model:Cycles from your browser, over USB, from your own official OS file.">
+<meta name="robots" content="noindex">
+<link rel="canonical" href="flasher/">
+<meta http-equiv="refresh" content="0; url=flasher/">
+<script>location.replace("flasher/" + location.search + location.hash);</script>
 </head>
-<body data-page="home">
-
-<header class="wrap top">
-  <nav aria-label="Site">
-    <a href="https://github.com/100demons" target="_blank" rel="noopener">GitHub</a>
-  </nav>
-  <div class="lang" role="group" aria-label="Language" hidden><button type="button" data-lang="en" aria-pressed="true">EN</button>/<button type="button" data-lang="fr" aria-pressed="false">FR</button></div>
-  <button type="button" class="theme-btn" aria-label="Dark mode"><svg class="moon" width="18" height="18" viewBox="0 0 20 20" fill="none" stroke="currentColor" stroke-width="1.6" stroke-linejoin="round" aria-hidden="true"><path d="M16.5 12.2A7 7 0 0 1 7.8 3.5a7 7 0 1 0 8.7 8.7Z"/></svg><svg class="sun" width="18" height="18" viewBox="0 0 20 20" fill="none" stroke="currentColor" stroke-width="1.6" stroke-linecap="round" aria-hidden="true"><circle cx="10" cy="10" r="3.6"/><path d="M10 1.8v2.1M10 16.1v2.1M1.8 10h2.1M16.1 10h2.1M4.2 4.2l1.5 1.5M14.3 14.3l1.5 1.5M4.2 15.8l1.5-1.5M14.3 5.7l1.5-1.5"/></svg></button>
-</header>
-
-<main class="wrap">
-  <section class="intro">
-    <h1><span data-l="en">Model Cycles Mods</span><span data-l="fr">Moteurs de démonstration pour le Model:Cycles</span></h1>
-    <div>
-      <p><span data-l="en">A machine demonstration zone: four-knob machines for the Elektron Model:Cycles, patched in your browser from your own official OS file. For a curated build check out <a href="https://18nelli18.github.io/Modded-Cycles/flasher/" target="_blank" rel="noopener">Modded Cycles</a> or <a href="https://aveycole.github.io/Modded-Cycles/flasher/" target="_blank" rel="noopener">Supermodel (AV)</a>.</span><span data-l="fr">Une zone de démonstration de machines : des machines à quatre potards pour l'Elektron Model:Cycles, patchées dans votre navigateur depuis votre propre fichier d'OS officiel. Pour un build soigné, voir <a href="https://18nelli18.github.io/Modded-Cycles/flasher/" target="_blank" rel="noopener">Modded Cycles</a> ou <a href="https://aveycole.github.io/Modded-Cycles/flasher/" target="_blank" rel="noopener">Supermodel (AV)</a>.</span></p>
-      <div class="act">
-        <a class="btn" href="flasher/"><span data-l="en">Open the flasher</span><span data-l="fr">Ouvrir le flasher</span></a>
-        <a href="guide/"><span data-l="en">Read the guide</span><span data-l="fr">Lire le guide</span></a>
-      </div>
-    </div>
-  </section>
-
-  <section class="bench">
-    <figure>
-      <div data-device="seq"></div>
-      <figcaption><span data-l="en">Hover over a mod: the controls it touches light up.</span><span data-l="fr">Survolez un mod : les commandes qu'il touche s'allument.</span></figcaption>
-    </figure>
-    <div>
-      <h2><span data-l="en">The mods</span><span data-l="fr">Les mods</span></h2>
-      <ol class="mods">
-        <li><a href="flasher/">
-          <b><span data-l="en">All this shit</span><span data-l="fr">All this shit</span></b><br>
-          <span><span data-l="en"><strong>Feral - 0.7 (beta)</strong><br>Dangerous experimental Macro OSC: nyblcore, bytebeat, benjolin, rungler, chaotic maps, fourses, rhythmicon, gendy, pulsar, wave scan, and even worse to come.<br><br><strong>Blast - 0.8 (beta)</strong><br>FM Macro OSC - melodic '90s PC Soundblaster engine. Think higher fidelity Sega Genesis or Doom 2. Surprisingly tasteful. A curated stock Yamaha OPL2.<br><br><strong>Blam - 0.5 (beta)</strong><br>FM Macro OSC - percussive/tonal - raw, heavy, digital. Extended fixed FM ratios allow modern sounds and alien harmonics to emerge. Mutated Yamaha OPL2.<br><br><strong>LiXR - 0.2 (beta)</strong><br>Single percussion voice - Brutal digital drum with lots of range and made for Techno. Sonic Potions LXR imitation from Deepseek. Needs work, but it can slam.<br><br><strong>SAM - 0.1 (alpha)</strong><br>Vocal Synthesizer - Software Automated Mouth - currently half-broken alpha - "I love you"</span><span data-l="fr"><strong>Feral - 0.7 (beta)</strong><br>Dangerous experimental Macro OSC: nyblcore, bytebeat, benjolin, rungler, chaotic maps, fourses, rhythmicon, gendy, pulsar, wave scan, and even worse to come.<br><br><strong>Blast - 0.8 (beta)</strong><br>FM Macro OSC - melodic '90s PC Soundblaster engine. Think higher fidelity Sega Genesis or Doom 2. Surprisingly tasteful. A curated stock Yamaha OPL2.<br><br><strong>Blam - 0.5 (beta)</strong><br>FM Macro OSC - percussive/tonal - raw, heavy, digital. Extended fixed FM ratios allow modern sounds and alien harmonics to emerge. Mutated Yamaha OPL2.<br><br><strong>LiXR - 0.2 (beta)</strong><br>Single percussion voice - Brutal digital drum with lots of range and made for Techno. Sonic Potions LXR imitation from Deepseek. Needs work, but it can slam.<br><br><strong>SAM - 0.1 (alpha)</strong><br>Vocal Synthesizer - Software Automated Mouth - currently half-broken alpha - "I love you"</span></span>
-          </a></li>
-      </ol>
-      <div class="about">
-        <p><span data-l="en">This is a demo zone for engines on the Model:Cycles, built on model27 by durchgemacht, itself a downstream fork of <a href="https://github.com/18nelli18/Modded-Cycles" target="_blank" rel="noopener">Modded-Cycles</a>. It is not a complete, curated build: it shows what the engines can do. Every engine and tool keeps its author's name: on the flasher's cards and credits, in the <a href="guide/#trouble">guide</a> and in the repository's third-party notices.</span><span data-l="fr">model27 est un fork dérivé de <a href="https://github.com/18nelli18/Modded-Cycles" target="_blank" rel="noopener">Modded-Cycles</a>, parti de sa version 1.55, la dernière avec une sélection de mods. Il garde la sélection et propose peu de cartes : d'abord les mods du mainteneur, puis un ou deux d'autres auteurs, chacun relu selon le Cycles Mod Standard pour que des mods de personnes différentes aillent ensemble. Les autres mods de Modded-Cycles restent constructibles en ligne de commande. Chaque mod et chaque outil garde le nom de son auteur : sur les cartes et les crédits du flasher, dans le <a href="guide/#trouble">guide</a> et dans les mentions tierces du dépôt.</span></p>
-      </div>
-    </div>
-  </section>
-
-  <section class="release" id="version">
-    <div>
-      <h2>Model Cycles Mods <span data-rel="version">0.6</span></h2>
-      <time data-rel="date">2026-10-21</time>
-    </div>
-    <div data-rel="changes"></div>
-  </section>
-</main>
-
-<footer class="foot">
-  <div class="wrap">
-    <p>
-      <span data-l="en">Independent project, not affiliated with Elektron, nor with Modded-Cycles' maintainers. Flashing a modified firmware is at your own risk. The code is Modded-Cycles' under the MIT license, with model27's and this site's changes under the same license.</span>
-      <span data-l="fr">Projet indépendant, non affilié à Elektron ni aux mainteneurs de Modded-Cycles. Flasher un firmware modifié se fait à vos risques. Le code est celui de Modded-Cycles sous licence MIT, les changements de model27 sous la même licence.</span>
-    </p>
-    <nav aria-label="Footer"><a href="https://github.com/100demons/cycles-flasher" target="_blank" rel="noopener">GitHub</a><a href="https://github.com/18nelli18/Modded-Cycles" target="_blank" rel="noopener">Modded-Cycles</a></nav>
-  </div>
-</footer>
-
-<script src="assets/release.js?v=2026-10-23-04"></script>
-<script src="assets/cycles.js?v=2026-10-23-04"></script>
-<script src="assets/site.js?v=2026-10-23-04"></script>
+<body>
+<p><a href="flasher/">Open the flasher</a> · <a href="flasher/">Ouvrir le flasher</a></p>
 </body>
 </html>

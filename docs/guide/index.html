@@ -4,15 +4,15 @@
 <meta charset="utf-8">
 <meta name="viewport" content="width=device-width, initial-scale=1">
 <title>Model Cycles Mods — Guide</title>
-<meta name="description" content="What each mod does and how to install it on the Elektron Model:Cycles: LiXR, flashing, going back and recovery.">
+<meta name="description" content="What each engine does and how to install it on the Elektron Model:Cycles: Feral, Blast, Blam, LiXR, SAM, flashing, going back and recovery.">
 <meta name="theme-color" content="#f7f6f2" media="(prefers-color-scheme: light)">
 <meta name="theme-color" content="#15161d" media="(prefers-color-scheme: dark)">
 <link rel="icon" href="../assets/icon.svg" type="image/svg+xml">
 <link rel="preconnect" href="https://fonts.googleapis.com">
 <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
 <link rel="stylesheet" href="https://fonts.googleapis.com/css2?family=Inter:wght@400;500;600;700&family=IBM+Plex+Mono:wght@400;500&family=Tiny5&display=swap">
-<link rel="stylesheet" href="../assets/site.css?v=2026-10-23-04">
-<link rel="stylesheet" href="../assets/guide.css?v=2026-10-23-04">
+<link rel="stylesheet" href="../assets/site.css?v=2026-10-23-06">
+<link rel="stylesheet" href="../assets/guide.css?v=2026-10-23-06">
 <script>try{var l=localStorage.getItem("mc-lang"),t=localStorage.getItem("mc-theme")}catch(e){}document.documentElement.lang=l||(/^fr\b/i.test(navigator.language||"")?"fr":"en");if(t)document.documentElement.setAttribute("data-theme",t)</script>
 </head>
 <body data-page="guide">
@@ -37,6 +37,11 @@
         <li><a href="#start"><span data-l="en">Before you start</span><span data-l="fr">Avant de commencer</span></a></li>
         <li><a href="#flash"><span data-l="en">Flashing</span><span data-l="fr">Flasher</span></a></li>
         <li><a href="#sampler">SAMPLE machine (Cycles One-Shot)</a></li>
+        <li><a href="#feral9"><span data-l="en">Feral machine</span><span data-l="fr">Machine Feral</span></a></li>
+        <li><a href="#blast"><span data-l="en">Blast machine</span><span data-l="fr">Machine Blast</span></a></li>
+        <li><a href="#blam"><span data-l="en">Blam machine</span><span data-l="fr">Machine Blam</span></a></li>
+        <li><a href="#lixr"><span data-l="en">LiXR machine</span><span data-l="fr">Machine LiXR</span></a></li>
+        <li><a href="#sam"><span data-l="en">SAM machine</span><span data-l="fr">Machine SAM</span></a></li>
         <li><a href="#control-all"><span data-l="en">Control All, your choice of tracks</span><span data-l="fr">Control All : choix des pistes</span></a></li>
         <li><a href="#mods-on-samples"><span data-l="en">Mods on a Model:Samples</span><span data-l="fr">Des mods sur un Model:Samples</span></a></li>
         <li><a href="#samples"><span data-l="en">Samples OS</span><span data-l="fr">OS Samples</span></a></li>
@@ -64,7 +69,7 @@
       <section id="flash">
         <h2><span class="n">2</span><span data-l="en">Flashing</span><span data-l="fr">Flasher</span></h2>
         <ol>
-          <li><span data-l="en">In the <a href="../flasher/">flasher</a>, tick the mods you want: they are sorted into sections, and they combine. <b>Details</b> on a row gives its full description and a link to its page in this guide.</span><span data-l="fr">Dans le <a href="../flasher/">flasher</a>, cochez les mods voulus : ils sont rangés par rubriques, et ils se combinent. <b>Détails</b> sur une ligne donne sa description complète et un lien vers sa page dans ce guide.</span></li>
+          <li><span data-l="en">In the <a href="../flasher/">flasher</a>, tick one engine: the five engine cards untick each other, so only one is installed at a time. Each card's full text and a link to its guide section are shown under it.</span><span data-l="fr">Dans le <a href="../flasher/">flasher</a>, cochez un moteur : les cinq cartes de moteur se décochent entre elles, un seul est donc installé à la fois. Le texte complet de chaque carte et un lien vers sa section du guide s'affichent dessous.</span></li>
           <li><span data-l="en">Drop your OS file. The firmware is built and checked in the page.</span><span data-l="fr">Déposez votre fichier d'OS. Le firmware est construit et vérifié dans la page.</span></li>
           <li><span data-l="en">Close Elektron Transfer, connect the Model:Cycles over USB and turn it on normally: no menu to open. Allow MIDI in the browser: the page finds the Model:Cycles and shows its OS version.</span><span data-l="fr">Fermez Elektron Transfer, branchez le Model:Cycles en USB et allumez-le normalement : aucun menu à ouvrir. Autorisez le MIDI dans le navigateur : la page trouve le Model:Cycles et affiche sa version d'OS.</span></li>
           <li><span data-l="en">Flash: about 30 seconds. Then confirm the update on the Model:Cycles screen with <b>YES</b>. It writes the firmware and restarts by itself: don't turn it off before.</span><span data-l="fr">Flashez : une trentaine de secondes. Confirmez ensuite la mise à jour sur l'écran du Model:Cycles avec <b>YES</b>. Il écrit le firmware et redémarre tout seul : ne l'éteignez pas avant.</span></li>
@@ -112,13 +117,103 @@
         <p class="note"><b>Before flashing another choice or the official firmware,</b> set your SAMPLE tracks back to an original machine (Kick to Chord): the official OS doesn't have SAMPLE, and a project that still names it can freeze its MACHINES page.</p>
       </section>
 
+      <section id="feral9">
+        <h2><span class="n">4</span><span data-l="en">Feral machine</span><span data-l="fr">Machine Feral</span></h2>
+        <p class="by"><span data-l="en">By 100demons · MIT license</span><span data-l="fr">Par 100demons · licence MIT</span></p>
+        <p class="lede"><span data-l="en">Feral is a deliberately dangerous macro oscillator with nine noisy, unpredictable models: NYB, GND, BNJ, RYT, FRS, RNG, PLS, SCN and KOS. It is made for texture, rhythm and happy accidents rather than clean tones.</span><span data-l="fr">Feral est un macro-oscillateur volontairement dangereux, avec neuf modèles bruités et imprévisibles : NYB, GND, BNJ, RYT, FRS, RNG, PLS, SCN et KOS. Il est fait pour les textures, les rythmes et les accidents heureux plutôt que pour les sons propres.</span></p>
+        <ol>
+          <li><span data-l="en">In the flasher, tick <b>Feral</b>. Only one engine can be ticked at a time: ticking another one unticks Feral.</span><span data-l="fr">Dans le flasher, cochez <b>Feral</b>. Un seul moteur se coche à la fois : en cocher un autre décoche Feral.</span></li>
+          <li><span data-l="en">On the machine, press <b>MACHINES</b> and pick <b>Feral</b>, the machine after Chord. Its icon and the MACHINES-page picture are Tone's.</span><span data-l="fr">Sur la machine, appuyez sur <b>MACHINES</b> et choisissez <b>Feral</b>, la machine après Chord. Son icône et l'image de la page MACHINES sont celles de Tone.</span></li>
+          <li><span data-l="en"><b>SHAPE</b> picks one of the nine models. <b>COLOR</b> and <b>SWEEP</b> are that model's two macros; their names on screen change with the model.</span><span data-l="fr"><b>SHAPE</b> choisit l'un des neuf modèles. <b>COLOR</b> et <b>SWEEP</b> sont les deux macros de ce modèle ; leurs noms à l'écran changent avec le modèle.</span></li>
+          <li><span data-l="en"><b>CONTOUR</b> is the model's cut envelope, or a third setting on some models (the rungler's second run, for example). <b>PUNCH</b> is FREE: the engine keeps running between trigs. <b>FINE</b> tunes by ±2 semitones; <b>DECAY</b> and <b>GATE</b> work as on Tone.</span><span data-l="fr"><b>CONTOUR</b> est l'enveloppe de coup du modèle, ou un troisième réglage sur certains modèles (le deuxième run du rungler, par exemple). <b>PUNCH</b> est FREE : le moteur continue entre les trigs. <b>FINE</b> accorde à ±2 demi-tons ; <b>DECAY</b> et <b>GATE</b> marchent comme sur Tone.</span></li>
+        </ol>
+        <div class="tbl">
+          <table>
+            <thead><tr><th>Knob</th><th>Name on screen</th><th>What it does</th></tr></thead>
+            <tbody>
+              <tr><th>COLOR</th><td>model macro</td><td>the first macro of the model: Formula on NYB, Points on GND, Osc2 on BNJ, and so on</td></tr>
+              <tr><th>SHAPE</th><td>MODL</td><td>the model: NYB, GND, BNJ, RYT, FRS, RNG, PLS, SCN, KOS</td></tr>
+              <tr><th>SWEEP</th><td>model macro</td><td>the second macro of the model: Const, Timing, Run1, Rate, Symm, Memory, Divide, Strike or Smooth</td></tr>
+              <tr><th>CONTOUR</th><td>Env / third</td><td>the cut envelope, or the model's third setting</td></tr>
+            </tbody>
+          </table>
+        </div>
+        <dl class="facts">
+          <div><dt><span data-l="en">Sound</span><span data-l="fr">Son</span></dt><dd><span data-l="en">one voice per track through the stock amp chain. The model makes the character, and Feral can be noisy or unstable on purpose.</span><span data-l="fr">une voix par piste à travers la chaîne d'ampli d'origine. Le modèle fait le caractère, et Feral peut être bruité ou instable exprès.</span></dd></div>
+          <div><dt><span data-l="en">Models</span><span data-l="fr">Modèles</span></dt><dd><span data-l="en">nine: NYB (formula bank), GND (points), BNJ (benjolin), RYT (rhythmicon), FRS (fourses), RNG (rungler), PLS (pulsar), SCN (wave scan) and KOS (chaotic map).</span><span data-l="fr">neuf : NYB (banque de formules), GND (points), BNJ (benjolin), RYT (rhythmicon), FRS (fourses), RNG (rungler), PLS (pulsar), SCN (wave scan) et KOS (carte chaotique).</span></dd></div>
+          <div><dt><span data-l="en">Limits</span><span data-l="fr">Limites</span></dt><dd><span data-l="en">the MACHINES-page picture and icon are still Tone's; only the SHAPE names are Feral's. It can be harsh, noisy or silent depending on the model and knobs: that is the point.</span><span data-l="fr">l'image et l'icône de la page MACHINES restent celles de Tone ; seuls les noms de SHAPE sont ceux de Feral. Il peut être dur, bruité ou silencieux selon le modèle et les potards : c'est le but.</span></dd></div>
+          <div><dt><span data-l="en">Tested</span><span data-l="fr">Testé</span></dt><dd><span data-l="en">flashed from this page and tested on a Model:Cycles (2026-10-22), standalone.</span><span data-l="fr">flashé depuis cette page et testé sur un Model:Cycles (22/10/2026), seul.</span></dd></div>
+        </dl>
+        <p class="note"><span data-l="en"><b>Before flashing another engine or the official OS,</b> set your Feral tracks back to an original machine (Kick to Chord): the official OS doesn't have Feral, and a project that still names it can freeze its MACHINES page.</span><span data-l="fr"><b>Avant de flasher un autre moteur ou le firmware officiel,</b> remettez vos pistes Feral sur une machine d'origine (de Kick à Chord) : l'OS officiel n'a pas Feral, et un projet qui le nomme encore peut figer sa page MACHINES.</span></p>
+      </section>
+
+      <section id="blast">
+        <h2><span class="n">5</span><span data-l="en">Blast machine</span><span data-l="fr">Machine Blast</span></h2>
+        <p class="by"><span data-l="en">By 100demons · MIT license · Experimental</span><span data-l="fr">Par 100demons · licence MIT · expérimentale</span></p>
+        <p class="lede"><span data-l="en">Blast is a tonal FM machine: 14 two-operator OPL2-style models, from clean keys and basses to bright leads and percussion-like strikes. It has its own SHAPE names, ratio display and MACHINES-page splash.</span><span data-l="fr">Blast est une machine FM tonale : 14 modèles à deux opérateurs de style OPL2, des sons propres de clavier et de basse aux leads brillants et aux frappes percussives. Elle a ses propres noms de SHAPE, son affichage de rapport et son image de page MACHINES.</span></p>
+        <ol>
+          <li><span data-l="en">In the flasher, tick <b>Blast</b>. Only one engine can be ticked at a time: ticking another one unticks Blast.</span><span data-l="fr">Dans le flasher, cochez <b>Blast</b>. Un seul moteur se coche à la fois : en cocher un autre décoche Blast.</span></li>
+          <li><span data-l="en">On the machine, press <b>MACHINES</b> and pick <b>Blast</b>, the machine after Chord.</span><span data-l="fr">Sur la machine, appuyez sur <b>MACHINES</b> et choisissez <b>Blast</b>, la machine après Chord.</span></li>
+          <li><span data-l="en"><b>SHAPE</b> picks the model: SIN, HLF, ABS, PLS, BAS, PIA, MAR, GLK, BRS, ACC, STR, STL, TMP, ZAP.</span><span data-l="fr"><b>SHAPE</b> choisit le modèle : SIN, HLF, ABS, PLS, BAS, PIA, MAR, GLK, BRS, ACC, STR, STL, TMP, ZAP.</span></li>
+          <li><span data-l="en"><b>SWEEP</b> steps through the FM ratios (1:2, 1:1, 2:1 … 15X), one step per detent; hold <b>FUNC</b> and turn it to glide between the steps. <b>PUNCH</b> turns the chip's LFO on, <b>GATE</b> holds the note, and the trig's velocity opens the struck sounds' brightness.</span><span data-l="fr"><b>SWEEP</b> parcourt les rapports FM (1:2, 1:1, 2:1 … 15X), un pas par cran ; maintenez <b>FUNC</b> et tournez-le pour glisser entre les pas. <b>PUNCH</b> allume le LFO de la puce, <b>GATE</b> tient la note, et la vélocité du trig ouvre la brillance des sons frappés.</span></li>
+        </ol>
+        <div class="tbl">
+          <table>
+            <thead><tr><th>Knob</th><th>Name on screen</th><th>What it does</th></tr></thead>
+            <tbody>
+              <tr><th>COLOR</th><td>model setting</td><td>the model's tone or timbre control</td></tr>
+              <tr><th>SHAPE</th><td>model name</td><td>the model, from SIN to ZAP</td></tr>
+              <tr><th>SWEEP</th><td>ratio</td><td>the FM ratio, stepped; FUNC glides between the steps</td></tr>
+              <tr><th>CONTOUR</th><td>model setting</td><td>the model's envelope or modulation control</td></tr>
+            </tbody>
+          </table>
+        </div>
+        <dl class="facts">
+          <div><dt><span data-l="en">Sound</span><span data-l="fr">Son</span></dt><dd><span data-l="en">two-operator FM with its own envelopes; the stock amp chain is not used. The four knobs keep the stock names, and the screen shows the model and the ratio.</span><span data-l="fr">FM à deux opérateurs avec ses propres enveloppes ; la chaîne d'ampli d'origine n'est pas utilisée. Les quatre potards gardent les noms d'origine, et l'écran affiche le modèle et le rapport.</span></dd></div>
+          <div><dt><span data-l="en">Models</span><span data-l="fr">Modèles</span></dt><dd><span data-l="en">14: SIN, HLF, ABS, PLS, BAS, PIA, MAR, GLK, BRS, ACC, STR, STL, TMP, ZAP.</span><span data-l="fr">14 : SIN, HLF, ABS, PLS, BAS, PIA, MAR, GLK, BRS, ACC, STR, STL, TMP, ZAP.</span></dd></div>
+          <div><dt><span data-l="en">Limits</span><span data-l="fr">Limites</span></dt><dd><span data-l="en">experimental: the engine passed its emulator proofs but has not been tested on hardware yet. One engine at a time: it cannot be ticked with Feral, Blam, LiXR or SAM.</span><span data-l="fr">expérimentale : le moteur passe ses preuves en émulation mais n'a pas encore été testé sur la machine. Un seul moteur à la fois : elle ne se coche pas avec Feral, Blam, LiXR ou SAM.</span></dd></div>
+          <div><dt><span data-l="en">Tested</span><span data-l="fr">Testé</span></dt><dd><span data-l="en">emulator only so far (2026-10).</span><span data-l="fr">émulation seulement pour l'instant (10/2026).</span></dd></div>
+        </dl>
+        <p class="note"><span data-l="en"><b>Before flashing another engine or the official OS,</b> set your Blast tracks back to an original machine (Kick to Chord): the official OS doesn't have Blast, and a project that still names it can freeze its MACHINES page.</span><span data-l="fr"><b>Avant de flasher un autre moteur ou le firmware officiel,</b> remettez vos pistes Blast sur une machine d'origine (de Kick à Chord) : l'OS officiel n'a pas Blast, et un projet qui le nomme encore peut figer sa page MACHINES.</span></p>
+      </section>
+
+      <section id="blam">
+        <h2><span class="n">6</span><span data-l="en">Blam machine</span><span data-l="fr">Machine Blam</span></h2>
+        <p class="by"><span data-l="en">By 100demons · MIT license · Experimental</span><span data-l="fr">Par 100demons · licence MIT · expérimentale</span></p>
+        <p class="lede"><span data-l="en">Blam is an FM percussion machine: 12 raw, heavy, digital OPL2-style engines, plus two SAM speech banks. It has its own SHAPE names, ratio display and MACHINES-page splash.</span><span data-l="fr">Blam est une machine de percussion FM : 12 moteurs de style OPL2 bruts, lourds et numériques, plus deux banques de parole SAM. Elle a ses propres noms de SHAPE, son affichage de rapport et son image de page MACHINES.</span></p>
+        <ol>
+          <li><span data-l="en">In the flasher, tick <b>Blam</b>. Only one engine can be ticked at a time: ticking another one unticks Blam.</span><span data-l="fr">Dans le flasher, cochez <b>Blam</b>. Un seul moteur se coche à la fois : en cocher un autre décoche Blam.</span></li>
+          <li><span data-l="en">On the machine, press <b>MACHINES</b> and pick <b>Blam</b>, the machine after Chord.</span><span data-l="fr">Sur la machine, appuyez sur <b>MACHINES</b> et choisissez <b>Blam</b>, la machine après Chord.</span></li>
+          <li><span data-l="en"><b>SHAPE</b> picks the engine: KIK, TOM, BNG, CNG, TAI, TIM, MAR, DJB, BLK, GNG, BUB, ZAP, then the SAM1 and SAM2 speech banks.</span><span data-l="fr"><b>SHAPE</b> choisit le moteur : KIK, TOM, BNG, CNG, TAI, TIM, MAR, DJB, BLK, GNG, BUB, ZAP, puis les banques de parole SAM1 et SAM2.</span></li>
+          <li><span data-l="en"><b>SWEEP</b> steps through the FM ratios, one step per detent; hold <b>FUNC</b> and turn it to glide. On SAM1 and SAM2, <b>COLOR</b> picks one of the 16 words of the bank, <b>SWEEP</b> scrubs it, <b>CONTOUR</b> sets the speaking speed, <b>PUNCH</b> loops the word and <b>DECAY</b> is the release.</span><span data-l="fr"><b>SWEEP</b> parcourt les rapports FM, un pas par cran ; maintenez <b>FUNC</b> et tournez-le pour glisser. Sur SAM1 et SAM2, <b>COLOR</b> choisit l'un des 16 mots de la banque, <b>SWEEP</b> le parcourt, <b>CONTOUR</b> règle la vitesse de parole, <b>PUNCH</b> boucle le mot et <b>DECAY</b> est le relâchement.</span></li>
+        </ol>
+        <div class="tbl">
+          <table>
+            <thead><tr><th>Knob</th><th>Name on screen</th><th>What it does</th></tr></thead>
+            <tbody>
+              <tr><th>COLOR</th><td>model setting / word</td><td>the engine's timbre control, or the SAM word on SAM1 and SAM2</td></tr>
+              <tr><th>SHAPE</th><td>engine name</td><td>the engine, from KIK to ZAP, then SAM1 and SAM2</td></tr>
+              <tr><th>SWEEP</th><td>ratio / scrub</td><td>the FM ratio on the drum engines, or the scrub position on the SAM banks</td></tr>
+              <tr><th>CONTOUR</th><td>model setting / speed</td><td>the engine's envelope, or the speaking speed on the SAM banks</td></tr>
+            </tbody>
+          </table>
+        </div>
+        <dl class="facts">
+          <div><dt><span data-l="en">Sound</span><span data-l="fr">Son</span></dt><dd><span data-l="en">FM with its own envelopes; the trig's velocity opens the struck sounds' brightness. PUNCH turns the chip's LFO on the drum engines and loops the word on the SAM banks.</span><span data-l="fr">FM avec ses propres enveloppes ; la vélocité du trig ouvre la brillance des sons frappés. PUNCH allume le LFO de la puce sur les moteurs de batterie et boucle le mot sur les banques SAM.</span></dd></div>
+          <div><dt><span data-l="en">Models</span><span data-l="fr">Modèles</span></dt><dd><span data-l="en">12 drum engines: KIK, TOM, BNG, CNG, TAI, TIM, MAR, DJB, BLK, GNG, BUB, ZAP; plus SAM1 and SAM2.</span><span data-l="fr">12 moteurs de batterie : KIK, TOM, BNG, CNG, TAI, TIM, MAR, DJB, BLK, GNG, BUB, ZAP ; plus SAM1 et SAM2.</span></dd></div>
+          <div><dt><span data-l="en">Limits</span><span data-l="fr">Limites</span></dt><dd><span data-l="en">experimental: the engine passed its emulator proofs but has not been tested on hardware yet. One engine at a time: it cannot be ticked with Feral, Blast, LiXR or SAM.</span><span data-l="fr">expérimentale : le moteur passe ses preuves en émulation mais n'a pas encore été testé sur la machine. Un seul moteur à la fois : elle ne se coche pas avec Feral, Blast, LiXR ou SAM.</span></dd></div>
+          <div><dt><span data-l="en">Tested</span><span data-l="fr">Testé</span></dt><dd><span data-l="en">emulator only so far (2026-10).</span><span data-l="fr">émulation seulement pour l'instant (10/2026).</span></dd></div>
+        </dl>
+        <p class="note"><span data-l="en"><b>Before flashing another engine or the official OS,</b> set your Blam tracks back to an original machine (Kick to Chord): the official OS doesn't have Blam, and a project that still names it can freeze its MACHINES page.</span><span data-l="fr"><b>Avant de flasher un autre moteur ou le firmware officiel,</b> remettez vos pistes Blam sur une machine d'origine (de Kick à Chord) : l'OS officiel n'a pas Blam, et un projet qui le nomme encore peut figer sa page MACHINES.</span></p>
+      </section>
+
       <section id="lixr">
-        <h2><span class="n">4</span><span data-l="en">LiXR machine</span><span data-l="fr">Machine LiXR</span></h2>
+        <h2><span class="n">7</span><span data-l="en">LiXR machine</span><span data-l="fr">Machine LiXR</span></h2>
         <p class="by"><span data-l="en">By 100demons · MIT license</span><span data-l="fr">Par 100demons · licence MIT</span></p>
         <p class="lede"><span data-l="en">One extra machine, LiXR, is a drum voice in the spirit of the Sonic Potions LXR drum voices. It is new code, built from the Model:Cycles' own fixed-point maths: one tableless oscillator, feedback FM, a noise and transient layer, a pitch envelope, and a sample-rate decimator where the stock machines have their filter.</span><span data-l="fr">Une machine en plus, LiXR, est une voix de batterie pensée dans l'esprit des voix de batterie du Sonic Potions LXR. C'est du code nouveau, bâti sur le calcul en virgule fixe du Model:Cycles : un oscillateur sans table, une FM à rétroaction, une couche de bruit et de transitoire, une enveloppe de hauteur, et un décimateur de fréquence d'échantillonnage là où les machines d'origine ont leur filtre.</span></p>
         <ol>
-          <li><span data-l="en">In the flasher, tick <b>LiXR machine</b>. It can be ticked with <b>SAMPLE</b>: SAMPLE then takes the 7th machine and LiXR the 8th, and both play.</span><span data-l="fr">Dans le flasher, cochez <b>Machine LiXR</b>. Elle se coche avec <b>SAMPLE</b> : SAMPLE prend alors la 7e machine et LiXR la 8e, et les deux jouent.</span></li>
-          <li><span data-l="en">On the machine, press <b>MACHINES</b> and pick <b>LiXR</b>, the machine after Chord (after SAMPLE if you ticked it). Its icon is Tone's.</span><span data-l="fr">Sur la machine, appuyez sur <b>MACHINES</b> et choisissez <b>LiXR</b>, la machine après Chord (après SAMPLE si vous l'avez cochée). Son icône est celle de Tone.</span></li>
+          <li><span data-l="en">In the flasher, tick <b>LiXR machine</b>. Only one engine can be ticked at a time: ticking another one unticks LiXR.</span><span data-l="fr">Dans le flasher, cochez <b>Machine LiXR</b>. Un seul moteur se coche à la fois : en cocher un autre décoche LiXR.</span></li>
+          <li><span data-l="en">On the machine, press <b>MACHINES</b> and pick <b>LiXR</b>, the machine after Chord. Its icon is Tone's.</span><span data-l="fr">Sur la machine, appuyez sur <b>MACHINES</b> et choisissez <b>LiXR</b>, la machine après Chord. Son icône est celle de Tone.</span></li>
           <li><span data-l="en">Shape it with the four knobs (table below). <b>PITCH</b>, the keys and <b>FINE</b> set the note; <b>DECAY</b>, <b>GATE</b> and <b>PUNCH</b> work as on Tone. A trigless trig or a p-lock on any knob works as on every machine.</span><span data-l="fr">Façonnez-la avec les quatre potards (tableau ci-dessous). <b>PITCH</b>, les touches et <b>FINE</b> règlent la note ; <b>DECAY</b>, <b>GATE</b> et <b>PUNCH</b> marchent comme sur Tone. Un trigless trig ou un p-lock sur n'importe quel potard marche comme sur toute machine.</span></li>
         </ol>
         <div class="tbl">
@@ -136,14 +231,44 @@
           <div><dt><span data-l="en">Sound</span><span data-l="fr">Son</span></dt><dd><span data-l="en">one voice per track, one note per trig, through the stock amp chain: the same DECAY, GATE, PUNCH, FINE, pan, level and distortion as Tone. The oscillator is tableless (no wavetable), and the decimator replaces the filter, so a LiXR track has no cutoff or resonance.</span><span data-l="fr">une voix par piste, une note par trig, à travers la chaîne d'ampli d'origine : les mêmes DECAY, GATE, PUNCH, FINE, pan, niveau et distorsion que Tone. L'oscillateur est sans table (pas de table d'ondes), et le décimateur remplace le filtre : une piste LiXR n'a donc ni cutoff ni résonance.</span></dd></div>
           <div><dt><span data-l="en">Processor</span><span data-l="fr">Processeur</span></dt><dd><span data-l="en">about as heavy as a stock Tone voice: 6,335 to 6,499 instructions per block, against 6,572 for TONE (measured in the OS's own voice loop).</span><span data-l="fr">à peu près aussi gourmande qu'une voix Tone d'origine : 6 335 à 6 499 instructions par bloc, contre 6 572 pour TONE (mesuré dans la boucle de voix de l'OS).</span></dd></div>
           <div><dt><span data-l="en">Limits</span><span data-l="fr">Limites</span></dt><dd><span data-l="en">no load governor of its own: several LiXR tracks playing at once can make the sound crackle, as with any stock machine pushed hard. There is no filter, no looping and no sample playback.</span><span data-l="fr">pas de régulateur de charge propre : plusieurs pistes LiXR qui jouent en même temps peuvent faire craquer le son, comme toute machine d'origine poussée loin. Pas de filtre, pas de boucle, pas de lecture d'échantillon.</span></dd></div>
-          <div><dt><span data-l="en">Other mods</span><span data-l="fr">Autres mods</span></dt><dd><span data-l="en">this page offers LiXR alone for now. It is a package, so it composes with other machine packages when they are offered. MACRO, ACID, the Syntakt engines and Model-TG are not offered on this page.</span><span data-l="fr">cette page ne propose que LiXR pour l'instant. C'est un paquet : elle se compose avec d'autres paquets de machines quand ils sont proposés. MACRO, ACID, les moteurs du Syntakt et Model-TG ne sont pas proposés sur cette page.</span></dd></div>
-          <div><dt><span data-l="en">Tested</span><span data-l="fr">Testé</span></dt><dd><span data-l="en">flashed from this page and tested on a Model:Cycles (2026-10-22), alone and next to SAMPLE; the same builds run in the emulator on the OS's own voice loop, with the stock machines unchanged.</span><span data-l="fr">flashée depuis cette page et testée sur un Model:Cycles (22/10/2026), seule et à côté de SAMPLE ; les mêmes images tournent en émulation dans la boucle de voix de l'OS, machines d'origine inchangées.</span></dd></div>
+          <div><dt><span data-l="en">Other mods</span><span data-l="fr">Autres mods</span></dt><dd><span data-l="en">one engine at a time on this page: LiXR cannot be ticked with Feral, Blast, Blam or SAM.</span><span data-l="fr">un seul moteur à la fois sur cette page : LiXR ne se coche pas avec Feral, Blast, Blam ou SAM.</span></dd></div>
+          <div><dt><span data-l="en">Tested</span><span data-l="fr">Testé</span></dt><dd><span data-l="en">flashed from this page and tested on a Model:Cycles (2026-10-22) on its own; the same build runs in the emulator on the OS's own voice loop, with the stock machines unchanged.</span><span data-l="fr">flashée depuis cette page et testée sur un Model:Cycles (22/10/2026) seule ; la même image tourne en émulation dans la boucle de voix de l'OS, machines d'origine inchangées.</span></dd></div>
         </dl>
         <p class="note"><span data-l="en"><b>Before flashing another choice or the official firmware,</b> set your LiXR tracks back to an original machine (Kick to Chord): the official OS doesn't have LiXR, and a project that still names it can freeze its MACHINES page.</span><span data-l="fr"><b>Avant de flasher un autre choix ou le firmware officiel,</b> remettez vos pistes LiXR sur une machine d'origine (Kick à Chord) : l'OS officiel n'a pas LiXR, et un projet qui la nomme encore peut figer sa page MACHINES.</span></p>
       </section>
 
+      <section id="sam">
+        <h2><span class="n">8</span><span data-l="en">SAM machine</span><span data-l="fr">Machine SAM</span></h2>
+        <p class="by"><span data-l="en">By 100demons · Experimental</span><span data-l="fr">Par 100demons · expérimentale</span></p>
+        <p class="lede"><span data-l="en">SAM is the Software Automated Mouth, the 36-word speech synthesizer from Braids Renaissance, as an added machine after Chord. It speaks one word per note; the word, its speed, where it starts and the throat/mouth character are on the four knobs. It is an alpha: some words and settings are still rough.</span><span data-l="fr">SAM est le Software Automated Mouth, le synthétiseur de parole à 36 mots de Braids Renaissance, en machine ajoutée après Chord. Il prononce un mot par note ; le mot, sa vitesse, son point de départ et le caractère gorge/bouche sont sur les quatre potards. C'est une alpha : certains mots et réglages sont encore rugueux.</span></p>
+        <ol>
+          <li><span data-l="en">In the flasher, tick <b>SAM</b>. Only one engine can be ticked at a time: ticking another one unticks SAM.</span><span data-l="fr">Dans le flasher, cochez <b>SAM</b>. Un seul moteur se coche à la fois : en cocher un autre décoche SAM.</span></li>
+          <li><span data-l="en">On the machine, press <b>MACHINES</b> and pick <b>SAM</b>, the machine after Chord.</span><span data-l="fr">Sur la machine, appuyez sur <b>MACHINES</b> et choisissez <b>SAM</b>, la machine après Chord.</span></li>
+          <li><span data-l="en"><b>SHAPE</b> picks one of the 36 words. HEL is “hello”, ILU is “I love you”.</span><span data-l="fr"><b>SHAPE</b> choisit l'un des 36 mots. HEL est « hello », ILU est « I love you ».</span></li>
+          <li><span data-l="en"><b>COLOR</b> is the speaking rate, centred on 100% and independent of the note. <b>SWEEP</b> scrubs or sets the start frame; <b>CONTOUR</b> is the throat/mouth character, exact SAM in the centre. <b>PUNCH</b> loops the word, <b>GATE</b> holds it, <b>DECAY</b> is the release; <b>PITCH</b>, <b>FINE</b> and the keys set the pitch.</span><span data-l="fr"><b>COLOR</b> est la vitesse de parole, centrée sur 100 % et indépendante de la note. <b>SWEEP</b> parcourt ou règle le point de départ ; <b>CONTOUR</b> est le caractère gorge/bouche, SAM exact au centre. <b>PUNCH</b> boucle le mot, <b>GATE</b> le tient, <b>DECAY</b> est le relâchement ; <b>PITCH</b>, <b>FINE</b> et les touches règlent la hauteur.</span></li>
+        </ol>
+        <div class="tbl">
+          <table>
+            <thead><tr><th>Knob</th><th>Name on screen</th><th>What it does</th></tr></thead>
+            <tbody>
+              <tr><th>COLOR</th><td>Speed (SPED)</td><td>speaking rate, centred on 100%; higher notes do not speak faster</td></tr>
+              <tr><th>SHAPE</th><td>Word (WORD)</td><td>one of the 36 words</td></tr>
+              <tr><th>SWEEP</th><td>Scrub (SCRB)</td><td>start frame: where the word begins</td></tr>
+              <tr><th>CONTOUR</th><td>Character (CHAR)</td><td>throat/mouth character: centre is exact SAM, left is deeper, right is brighter</td></tr>
+            </tbody>
+          </table>
+        </div>
+        <dl class="facts">
+          <div><dt><span data-l="en">Sound</span><span data-l="fr">Son</span></dt><dd><span data-l="en">one SAM voice per track, one word per note, with a zero-order-hold resampling of SAM's 22.05 kHz output. THROAT and MOUTH are the real SAM formant parameters, not a post-filter.</span><span data-l="fr">une voix SAM par piste, un mot par note, avec un rééchantillonnage à maintien d'ordre zéro de la sortie 22,05 kHz de SAM. THROAT et MOUTH sont les vrais paramètres de formants de SAM, pas un filtre en sortie.</span></dd></div>
+          <div><dt><span data-l="en">Words</span><span data-l="fr">Mots</span></dt><dd><span data-l="en">36, in SHAPE order, from HEL to BEL; ILU is “I love you”.</span><span data-l="fr">36, dans l'ordre de SHAPE, de HEL à BEL ; ILU est « I love you ».</span></dd></div>
+          <div><dt><span data-l="en">Limits</span><span data-l="fr">Limites</span></dt><dd><span data-l="en">alpha: some words and transitions are rough or broken. It has no hardware test yet, and it cannot be ticked with Feral, Blast, Blam or LiXR.</span><span data-l="fr">alpha : certains mots et transitions sont rugueux ou cassés. Pas encore de test sur la machine, et elle ne se coche pas avec Feral, Blast, Blam ou LiXR.</span></dd></div>
+          <div><dt><span data-l="en">Source</span><span data-l="fr">Source</span></dt><dd><span data-l="en">the Braids Renaissance vocalist, itself derived from Sebastian Macke and Vidar Hokstad's C reconstruction of SAM. The provenance and licence still need to be confirmed.</span><span data-l="fr">le vocaliste de Braids Renaissance, lui-même dérivé de la reconstruction en C de SAM par Sebastian Macke et Vidar Hokstad. La provenance et la licence restent à confirmer.</span></dd></div>
+        </dl>
+        <p class="note"><span data-l="en"><b>Before flashing another engine or the official OS,</b> set your SAM tracks back to an original machine (Kick to Chord): the official OS doesn't have SAM, and a project that still names it can freeze its MACHINES page.</span><span data-l="fr"><b>Avant de flasher un autre moteur ou le firmware officiel,</b> remettez vos pistes SAM sur une machine d'origine (de Kick à Chord) : l'OS officiel n'a pas SAM, et un projet qui le nomme encore peut figer sa page MACHINES.</span></p>
+      </section>
+
       <section id="control-all">
-        <h2><span class="n">5</span><span data-l="en">Control All, your choice of tracks</span><span data-l="fr">Control All : choix des pistes</span></h2>
+        <h2><span class="n">9</span><span data-l="en">Control All, your choice of tracks</span><span data-l="fr">Control All : choix des pistes</span></h2>
         <p class="by"><span data-l="en">By</span><span data-l="fr">Par</span> <a href="https://github.com/durchgemacht/cycles-control-all-config" target="_blank" rel="noopener">durchgemacht</a></p>
         <p class="lede"><span data-l="en">Leave single tracks out of Control All: with TRACK held, a knob changes only the tracks you chose.</span><span data-l="fr">Écartez des pistes de Control All : TRACK tenu, un potard ne change que les pistes que vous avez choisies.</span></p>
         <ol>
@@ -162,7 +287,7 @@
       </section>
 
       <section id="mods-on-samples">
-        <h2><span class="n">6</span><span data-l="en">Mods on a Model:Samples</span><span data-l="fr">Des mods sur un Model:Samples</span></h2>
+        <h2><span class="n">10</span><span data-l="en">Mods on a Model:Samples</span><span data-l="fr">Des mods sur un Model:Samples</span></h2>
         <p class="lede"><span data-l="en">A Model:Samples can run the Model:Cycles OS with the same mods as a Model:Cycles. Whatever the machine, the flasher always installs the Model:Cycles OS. With the <a href="#sampler">SAMPLE</a> machine ticked, it can play the samples already on the +Drive (not yet tried on a Model:Samples).</span><span data-l="fr">Un Model:Samples peut faire tourner l'OS du Model:Cycles avec les mêmes mods qu'un Model:Cycles. Quelle que soit la machine, le flasher installe toujours l'OS du Model:Cycles. Avec la machine <a href="#sampler">SAMPLE</a> cochée, il peut jouer les samples déjà sur le +Drive (pas encore essayé sur un Model:Samples).</span></p>
         <ol>
           <li><span data-l="en">Back up your samples and projects with Elektron Transfer, then close Transfer.</span><span data-l="fr">Sauvegardez vos samples et vos projets avec Elektron Transfer, puis fermez Transfer.</span></li>
@@ -186,7 +311,7 @@
       </section>
 
       <section id="samples">
-        <h2><span class="n">7</span><span data-l="en">Samples OS</span><span data-l="fr">OS Samples</span></h2>
+        <h2><span class="n">11</span><span data-l="en">Samples OS</span><span data-l="fr">OS Samples</span></h2>
         <p class="lede"><span data-l="en">The Model:Cycles starts as a Model:Samples: you load and play your own samples, managed with Elektron Transfer.</span><span data-l="fr">Le Model:Cycles démarre en Model:Samples : vous chargez et jouez vos propres samples, gérés avec Elektron Transfer.</span></p>
         <p><span data-l="en">The flasher puts the official Model:Samples OS inside your Model:Cycles firmware file:</span><span data-l="fr">Le flasher place l'OS officiel du Model:Samples dans le fichier firmware de votre Model:Cycles :</span></p>
         <dl class="layers fig">
@@ -220,13 +345,13 @@
       </section>
 
       <section id="stock">
-        <h2><span class="n">8</span><span data-l="en">Back to stock</span><span data-l="fr">Revenir à l'origine</span></h2>
+        <h2><span class="n">12</span><span data-l="en">Back to stock</span><span data-l="fr">Revenir à l'origine</span></h2>
         <p><span data-l="en">The <b>Official firmware</b> tab of the flasher sends your OS file unchanged, over USB, like a normal update. It is also a good rehearsal before a first mod: it checks the cable and the setup without changing anything.</span><span data-l="fr">L'onglet <b>Firmware officiel</b> du flasher renvoie votre fichier d'OS sans le modifier, par USB, comme une mise à jour normale. C'est aussi une bonne répétition avant un premier mod : elle vérifie le câble et l'installation sans rien changer.</span></p>
-        <p><span data-l="en">With the SAMPLE machine, first set your SAMPLE tracks back to an original machine (Kick to Chord): the official OS doesn't have SAMPLE, and a project that still names it can freeze its MACHINES page.</span><span data-l="fr">Avec la machine SAMPLE, remettez d'abord vos pistes SAMPLE sur une machine d'origine (de Kick à Chord) : l'OS officiel n'a pas SAMPLE, et un projet qui la nomme encore peut geler sa page MACHINES.</span></p>
+        <p><span data-l="en">With an added engine (Feral, Blast, Blam, LiXR or SAM), first set its tracks back to an original machine (Kick to Chord): the official OS doesn't have it, and a project that still names it can freeze its MACHINES page.</span><span data-l="fr">Avec un moteur ajouté (Feral, Blast, Blam, LiXR ou SAM), remettez d'abord ses pistes sur une machine d'origine (de Kick à Chord) : l'OS officiel ne l'a pas, et un projet qui le nomme encore peut geler sa page MACHINES.</span></p>
       </section>
 
       <section id="recovery">
-        <h2><span class="n">9</span><span data-l="en">Recovery</span><span data-l="fr">Secours</span></h2>
+        <h2><span class="n">13</span><span data-l="en">Recovery</span><span data-l="fr">Secours</span></h2>
         <p class="lede"><span data-l="en">If the Model:Cycles no longer starts, its startup menu can always reinstall the OS: it lives in an area that updates never write.</span><span data-l="fr">Si le Model:Cycles ne démarre plus, son menu de démarrage peut toujours réinstaller l'OS : il vit dans une zone que les mises à jour n'écrivent jamais.</span></p>
         <figure class="fig">
           <div data-device data-scenes="func @logo | func,mainvol | s4 @READY TO/>RECEIVE" data-ms="1300"></div>
@@ -240,7 +365,7 @@
       </section>
 
       <section id="trouble">
-        <h2><span class="n">10</span><span data-l="en">Troubleshooting</span><span data-l="fr">Dépannage</span></h2>
+        <h2><span class="n">14</span><span data-l="en">Troubleshooting</span><span data-l="fr">Dépannage</span></h2>
         <div class="faq">
           <details>
             <summary><span data-l="en">Nothing happens on the Model:Cycles screen</span><span data-l="fr">Rien ne se passe sur l'écran du Model:Cycles</span></summary>
@@ -307,8 +432,8 @@
   </div>
 </footer>
 
-<script src="../assets/release.js?v=2026-10-23-04"></script>
-<script src="../assets/cycles.js?v=2026-10-23-04"></script>
-<script src="../assets/site.js?v=2026-10-23-04"></script>
+<script src="../assets/release.js?v=2026-10-23-06"></script>
+<script src="../assets/cycles.js?v=2026-10-23-06"></script>
+<script src="../assets/site.js?v=2026-10-23-06"></script>
 </body>
 </html>

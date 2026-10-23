@@ -7,6 +7,16 @@
  * of everything model27 builds on.
  */
 window.MC_RELEASES = [
+  { version: "0.13", date: "2026-10-23", changes: [
+    { en: "The engine cards show only their full text: the short duplicate line, the per-card credit, Status, clash warnings and the pre-install note are gone. Each card now links to its own guide section",
+      fr: "Les cartes de moteur n'affichent plus que leur texte complet : la ligne courte en double, le crédit par carte, l'État, les avertissements d'incompatibilité et la note avant installation ont disparu. Chaque carte renvoie maintenant à sa section du guide" },
+    { en: "New guide sections for Feral, Blast, Blam and SAM, and an updated LiXR section",
+      fr: "Nouvelles sections du guide pour Feral, Blast, Blam et SAM, et section LiXR mise à jour" },
+  ] },
+  { version: "0.12", date: "2026-10-23", changes: [
+    { en: "The site now opens directly on the flasher; the old introduction page is no longer shown",
+      fr: "Le site s'ouvre maintenant directement sur le flasher ; l'ancienne page d'introduction n'est plus affichée" },
+  ] },
   { version: "0.11", date: "2026-10-23", changes: [
     { en: "The flasher offers the five engines one at a time: Feral, BLAST, BLAM, LiXR and SAM. Ticking one unticks the other; the combined “All” build is no longer offered",
       fr: "Le flasher propose les cinq moteurs un par un : Feral, BLAST, BLAM, LiXR et SAM. Cocher l'un décoche l'autre ; le build combiné « All » n'est plus proposé" },

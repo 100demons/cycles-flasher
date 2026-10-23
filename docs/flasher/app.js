@@ -108,7 +108,11 @@ const GUIDE_OF = {
   macro: "macro",
   acid: "acid",
   sampler: "sampler",
+  feral9: "feral9",
+  blast: "blast",
+  blam: "blam",
   lixr: "lixr",
+  sam: "sam",
   "chord-keys": "chord-keys",
   "track-filter": "track-filter",
   "lfo-plus": "lfo-plus",
@@ -1283,7 +1287,7 @@ function renderRow(f) {
   d.hidden = !matches(f);
   const side = [];
   // "by drumkilla" / "based on ms-multi-output by scottmetoyer"; a link inside the <label> doesn't toggle the checkbox
-  if (f.credit) side.push(`<span class="credit">${creditHtml(f.credit)}` +
+  if (f.credit && !f.one_of) side.push(`<span class="credit">${creditHtml(f.credit)}` +
     (f.license ? ` · <a href="${esc(f.license)}" target="_blank" rel="noopener">${esc(t("license_mit"))}</a>` : "") + `</span>`);
   if (f.needs === "syntakt") side.push(`<span class="need">${esc(t("need_syntakt"))}</span>`);
   const req = f.requires && featById(f.requires);
@@ -1292,7 +1296,7 @@ function renderRow(f) {
       `<input type="checkbox" id="feat-${f.id}"${on ? " checked" : ""}${holder ? " disabled" : ""}>` +
       `<span class="ttl"><span class="nm">${esc(label(f))}</span>${holder ? `<span class="incl">${esc(t("included", { name: label(holder) }))}</span>` : ""}</span>` +
       `<span class="by">${side.join("")}</span>` +
-      `<span class="short">${engineBlurb(shortOf(f))}</span>` +
+      (f.one_of ? "" : `<span class="short">${engineBlurb(shortOf(f))}</span>`) +
     `</label>` +
     `<div class="ext"></div>`;
   const ext = d.querySelector(".ext");
@@ -1303,17 +1307,10 @@ function renderRow(f) {
   if (parts) add(`<ul class="parts">${parts.map((p) => `<li>${esc(p)}</li>`).join("")}</ul>`);
   const held = (f.includes || []).map(featById).filter(Boolean);
   if (held.length) add(`<p class="also">${t("also", { n: held.length, names: held.map((g) => `<b>${esc(label(g))}</b>`).join(", ") })}</p>`);
-  // just unticked: said on the row just ticked, where the eyes are, with Undo
-  if (pick.swap && pick.swap.by === f.id) add(`<p class="say swap">${esc(swapText(pick.swap))} <button type="button" class="lnk" data-undo>${esc(t("undo"))}</button></p>`);
-  // before ticking: why this mod doesn't go with a ticked one
-  if (!on) for (const g of features()) {
-    const by = g !== f && isOn(g.id) && clashVia(f, g);
-    if (by) add(`<p class="say clash">${t("clash_row", { name: esc(t("quoted", { name: label(g) })), why: esc(clashWhy(by, g)) })}</p>`);
-  }
   // several variants of one mod (none today): a sub-choice once ticked
   if (f.variants && f.variants.length > 1 && sel.on) add(renderVariants(f, sel));
   if (f.engines && sel.on) add(renderEngines(f, sel, status));
-  if (sel.on && featText(f.id, "note", "")) add(`<p class="say"><b>${esc(t("good_to_know"))}</b> ${esc(featText(f.id, "note", ""))}</p>`);
+  if (sel.on && !f.one_of && featText(f.id, "note", "")) add(`<p class="say"><b>${esc(t("good_to_know"))}</b> ${esc(featText(f.id, "note", ""))}</p>`);
   add(renderDetails(f, sel, true));
   return d;
 }
@@ -1401,17 +1398,13 @@ function renderDetails(f, sel, open) {
     const g = featById(gid), ok = ((g && g.combos) || []).filter((c) => c.tg_tested);
     if (ok.length) status += " " + esc(t("d_with_tested", { name: label(g), list: ok.map((c) => comboName(g, c)).join(" ; ") }));
   }
-  row("d_status", status);
   const held = (f.includes || []).map(featById).filter(Boolean);
   if (held.length) row("d_contains", t("d_contains_v", { names: held.map((g) => `<b>${esc(label(g))}</b>`).join(", ") }));
-  const clash = features().filter((g) => g !== f && clashVia(f, g));
-  if (clash.length) row("d_clash", clash.map((g) => t("d_clash_v", { name: `<b>${esc(label(g))}</b>`, why: esc(clashWhy(clashVia(f, g), g)) })).join(" "));
   if (f.needs === "syntakt") row("d_file", esc(t("d_file_syntakt")));
   const req = f.requires && featById(f.requires);
   if (req) row("d_requires", t("d_requires_v", { name: `<b>${esc(label(req))}</b>` }));
   if (f.engines) row("d_engines", f.engines.map((e) =>
     `<b>${esc(e.name)}</b> (${esc(e.label)})${featText("eng-" + e.code, "note", "") ? " : " + esc(featText("eng-" + e.code, "note", "")) : ""}`).join("<br>"));
-  if (!sel.on && featText(f.id, "note", "")) row("d_note", esc(featText(f.id, "note", "")));
   if (GUIDE_OF[f.id]) row("d_guide", `<a class="feat-guide" href="${GUIDE}#${GUIDE_OF[f.id]}">${esc(t("read_guide"))} <span aria-hidden="true">→</span></a>`);
   return `<div class="det" id="det-${f.id}"><p>${engineBlurb(featText(f.id, "desc", f.desc))}</p><dl class="facts">${rows.join("")}</dl></div>`;
 }
