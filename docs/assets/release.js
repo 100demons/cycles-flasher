@@ -7,6 +7,10 @@
  * of everything model27 builds on.
  */
 window.MC_RELEASES = [
+  { version: "0.10", date: "2026-10-22", changes: [
+    { en: "Feral's custom SHAPE display is initialized once and the runtime preserves the screen registers: the garbled encoder animations in the LiXR + Feral build are fixed",
+      fr: "L'affichage SHAPE de Feral est initialisé une seule fois et le runtime préserve les registres de l'écran : les animations d'encodeur brouillées du build LiXR + Feral sont corrigées" },
+  ] },
   { version: "0.9", date: "2026-10-22", changes: [
     { en: "BLAST and BLAM machines added, standalone and Experimental: BLAST brings 14 tonal OPL2 two-operator models with a stepped Ratio, BLAM brings 12 FM percussion models and two SAM speech banks. Both keep their custom SHAPE names, ratio display and MACHINES-page splash. Not with LiXR or Feral",
       fr: "Machines BLAST et BLAM ajoutées, autonomes et expérimentales : BLAST apporte 14 modèles tonaux FM à deux opérateurs OPL2 avec un rapport par pas, BLAM 12 modèles de percussion FM et deux banques de parole SAM. Les deux gardent leurs noms de SHAPE, leur affichage de rapport et leur image MACHINES. Pas avec LiXR ni Feral" },

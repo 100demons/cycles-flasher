@@ -50,8 +50,10 @@ map_state:
  * (first_desc + 1). Zero means the generic SNARE object. */
 	.globl	state_at
 state_at:
+	move.l	%d2, -(%sp)
+	move.l	%d3, -(%sp)
 	move.l	%a0, -(%sp)
-	move.l	8(%sp), %d0
+	move.l	16(%sp), %d0
 	lea	REGS+16, %a0
 sat_loop:
 	cmpa.l	REGS+12, %a0
@@ -67,10 +69,14 @@ sat_found:
 	tst.l	%a1
 	beq.s	sat_generic
 	move.l	(%sp)+, %a0
+	move.l	(%sp)+, %d3
+	move.l	(%sp)+, %d2
 	jsr	(%a1)
 	rts
 sat_generic:
 	move.l	(%sp)+, %a0
+	move.l	(%sp)+, %d3
+	move.l	(%sp)+, %d2
 	move.l	4(%sp), %d0
 	bsr.w	map_state
 	moveq	#100, %d1
@@ -80,8 +86,10 @@ sat_generic:
 
 	.globl	state_connect
 state_connect:
+	move.l	%d2, -(%sp)
+	move.l	%d3, -(%sp)
 	move.l	%a0, -(%sp)
-	move.l	8(%sp), %d0
+	move.l	16(%sp), %d0
 	lea	REGS+16, %a0
 sc_loop:
 	cmpa.l	REGS+12, %a0
@@ -97,11 +105,15 @@ sc_found:
 	tst.l	%a1
 	beq.s	sc_generic
 	move.l	(%sp)+, %a0
+	move.l	(%sp)+, %d3
+	move.l	(%sp)+, %d2
 	jsr	(%a1)
 	add.l	#0x14, %d0
 	bra.s	sc_common
 sc_generic:
 	move.l	(%sp)+, %a0
+	move.l	(%sp)+, %d3
+	move.l	(%sp)+, %d2
 	move.l	4(%sp), %d0
 	bsr.w	map_state
 	moveq	#100, %d1

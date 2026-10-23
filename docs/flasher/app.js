@@ -30,19 +30,19 @@ const ELEKTRON_ST_DL = "https://www.elektron.se/support-downloads/syntakt";
 // entry per set of them, the tweak tools/compose.py composes them into: the page's composer must give its bytes.
 const REF_MAINOS = {
   // each card alone: each variant, each combination of real Syntakt engines
-  "lixr": "55bfaaf420e200925fbfbe4e9d3112af8d00bc1ca85d8ea13dfb3a7b999e8568",
-  "feral9": "7c4b21f41b4e3540eb758d67409c5e768505c6be69ec48b25769907cda7bfe6f",
+  "lixr": "15f23a994aa715b278b92725315e2f702dba5483fce8560134eccf6560684d74",
+  "feral9": "2a7d4d8b3f48d57817318ea32cc204923791e553226df76726bcfe3baf0c3b4b",
   "blast": "cf38327ab67913b3dbbd9379646111aa33d1d468de7ceda45f3a800c3a160a53",
   "blam": "0c1eef2be6c93503bc7f04f1fb2175af9687454acf028f73183dff2ecbac8ec9",
   // every pair of cards the page lets you tick together
-  "lixr+feral9": "f5f75e6866617d76dc358ed63702e4d0c369fc2eb31ff81775832c4a45606227",
+  "lixr+feral9": "7164711ef3765617658ede109c3cdc884f3a0d5515ecfbcd42d62e2a21c5bd35",
 };
 const REF_MODS = {
   "blast": {"w": "f9d9967cbeaca411c1e3f7e3589d3a50649d179519b12949c702b2e62c1efb02", "p": "9eb8ace296d0564194d6ca33fb3ed84d9bbcbf5af91014b982c7c89e8fa108e1"},
   "blam": {"w": "ed07fb3a2ff09d3d5783c642ca78d3d3493bea1e5fe0ca9997a53a046b54e6b3", "p": "e13c75a58eecc4a15fee4f7ae6ad68842a6796fed4d1903e3f7c2aa6ac3a0ca4"},
-  "lixr": {"w": "901192bf50f8599968dd49f472ae77b4803d47ad98861af00d639cc64df51bcf", "p": "eaa50be33a1390eab1f1602a2813d50eb845990335f4daa8728a58edb3741368"},
-  "feral9": {"w": "11d51c6a98adcee58eb8c87d05f470c4b8af70c3e6fe8a8558ca75efcb8b0f87", "p": "ffbd357ab07329bed2aebc97f494beb68452af80460c183405a5a4f0b12726e3"},
-  "lixr+feral9": {"w": "052c5829a74fd49f05f480f1a56bbf2e2d81b3a776df01e42ccc290361c738f7", "p": "f50eb917484e86b6c637e90493cbc0cd058024bd7ce918d1d9a74f7ee07a8d31"},
+  "lixr": {"w": "fa627c88e153575615f39432b3a4ba69fa7b5fe5bcbba1e403456c99f4c80d90", "p": "dcbb0b8b611d2db57cd58f2c25e1e282012b87c4401a4ee896249cf15e9715cd"},
+  "feral9": {"w": "83ea8a19a46bbf3dc66451a55fae20b5fd0a0044a4bcccce5c35a2583ff9275e", "p": "2bba4f1fd7bd9107ed0fab2e5a3b837827e5ae0682292aaca33beb8e39d46025"},
+  "lixr+feral9": {"w": "21abbf0f7c762147c3824374338968dece9363c09bcb2643a53ad581c6c718f8", "p": "caaae4961e7e1003c8c38740e2a89b62d0c812b94707596f91d4c813e48d42c7"},
 };
 
 // "Samples OS" tab: official Model:Samples OS 1.13 inside the official Model:Cycles container
