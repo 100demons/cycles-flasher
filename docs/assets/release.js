@@ -7,6 +7,10 @@
  * of everything model27 builds on.
  */
 window.MC_RELEASES = [
+  { version: "0.11", date: "2026-10-23", changes: [
+    { en: "The flasher offers the five engines one at a time: Feral, BLAST, BLAM, LiXR and SAM. Ticking one unticks the other; the combined “All” build is no longer offered",
+      fr: "Le flasher propose les cinq moteurs un par un : Feral, BLAST, BLAM, LiXR et SAM. Cocher l'un décoche l'autre ; le build combiné « All » n'est plus proposé" },
+  ] },
   { version: "0.10", date: "2026-10-22", changes: [
     { en: "Feral's custom SHAPE display is initialized once and the runtime preserves the screen registers: the garbled encoder animations in the LiXR + Feral build are fixed",
       fr: "L'affichage SHAPE de Feral est initialisé une seule fois et le runtime préserve les registres de l'écran : les animations d'encodeur brouillées du build LiXR + Feral sont corrigées" },
