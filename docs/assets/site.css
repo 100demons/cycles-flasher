@@ -34,7 +34,7 @@
   --f:"Inter",ui-sans-serif,system-ui,-apple-system,"Segoe UI",Helvetica,Arial,sans-serif;
   --f-lcd:"Tiny5",ui-monospace,monospace;
   --f-code:"IBM Plex Mono",ui-monospace,SFMono-Regular,Menlo,Consolas,monospace;
-  --link:#0969da;
+  --link:#3f4356;
   --foot:#70706b;
   --r:0px;
   --wrap:1180px;
@@ -45,7 +45,7 @@
   :root:not([data-theme="light"]){
     color-scheme:dark;
     --paper:#1a1a1a;
-    --link:#58a6ff;
+    --link:#c9c8c3;
     --foot:#4f4f4b;
     --casing:#232323;
     --well:#2c2c2c;
@@ -73,7 +73,7 @@
 :root[data-theme="dark"]{
   color-scheme:dark;
   --paper:#1a1a1a;
-  --link:#58a6ff;
+  --link:#c9c8c3;
   --foot:#4f4f4b;
   --casing:#232323;
   --well:#2c2c2c;
