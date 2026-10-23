@@ -224,12 +224,16 @@ async function main() {
     const ids = w.MC_TWEAKS.tweaks.map((x) => x.id), cards = w.MC_TWEAKS.features;
     const lix = cards.find((f) => f.id === "lixr") || {};
     const fe = cards.find((f) => f.id === "feral9") || {};
-    check(ids.length === 0 && cards.map((f) => f.id).join() === "lixr,feral9"
+    const bl = cards.find((f) => f.id === "blast") || {};
+    const bm = cards.find((f) => f.id === "blam") || {};
+    check(ids.join() === "blast,blam" && cards.map((f) => f.id).join() === "lixr,feral9,blast,blam"
       && lix.package === "lixr" && !lix.variants && fe.package === "feral9" && !fe.variants
       && Object.keys(w.MC_TWEAKS.packages).join() === "lixr,feral9"
+      && bl.variants && bl.variants[0].id === "blast" && bm.variants && bm.variants[0].id === "blam"
+      && (bl.excludes || []).includes("lixr") && (bm.excludes || []).includes("blast")
       && w.MC_TWEAKS.registrar && w.MC_TWEAKS.registrar.schema === "model27-registrar-frame/0.1"
       && !cards.some((f) => f.engines || f.needs) && !w.MC_TWEAKS.tweaks.some((x) => x.append && x.append.syntakt),
-      "MC_TWEAKS: LiXR and Feral, both machine packages composed in the page; " +
+      "MC_TWEAKS: LiXR and Feral packages, BLAST and BLAM prebuilt cards; " +
       "nothing that needs the Syntakt OS: " + cards.map((f) => f.id).join());
     check(/build \d{4}-/.test(text(doc, "build-stamp")), "version stamp shown");
     const srcs = [...doc.querySelectorAll("script[src]")].map((x) => x.getAttribute("src"));
@@ -239,7 +243,7 @@ async function main() {
     // display order: by section (Sounds & machines, then Live playing), FEATURES order inside a section; the build
     // keeps FEATURES order (checked in 1b)
     const feats = [...doc.querySelectorAll("#features input[type=checkbox]")].map((c) => c.id);
-    check(feats.join() === "feat-lixr,feat-feral9", "2 feature rows: " + JSON.stringify(feats));
+    check(feats.join() === "feat-lixr,feat-feral9,feat-blast,feat-blam", "4 feature rows: " + JSON.stringify(feats));
     check(cards.every((f) => doc.querySelector(`#cat-${f.cat || "other"} #mod-${f.id} #feat-${f.id}`)),
       "every feature has a row in its section (cat)");
     const tagOfFeat = (f) => (f.status === "tested" ? "Tested" : "Experimental");
@@ -274,7 +278,13 @@ async function main() {
     box("feat-lixr").click(); box("feat-feral9").click(); await wait(30);
     check(doc.querySelectorAll('input[name="var-lixr"]').length === 0
       && doc.querySelectorAll('input[name="var-feral9"]').length === 0, "LiXR and Feral: package cards, no sub-choice");
-    box("feat-feral9").click(); await wait(5);
+    box("feat-blast").click(); await wait(5);
+    check(chosen() === "blast" && !box("feat-lixr").checked && !box("feat-feral9").checked,
+      "BLAST alone replaces the packages: " + chosen());
+    box("feat-blam").click(); await wait(5);
+    check(chosen() === "blam" && !box("feat-blast").checked, "BLAM alone replaces BLAST: " + chosen());
+    box("feat-blam").click(); await wait(5);
+    check(!chosen().length, "unticking BLAM empties the selection");
     check(!!doc.getElementById("tab-samples") && doc.getElementById("panel-samples").hidden && doc.getElementById("drop2-wrap").hidden,
       "Samples OS tab present, its panel and second drop zone hidden in Mods");
     check(/Load your official OS file/.test(text(doc, "missing")), "flash button says what is missing: " + text(doc, "missing"));
@@ -284,7 +294,7 @@ async function main() {
     doc.querySelector('.lang button[data-lang="fr"]').click();
     await wait(20);
     check(/Que voulez-vous installer/.test(text(doc, "h1s")) && doc.documentElement.lang === "fr", "FR switch translates the page");
-    check(/Machine LiXR/.test(text(doc, "features")) && /Machine Feral/.test(text(doc, "features"))
+    check(/Machine LiXR/.test(text(doc, "features")) && /Machine Feral/.test(text(doc, "features")) && /Machine BLAST/.test(text(doc, "features")) && /Machine BLAM/.test(text(doc, "features"))
       && /par 100demons/.test(text(doc, "features")) && /Testé/.test(text(doc, "features"))
       && doc.querySelector('#features a[href$="#lixr"]'),
       "FR switch translates both cards, their credit and tags, with the LiXR guide link");

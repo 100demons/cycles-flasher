@@ -372,6 +372,38 @@ ALL_FEATURES = [
         "package": "feral9",
     },
     {
+        "id": "blast",
+        "cat": "sound",
+        "label": "BLAST machine (tonal OPL2)",
+        "desc": "One extra machine after Chord: fourteen tonal models built from the OPL2's two-operator FM "
+                "(SIN, HLF, ABS, PLS, BAS, PIA, MAR, GLK, BRS, ACC, STR, STL, TMP, ZAP). SHAPE picks the model, "
+                "SWEEP is the modulator ratio in steps (1:2 to 15X; FUNC leaves the steps), COLOR is the FM "
+                "index, CONTOUR the envelope contour, PUNCH the chip's LFO, DECAY and GATE as on Tone. It has its "
+                "own SHAPE names, ratio display and MACHINES-page splash. Standalone: not with LiXR, Feral or BLAM.",
+        "status": "experimental",
+        "credit": {"kind": "own", "who": "100demons"},
+        "variants": [
+            {"file": "66-blast", "label": None},
+        ],
+        "excludes": ["lixr", "feral9", "blam"],
+    },
+    {
+        "id": "blam",
+        "cat": "sound",
+        "label": "BLAM machine (percussive OPL2)",
+        "desc": "One extra machine after Chord: twelve FM percussion models (KIK, TOM, BNG, CNG, TAI, TIM, MAR, "
+                "DJB, BLK, GNG, BUB, ZAP) and two SAM speech banks. The FM models use the stepped Ratio list; "
+                "SAM1/SAM2 use COLOR for the word, SWEEP for the scrub position and CONTOUR for the speaking "
+                "speed. It has its own SHAPE names, ratio display and MACHINES-page splash. Standalone: not with "
+                "LiXR, Feral or BLAST.",
+        "status": "experimental",
+        "credit": {"kind": "own", "who": "100demons"},
+        "variants": [
+            {"file": "67-blam", "label": None},
+        ],
+        "excludes": ["lixr", "feral9", "blast"],
+    },
+    {
         "id": "chord-keys",
         "cat": "live",
         "label": "Accords de gamme sur TRIG 1–16",
@@ -429,7 +461,7 @@ ALL_FEATURES = [
 # model27 offers a short list of cards. The other definitions above stay as they are, for the command-line build
 # (every tweak of tweaks/ is still built by tools/build.py) and so that merges from upstream apply cleanly; a card
 # comes back into the flasher by adding its id here, once it has been reviewed against the Cycles Mod Standard.
-OFFERED = ("lixr", "feral9")
+OFFERED = ("lixr", "feral9", "blast", "blam")
 FEATURES = [f for f in ALL_FEATURES if f["id"] in OFFERED]
 _missing = set(OFFERED) - {f["id"] for f in FEATURES}
 if _missing:
