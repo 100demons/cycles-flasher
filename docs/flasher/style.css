@@ -271,7 +271,7 @@ details.trouble{margin-top:8px}
 .trouble dl{margin:12px 0 0;max-width:64ch}
 .trouble dt{margin-top:12px;font-weight:700}
 .trouble dd{margin:3px 0 0;color:var(--ink-2)}
-.adv{padding:8px 0 0;border-top:0}
+.adv{padding:0;border-top:0}
 .adv .field{display:flex;flex-wrap:wrap;align-items:center;gap:10px 14px;margin:14px 0 0}
 .adv .hint{margin:0}
 .adv input[type=number]{width:5.5em;padding:8px 10px;border:1px solid var(--line-2);border-radius:var(--r);background:var(--paper);color:var(--ink);font:16px var(--f)}
@@ -280,7 +280,7 @@ details.trouble{margin-top:8px}
   font:12.5px/1.6 var(--f-code);color:var(--ink-2);white-space:pre-wrap}
 #log .is-ok{color:var(--ok)} #log .is-bad{color:var(--bad)} #log .is-warn{color:var(--warn)}
 
-.credits{margin-top:6px;padding-top:0;padding-bottom:0;border-top:0;max-width:820px}
+.credits{margin-top:0;padding-top:0;padding-bottom:0;border-top:0;max-width:820px}
 .credits h2{font-size:24px;margin:0 0 10px}
 .credits p{color:var(--muted);margin:0 0 10px}
 .credits ul{list-style:none;margin:0;padding:0;border-top:1px solid var(--line)}
@@ -367,7 +367,7 @@ button.btn{border:1px solid var(--ink)}
 .btn.secondary{background:none;color:var(--ink);box-shadow:none}
 .btn.secondary:hover{background:var(--ink);color:var(--paper)}
 
-#step-flash{padding-bottom:0}
+#step-flash{padding-bottom:12px}
 
 
 /* middle ground: rounded keys and drawers, not the full original */
@@ -390,9 +390,7 @@ button.btn{border:1px solid var(--ink)}
 .method-info>summary{font-size:16px}
 .method-info .howto{margin-top:12px}
 
-.blurb-info{margin:0 0 14px;max-width:70ch}
-.blurb-info>summary{font-weight:600}
-.make-firmware{margin:12px 0 8px;max-width:820px}
+.make-firmware{margin:12px 0;max-width:820px}
 .make-firmware>summary{color:var(--bad);font-weight:700}
 .make-firmware ol{margin:12px 0 0;padding-left:1.4em;max-width:64ch}
 .make-firmware li{margin:.35em 0}
