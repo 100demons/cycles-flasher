@@ -238,13 +238,13 @@ async function main() {
     check(feats.join() === "feat-all", "one feature row: " + JSON.stringify(feats));
     check(!doc.querySelector("#features .tag"), "no Tested / Experimental tags on the cards");
     check(/Dangerous experimental Macro OSC/.test(text(doc, "features")) && /Needs work, but it can slam\./.test(text(doc, "features")),
-      "the full four-engine blurb is on the card, in order");
+      "the full five-engine blurb is on the card, in order");
     check(cards.every((f) => doc.querySelector(`#cat-${f.cat || "other"} #mod-${f.id} #feat-${f.id}`)),
       "every feature has a row in its section (cat)");
     check(doc.getElementById("drop3-wrap").hidden, "no Syntakt drop zone: no card needs the Syntakt OS");
     const credits = [...doc.querySelectorAll("#features .credit a")].map((a) => a.href);
-    check(credits.length === 0 && /by 100demons/.test(text(doc, "features")),
-      "the four engines are credited to 100demons by name, no outside license link: " + JSON.stringify(credits));
+    check(credits.length === 0 && !/by 100demons/.test(text(doc, "features")),
+      "no 'by 100demons' line, no outside license link: " + JSON.stringify(credits));
     const list = [...doc.querySelectorAll("#credits-list a")].map((a) => a.textContent);
     check(list.join() === "durchgemacht/model27,18nelli18/Modded-Cycles,scottmetoyer/ms-multi-output,drumkilla/elektron-model-tweaks,pichenettes/eurorack,RobinSchmidt/Open303,TinyGregAudio/Model-TG,mischa85/elektron-firmware-tool,dagargo/elektroid,mxldyn/octamax",
       "credits section lists model27 by durchgemacht first, then Modded-Cycles and the 8 repositories it builds on");
@@ -253,10 +253,15 @@ async function main() {
       "credits section links Modded-Cycles' MIT license and this repo's third-party notices: " + JSON.stringify(lic));
     const box = (id) => doc.getElementById(id);
     const chosen = () => w.MCFlasherApp.chosenTweaks().map((x) => x.id).join();
+    check(chosen() === "all" && box("feat-all").checked, "the one card is selected by default: " + chosen());
+    check(!doc.getElementById("mod-sel") && !/Your selection/.test(text(doc, "panel-mods")),
+      "no Your selection area");
+    check(doc.querySelectorAll("#features .more, #features .chev").length === 0, "no Details dropdown or section caret");
+    check(!box("det-all").hidden && /Feral - 0.7/.test(box("det-all").textContent), "details are always visible");
     box("feat-all").click(); await wait(5);
-    check(chosen() === "all" && box("feat-all").checked, "the one card builds the all-four tweak: " + chosen());
+    check(!chosen().length && !box("feat-all").checked, "unticking the card empties the selection");
     box("feat-all").click(); await wait(5);
-    check(!chosen().length, "unticking the card empties the selection");
+    check(chosen() === "all", "ticking it again builds the all-five tweak: " + chosen());
     check(/Load your official OS file/.test(text(doc, "missing")), "flash button says what is missing: " + text(doc, "missing"));
     check(doc.getElementById("flash").disabled, "flash button disabled without a file");
 
@@ -264,10 +269,10 @@ async function main() {
     doc.querySelector('.lang button[data-lang="fr"]').click();
     await wait(20);
     check(/Que voulez-vous installer/.test(text(doc, "h1s")) && doc.documentElement.lang === "fr", "FR switch translates the page");
-    check(/Feral - 0.7 beta/.test(text(doc, "features")) && /Blast - 0.8 beta/.test(text(doc, "features"))
-      && /Blam - 0.5 beta/.test(text(doc, "features")) && /LiXR - 0.1 alpha/.test(text(doc, "features"))
-      && /par 100demons/.test(text(doc, "features")),
-      "FR switch keeps the four engine titles and the credit");
+    check(/Feral - 0.7 \(beta\)/.test(text(doc, "features")) && /Blast - 0.8 \(beta\)/.test(text(doc, "features"))
+      && /Blam - 0.5 \(beta\)/.test(text(doc, "features")) && /LiXR - 0.2 \(beta\)/.test(text(doc, "features"))
+      && /SAM - 0.1 \(alpha\)/.test(text(doc, "features")),
+      "FR switch keeps the five engine titles");
     check(/Crédits/.test(text(doc, "credits")) && /boîte à outils/.test(text(doc, "credits")) && /licence MIT/.test(text(doc, "credits")),
       "FR switch translates the credits section");
     doc.querySelector('.lang button[data-lang="en"]').click();

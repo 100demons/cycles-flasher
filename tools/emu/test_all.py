@@ -21,7 +21,7 @@ def main():
     e.uc.mem_map(0x40800000,0x01800000)  # OS BSS incl. trig velocity at 0x40fe4cdc
     check(not e.unmapped,'voice loop starts, no unmapped access')
     base=dict(note=36,pitch=64,finetune=64,gate=0,punch=0,decay=50)
-    for idx,name in [(6,'Feral'),(7,'BLAST'),(8,'BLAM'),(9,'LiXR')]:
+    for idx,name in [(6,'Feral'),(7,'BLAST'),(8,'BLAM'),(9,'LiXR'),(10,'SAM')]:
         e.set(0,machine=idx,color=64,shape=64,sweep=64,contour=48,**base)
         try:
             x=np.stack([e.block(1 if b in (1,120) else 0) for b in range(220)])[:,0]

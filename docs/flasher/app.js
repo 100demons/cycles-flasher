@@ -30,10 +30,10 @@ const ELEKTRON_ST_DL = "https://www.elektron.se/support-downloads/syntakt";
 // entry per set of them, the tweak tools/compose.py composes them into: the page's composer must give its bytes.
 const REF_MAINOS = {
   // each card alone: each variant, each combination of real Syntakt engines
-  "all": "dbf035da5f9066b6e207c2598be9a0c02388017319dbb00c3193d1f408cff516",
+  "all": "14b9432a1527047218220a533a518a56c051c9dc695385e4b900b5e53cc88863",
 };
 const REF_MODS = {
-  "all": {"w": "439a0a3cdbe86aeeb9b0f04555cbedcbeb980a63813317d101237f1fbefb1dca", "p": "e9682b3aab1b2d7b69fee6747c613ae71f7ceb782c3d1fcd81f0a79f04efd7ed"},
+  "all": {"w": "ed1bfa65ebc5f60ff0f89d286d8ca088e5c240bc08ca66826f19a1bb487fb997", "p": "014bcf0836d279b304dd3e47c29402c3d5fda703ec770ce412266f824539ac60"},
 };
 
 // "Samples OS" tab: official Model:Samples OS 1.13 inside the official Model:Cycles container
@@ -774,10 +774,10 @@ const FEAT = {
       "clash_sample-preview": "both read sample files from the same PRESET browser, and sample preview needs Model-TG",
       desc: "An extra machine after Chord: SAMPLE plays one sample from the +Drive per trig, the way the Model:Samples does (6-tap interpolation at 96 kHz, then the Cycles' own decimator and amp chain). Open the PRESET browser (FUNC + MACHINE) on a SAMPLE track and open a sample file: the sound takes its name and keeps the choice in the project, the kit and the preset; hold a step while you open one and the step gets it as a sound lock. COLOR = Start and SHAPE = Length (0 to 120 each; the trig ends at Start + Length), SWEEP = the Model:Samples' filter (lowpass to the left, off in the centre, highpass to the right, shown as -64 to 63), CONTOUR = Reso; DECAY, GATE and PUNCH as on Tone. The main screen shows the sample's name and waveform with the start and end marked. Stereo files play as mono, other sample rates keep their pitch.",
       note: "Needs samples on the +Drive in the Model:Samples' format, what Elektron Transfer and One-Shot's upload page write. No looping or reverse yet. A project using SAMPLE needs a firmware with SAMPLE: set SAMPLE tracks back to an original machine before flashing another choice or the official OS. English only for now." },
-    all: { label: "Feral + Blast + Blam + LiXR",
-      short: "Feral - 0.7 beta\nDangerous experimental Macro OSC: nyblcore, bytebeat, benjolin, rungler, chaotic maps, fourses, rhythmicon, gendy, pulsar, wave scan, and even worse to come.\n\nBlast - 0.8 beta\nTonal FM Macro OSC: melodic / '90s / Soundblaster / PC / Doom 2 . Think higher fidelity Sega Genesis. [stock Yamaha OPL2]\n\nBlam - 0.5 beta\nPercussion FM Macro OSC: raw, slamming, digital. Extensive fixed FM ratios turn anything into bass or lead. Modern sounds and oddly beautiful harmonics can be found. [mutated Yamaha OPL2]\n\nLiXR - 0.1 alpha\nSingle percussion voice - Brutal Sonic Potions LXR imitation from Deepseek. Lots of range and can make ripping techno kicks. Needs work, but it can slam.",
-      desc: "Feral - 0.7 beta\nDangerous experimental Macro OSC: nyblcore, bytebeat, benjolin, rungler, chaotic maps, fourses, rhythmicon, gendy, pulsar, wave scan, and even worse to come.\n\nBlast - 0.8 beta\nTonal FM Macro OSC: melodic / '90s / Soundblaster / PC / Doom 2 . Think higher fidelity Sega Genesis. [stock Yamaha OPL2]\n\nBlam - 0.5 beta\nPercussion FM Macro OSC: raw, slamming, digital. Extensive fixed FM ratios turn anything into bass or lead. Modern sounds and oddly beautiful harmonics can be found. [mutated Yamaha OPL2]\n\nLiXR - 0.1 alpha\nSingle percussion voice - Brutal Sonic Potions LXR imitation from Deepseek. Lots of range and can make ripping techno kicks. Needs work, but it can slam.",
-      note: "One build: Feral is machine 6, Blast machine 7, Blam machine 8 and LiXR machine 9." },
+    all: { label: "All this shit",
+      short: "\nFeral - 0.7 (beta)\nDangerous experimental Macro OSC: nyblcore, bytebeat, benjolin, rungler, chaotic maps, fourses, rhythmicon, gendy, pulsar, wave scan, and even worse to come.\n\nBlast - 0.8 (beta)\nFM Macro OSC - melodic '90s PC Soundblaster engine. Think higher fidelity Sega Genesis or Doom 2. Surprisingly tasteful. A curated stock Yamaha OPL2.\n\nBlam - 0.5 (beta)\nFM Macro OSC - percussive/tonal - raw, heavy, digital. Extended fixed FM ratios allow modern sounds and alien harmonics to emerge. Mutated Yamaha OPL2.\n\nLiXR - 0.2 (beta)\nSingle percussion voice - Brutal digital drum with lots of range and made for Techno. Sonic Potions LXR imitation from Deepseek. Needs work, but it can slam.\n\nSAM - 0.1 (alpha)\nVocal Synthesizer - Software Automated Mouth - currently half-broken alpha - \"I love you\"",
+      desc: "Feral - 0.7 (beta)\nDangerous experimental Macro OSC: nyblcore, bytebeat, benjolin, rungler, chaotic maps, fourses, rhythmicon, gendy, pulsar, wave scan, and even worse to come.\n\nBlast - 0.8 (beta)\nFM Macro OSC - melodic '90s PC Soundblaster engine. Think higher fidelity Sega Genesis or Doom 2. Surprisingly tasteful. A curated stock Yamaha OPL2.\n\nBlam - 0.5 (beta)\nFM Macro OSC - percussive/tonal - raw, heavy, digital. Extended fixed FM ratios allow modern sounds and alien harmonics to emerge. Mutated Yamaha OPL2.\n\nLiXR - 0.2 (beta)\nSingle percussion voice - Brutal digital drum with lots of range and made for Techno. Sonic Potions LXR imitation from Deepseek. Needs work, but it can slam.\n\nSAM - 0.1 (alpha)\nVocal Synthesizer - Software Automated Mouth - currently half-broken alpha - \"I love you\"" },
+
     lixr: { label: "LiXR - 0.1 alpha",
       short: "Single percussion voice - Brutal Sonic Potions LXR imitation from Deepseek. Lots of range and can make ripping techno kicks. Needs work, but it can slam.",
       desc: "Single percussion voice - Brutal Sonic Potions LXR imitation from Deepseek. Lots of range and can make ripping techno kicks. Needs work, but it can slam.",
@@ -889,10 +889,10 @@ const FEAT = {
       short: "Une machine en plus : une basse acide à la manière de la TB-303, avec un potard de saturation et le slide tiré de vos trigs.",
       desc: "Une machine ajoutée après Chord, toujours la dernière (après le Sampler avec Model-TG, puis les moteurs du Syntakt et MACRO si vous les cochez aussi) : une basse acide à la manière de la TB-303, d'après le modèle libre Open303 de Robin Schmidt. COLOR règle le cutoff, SHAPE la résonance, SWEEP l'env mod, CONTOUR la saturation (du son propre au fuzz, à volume à peu près égal) et DECAY la décroissance ; PUNCH passe l'onde de scie à carré. Un trig dont la longueur (LEN) dépasse le trig suivant glisse vers la note suivante au lieu de la rejouer ; un pad joué pendant qu'un autre est tenu glisse aussi.",
       note: "À peu près aussi gourmande en calcul que Tone. Allumez GATE pour que les notes tiennent toute leur longueur, comme sur l'original. Avec les moteurs du Syntakt, leur régulateur de charge veille aussi sur les pistes ACID : une piste qu'il a arrêtée rejoue sa note suivante, sans glisser. Un projet qui utilise ACID demande un firmware où ACID est à la même place : c'est la dernière machine, son numéro dépend donc de Model-TG, des moteurs du Syntakt cochés et de MACRO." },
-    all: { label: "Feral + Blast + Blam + LiXR",
-      short: "Feral - 0.7 beta\nDangerous experimental Macro OSC: nyblcore, bytebeat, benjolin, rungler, chaotic maps, fourses, rhythmicon, gendy, pulsar, wave scan, and even worse to come.\n\nBlast - 0.8 beta\nTonal FM Macro OSC: melodic / '90s / Soundblaster / PC / Doom 2 . Think higher fidelity Sega Genesis. [stock Yamaha OPL2]\n\nBlam - 0.5 beta\nPercussion FM Macro OSC: raw, slamming, digital. Extensive fixed FM ratios turn anything into bass or lead. Modern sounds and oddly beautiful harmonics can be found. [mutated Yamaha OPL2]\n\nLiXR - 0.1 alpha\nSingle percussion voice - Brutal Sonic Potions LXR imitation from Deepseek. Lots of range and can make ripping techno kicks. Needs work, but it can slam.",
-      desc: "Feral - 0.7 beta\nDangerous experimental Macro OSC: nyblcore, bytebeat, benjolin, rungler, chaotic maps, fourses, rhythmicon, gendy, pulsar, wave scan, and even worse to come.\n\nBlast - 0.8 beta\nTonal FM Macro OSC: melodic / '90s / Soundblaster / PC / Doom 2 . Think higher fidelity Sega Genesis. [stock Yamaha OPL2]\n\nBlam - 0.5 beta\nPercussion FM Macro OSC: raw, slamming, digital. Extensive fixed FM ratios turn anything into bass or lead. Modern sounds and oddly beautiful harmonics can be found. [mutated Yamaha OPL2]\n\nLiXR - 0.1 alpha\nSingle percussion voice - Brutal Sonic Potions LXR imitation from Deepseek. Lots of range and can make ripping techno kicks. Needs work, but it can slam.",
-      note: "One build: Feral is machine 6, Blast machine 7, Blam machine 8 and LiXR machine 9." },
+    all: { label: "All this shit",
+      short: "\nFeral - 0.7 (beta)\nDangerous experimental Macro OSC: nyblcore, bytebeat, benjolin, rungler, chaotic maps, fourses, rhythmicon, gendy, pulsar, wave scan, and even worse to come.\n\nBlast - 0.8 (beta)\nFM Macro OSC - melodic '90s PC Soundblaster engine. Think higher fidelity Sega Genesis or Doom 2. Surprisingly tasteful. A curated stock Yamaha OPL2.\n\nBlam - 0.5 (beta)\nFM Macro OSC - percussive/tonal - raw, heavy, digital. Extended fixed FM ratios allow modern sounds and alien harmonics to emerge. Mutated Yamaha OPL2.\n\nLiXR - 0.2 (beta)\nSingle percussion voice - Brutal digital drum with lots of range and made for Techno. Sonic Potions LXR imitation from Deepseek. Needs work, but it can slam.\n\nSAM - 0.1 (alpha)\nVocal Synthesizer - Software Automated Mouth - currently half-broken alpha - \"I love you\"",
+      desc: "Feral - 0.7 (beta)\nDangerous experimental Macro OSC: nyblcore, bytebeat, benjolin, rungler, chaotic maps, fourses, rhythmicon, gendy, pulsar, wave scan, and even worse to come.\n\nBlast - 0.8 (beta)\nFM Macro OSC - melodic '90s PC Soundblaster engine. Think higher fidelity Sega Genesis or Doom 2. Surprisingly tasteful. A curated stock Yamaha OPL2.\n\nBlam - 0.5 (beta)\nFM Macro OSC - percussive/tonal - raw, heavy, digital. Extended fixed FM ratios allow modern sounds and alien harmonics to emerge. Mutated Yamaha OPL2.\n\nLiXR - 0.2 (beta)\nSingle percussion voice - Brutal digital drum with lots of range and made for Techno. Sonic Potions LXR imitation from Deepseek. Needs work, but it can slam.\n\nSAM - 0.1 (alpha)\nVocal Synthesizer - Software Automated Mouth - currently half-broken alpha - \"I love you\"" },
+
     lixr: { label: "LiXR - 0.1 alpha",
       short: "Single percussion voice - Brutal Sonic Potions LXR imitation from Deepseek. Lots of range and can make ripping techno kicks. Needs work, but it can slam.",
       desc: "Single percussion voice - Brutal Sonic Potions LXR imitation from Deepseek. Lots of range and can make ripping techno kicks. Needs work, but it can slam.",
@@ -1111,15 +1111,21 @@ const triedWith = (v, tg) => !!(v && (tg ? v.tg_tested : v.tested));
 // display order (chosenTweaks, REF_MAINOS keys).
 const features = () => (window.MC_TWEAKS && window.MC_TWEAKS.features) || [];
 const featById = (id) => features().find((f) => f.id === id);
+const DEFAULT_ON = new Set(["all"]);
 function selOf(f) {
-  return selection[f.id] || (selection[f.id] = f.engines ? { on: false, engines: [] }
-    : f.package ? { on: false } : { on: false, variant: f.variants[0].id });
+  return selection[f.id] || (selection[f.id] = f.engines ? { on: DEFAULT_ON.has(f.id), engines: [] }
+    : f.package ? { on: DEFAULT_ON.has(f.id) } : { on: DEFAULT_ON.has(f.id), variant: f.variants[0].id });
 }
 const label = (f) => featText(f.id, "label", f.label);
 // a mod without a short text shows the first sentence of its description (cut to 2 lines by the CSS)
 function shortOf(f) {
   const d = featText(f.id, "desc", f.desc);
   return featText(f.id, "short", "") || (d.match(/^.*?[.!?](?=\s|$)/) || [d])[0];
+}
+// The engine titles in the combined card are bold; every other line stays escaped text.
+function engineBlurb(text) {
+  return String(text).split("\n").map((line) =>
+    /^(Feral|Blast|Blam|LiXR|SAM) - /.test(line) ? `<b>${esc(line)}</b>` : esc(line)).join("\n");
 }
 const catOf = (f) => (f.cat && CATS.includes(f.cat) ? f.cat : "other");
 const order = () => CATS.flatMap((c) => features().filter((f) => catOf(f) === c));    // display order
@@ -1228,24 +1234,17 @@ function renderFeatures() {
   for (const c of CATS) {
     const mods = features().filter((f) => catOf(f) === c);
     if (!mods.length) continue;
-    const lit = mods.filter((f) => isOn(f.id) || includedBy(f));
-    const folded = pick.folded.has(c) && !searching();
     const g = document.createElement("section");
     g.className = "grp";
     g.id = "cat-" + c;
     g.hidden = !mods.some(matches);
-    const n = lit.length ? t(lit.length > 1 ? "grp_on" : "grp_on1", { k: lit.length, n: mods.length })
-      : esc(t(mods.length > 1 ? "grp_n" : "grp_n1", { n: mods.length }));
     const sub = (T[st.lang] || {})["cat_" + c + "_sub"] || "";
-    g.innerHTML = `<h3><button type="button" class="grp-h" id="grp-h-${c}" aria-expanded="${!folded}" aria-controls="grp-${c}">` +
-      `<span class="gt">${esc(t("cat_" + c))}</span>${sub ? `<span class="gs">${esc(sub)}</span>` : ""}<span class="gn">${n}</span>` +
-      `<svg class="chev" width="14" height="14" viewBox="0 0 14 14" fill="none" stroke="currentColor" stroke-width="1.7" stroke-linecap="round" stroke-linejoin="round" aria-hidden="true"><path d="M3 5l4 4 4-4"/></svg>` +
-      `</button></h3>` +
-      (folded && lit.length ? `<p class="grp-sel">${lit.map((f) => `<span class="${includedBy(f) ? "inc" : ""}">${esc(label(f))}</span>`).join("")}</p>` : "");
+    g.innerHTML = `<h3><span class="grp-h">` +
+      `<span class="gt">${esc(t("cat_" + c))}</span>${sub ? `<span class="gs">${esc(sub)}</span>` : ""}` +
+      `</span></h3>`;
     const body = document.createElement("div");
     body.className = "grp-body";
     body.id = "grp-" + c;
-    body.hidden = folded;
     for (const f of mods) body.appendChild(renderRow(f));
     g.appendChild(body);
     box.appendChild(g);
@@ -1270,15 +1269,12 @@ function renderRow(f) {
   if (f.needs === "syntakt") side.push(`<span class="need">${esc(t("need_syntakt"))}</span>`);
   const req = f.requires && featById(f.requires);
   if (req) side.push(`<span class="need">${esc(t("with_mod", { name: label(req) }))}</span>`);
-  const open = pick.open.has(f.id);
   d.innerHTML = `<label class="mod-row" for="feat-${f.id}">` +
       `<input type="checkbox" id="feat-${f.id}"${on ? " checked" : ""}${holder ? " disabled" : ""}>` +
       `<span class="ttl"><span class="nm">${esc(label(f))}</span>${holder ? `<span class="incl">${esc(t("included", { name: label(holder) }))}</span>` : ""}</span>` +
       `<span class="by">${side.join("")}</span>` +
-      `<span class="short">${esc(shortOf(f))}</span>` +
+      `<span class="short">${engineBlurb(shortOf(f))}</span>` +
     `</label>` +
-    `<button type="button" class="more" id="more-${f.id}" aria-expanded="${open}" aria-controls="det-${f.id}" aria-label="${esc(t("details_of", { name: label(f) }))}">` +
-      `<span class="lbl">${esc(t("details"))}</span><svg width="14" height="14" viewBox="0 0 14 14" fill="none" stroke="currentColor" stroke-width="1.7" stroke-linecap="round" stroke-linejoin="round" aria-hidden="true"><path d="M3 5l4 4 4-4"/></svg></button>` +
     `<div class="ext"></div>`;
   const ext = d.querySelector(".ext");
   const add = (html) => ext.insertAdjacentHTML("beforeend", html);
@@ -1299,7 +1295,7 @@ function renderRow(f) {
   if (f.variants && f.variants.length > 1 && sel.on) add(renderVariants(f, sel));
   if (f.engines && sel.on) add(renderEngines(f, sel, status));
   if (sel.on && featText(f.id, "note", "")) add(`<p class="say"><b>${esc(t("good_to_know"))}</b> ${esc(featText(f.id, "note", ""))}</p>`);
-  add(renderDetails(f, sel, open));
+  add(renderDetails(f, sel, true));
   return d;
 }
 
@@ -1398,7 +1394,7 @@ function renderDetails(f, sel, open) {
     `<b>${esc(e.name)}</b> (${esc(e.label)})${featText("eng-" + e.code, "note", "") ? " : " + esc(featText("eng-" + e.code, "note", "")) : ""}`).join("<br>"));
   if (!sel.on && featText(f.id, "note", "")) row("d_note", esc(featText(f.id, "note", "")));
   if (GUIDE_OF[f.id]) row("d_guide", `<a class="feat-guide" href="${GUIDE}#${GUIDE_OF[f.id]}">${esc(t("read_guide"))} <span aria-hidden="true">→</span></a>`);
-  return `<div class="det" id="det-${f.id}"${open ? "" : " hidden"}><p>${esc(featText(f.id, "desc", f.desc))}</p><dl class="facts">${rows.join("")}</dl></div>`;
+  return `<div class="det" id="det-${f.id}"><p>${engineBlurb(featText(f.id, "desc", f.desc))}</p><dl class="facts">${rows.join("")}</dl></div>`;
 }
 
 // Section chips: they jump to a section (never filter); the LED lights when the section holds a ticked mod.
@@ -1497,15 +1493,7 @@ function wirePicker() {
   $("features").addEventListener("click", (e) => {
     const b = e.target.closest("button");
     if (!b) return;
-    if (b.classList.contains("more")) {
-      const id = b.id.slice(5);
-      if (pick.open.has(id)) pick.open.delete(id); else pick.open.add(id);
-      renderFeatures();
-    } else if (b.classList.contains("grp-h")) {
-      const c = b.id.slice(6);
-      if (pick.folded.has(c)) pick.folded.delete(c); else pick.folded.add(c);
-      renderFeatures();
-    } else if (b.hasAttribute("data-undo")) {
+    if (b.hasAttribute("data-undo")) {
       const by = undo();
       changed();
       if (by && $("feat-" + by)) $("feat-" + by).focus({ preventScroll: true });
@@ -1515,33 +1503,12 @@ function wirePicker() {
       changed();
     }
   });
-  $("mod-sel").addEventListener("click", (e) => {
-    const b = e.target.closest("button");
-    if (!b) return;
-    if (b.dataset.off && featById(b.dataset.off)) {
-      const xs = [...$("mod-sel").querySelectorAll("[data-off]")], k = xs.indexOf(b);
-      setOn(featById(b.dataset.off), false);
-      changed();
-      const next = $("mod-sel").querySelectorAll("[data-off]")[k] || $("sel-title");   // focus: the next ×, else the title
-      if (next) next.focus({ preventScroll: true });
-      return;
-    }
-    if (b.hasAttribute("data-clear")) { for (const id in selection) selection[id].on = false; pick.swap = null; }
-    else if (b.hasAttribute("data-undo")) {
-      const by = undo();
-      changed();
-      if (by && $("feat-" + by)) $("feat-" + by).focus({ preventScroll: true });
-      return;
-    } else if (b.classList.contains("sel-more")) { pick.selOpen = !pick.selOpen; renderFeatures(); return; }
-    else return;
-    changed();
-  });
   $("mod-q").addEventListener("input", (e) => { pick.q = e.target.value; renderFeatures(); });
   $("mod-q").addEventListener("keydown", (e) => { if (e.key === "Escape") { pick.q = ""; renderFeatures(); } });
   $("mod-q-clr").addEventListener("click", () => { pick.q = ""; renderFeatures(); $("mod-q").focus(); });
   $("mod-found").addEventListener("click", (e) => { if (e.target.closest("[data-showall]")) { pick.q = ""; renderFeatures(); } });
-  // the selection bar floats only where IntersectionObserver exists (not in jsdom); its shadow only while it floats
-  if ("IntersectionObserver" in window) {
+  // the selection bar has been removed; keep the guard for old cached pages
+  if ("IntersectionObserver" in window && $("mod-sel-end") && $("mod-sel")) {
     $("panel-mods").classList.add("js-sticky");
     new IntersectionObserver(([en]) => {
       $("mod-sel").classList.toggle("stuck", !en.isIntersecting && en.boundingClientRect.top > 0);

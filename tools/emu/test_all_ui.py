@@ -16,7 +16,7 @@ def main():
  pat=bytes((i*7)&0xff for i in range(100))
  for d in (51,52,53): e.uc.mem_write(0x40a71754+100*d,pat)
  st=int(tw['symbols']['state_at'],16)
- for desc,name in [(77,'Feral SHAPE'),(82,'BLAST SHAPE'),(83,'BLAST SWEEP'),(87,'BLAM SHAPE'),(88,'BLAM SWEEP')]:
+ for desc,name in [(77,'Feral SHAPE'),(82,'BLAST SHAPE'),(83,'BLAST SWEEP'),(87,'BLAM SHAPE'),(88,'BLAM SWEEP'),(96,'SAM COLOR'),(97,'SAM SHAPE'),(98,'SAM SWEEP'),(99,'SAM CONTOUR')]:
   p=e.call(st,desc)
   obj=e.uc.mem_read(p,100)
   same=obj[:0x20]==pat[:0x20] and obj[0x24:0x30]==pat[0x24:0x30] and obj[0x34:]==pat[0x34:]

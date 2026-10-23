@@ -91,8 +91,8 @@ code{font-size:.82em}
 
 /* a mod = one row: key, name, one sentence; status and author on the right; Details opens the drawer */
 .mod{position:relative;border-bottom:1px solid var(--line)}
-.mod-row{display:grid;grid-template-columns:22px minmax(0,max-content) minmax(0,1fr) max-content;
-  grid-template-areas:"key ttl by tag" "key short short short";column-gap:14px;row-gap:1px;align-items:baseline;padding:12px 104px 13px 0;cursor:pointer}
+.mod-row{display:grid;grid-template-columns:22px minmax(0,max-content) minmax(0,1fr);
+  grid-template-areas:"key ttl by" "key short short";column-gap:14px;row-gap:1px;align-items:baseline;padding:12px 0 13px;cursor:pointer}
 .mod-row>input{grid-area:key;align-self:start;margin-top:2px}
 .ttl{grid-area:ttl;display:flex;flex-wrap:wrap;align-items:baseline;gap:0 10px;font-weight:700;font-size:17px;line-height:1.35;letter-spacing:-.01em}
 .ttl .incl{font-weight:400;font-size:14.5px;color:var(--muted);letter-spacing:0}
