@@ -35,7 +35,7 @@
   --f-lcd:"Tiny5",ui-monospace,monospace;
   --f-code:"IBM Plex Mono",ui-monospace,SFMono-Regular,Menlo,Consolas,monospace;
   --link:#0969da;
-  --foot:#8f8f89;
+  --foot:#70706b;
   --r:0px;
   --wrap:1180px;
   --gut:24px;
@@ -46,7 +46,7 @@
     color-scheme:dark;
     --paper:#1a1a1a;
     --link:#58a6ff;
-    --foot:#666662;
+    --foot:#4f4f4b;
     --casing:#232323;
     --well:#2c2c2c;
     --line:#343434;
@@ -74,7 +74,7 @@
   color-scheme:dark;
   --paper:#1a1a1a;
   --link:#58a6ff;
-  --foot:#666662;
+  --foot:#4f4f4b;
   --casing:#232323;
   --well:#2c2c2c;
   --line:#343434;

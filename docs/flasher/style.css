@@ -385,11 +385,14 @@ button.btn{border:1px solid var(--ink)}
 .foot{margin-top:24px}
 
 
-/* selectable options: a clear radio dot, filled when chosen */
-.seg button[role="radio"]{display:inline-flex;align-items:center;gap:8px;padding:10px 14px}
-.seg button[role="radio"]::before{content:"";flex:none;width:10px;height:10px;border:1.5px solid currentColor;border-radius:50%}
-.seg button[role="radio"][aria-checked="true"]::before{background:var(--paper);border-color:var(--paper)}
 
 .method-info{margin:0 0 16px}
 .method-info>summary{font-size:16px}
 .method-info .howto{margin-top:12px}
+
+.blurb-info{margin:0 0 14px;max-width:70ch}
+.blurb-info>summary{font-weight:600}
+.make-firmware{margin:12px 0 8px;max-width:820px}
+.make-firmware>summary{color:var(--bad);font-weight:700}
+.make-firmware ol{margin:12px 0 0;padding-left:1.4em;max-width:64ch}
+.make-firmware li{margin:.35em 0}
