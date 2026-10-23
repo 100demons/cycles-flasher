@@ -8,6 +8,8 @@
 
 .alert{margin:0 0 20px;padding:2px 0 2px 14px;border-left:3px solid var(--bad);color:var(--bad);font-size:16px}
 .alert a{color:inherit}
+.mach-warning{margin:14px 0 18px;padding:2px 0 2px 14px;border-left:3px solid var(--bad);color:var(--bad);font-size:16px;line-height:1.5;max-width:74ch}
+.mach-warning a{color:inherit;font-weight:600}
 
 /* steps: a rule, a numbered trig key that lights up once the step is done */
 .step{padding:22px 0 44px;border-top:1px solid var(--ink)}

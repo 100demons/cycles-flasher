@@ -255,6 +255,13 @@ async function main() {
       "credits section links Modded-Cycles' MIT license and this repo's third-party notices: " + JSON.stringify(lic));
     const box = (id) => doc.getElementById(id);
     const chosen = () => w.MCFlasherApp.chosenTweaks().map((x) => x.id).join();
+    const warning = textOf(doc, "#cat-sound .mach-warning");
+    check(/Warning: You can only flash ONE machine at a time/.test(warning)
+      && !!doc.querySelector('#cat-sound .mach-warning a[href="#make-firmware"]')
+      && !!box("make-firmware"), "red Machines warning, linked to the make-your-own instructions");
+    doc.querySelector('#cat-sound .mach-warning a[href="#make-firmware"]').click();
+    await wait(5);
+    check(box("make-firmware").open, "the warning link opens the make-your-own instructions");
     check(chosen() === "" && !box("feat-feral9").checked, "no engine selected by default: " + JSON.stringify(chosen()));
     check(!doc.getElementById("mod-sel") && !/Your selection/.test(text(doc, "panel-mods")),
       "no Your selection area");
@@ -272,6 +279,8 @@ async function main() {
     box("feat-sam").click(); await wait(5);
     check(chosen() === "sam" && box("feat-sam").checked && !box("feat-blast").checked,
       "ticking SAM unticks Blast: " + chosen());
+    check(!/Good to know|Doesn't go with/.test(text(doc, "features")),
+      "no Good to know or Doesn't go with pop-ups after ticking");
     box("feat-sam").click(); await wait(5);
     check(!chosen().length && !box("feat-sam").checked, "unticking the engine empties the selection");
     check(/Load your official OS file/.test(text(doc, "missing")), "flash button says what is missing: " + text(doc, "missing"));

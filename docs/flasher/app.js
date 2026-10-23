@@ -148,6 +148,7 @@ const T = {
     cat_lit: ", with ticked mods",
     cat_pack: "Packs", cat_pack_sub: "several mods in one",
     cat_sound: "Machines", cat_sound_sub: "",
+    mach_warning: `Warning: You can only flash ONE machine at a time. I'm working to fix this, but it is difficult. This page is a personal gallery for now. My goal is to have my better work incorporated into a larger, more successful firmware project.<br><br>Feel free to take anything from <a href="https://github.com/100demons/cycles-mods" target="_blank" rel="noopener">/cycles-mods/</a> repo and give it to your AI Agent. You can <a href="#make-firmware">make your own custom firmware</a> today with the parts you like.`,
     cat_seq: "Sequencer", cat_seq_sub: "trigs, tempo, arpeggios",
     cat_live: "Live playing", cat_live_sub: "mutes, chords, mixing",
     cat_screen: "Screen & browsing", cat_screen_sub: "browser, display, startup",
@@ -161,11 +162,7 @@ const T = {
     need_syntakt: "+ Syntakt OS in step 2",
     with_mod: "with {name}",
     part_tested: "Partly tested",
-    good_to_know: "Good to know:",
-    clash_row: "<b>Doesn't go with the mod {name}</b>, already ticked: {why}. Ticking this one unticks it.",
     clash_generic: "both change the same part of the firmware",
-    swapped: "The mod {off} was unticked: it doesn't go with {on}.",
-    swapped_n: "The mods {off} were unticked: they don't go with {on}.",
     quoted: "“{name}”",
     undo: "Undo",
     eng_group: "Engines",
@@ -180,7 +177,6 @@ const T = {
     d_join_new: "With {name}: checked in the emulator, not tested on a Model:Cycles yet.",
     d_with_tested_one: "With {name}: tried on the machine.",
     d_contains: "Contains", d_contains_v: "{names}: nothing more to tick.",
-    d_clash: "Doesn't go with", d_clash_v: "{name}: {why}.",
     d_file: "Extra file", d_file_syntakt: "your Syntakt OS file, asked for in step 2.",
     d_requires: "Works with", d_requires_v: "{name} only: ticking this one ticks it too, and unticking {name} unticks this one.",
     d_engines: "Engines",
@@ -430,6 +426,7 @@ const T = {
     cat_lit: ", avec des mods cochés",
     cat_pack: "Packs", cat_pack_sub: "plusieurs mods en un",
     cat_sound: "Machines", cat_sound_sub: "",
+    mach_warning: `Attention : vous ne pouvez flasher qu'UNE machine à la fois. Je travaille à corriger cela, mais c'est difficile. Cette page est une galerie personnelle pour l'instant. Mon objectif est de faire intégrer mon meilleur travail à un projet de firmware plus grand et plus abouti.<br><br>N'hésitez pas à prendre ce que vous voulez dans le dépôt <a href="https://github.com/100demons/cycles-mods" target="_blank" rel="noopener">/cycles-mods/</a> et à le donner à votre agent IA. Vous pouvez <a href="#make-firmware">fabriquer votre propre firmware personnalisé</a> dès aujourd'hui avec les parties qui vous plaisent.`,
     cat_seq: "Séquenceur", cat_seq_sub: "trigs, tempo, arpèges",
     cat_live: "Jeu en live", cat_live_sub: "mutes, accords, mixage",
     cat_screen: "Écran et navigation", cat_screen_sub: "navigateur, affichage, démarrage",
@@ -443,11 +440,7 @@ const T = {
     need_syntakt: "+ OS Syntakt à l'étape 2",
     with_mod: "avec {name}",
     part_tested: "Testé en partie",
-    good_to_know: "À savoir :",
-    clash_row: "<b>Ne va pas avec le mod {name}</b>, déjà coché : {why}. Cocher celui-ci le décochera.",
     clash_generic: "les deux modifient le même endroit du firmware",
-    swapped: "Le mod {off} a été décoché : il ne va pas avec {on}.",
-    swapped_n: "Les mods {off} ont été décochés : ils ne vont pas avec {on}.",
     quoted: "« {name} »",
     undo: "Annuler",
     eng_group: "Moteurs",
@@ -462,7 +455,6 @@ const T = {
     d_join_new: "Avec {name} : vérifié en émulation, pas encore testé sur un Model:Cycles.",
     d_with_tested_one: "Avec {name} : essayé sur la machine.",
     d_contains: "Contient", d_contains_v: "{names} : rien à cocher en plus.",
-    d_clash: "Ne va pas avec", d_clash_v: "{name} : {why}.",
     d_file: "Fichier en plus", d_file_syntakt: "votre fichier d'OS Syntakt, demandé à l'étape 2.",
     d_requires: "Marche avec", d_requires_v: "{name} seulement : cocher celui-ci le coche aussi, et décocher {name} décoche celui-ci.",
     d_engines: "Moteurs",
@@ -1265,6 +1257,7 @@ function renderFeatures() {
     g.innerHTML = `<h3><span class="grp-h">` +
       `<span class="gt">${esc(t("cat_" + c))}</span>${sub ? `<span class="gs">${esc(sub)}</span>` : ""}` +
       `</span></h3>`;
+    if (c === "sound") g.insertAdjacentHTML("beforeend", `<p class="mach-warning">${t("mach_warning")}</p>`);
     const body = document.createElement("div");
     body.className = "grp-body";
     body.id = "grp-" + c;
@@ -1310,14 +1303,8 @@ function renderRow(f) {
   // several variants of one mod (none today): a sub-choice once ticked
   if (f.variants && f.variants.length > 1 && sel.on) add(renderVariants(f, sel));
   if (f.engines && sel.on) add(renderEngines(f, sel, status));
-  if (sel.on && !f.one_of && featText(f.id, "note", "")) add(`<p class="say"><b>${esc(t("good_to_know"))}</b> ${esc(featText(f.id, "note", ""))}</p>`);
   add(renderDetails(f, sel, true));
   return d;
-}
-
-function swapText(sw) {
-  return t(sw.off.length > 1 ? "swapped_n" : "swapped",
-    { off: sw.off.map((id) => t("quoted", { name: label(featById(id)) })).join(", "), on: t("quoted", { name: label(featById(sw.by)) }) });
 }
 
 function renderVariants(f, sel) {
@@ -1358,7 +1345,6 @@ function renderEngines(f, sel, status) {
   }
   if (tg) html += `<p class="combo quiet">${esc(t("with_tg"))}</p>`;
   for (const id of j ? j.split("+") : []) html += `<p class="combo quiet">${esc(t("with_" + id))}</p>`;
-  html += `<p class="say"><b>${esc(t("good_to_know"))}</b> ${esc(t("renumber"))}</p>`;
   return html;
 }
 const dist = (c, sel) => c.engines.filter((x) => !sel.engines.includes(x)).length + sel.engines.filter((x) => !c.engines.includes(x)).length;
@@ -1467,7 +1453,6 @@ function renderSelection() {
       (statusOf(f) === "experimental" ? `<span class="cx" role="img" aria-label="${esc(t("experimental"))}" title="${esc(t("experimental"))}"></span>` : "") +
       `<button type="button" class="x" data-off="${f.id}" aria-label="${esc(t("sel_remove", { name: label(f) }))}">×</button></li>`;
   };
-  const sw = pick.swap;
   box.innerHTML = `<div class="sel-h">` +
       `<div class="sel-sum"><span class="sel-t" id="sel-title" tabindex="-1">${esc(t("sel_title"))}</span><span class="sel-c">${counts}</span></div>` +
       `<div class="sel-x">` +
@@ -1479,12 +1464,11 @@ function renderSelection() {
     `<div class="sel-body" id="sel-body">` +
       `<ul class="chips">${on.map(chip).join("")}${choiceNeedsSyntakt() ? `<li class="sel-need">${esc(t("sel_syntakt"))}</li>` : ""}` +
         `${st.machine !== "cyc" ? `<li class="sel-need">${esc(t("sel_samples"))}</li>` : ""}</ul>` +
-      (sw ? `<p class="sel-msg">${esc(swapText(sw))} <button type="button" class="lnk" data-undo>${esc(t("undo"))}</button></p>` : "") +
       `<p class="sel-foot"><button type="button" class="lnk soft" data-clear>${esc(t("sel_clear"))}</button></p>` +
     `</div>`;
   box.classList.toggle("open", pick.selOpen);
   // short announcement for screen readers: the live region stays in place, only its text changes
-  live(box.querySelector(".sel-c").textContent + (sw ? ". " + swapText(sw) : ""));
+  live(box.querySelector(".sel-c").textContent);
 }
 function live(text) {
   const el = $("mod-live");
@@ -1519,6 +1503,10 @@ function wirePicker() {
   $("mod-q").addEventListener("keydown", (e) => { if (e.key === "Escape") { pick.q = ""; renderFeatures(); } });
   $("mod-q-clr").addEventListener("click", () => { pick.q = ""; renderFeatures(); $("mod-q").focus(); });
   $("mod-found").addEventListener("click", (e) => { if (e.target.closest("[data-showall]")) { pick.q = ""; renderFeatures(); } });
+  // the red warning's "make your own custom firmware" link opens the instructions it points to
+  document.addEventListener("click", (e) => {
+    if (e.target.closest('a[href="#make-firmware"]') && $("make-firmware")) $("make-firmware").open = true;
+  });
   // the selection bar has been removed; keep the guard for old cached pages
   if ("IntersectionObserver" in window && $("mod-sel-end") && $("mod-sel")) {
     $("panel-mods").classList.add("js-sticky");
