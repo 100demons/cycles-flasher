@@ -14,7 +14,7 @@
 "use strict";
 
 const $ = (id) => document.getElementById(id);
-const REPO = "https://github.com/100demons/cycles";   // this demo site; the code comes from https://github.com/18nelli18/Modded-Cycles
+const REPO = "https://github.com/100demons/cycles-flasher";   // this demo site; the code comes from https://github.com/18nelli18/Modded-Cycles
 const UPSTREAM = "https://github.com/18nelli18/Modded-Cycles";
 const ELEKTRON_DL = "https://www.elektron.se/support-downloads/modelcycles";
 const ELEKTRON_SMP_DL = "https://www.elektron.se/support-downloads/modelsamples";

@@ -384,5 +384,8 @@ button.btn{border:1px solid var(--ink)}
 .bar i{box-shadow:0 2px 0 var(--ctl-edge)}
 .foot{margin-top:24px}
 
-#refresh{border:1px solid var(--ink);background:var(--paper);color:var(--ink);box-shadow:none;padding:10px 16px}
-#refresh:hover{background:var(--ink);color:var(--paper)}
+
+/* selectable options: a clear radio dot, filled when chosen */
+.seg button[role="radio"]{display:inline-flex;align-items:center;gap:8px;padding:10px 14px}
+.seg button[role="radio"]::before{content:"";flex:none;width:10px;height:10px;border:1.5px solid currentColor;border-radius:50%}
+.seg button[role="radio"][aria-checked="true"]::before{background:var(--paper);border-color:var(--paper)}
