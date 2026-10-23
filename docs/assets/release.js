@@ -7,6 +7,10 @@
  * of everything model27 builds on.
  */
 window.MC_RELEASES = [
+  { version: "0.14", date: "2026-10-23", changes: [
+    { en: "A red warning at the top of the Machines section explains that only one engine can be flashed at a time and links to the cycles-mods repo and to the “make your own custom firmware” instructions. The remaining “Good to know” and “Doesn't go with” messages are gone",
+      fr: "Un avertissement rouge en haut de la section Machines explique qu'un seul moteur peut être flashé à la fois et renvoie au dépôt cycles-mods ainsi qu'aux instructions « fabriquer votre propre firmware personnalisé ». Les derniers messages « À savoir » et « Ne va pas avec » ont disparu" },
+  ] },
   { version: "0.13", date: "2026-10-23", changes: [
     { en: "The engine cards show only their full text: the short duplicate line, the per-card credit, Status, clash warnings and the pre-install note are gone. Each card now links to its own guide section",
       fr: "Les cartes de moteur n'affichent plus que leur texte complet : la ligne courte en double, le crédit par carte, l'État, les avertissements d'incompatibilité et la note avant installation ont disparu. Chaque carte renvoie maintenant à sa section du guide" },
