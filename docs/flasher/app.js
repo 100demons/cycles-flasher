@@ -125,7 +125,7 @@ const PARTLY = false;           // true: an unticked engine card tested with som
 // ---------------------------------------------------------------------------
 const T = {
   en: {
-    title: "Model Cycles Engines — Flasher",
+    title: "Model Cycles Mods — Flasher",
     tagline: "Install mods on your Elektron Model:Cycles or Model:Samples, right from your browser.",
     s1: "What do you want to install?",
     tab_mods: "Mods",
@@ -134,7 +134,7 @@ const T = {
     cats_label: "Sections",
     cat_lit: ", with ticked mods",
     cat_pack: "Packs", cat_pack_sub: "several mods in one",
-    cat_sound: "Engines", cat_sound_sub: "",
+    cat_sound: "Machines", cat_sound_sub: "",
     cat_seq: "Sequencer", cat_seq_sub: "trigs, tempo, arpeggios",
     cat_live: "Live playing", cat_live_sub: "mutes, chords, mixing",
     cat_screen: "Screen & browsing", cat_screen_sub: "browser, display, startup",
@@ -416,7 +416,7 @@ const T = {
     cats_label: "Rubriques",
     cat_lit: ", avec des mods cochés",
     cat_pack: "Packs", cat_pack_sub: "plusieurs mods en un",
-    cat_sound: "Moteurs", cat_sound_sub: "",
+    cat_sound: "Machines", cat_sound_sub: "",
     cat_seq: "Séquenceur", cat_seq_sub: "trigs, tempo, arpèges",
     cat_live: "Jeu en live", cat_live_sub: "mutes, accords, mixage",
     cat_screen: "Écran et navigation", cat_screen_sub: "navigateur, affichage, démarrage",
