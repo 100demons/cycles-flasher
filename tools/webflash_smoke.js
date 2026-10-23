@@ -223,13 +223,13 @@ async function main() {
       "MCBuilder + MCComposer + MCFlasher present");
     const ids = w.MC_TWEAKS.tweaks.map((x) => x.id), cards = w.MC_TWEAKS.features;
     const lix = cards.find((f) => f.id === "lixr") || {};
-    const fe = cards.find((f) => f.id === "feral9") || {};
-    check(ids.length === 0 && cards.map((f) => f.id).join() === "lixr,feral9"
-      && lix.package === "lixr" && !lix.variants && fe.package === "feral9" && !fe.variants
-      && Object.keys(w.MC_TWEAKS.packages).join() === "lixr,feral9"
+    const fe = cards.find((f) => f.id === "feral9-lixr") || {};
+    check(ids.join() === "feral9-lixr" && cards.map((f) => f.id).join() === "lixr,feral9-lixr"
+      && lix.package === "lixr" && !lix.variants && fe.variants && fe.variants[0].id === "feral9-lixr"
+      && (fe.excludes || []).includes("lixr") && Object.keys(w.MC_TWEAKS.packages).join() === "lixr"
       && w.MC_TWEAKS.registrar && w.MC_TWEAKS.registrar.schema === "model27-registrar-frame/0.1"
       && !cards.some((f) => f.engines || f.needs) && !w.MC_TWEAKS.tweaks.some((x) => x.append && x.append.syntakt),
-      "MC_TWEAKS: LiXR and Feral, both machine packages composed in the page; " +
+      "MC_TWEAKS: LiXR (package) and the combined Feral + LiXR tweak; " +
       "nothing that needs the Syntakt OS: " + cards.map((f) => f.id).join());
     check(/build \d{4}-/.test(text(doc, "build-stamp")), "version stamp shown");
     const srcs = [...doc.querySelectorAll("script[src]")].map((x) => x.getAttribute("src"));
@@ -239,7 +239,7 @@ async function main() {
     // display order: by section (Sounds & machines, then Live playing), FEATURES order inside a section; the build
     // keeps FEATURES order (checked in 1b)
     const feats = [...doc.querySelectorAll("#features input[type=checkbox]")].map((c) => c.id);
-    check(feats.join() === "feat-lixr,feat-feral9", "2 feature rows: " + JSON.stringify(feats));
+    check(feats.join() === "feat-lixr,feat-feral9-lixr", "2 feature rows: " + JSON.stringify(feats));
     check(cards.every((f) => doc.querySelector(`#cat-${f.cat || "other"} #mod-${f.id} #feat-${f.id}`)),
       "every feature has a row in its section (cat)");
     const tagOfFeat = (f) => (f.status === "tested" ? "Tested" : "Experimental");
@@ -257,7 +257,7 @@ async function main() {
       "credits section links Modded-Cycles' MIT license and this repo's third-party notices: " + JSON.stringify(lic));
     const box = (id) => doc.getElementById(id);
     const chosen = () => w.MCFlasherApp.chosenTweaks().map((x) => x.id).join();
-    // both are composed package cards and go together
+    // LiXR is a package; the combined Feral + LiXR card is a prebuilt tweak
     box("feat-lixr").click(); await wait(5);
     const lixrAlone = chosen();
     check(lixrAlone === "lixr" && box("feat-lixr").checked && !doc.querySelector("#mod-lixr .say.clash")
@@ -265,16 +265,16 @@ async function main() {
       "LiXR alone gives the composed tweak " + lixrAlone + "; guide link");
     box("feat-lixr").click(); await wait(5);
     check(!chosen().length, "unticking LiXR empties the selection");
-    box("feat-feral9").click(); await wait(5);
-    const feralAlone = chosen();
-    check(feralAlone === "feral9" && box("feat-feral9").checked, "Feral alone gives its composed tweak: " + feralAlone);
+    box("feat-feral9-lixr").click(); await wait(5);
+    const combined = chosen();
+    check(combined === "feral9-lixr" && box("feat-feral9-lixr").checked, "Feral + LiXR gives its combined tweak: " + combined);
     box("feat-lixr").click(); await wait(5);
-    check(chosen() === "lixr+feral9" && box("feat-feral9").checked && box("feat-lixr").checked
-      && !doc.querySelector("#mod-feral9 .say.clash"), "LiXR and Feral compose together: " + chosen());
-    box("feat-lixr").click(); box("feat-feral9").click(); await wait(30);
+    check(chosen() === "lixr" && !box("feat-feral9-lixr").checked,
+      "LiXR replaces the combined card (they exclude each other): " + chosen());
+    box("feat-lixr").click(); box("feat-feral9-lixr").click(); await wait(30);
     check(doc.querySelectorAll('input[name="var-lixr"]').length === 0
-      && doc.querySelectorAll('input[name="var-feral9"]').length === 0, "LiXR and Feral: package cards, no sub-choice");
-    box("feat-feral9").click(); await wait(5);
+      && doc.querySelectorAll('input[name="var-feral9-lixr"]').length === 0, "LiXR and the combined card: no sub-choice");
+    box("feat-feral9-lixr").click(); await wait(5);
     check(!!doc.getElementById("tab-samples") && doc.getElementById("panel-samples").hidden && doc.getElementById("drop2-wrap").hidden,
       "Samples OS tab present, its panel and second drop zone hidden in Mods");
     check(/Load your official OS file/.test(text(doc, "missing")), "flash button says what is missing: " + text(doc, "missing"));
@@ -284,7 +284,7 @@ async function main() {
     doc.querySelector('.lang button[data-lang="fr"]').click();
     await wait(20);
     check(/Que voulez-vous installer/.test(text(doc, "h1s")) && doc.documentElement.lang === "fr", "FR switch translates the page");
-    check(/Machine LiXR/.test(text(doc, "features")) && /Machine Feral/.test(text(doc, "features"))
+    check(/Machine LiXR/.test(text(doc, "features")) && /Feral \+ LiXR/.test(text(doc, "features"))
       && /par 100demons/.test(text(doc, "features")) && /Testé/.test(text(doc, "features"))
       && doc.querySelector('#features a[href$="#lixr"]'),
       "FR switch translates both cards, their credit and tags, with the LiXR guide link");

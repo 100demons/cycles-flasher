@@ -372,6 +372,21 @@ ALL_FEATURES = [
         "package": "feral9",
     },
     {
+        "id": "feral9-lixr",
+        "cat": "sound",
+        "label": "Feral + LiXR",
+        "desc": "Both machines in one build: Feral's nine noisy models with its custom SHAPE names and MACHINES-page "
+                "picture, and LiXR's fixed-point drum voice. Feral is machine 6 and LiXR machine 7. "
+                "This is a fixed combined build: LiXR and Feral are not offered separately on this page.",
+        # both engines were tested alone; this combined build is new
+        "status": "experimental",
+        "credit": {"kind": "own", "who": "100demons"},
+        "variants": [
+            {"file": "65-feral9-lixr", "label": None},
+        ],
+        "excludes": ["lixr"],
+    },
+    {
         "id": "chord-keys",
         "cat": "live",
         "label": "Accords de gamme sur TRIG 1–16",
@@ -429,7 +444,7 @@ ALL_FEATURES = [
 # model27 offers a short list of cards. The other definitions above stay as they are, for the command-line build
 # (every tweak of tweaks/ is still built by tools/build.py) and so that merges from upstream apply cleanly; a card
 # comes back into the flasher by adding its id here, once it has been reviewed against the Cycles Mod Standard.
-OFFERED = ("lixr", "feral9")
+OFFERED = ("lixr", "feral9-lixr")
 FEATURES = [f for f in ALL_FEATURES if f["id"] in OFFERED]
 _missing = set(OFFERED) - {f["id"] for f in FEATURES}
 if _missing:

@@ -31,14 +31,11 @@ const ELEKTRON_ST_DL = "https://www.elektron.se/support-downloads/syntakt";
 const REF_MAINOS = {
   // each card alone: each variant, each combination of real Syntakt engines
   "lixr": "64598fe9a731343a96d8df7c33d1f4a8227ffffb8de26c45eefb1cfaec51d8c0",
-  "feral9": "b862a705d4518caff05b29d50f9d77bfbe6b085a337af65653c2c866ceec7a2d",
-  // every pair of cards the page lets you tick together
-  "lixr+feral9": "7cf98a3031d93ba9fe46155af4f438411dd68ad94b1f40967320672b09b576f0",
+  "feral9-lixr": "6ace2482ede3df46f7a46f37387abe567c4bcbd20f293de1781904507d798fe3",
 };
 const REF_MODS = {
+  "feral9-lixr": {"w": "e313b681fa854a7e149dbbc25d323a0952e8863a545569810942db846829c864", "p": "cfe88516c04f1dc1e54ee344badfde2cb28eb5018a80ebe3399c0cd15d8f0459"},
   "lixr": {"w": "8a6ab543006717bbfbe47a156cd3fb1e08459f09c762605acd4c6c678b2c29d6", "p": "70d2c2e589057476a55f4282f9ef44afe45f138c818edc173ab52605d9d20c39"},
-  "feral9": {"w": "232b6f2d310894d6efca232e0aa94a295d146cecfeec7ffb001bdca8bb58584a", "p": "82950af9d1616c34df432821a44e749f4b5e3cb737e533beb81acfe66597c806"},
-  "lixr+feral9": {"w": "39dbbc36411e1f6a961028888bbd8698edaf82bd16899a7706bbd680f36652e8", "p": "2e6e92ca4cf415c093dfb00e06e40979054ba2d9b7dcd2be266ffd616810c971"},
 };
 
 // "Samples OS" tab: official Model:Samples OS 1.13 inside the official Model:Cycles container
@@ -783,6 +780,10 @@ const FEAT = {
       short: "One extra machine: a fixed-point drum voice, feedback FM, a decimator instead of the filter.",
       desc: "An extra machine after Chord: a drum voice in the spirit of the Sonic Potions LXR drum voices, built from the Cycles' own fixed-point maths. One tableless oscillator moves from sine through triangle to saw and rectangle, with a noise and transient layer on top; feedback FM shapes it, a pitch envelope gives the attack, and a sample-rate decimator takes the place of the filter. COLOR = waveform (sine on the left, triangle in the centre, saw and rectangle on the right, noise and clap past 0.65), SHAPE = feedback FM, SWEEP = pitch-envelope depth and decay, RATE (where CONTOUR sits) = decimator rate; DECAY, GATE, PUNCH, FINE and PITCH work as on Tone.",
       note: "About as heavy on the processor as a stock Tone voice (measured: 6,335 to 6,499 instructions per block, against 6,572 for TONE). No load governor: several LiXR tracks at once can make the sound crackle. A project using LiXR needs a firmware with LiXR at the same place: it comes after Chord. English only for now." },
+    "feral9-lixr": { label: "Feral + LiXR",
+      short: "Both machines in one build: Feral's nine models with its custom UI, and LiXR.",
+      desc: "Both machines in one build: Feral's nine noisy models with its custom SHAPE names and MACHINES-page picture, and LiXR's fixed-point drum voice. Feral is machine 6 and LiXR machine 7. This is a fixed combined build; LiXR and Feral are not offered separately on this page.",
+      note: "Experimental: both engines were tested alone; this combined build is new. Back up first." },
     feral9: { label: "Feral machine",
       short: "One extra machine: nine noisy, unpredictable synthesis models, light on the processor.",
       desc: "An extra machine after Chord: nine noisy, unpredictable synthesis models. SHAPE picks the model: NYB (bytebeat), GND (Gendy), BNJ (Benjolin), RYT (Rhythmicon resonators), FRS (Fourses), RNG (a HAVOC rungler), PLS (pulsar), SCN (scanned synthesis) and KOS (logistic map). COLOR and SWEEP are the model's two macros, CONTOUR the tone envelope (or a third control for BNJ and RNG), PUNCH = FREE, DECAY and GATE as on Tone. Composes with LiXR.",

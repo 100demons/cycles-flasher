@@ -7,6 +7,10 @@
  * of everything model27 builds on.
  */
 window.MC_RELEASES = [
+  { version: "0.8", date: "2026-10-22", changes: [
+    { en: "Feral + LiXR: one combined card with both machines, keeping Feral's custom SHAPE model names and MACHINES-page picture. Experimental: each engine was tested alone; this combined build is new. LiXR alone stays available",
+      fr: "Feral + LiXR : une carte combinée avec les deux machines, qui garde les noms de modèles de SHAPE et l'image MACHINES de Feral. Expérimental : chaque moteur a été testé seul ; ce build combiné est nouveau. LiXR reste disponible seule" },
+  ] },
   { version: "0.7", date: "2026-10-22", changes: [
     { en: "Feral machine added: nine noisy, unpredictable synthesis models (NYB to KOS), light on the processor. Tested on a Model:Cycles (2026-10-22), and now composable with LiXR",
       fr: "Machine Feral ajoutée : neuf modèles de synthèse bruités et imprévisibles (NYB à KOS), légers pour le processeur. Testée sur un Model:Cycles (22/10/2026), et désormais composable avec LiXR" },
