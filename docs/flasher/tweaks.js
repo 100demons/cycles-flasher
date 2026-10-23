@@ -2032,8 +2032,8 @@ window.MC_TWEAKS = {
  "features": [
   {
    "id": "lixr",
-   "label": "LiXR machine",
-   "desc": "One extra machine after Chord: a fixed-point drum voice in the spirit of the Sonic Potions LXR drum voices. One tableless oscillator morphs from sine through triangle to saw and rectangle, with a noise and transient layer on top; feedback FM shapes it, a pitch envelope gives the attack, and a sample-rate decimator takes the place of the filter. COLOR = waveform (sine on the left, triangle in the centre, saw and rectangle on the right, noise and clap past 0.65), SHAPE = feedback FM, SWEEP = pitch-envelope depth and decay, RATE (where CONTOUR sits) = decimator rate; DECAY, GATE, PUNCH, FINE and PITCH work as on Tone.",
+   "label": "LiXR - 0.1 alpha",
+   "desc": "Single percussion voice - Brutal Sonic Potions LXR imitation from Deepseek. Lots of range and can make ripping techno kicks. Needs work, but it can slam.",
    "status": "tested",
    "credit": {
     "kind": "own",
@@ -2048,8 +2048,8 @@ window.MC_TWEAKS = {
   },
   {
    "id": "feral9",
-   "label": "Feral machine",
-   "desc": "One extra machine after Chord: nine noisy, unpredictable synthesis models, light on the processor. SHAPE picks the model (NYB bytebeat, GND Gendy, BNJ Benjolin, RYT Rhythmicon resonators, FRS Fourses, RNG a HAVOC rungler, PLS pulsar, SCN scanned synthesis, KOS logistic map); COLOR and SWEEP are the model's two macros, CONTOUR the tone envelope (or a third control for BNJ and RNG), PUNCH = FREE, DECAY and GATE as on Tone. Composes with LiXR.",
+   "label": "Feral - 0.7 beta",
+   "desc": "Dangerous experimental Macro OSC: nyblcore, bytebeat, benjolin, rungler, chaotic maps, fourses, rhythmicon, gendy, pulsar, wave scan, and even worse to come.",
    "status": "tested",
    "credit": {
     "kind": "own",
@@ -2064,8 +2064,8 @@ window.MC_TWEAKS = {
   },
   {
    "id": "blast",
-   "label": "BLAST machine (tonal OPL2)",
-   "desc": "One extra machine after Chord: fourteen tonal models built from the OPL2's two-operator FM (SIN, HLF, ABS, PLS, BAS, PIA, MAR, GLK, BRS, ACC, STR, STL, TMP, ZAP). SHAPE picks the model, SWEEP is the modulator ratio in steps (1:2 to 15X; FUNC leaves the steps), COLOR is the FM index, CONTOUR the envelope contour, PUNCH the chip's LFO, DECAY and GATE as on Tone. It has its own SHAPE names, ratio display and MACHINES-page splash. Standalone: not with LiXR, Feral or BLAM.",
+   "label": "Blast - 0.8 beta",
+   "desc": "Tonal FM Macro OSC: melodic / '90s / Soundblaster / PC / Doom 2 . Think higher fidelity Sega Genesis. [stock Yamaha OPL2]",
    "status": "experimental",
    "credit": {
     "kind": "own",
@@ -2086,8 +2086,8 @@ window.MC_TWEAKS = {
   },
   {
    "id": "blam",
-   "label": "BLAM machine (percussive OPL2)",
-   "desc": "One extra machine after Chord: twelve FM percussion models (KIK, TOM, BNG, CNG, TAI, TIM, MAR, DJB, BLK, GNG, BUB, ZAP) and two SAM speech banks. The FM models use the stepped Ratio list; SAM1/SAM2 use COLOR for the word, SWEEP for the scrub position and CONTOUR for the speaking speed. It has its own SHAPE names, ratio display and MACHINES-page splash. Standalone: not with LiXR, Feral or BLAST.",
+   "label": "Blam - 0.5 beta",
+   "desc": "Percussion FM Macro OSC: raw, slamming, digital. Extensive fixed FM ratios turn anything into bass or lead. Modern sounds and oddly beautiful harmonics can be found. [mutated Yamaha OPL2]",
    "status": "experimental",
    "credit": {
     "kind": "own",
