@@ -398,3 +398,6 @@ button.btn{border:1px solid var(--ink)}
 .discord{display:inline-flex;align-items:center;gap:6px;text-decoration:none}
 .discord svg{flex:none}
 .discord:hover{text-decoration:underline}
+
+.muted-link{color:inherit;text-decoration-color:currentColor}
+.step.done .num{background:var(--ctl);color:var(--ctl-ink);box-shadow:0 2px 0 var(--ctl-edge)}

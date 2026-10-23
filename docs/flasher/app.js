@@ -208,14 +208,14 @@ const T = {
     drop_title: "Drop model-cycles_OS1.13.syx here",
     drop_sub: "or click to choose it",
     drop_again: "Checked. Click or drop to use another file.",
-    get_os: `Don't have it? <a href="${ELEKTRON_DL}" target="_blank" rel="noopener">Download Model:Cycles OS 1.13 from elektron.se</a>, then unzip it.`,
+    get_os: `Don't have it? <a class="muted-link" href="${ELEKTRON_DL}" target="_blank" rel="noopener">Download Model:Cycles OS 1.13 from elektron.se</a>, then unzip it.`,
     s2_samples: "Load both official OS files",
     drop2_title: "Drop model-samples_OS1.13.syx here",
     drop2_sub: "the official Model:Samples OS, or click to choose it",
-    get_os_samples: `Don't have it? <a href="${ELEKTRON_SMP_DL}" target="_blank" rel="noopener">Download Model:Samples OS 1.13 from elektron.se</a>, then unzip it.`,
+    get_os_samples: `Don't have it? <a class="muted-link" href="${ELEKTRON_SMP_DL}" target="_blank" rel="noopener">Download Model:Samples OS 1.13 from elektron.se</a>, then unzip it.`,
     drop3_title: "Drop Syntakt_OS1.42.syx here",
     drop3_sub: "the official Syntakt OS, for its engines, or click to choose it",
-    get_os_syntakt: `Don't have it? <a href="${ELEKTRON_ST_DL}" target="_blank" rel="noopener">Download Syntakt OS 1.42 from elektron.se</a>, then unzip it. The page reads the engines from it, on your computer: no Syntakt needed.`,
+    get_os_syntakt: `Don't have it? <a class="muted-link" href="${ELEKTRON_ST_DL}" target="_blank" rel="noopener">Download Syntakt OS 1.42 from elektron.se</a>, then unzip it. The page reads the engines from it, on your computer: no Syntakt needed.`,
     s3: "Connect your Model:Cycles over USB",
     hu1: "Connect the {dev} to the computer with a USB cable and turn it on normally.",
     hu2: "On the {dev}, press <b>SETTINGS</b>, open <b>CONFIG › UPGRADE</b> and confirm with <b>YES</b>. It now waits for the firmware.",
@@ -1481,10 +1481,6 @@ function wirePicker() {
       pick.swap = null;
       changed();
     }
-  });
-  $("cats").addEventListener("click", (e) => {               // a jump to a folded section unfolds it first
-    const a = e.target.closest("a[data-cat]");
-    if (a && pick.folded.delete(a.dataset.cat)) renderFeatures();
   });
   $("mod-sel").addEventListener("click", (e) => {
     const b = e.target.closest("button");
