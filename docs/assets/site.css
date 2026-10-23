@@ -35,6 +35,7 @@
   --f-lcd:"Tiny5",ui-monospace,monospace;
   --f-code:"IBM Plex Mono",ui-monospace,SFMono-Regular,Menlo,Consolas,monospace;
   --link:#0969da;
+  --foot:#8f8f89;
   --r:0px;
   --wrap:1180px;
   --gut:24px;
@@ -45,6 +46,7 @@
     color-scheme:dark;
     --paper:#1a1a1a;
     --link:#58a6ff;
+    --foot:#666662;
     --casing:#232323;
     --well:#2c2c2c;
     --line:#343434;
@@ -72,6 +74,7 @@
   color-scheme:dark;
   --paper:#1a1a1a;
   --link:#58a6ff;
+  --foot:#666662;
   --casing:#232323;
   --well:#2c2c2c;
   --line:#343434;
@@ -145,7 +148,8 @@ h3{font-size:20px;letter-spacing:-.01em}
 .btn:active{transform:translateY(1px);box-shadow:0 1px 0 var(--ctl-edge)}
 
 /* footer */
-.foot{margin-top:120px;padding:28px 0 48px;border-top:1px solid var(--line);font-size:15px;color:var(--muted)}
+.foot{margin-top:120px;padding:28px 0 48px;border-top:1px solid var(--line);font-size:15px;color:var(--foot)}
+.foot a{color:inherit}
 .foot .wrap{display:flex;flex-wrap:wrap;gap:12px 32px;justify-content:space-between}
 .foot p{margin:0;max-width:62ch}
 .foot nav{display:flex;gap:18px}
