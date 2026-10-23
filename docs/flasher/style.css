@@ -401,3 +401,22 @@ button.btn{border:1px solid var(--ink)}
 
 .muted-link{color:inherit;text-decoration-color:currentColor}
 .step.done .num{background:var(--ctl);color:var(--ctl-ink);box-shadow:0 2px 0 var(--ctl-edge)}
+
+
+/* ticked boxes: a real check, not just a filled square */
+.mod-row>input:checked,.check input:checked,.variants input:not([type="radio"]):checked{
+  background-color:var(--ink);border-color:var(--ink);box-shadow:none;
+  background-image:url("data:image/svg+xml,%3Csvg xmlns='http://www.w3.org/2000/svg' viewBox='0 0 12 12'%3E%3Cpath d='M2 6.2 4.6 9 10 3' fill='none' stroke='%23f7f6f2' stroke-width='2' stroke-linecap='round' stroke-linejoin='round'/%3E%3C/svg%3E");background-position:center;background-size:13px 13px;background-repeat:no-repeat;
+}
+@media (prefers-color-scheme:dark){
+  :root:not([data-theme="light"]) .mod-row>input:checked,
+  :root:not([data-theme="light"]) .check input:checked,
+  :root:not([data-theme="light"]) .variants input:not([type="radio"]):checked {
+    background-image:url("data:image/svg+xml,%3Csvg xmlns='http://www.w3.org/2000/svg' viewBox='0 0 12 12'%3E%3Cpath d='M2 6.2 4.6 9 10 3' fill='none' stroke='%231a1a1a' stroke-width='2' stroke-linecap='round' stroke-linejoin='round'/%3E%3C/svg%3E");
+  }
+}
+:root[data-theme="dark"] .mod-row>input:checked,
+:root[data-theme="dark"] .check input:checked,
+:root[data-theme="dark"] .variants input:not([type="radio"]):checked {
+  background-image:url("data:image/svg+xml,%3Csvg xmlns='http://www.w3.org/2000/svg' viewBox='0 0 12 12'%3E%3Cpath d='M2 6.2 4.6 9 10 3' fill='none' stroke='%231a1a1a' stroke-width='2' stroke-linecap='round' stroke-linejoin='round'/%3E%3C/svg%3E");
+}
