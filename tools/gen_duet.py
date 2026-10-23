@@ -1,21 +1,21 @@
 #!/usr/bin/env python3
-"""Generates BLAM: one added percussion machine built from BLAM's OPL2-style 2-operator FM voice.
+"""Generates the DUET machine: 15 OPL2-style 2-operator FM models on SHAPE, as an added machine of the Model:Cycles.
 
-  - BLAM (7th machine): 12 curated BLAM engines and two SAM banks; SWEEP steps through the ratio list on the FM
-    engines and scrubs the word on SAM.
+  - 27-duet.json: the 7th machine, after the 6 stock ones.
 
-The engine is in tools/machines/blast/ (blast_dsp.h, the FM engine, blast_sam.h, the SAM voice, and blast.c, the
-bridge to the voice loop); its FM tables (blast_tables.h) are computed here. The tables come from their formulas: the
-OPL2's log-sine and power tables are rebuilt from the chip's published math, not copied from a ROM dump. The SAM
-tables and the 32 Braids words are static in blast_sam_tables.h and blast_sam_words.h.
+Every model has a fixed modulator:carrier ratio, set in steps on SWEEP; the percussion models of the first BLAST
+(which took a free ratio) and PLUCK, VIBES, ORGAN and FLUTE are gone. The engine is in tools/machines/duet/
+(duet_dsp.h, the engine, and duet.c, the bridge to the voice loop); its tables (duet_tables.h) and its splash
+pictures (duet_icons.h, tools/duet_screens.py) are computed here. The tables come from their formulas: the OPL2's
+log-sine and power tables are rebuilt from the chip's published math, not copied from a ROM dump.
 
 The machinery is ACID's and MACRO's (gen_macro.added_machine, notes/43 and notes/54): the same detours, the same moved
 tables, the same place in the payload. The tweak carries, from the OS, only the short original bytes ("old") that
 check the official file; the descriptor table is copied at build time from YOUR file (recipe "cycles").
 
-    python3 tools/gen_blast.py                                        # blast_tables.h only
-    python3 tools/gen_blast.py --cycles model-cycles_OS1.13.syx [--check]
-    python3 tools/gen_blast.py --compile-only                         # compile and link, no OS needed
+    python3 tools/gen_duet.py                                        # duet_tables.h only
+    python3 tools/gen_duet.py --cycles model-cycles_OS1.13.syx [--check]
+    python3 tools/gen_duet.py --compile-only                         # compile and link, no OS needed
 
 Built with m68k-linux-gnu-gcc 13.3 (Ubuntu 24.04), like ACID: another GCC gives other bytes, and --check says so.
 """
@@ -30,22 +30,20 @@ HERE = pathlib.Path(__file__).resolve().parent
 sys.path.insert(0, str(HERE))
 sys.path.insert(0, str(HERE / "emu"))
 
-import blam_screens as ui                 # noqa: E402  (the SHAPE / SWEEP interface detours)
+import duet_screens as ui                 # noqa: E402  (the splash pictures and the machine page)
 
 DEV = HERE.parent / "tweaks" / "model-cycles_OS1.13"
-OUT = DEV / "67-blam.json"
-SRC = HERE / "machines" / "blam"
-TABLES = SRC / "blam_tables.h"
-ICONS = SRC / "blam_icons.h"
+OUT = DEV / "66-duet.json"
+SRC = HERE / "machines" / "duet"
+TABLES = SRC / "duet_tables.h"
+ICONS = SRC / "duet_icons.h"
 
-CFLAGS = ["-mcpu=54418", "-Os", "-malign-int", "-U_FORTIFY_SOURCE", "-ffreestanding", "-fno-builtin",
+CFLAGS = ["-mcpu=54418", "-O2", "-malign-int", "-U_FORTIFY_SOURCE", "-ffreestanding", "-fno-builtin",
           "-fno-tree-loop-distribute-patterns", "-nostdlib", "-fno-pic", "-fno-common", "-ffunction-sections",
-          "-fdata-sections", "-fomit-frame-pointer", "-fno-asynchronous-unwind-tables",
-          "-fno-unwind-tables", "-fmerge-all-constants", "-fno-inline-functions-called-once",
-          "-Wall", "-Wextra", "-Werror"]
+          "-fdata-sections", "-fomit-frame-pointer", "-Wall", "-Wextra", "-Werror"]
 LINK = """SECTIONS
 {{
-  .text {code:#x} : {{ *(.text.blast_update) *(.text.blast_render) *(.text*) }}
+  .text {code:#x} : {{ *(.text.duet_update) *(.text.duet_render) *(.text*) }}
   .rodata ALIGN(4) : {{ *(.rodata*) }}
   .data ALIGN(4) : {{ *(.data*) }}
   .bss {bss:#x} (NOLOAD) : {{ *(.bss*) *(COMMON) }}
@@ -53,17 +51,13 @@ LINK = """SECTIONS
 }}
 """
 
-# BLAM exposes 12 FM engines and two SAM banks, in this SHAPE order.
-MODELS_BLAM = ("KIK", "TOM", "BNG", "CNG", "TAI", "TIM", "MAR", "DJB", "BLK", "GNG", "BUB", "ZAP",
-                "SAM1", "SAM2")
+MODELS = ("SIN", "HLF", "ABS", "PLS", "BAS", "PIA", "MAR", "GLK", "BRS", "ACC", "STR", "STL", "TMP", "ZAP")
 
-# --- the machines (as gen_macro.MACHINE): COLOR, SHAPE, SWEEP, CONTOUR = (long name, short name, default[, min, max]);
-# decay: the DECAY default; image 4: the stock TONE picture (the custom splash is not linked).
-# The display names follow BLAM v3: Index/Idx, Model/MODL, Ratio/RTIO, Env/Env. Ratio defaults to 4:1 (step 11,
-# whose first whole knob position is 68; see blast.c:step_value).
-KNOBS_BLAM = (("Index", "Idx", 64), ("Model", "MODL", 0, 0, len(MODELS_BLAM) - 1), ("Ratio", "RTIO", 68),
-               ("Env", "Env", 40))
-MACHINE = dict(name="BLAM", image=ui.IMAGE, decay=50, knobs=KNOBS_BLAM)
+# --- the machine (as gen_macro.MACHINE): COLOR, SHAPE, SWEEP, CONTOUR = (long name, short name, default[, min, max]);
+# decay: the DECAY default; image: our own splash, index 6 (tools/duet_screens.py). Defaults: the first model.
+MACHINE = dict(name="DUET", image=ui.IMAGE, decay=50,
+               knobs=(("Index", "Idx", 64), ("Model", "MODL", 0, 0, len(MODELS) - 1), ("Ratio", "RTIO", 80),
+                      ("Env", "Env", 40)))
 
 BSS_OFF = 0x36000                  # as MACRO and ACID: variables above the moved tables (gs.LAYOUT)
 
@@ -74,23 +68,24 @@ LFO_CLOCK = 49716.0                               # the OPL2's sample rate (14.3
 
 
 def tables():
-    """(name, C type, values) of blast_tables.h, and the #defines."""
+    """(name, C type, values) of duet_tables.h, and the #defines."""
     t = []
     # TINY's tables (gen_tables.py of the TINY add-on), same formulas
     t.append(("FM_SEMI_INC", "u32", [round(2 ** 32 * 440.0 * 2 ** ((n - 69) / 12.0) / FS) for n in range(13)]))
     t.append(("FM_LOGSIN", "u16", [round(-math.log2(math.sin((2 * i + 1) * math.pi / 1024.0)) * 256)
                                    for i in range(256)]))
     t.append(("FM_POW", "u16", [round(8192 * 2 ** (-(i + 1) / 256.0)) for i in range(256)]))
-    # BLAM's OPL2 multipliers plus the percussion ratios around them. 4:1 is present and is the default step;
-    # 1:4, 1:3, 2:3, 5:4, 3:2, 5:2, 7:2 and 9:2 are new.
-    t.append(("FM_MULT", "u16", [round(r * 256) for r in
-                                 (0.25, 1 / 3, 0.5, 2 / 3, 1, 1.25, 1.5, 2, 2.5, 3, 3.5, 4, 4.5, 5, 6, 7, 8, 9,
-                                  10, 12, 15)]))
+    # DUET
+    t.append(("FM_WZERO", "u16", [0, 0x200, 0, 0x100]))            # sine, half-sine, abs-sine, pulse
+    t.append(("FM_WSIGN", "u16", [0x200, 0x200, 0, 0]))
+    t.append(("FM_MULT", "u16", [round(r * 256) for r in (0.5, 1, 2, 3, 4, 5, 6, 7, 8, 9, 10, 12, 15)]))
     sixty = 60 * DB_UNITS
     t.append(("FM_RATE", "u32", [round(sixty * 65536 / (0.005 * 2000 ** (k / 127) * FS)) for k in range(128)]))
-    t.append(("FM_PDECAY", "u16", [round(65536 * math.exp(-BLK / (0.001 * 1000 ** (k / 127) * FS))) for k in range(128)]))
+    t.append(("FM_ATK", "u32", [min(65536, round(65536 * (1 - math.exp(-5 * BLK / (0.0005 * 4000 ** (k / 127) * FS)))))
+                                for k in range(128)]))
+    t.append(("FM_PDECAY", "u32", [round(65536 * math.exp(-BLK / (0.001 * 1000 ** (k / 127) * FS))) for k in range(128)]))
     t.append(("FM_EXP2", "u32", [round(65536 * 2 ** (i / 256)) for i in range(256)]))
-    t.append(("FM_CENTS", "u16", [round(65536 * (2 ** (c / 1200) - 1)) for c in range(64)]))
+    t.append(("FM_CENTS", "u32", [round(65536 * (2 ** (c / 1200) - 1)) for c in range(64)]))
     k = {
         "FM_LFO_VIB": round(2 ** 32 * (LFO_CLOCK / 8192) * BLK / FS),     # 6.07 Hz
         "FM_LFO_AM": round(2 ** 32 * (LFO_CLOCK / 13432) * BLK / FS),     # 3.70 Hz
@@ -100,8 +95,8 @@ def tables():
 
 def tables_header():
     t, k = tables()
-    out = ["/* BLAM's tables, computed by tools/gen_blast.py: do not edit by hand. */",
-           "#ifndef BLAM_TABLES_H", "#define BLAM_TABLES_H", ""]
+    out = ["/* DUET's tables, computed by tools/gen_duet.py: do not edit by hand. */",
+           "#ifndef DUET_TABLES_H", "#define DUET_TABLES_H", ""]
     for name, v in k.items():
         out.append(f"#define {name} {v:#x}u")
     out.append("")
@@ -114,24 +109,23 @@ def tables_header():
 
 
 def compile_machine(tmp, pay, tables_h, icons_h, bss_at=None, code_end=None, defs=()):
-    """The bridge and engine of BLAM linked at pay (code and tables) and bss_at (variables; pay + BSS_OFF by
-    default). The code and tables must end before code_end (gs.STUBS by default). Returns (bytes, symbols, end of the
-    BSS)."""
+    """The bridge, engine and splash pictures of DUET linked at pay (code, tables, pictures) and bss_at (variables;
+    pay + BSS_OFF by default). The code and tables must end before code_end (gs.STUBS by default). Returns (bytes,
+    symbols, end of the BSS)."""
     import gen_sdvintage_exact as gx
     import gen_syntakt_engines as gs
-    (tmp / "blam_tables.h").write_text(tables_h)           # this generator's tables, not the repo's file
-    (tmp / "blam_icons.h").write_text(icons_h)             # this generator's pictures
-    for f in ("blam.c", "blam_dsp.h", "blam_sam.h", "blam_sam_tables.h", "blam_sam_words.h"):
+    (tmp / "duet_tables.h").write_text(tables_h)           # this generator's tables, not the repo's file
+    (tmp / "duet_icons.h").write_text(icons_h)             # this generator's pictures
+    for f in ("duet.c", "duet_dsp.h"):
         (tmp / f).write_bytes((SRC / f).read_bytes())
     bss_at = pay + BSS_OFF if bss_at is None else bss_at
     code_end = gs.STUBS if code_end is None else code_end
-    o = tmp / "blast.o"
-    gx.run([gx.CROSS + "gcc", *CFLAGS, *(f"-D{d}" for d in defs), f"-I{tmp}", "-c", str(tmp / "blam.c"), "-o", str(o)])
-    ld, elf, out = tmp / "link.ld", tmp / "blast.elf", tmp / "blast.bin"
+    o = tmp / "duet.o"
+    gx.run([gx.CROSS + "gcc", *CFLAGS, *(f"-D{d}" for d in defs), f"-I{tmp}", "-c", str(tmp / "duet.c"), "-o", str(o)])
+    ld, elf, out = tmp / "link.ld", tmp / "duet.elf", tmp / "duet.bin"
     ld.write_text(LINK.format(code=pay, bss=bss_at))
-    gx.run([gx.CROSS + "ld", "-T", str(ld), "--gc-sections", "--no-warn-rwx-segments", "-e", "blast_update",
-            "-u", "blast_render", *(a for k in HOOKS for a in ("-u", k)), "-o", str(elf),
-            str(o)])
+    gx.run([gx.CROSS + "ld", "-T", str(ld), "--gc-sections", "--no-warn-rwx-segments", "-e", "duet_update",
+            "-u", "duet_render", *(a for k in HOOKS for a in ("-u", k)), "-o", str(elf), str(o)])
     secs = {}
     for line in gx.run([gx.CROSS + "objdump", "-h", str(elf)]).splitlines():
         f = line.split()
@@ -155,13 +149,14 @@ def compile_machine(tmp, pay, tables_h, icons_h, bss_at=None, code_end=None, def
 
 # called only from the detours (outside the C), kept by the linker: SWEEP's interface object, the knob turn's hook and
 # the machine's three Bitmap objects (their addresses go into the detour stubs)
-HOOKS = ("blast_state_at", "blast_state_connect", "blast_turn_hook", "blast_bm_a", "blast_bm_b", "blast_bm_c")
-SHAPE_DESC, SWEEP_DESC = 77, 78    # BLAM's descriptors: 76..80
+HOOKS = ("duet_state_at", "duet_state_connect", "duet_turn_hook", "duet_bm_a", "duet_bm_b", "duet_bm_c")
+SHAPE_DESC, SWEEP_DESC = 77, 78    # DUET's descriptors (gen_macro.added_machine, one added machine): 76..80
 TURN_AT, TURN_OLD = 0x4000b82a, "2f032f002f02"     # the OS's knob turn (0x4000b7d6), before vt[20]
 
 
-def blast_detours(syms):
-    """gen_syntakt_engines.detours_asm with BLAM's COLOR, SHAPE and SWEEP interface objects (76, 77 and 78)."""
+def duet_detours(syms):
+    """gen_syntakt_engines.detours_asm with DUET's screens: descriptors 77 and 78 (SHAPE and SWEEP) go to our own
+    interface objects, and the machine's pictures (index 6) to our Bitmap objects (tools/duet_screens.py)."""
     import gen_syntakt_engines as gs
     orig = gs.detours_asm
 
@@ -171,24 +166,20 @@ def blast_detours(syms):
 
 
 def other_ids():
-    """Tweaks never built with BLAM: everything that adds a machine or appends to the image (the payload and
-    boot hook are shared), and the TINY add-on's machines (not in this repo, same place)."""
-    import gen_acid as ga
-    ids = ga.other_ids() | {"acid", "acid-tg", "macro", "macro-tg", "model-tg", "model-tg-st",
-                            "tiny", "port", "tiny-port", "6ch-usbup", "mod-settings"}
-    for path in DEV.glob("[0-9]*.json"):
-        try:
-            t = json.loads(path.read_text(encoding="utf-8"))
-        except (OSError, ValueError):
-            continue
-        if t.get("append"):
+    """Tweaks never built with DUET: everything ACID alone excludes (DUET takes the same place and hooks), ACID
+    itself and every tweak that excludes ACID, and the TINY add-on's machines (not in this repo, same place)."""
+    import glob
+    acid = json.loads((DEV / "26-acid.json").read_text(encoding="utf-8"))
+    ids = set(acid["conflicts"]) | {"acid", "tiny", "port", "tiny-port", "6ch-usbup", "6ch-multiout", "blast"}
+    for f in glob.glob(str(DEV / "[0-9]*.json")):
+        t = json.loads(pathlib.Path(f).read_text(encoding="utf-8"))
+        if "acid" in t.get("conflicts", ()):
             ids.add(t["id"])
-    ids.discard("blam")
-    return ids
+    return ids - {"duet"}
 
 
 def build_tweak(img):
-    """The BLAM tweak: the 7th machine, alone (no Model-TG version yet)."""
+    """The DUET tweak: the 7th machine, alone (no Model-TG version yet)."""
     import gen_macro as gm
     import gen_syntakt_engines as gs
     import usb_steady
@@ -211,9 +202,10 @@ def build_tweak(img):
             return blob_, syms_
 
         gs.detours_asm, gm.assemble = detours_with_screens, assemble_keeping_symbols
-        machines = [dict(MACHINE, update=syms["blast_update"], render=syms["blast_render"])]
         try:
-            writes, append = gm.added_machine(img, None, machines, tmp, [(pay, blob)], bss_end)
+            writes, append = gm.added_machine(img, None, [dict(MACHINE, update=syms["duet_update"],
+                                                               render=syms["duet_render"])], tmp, [(pay, blob)],
+                                              bss_end)
         finally:
             gs.detours_asm, gm.assemble = detours, assemble
         ui.clamp_writes(writes, gm.BASE)
@@ -222,37 +214,35 @@ def build_tweak(img):
     if old.hex() != TURN_OLD:
         raise SystemExit(f"!! {TURN_AT:#x}: {TURN_OLD} expected, {old.hex()} found")
     writes.append({"off": TURN_AT - 0x40000400, "old": TURN_OLD,
-                   "new": "4ef9" + f"{syms['blast_turn_hook']:08x}"})
+                   "new": "4ef9" + f"{syms['duet_turn_hook']:08x}"})
     writes.sort(key=lambda w: w["off"])
     for a_, b_ in zip(writes, writes[1:]):
         if a_["off"] + len(a_["new"]) // 2 > b_["off"]:
             raise SystemExit(f"!! overlapping writes at {0x40000400 + b_['off']:#x}")
     ids = other_ids() | {"model-tg", "model-tg-st"}
     out = {
-        "id": "blam",
+        "id": "duet",
         "order": 27,
-        "name": "Machine BLAM : FM percussion and SAM speech",
+        "name": "Machine DUET : 14 modèles FM à la manière de l'OPL2",
         "description": [
-            "One added machine after the six stock ones, built from BLAM's OPL2-style FM voice and the SAM speech",
-            "synthesizer of Braids Renaissance:",
-            "BLAM (7th) has 12 percussion engines (KIK, TOM, BNG, CNG, TAI, TIM, MAR, DJB, BLK, GNG, BUB, ZAP)",
-            "and steps SWEEP through the ratio list, 1:4, 1:3, 1:2, 2:3, 1:1 ... 9:1, 10X, 12X, 15X, with 4:1 as the",
-            "default step. SHAPE 12 and 13 are SAM1 and SAM2: COLOR selects one of 16 words, SWEEP scrubs it,",
-            "CONTOUR sets the speaking speed, PUNCH loops the word, DECAY is the release.",
-            "COLOR = FM index / strike, SHAPE = model, SWEEP = ratio, CONTOUR = movement of the sound, DECAY, PUNCH =",
-            "the chip's LFO, GATE holds the note. A silent voice is not computed. Generated by tools/gen_blast.py.",
-            "From the OS, only the original bytes (old) that check the official file; the descriptor table is copied",
-            "at build time (recipe cycles).",
+            "Machine DUET en 7e machine, après les 6 d'origine : 14 modèles FM à deux opérateurs à la manière de",
+            "l'OPL2 sur SHAPE, tous à rapport fixe (SIN, HLF, ABS, PLS, BAS, PIA, MAR, GLK, BRS, ACC, STR, STL, TMP,",
+            "ZAP) et une image de machine à nous. COLOR = indice de modulation, SWEEP = rapport affiché 1:2, 1:1 …",
+            "9:1, 10X, 12X, 15X (par crans, comme le Digitone), CONTOUR = mouvement du son, DECAY, PUNCH = LFO de",
+            "la puce,",
+            "GATE tient la note. Une voix muette n'est pas calculée. Généré par tools/gen_duet.py. De l'OS, seuls",
+            "les octets d'origine (old) qui vérifient le fichier officiel ; la table des descripteurs est recopiée au",
+            "build (recette cycles).",
         ],
         "device": "Model:Cycles",
         "os": "1.13",
         "section": 3,
     }
-    out.update({"conflicts": sorted(ids - {"blam"}), "writes": writes, "append": append})
-    out["symbols"] = {k: f"{syms[k]:#x}" for k in ("blast_update", "blast_render", "trk",
-                                                   "blast_state_at", "blast_turn_hook", "blast_fmt", "blast_fine",
-                                                   "blast_turn", "blast_model_fmt", "ui_sweep", "ui_shape",
-                                                   "ui_color", "blast_bm_a", "blast_bm_b", "blast_bm_c")}
+    out.update({"conflicts": sorted(ids - {"duet"}), "writes": writes, "append": append})
+    out["symbols"] = {k: f"{syms[k]:#x}" for k in ("duet_update", "duet_render", "trk", "duet_shape",
+                                                   "duet_state_at", "duet_turn_hook", "duet_fmt", "duet_fine",
+                                                   "duet_turn", "duet_model_fmt", "ui_sweep", "ui_shape",
+                                                   "duet_bm_a", "duet_bm_b", "duet_bm_c")}
     out = usb_steady.add_to(out)           # as MACRO and ACID alone: USB sent on time (notes/35), voice loop (notes/36)
     out = voice_loop.add_to(out)
     segs = sum(n for _, n in append["pack"])
@@ -271,7 +261,7 @@ def emit(path, text, check):
 
 def main():
     ap = argparse.ArgumentParser(description=__doc__, formatter_class=argparse.RawDescriptionHelpFormatter)
-    ap.add_argument("--cycles", help="the official model-cycles_OS1.13.syx (without it: blast_tables.h only)")
+    ap.add_argument("--cycles", help="the official model-cycles_OS1.13.syx (without it: duet_tables.h only)")
     ap.add_argument("--check", action="store_true", help="check that the files in the repo match")
     ap.add_argument("--compile-only", action="store_true", help="compile and link the machine, no OS needed")
     args = ap.parse_args()
@@ -282,8 +272,8 @@ def main():
         gs.set_base(gs.PAY_ALONE)
         with tempfile.TemporaryDirectory() as d:
             blob, syms, bss_end = compile_machine(pathlib.Path(d), gs.PAY_ALONE, tables_header(), ui.icons_header())
-        print(f"  blast: code and tables {len(blob)} bytes, variables {bss_end - gs.PAY_ALONE - BSS_OFF} "
-              f"bytes, update {syms['blast_update']:#x}, render {syms['blast_render']:#x}")
+        print(f"  duet: code, tables and pictures {len(blob)} bytes, variables {bss_end - gs.PAY_ALONE - BSS_OFF} "
+              f"bytes, update {syms['duet_update']:#x}, render {syms['duet_render']:#x}")
     if args.cycles:
         import gen_sdvintage_7th as g7
         import gen_sdvintage_exact as gx

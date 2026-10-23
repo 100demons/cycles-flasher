@@ -3,7 +3,7 @@ HERE=pathlib.Path(__file__).resolve().parent
 sys.path.insert(0,str(HERE))
 import compose, gen_macro as gm, gen_sdvintage_exact as gx, gen_sdvintage_7th as g7
 import gen_syntakt_engines as gs
-import gen_blast, gen_blam, gen_sam
+import gen_duet, gen_blast, gen_sam
 import all_ui
 
 def align4(x): return (x+3)&~3
@@ -12,26 +12,26 @@ def mdict(m, name, image=4):
     return dict(name=name,image=image,decay=mc['decay_default'],knobs=knobs)
 
 def unified_detours(text, fs, bs, ls, ss):
-    # fs/bs/ls/ss: symbols of the Feral, BLAST, BLAM and SAM blobs (BLAST and BLAM use the same C names)
+    # fs/bs/ls/ss: symbols of the Feral, DUET, BLAST and SAM blobs (DUET and BLAST use the same C names)
     def setv(name, syms, key): return f"\t.set {name}, {syms[key]:#x}"
     head = "\n".join([setv('FERAL_INIT', fs, 'feral_state_init'),
-                      setv('BLAST_STATE_AT', bs, 'blast_state_at'), setv('BLAST_STATE_CONNECT', bs, 'blast_state_connect'),
-                      setv('BLAST_TURN_HOOK', bs, 'blast_turn_hook'),
-                      setv('BLAM_STATE_AT', ls, 'blast_state_at'), setv('BLAM_STATE_CONNECT', ls, 'blast_state_connect'),
-                      setv('BLAM_TURN_HOOK', ls, 'blast_turn_hook'),
+                      setv('DUET_STATE_AT', bs, 'duet_state_at'), setv('DUET_STATE_CONNECT', bs, 'duet_state_connect'),
+                      setv('DUET_TURN_HOOK', bs, 'duet_turn_hook'),
+                      setv('BLAST_STATE_AT', ls, 'blast_state_at'), setv('BLAST_STATE_CONNECT', ls, 'blast_state_connect'),
+                      setv('BLAST_TURN_HOOK', ls, 'blast_turn_hook'),
                       setv('SAM_STATE_AT', ss, 'sam_state_at'), setv('SAM_STATE_CONNECT', ss, 'sam_state_connect')]) + "\n"
     dispatch_at = """
 \tmove.l 4(%sp), %d0
 \tcmp.l #77, %d0
 \tbeq.w all_state_feral
 \tcmp.l #82, %d0
-\tbeq.w all_state_blast_shape
+\tbeq.w all_state_duet_shape
 \tcmp.l #83, %d0
-\tbeq.w all_state_blast_sweep
+\tbeq.w all_state_duet_sweep
 \tcmp.l #87, %d0
-\tbeq.w all_state_blam_shape
+\tbeq.w all_state_blast_shape
 \tcmp.l #88, %d0
-\tbeq.w all_state_blam_sweep
+\tbeq.w all_state_blast_sweep
 \tcmp.l #96, %d0
 \tbeq.w all_state_sam_color
 \tcmp.l #97, %d0
@@ -46,13 +46,13 @@ def unified_detours(text, fs, bs, ls, ss):
 \tcmp.l #77, %d0
 \tbeq.w all_connect_feral
 \tcmp.l #82, %d0
-\tbeq.w all_connect_blast_shape
+\tbeq.w all_connect_duet_shape
 \tcmp.l #83, %d0
-\tbeq.w all_connect_blast_sweep
+\tbeq.w all_connect_duet_sweep
 \tcmp.l #87, %d0
-\tbeq.w all_connect_blam_shape
+\tbeq.w all_connect_blast_shape
 \tcmp.l #88, %d0
-\tbeq.w all_connect_blam_sweep
+\tbeq.w all_connect_blast_sweep
 \tcmp.l #96, %d0
 \tbeq.w all_connect_sam_color
 \tcmp.l #97, %d0
@@ -66,6 +66,16 @@ def unified_detours(text, fs, bs, ls, ss):
 all_state_feral:
 \tjsr FERAL_INIT
 \trts
+all_state_duet_shape:
+\tmove.l #77, -(%sp)
+\tjsr DUET_STATE_AT
+\taddq.l #4, %sp
+\trts
+all_state_duet_sweep:
+\tmove.l #78, -(%sp)
+\tjsr DUET_STATE_AT
+\taddq.l #4, %sp
+\trts
 all_state_blast_shape:
 \tmove.l #77, -(%sp)
 \tjsr BLAST_STATE_AT
@@ -74,16 +84,6 @@ all_state_blast_shape:
 all_state_blast_sweep:
 \tmove.l #78, -(%sp)
 \tjsr BLAST_STATE_AT
-\taddq.l #4, %sp
-\trts
-all_state_blam_shape:
-\tmove.l #77, -(%sp)
-\tjsr BLAM_STATE_AT
-\taddq.l #4, %sp
-\trts
-all_state_blam_sweep:
-\tmove.l #78, -(%sp)
-\tjsr BLAM_STATE_AT
 \taddq.l #4, %sp
 \trts
 
@@ -97,6 +97,16 @@ all_connect_feral:
 \tlea 12(%sp), %sp
 \tmove.l #0x40a71500, %d0
 \trts
+all_connect_duet_shape:
+\tmove.l #77, -(%sp)
+\tjsr DUET_STATE_CONNECT
+\taddq.l #4, %sp
+\trts
+all_connect_duet_sweep:
+\tmove.l #78, -(%sp)
+\tjsr DUET_STATE_CONNECT
+\taddq.l #4, %sp
+\trts
 all_connect_blast_shape:
 \tmove.l #77, -(%sp)
 \tjsr BLAST_STATE_CONNECT
@@ -105,16 +115,6 @@ all_connect_blast_shape:
 all_connect_blast_sweep:
 \tmove.l #78, -(%sp)
 \tjsr BLAST_STATE_CONNECT
-\taddq.l #4, %sp
-\trts
-all_connect_blam_shape:
-\tmove.l #77, -(%sp)
-\tjsr BLAM_STATE_CONNECT
-\taddq.l #4, %sp
-\trts
-all_connect_blam_sweep:
-\tmove.l #78, -(%sp)
-\tjsr BLAM_STATE_CONNECT
 \taddq.l #4, %sp
 \trts
 
@@ -163,11 +163,11 @@ all_connect_sam_contour:
 all_turn_hook:
 \tcmp.l #83, %d2
 \tbne.s 1f
-\tjmp BLAST_TURN_HOOK
+\tjmp DUET_TURN_HOOK
 1:
 \tcmp.l #88, %d2
 \tbne.s 2f
-\tjmp BLAM_TURN_HOOK
+\tjmp BLAST_TURN_HOOK
 2:
 \tmove.l %d3, -(%sp)
 \tmove.l %d0, -(%sp)
@@ -190,9 +190,9 @@ with tempfile.TemporaryDirectory() as d:
     feral_at=align4(pay); feral_bss=align4(pay+gm.BSS_OFF)
     fb,fs,fend=compose.place_package(fe,feral_at,feral_bss,gs.STUBS,{'descriptor_base':76})
     blast_at=align4(feral_at+len(fb)); blast_bss=align4(fend)
-    bb,bs,bend=gen_blast.compile_machine(tmp,blast_at,gen_blast.tables_header(),gen_blast.ui.icons_header(),bss_at=blast_bss,defs=("SHAPE_DESC=82","SWEEP_DESC=83"))
+    bb,bs,bend=gen_duet.compile_machine(tmp,blast_at,gen_duet.tables_header(),gen_duet.ui.icons_header(),bss_at=blast_bss,defs=("SHAPE_DESC=82","SWEEP_DESC=83"))
     blam_at=align4(blast_at+len(bb)); blam_bss=align4(bend)
-    lb,ls,lend=gen_blam.compile_machine(tmp,blam_at,gen_blam.tables_header(),gen_blam.ui.icons_header(),bss_at=blam_bss,defs=("COLOR_DESC=86","SHAPE_DESC=87","SWEEP_DESC=88"))
+    lb,ls,lend=gen_blast.compile_machine(tmp,blam_at,gen_blast.tables_header(),gen_blast.ui.icons_header(),bss_at=blam_bss,defs=("COLOR_DESC=86","SHAPE_DESC=87","SWEEP_DESC=88"))
     lixr_at=align4(blam_at+len(lb)); lixr_bss=align4(lend)
     xb,xs,xend=compose.place_package(lx,lixr_at,lixr_bss,gs.STUBS,{})
     sam_at=align4(lixr_at+len(xb)); sam_bss=align4(xend)
@@ -201,8 +201,8 @@ with tempfile.TemporaryDirectory() as d:
     ub,us=all_ui.compile_ui(tmp,ui_at)
     syms={**fs,**bs,**ls,**xs,**ss}
     machines=[dict(mdict(fe,'Feral',image=6),update=fs['tiny2_update'],render=fs['tiny2_render']),
-              dict(name='BLAST',image=7,decay=gen_blast.MACHINE['decay'],knobs=gen_blast.MACHINE['knobs'],update=bs['blast_update'],render=bs['blast_render']),
-              dict(name='BLAM',image=8,decay=gen_blam.MACHINE['decay'],knobs=gen_blam.MACHINE['knobs'],update=ls['blast_update'],render=ls['blast_render']),
+              dict(name='DUET',image=7,decay=gen_duet.MACHINE['decay'],knobs=gen_duet.MACHINE['knobs'],update=bs['duet_update'],render=bs['duet_render']),
+              dict(name='BLAST',image=8,decay=gen_blast.MACHINE['decay'],knobs=gen_blast.MACHINE['knobs'],update=ls['blast_update'],render=ls['blast_render']),
               dict(mdict(lx,'LiXR',image=9),update=xs['lixr_update'],render=xs['lixr_render']),
               dict(name='SAM',image=4,decay=gen_sam.MACHINE['decay'],knobs=gen_sam.MACHINE['knobs'],update=ss['sam_update'],render=ss['sam_render'])]
     detsyms={}
@@ -228,9 +228,9 @@ with tempfile.TemporaryDirectory() as d:
     writes.sort(key=lambda w:w['off'])
     for a,b in zip(writes,writes[1:]):
         assert a['off']+len(a['new'])//2 <= b['off'], (hex(a['off']),hex(b['off']))
-    tweak=dict(id='all',order=90,name='All this shit',description=['One firmware with five machines: Feral, Blast, Blam, LiXR and SAM.'],
+    tweak=dict(id='all',order=90,name='All this shit',description=['One firmware with five machines: Feral, Duet, Blast, LiXR and SAM.'],
                device='Model:Cycles',os='1.13',section=3,status='experimental',
-               conflicts=['lixr','feral9','blast','blam','sam'],writes=writes,append=append,
-               symbols={**{k:f'{v:#x}' for k,v in syms.items() if k in ('tiny2_update','tiny2_render','blast_update','blast_render','lixr_update','lixr_render','sam_update','sam_render')}, **{k:f'{v:#x}' for k,v in detsyms.items() if k in ('state_at','state_connect','all_turn_hook')}})
+               conflicts=['lixr','feral9','duet','blast','sam'],writes=writes,append=append,
+               symbols={**{k:f'{v:#x}' for k,v in syms.items() if k in ('tiny2_update','tiny2_render','duet_update','duet_render','blast_update','blast_render','lixr_update','lixr_render','sam_update','sam_render')}, **{k:f'{v:#x}' for k,v in detsyms.items() if k in ('state_at','state_connect','all_turn_hook')}})
     pathlib.Path('tweaks/model-cycles_OS1.13/90-all.json').write_text(json.dumps(tweak,indent=1)+'\n')
     print('wrote 90-all',len(writes),append['size'],append['dest'],'bss end',hex(send),'turn',hex(detsyms['all_turn_hook']))

@@ -173,7 +173,7 @@ def patch_detours(text, syms):
 
 def other_ids():
     """Every tweak that carries an appended payload or adds a machine: the payload and boot hook are shared."""
-    ids = ga.other_ids() | {"acid", "acid-tg", "blast", "macro", "macro-tg", "model-tg", "model-tg-st",
+    ids = ga.other_ids() | {"acid", "acid-tg", "blast", "duet", "macro", "macro-tg", "model-tg", "model-tg-st",
                             "lixr", "dxr", "tiny", "port", "tiny-port", "6ch-usbup", "mod-settings"}
     for path in DEV.glob("*.json"):
         try:

@@ -17,16 +17,16 @@ window.MC_TWEAKS = {
  },
  "tweaks": [
   {
-   "id": "blast",
+   "id": "duet",
    "order": 27,
-   "name": "Machine BLAST : 14 modèles FM à la manière de l'OPL2",
+   "name": "Machine DUET : 14 modèles FM à la manière de l'OPL2",
    "description": [
-    "Machine BLAST en 7e machine, après les 6 d'origine : 14 modèles FM à deux opérateurs à la manière de",
+    "Machine DUET en 7e machine, après les 6 d'origine : 14 modèles FM à deux opérateurs à la manière de",
     "l'OPL2 sur SHAPE, tous à rapport fixe (SIN, HLF, ABS, PLS, BAS, PIA, MAR, GLK, BRS, ACC, STR, STL, TMP,",
     "ZAP) et une image de machine à nous. COLOR = indice de modulation, SWEEP = rapport affiché 1:2, 1:1 …",
     "9:1, 10X, 12X, 15X (par crans, comme le Digitone), CONTOUR = mouvement du son, DECAY, PUNCH = LFO de",
     "la puce,",
-    "GATE tient la note. Une voix muette n'est pas calculée. Généré par tools/gen_blast.py. De l'OS, seuls",
+    "GATE tient la note. Une voix muette n'est pas calculée. Généré par tools/gen_duet.py. De l'OS, seuls",
     "les octets d'origine (old) qui vérifient le fichier officiel ; la table des descripteurs est recopiée au",
     "build (recette cycles).",
     "Envoi à l'USB à heure fixe (tools/usb_steady.py, notes/35) : la charge varie avec l'arrêt des voix muettes.",
@@ -40,9 +40,8 @@ window.MC_TWEAKS = {
     "6ch-usbup",
     "acid",
     "acid-tg",
-    "blam",
+    "blast",
     "feral9",
-    "feral9-lixr",
     "lixr",
     "macro",
     "macro-acid",
@@ -52,6 +51,7 @@ window.MC_TWEAKS = {
     "model-tg-st",
     "port",
     "refmachine",
+    "sam",
     "sampler",
     "sdvintage-7th",
     "sdvintage-exact",
@@ -963,7 +963,7 @@ window.MC_TWEAKS = {
      },
      {
       "dest": "0x43033800",
-      "hex": "401300d8401300dd401300e3401300e940129960401300ee43033878400aa08c400ab3b0400aa49c400aa998400aa7b8400aae8843000000400aa3c4400ab6e8400aa712400aacc2400aa930400ab24c430002bc000000010000000200000003000000040000000500000006000000070001020304050600424c41535400496e64657800496478004d6f64656c004d4f444c00526174696f005254494f00456e7600"
+      "hex": "401300d8401300dd401300e3401300e940129960401300ee43033878400aa08c400ab3b0400aa49c400aa998400aa7b8400aae8843000000400aa3c4400ab6e8400aa712400aacc2400aa930400ab24c430002bc0000000100000002000000030000000400000005000000060000000700010203040506004455455400496e64657800496478004d6f64656c004d4f444c00526174696f005254494f00456e7600"
      },
      {
       "dest": "0x43034000",
@@ -974,7 +974,7 @@ window.MC_TWEAKS = {
      },
      {
       "dest": "0x430350a0",
-      "hex": "000000060000000b0000000000007f0000004000000000000010ffffffffffff0000000000000600000000284303387e4012996f43033884000000060000000c0000000000000d0000000000000000000011ffffffffffff000000000000060000000032430338884012996f4303388e000000060000000d0000000000007f0000005000000000000012ffffffffffff00000000000006000000003c430338934012996f43033899000000060000000e0000000000007f0000002800000000000013ffffffffffff0000000000000600000000464303389e4012996f4303389e00000007000000120000000000007f0000003200000000000050ffff0000009a00000000000006000000001e401298784012988240129886"
+      "hex": "000000060000000b0000000000007f0000004000000000000010ffffffffffff0000000000000600000000284303387d4012996f43033883000000060000000c0000000000000d0000000000000000000011ffffffffffff000000000000060000000032430338874012996f4303388d000000060000000d0000000000007f0000005000000000000012ffffffffffff00000000000006000000003c430338924012996f43033898000000060000000e0000000000007f0000002800000000000013ffffffffffff0000000000000600000000464303389d4012996f4303389d00000007000000120000000000007f0000003200000000000050ffff0000009a00000000000006000000001e401298784012988240129886"
      }
     ],
     "reloc": [
@@ -1004,31 +1004,31 @@ window.MC_TWEAKS = {
     ]
    },
    "symbols": {
-    "blast_update": "0x43000000",
-    "blast_render": "0x430002bc",
+    "duet_update": "0x43000000",
+    "duet_render": "0x430002bc",
     "trk": "0x430360d4",
-    "blast_shape": "0x430360cc",
-    "blast_state_at": "0x43002048",
-    "blast_turn_hook": "0x43001b88",
-    "blast_fmt": "0x43001e38",
-    "blast_fine": "0x43001ec8",
-    "blast_turn": "0x43001f46",
-    "blast_model_fmt": "0x43001db6",
+    "duet_shape": "0x430360cc",
+    "duet_state_at": "0x43002048",
+    "duet_turn_hook": "0x43001b88",
+    "duet_fmt": "0x43001e38",
+    "duet_fine": "0x43001ec8",
+    "duet_turn": "0x43001f46",
+    "duet_model_fmt": "0x43001db6",
     "ui_sweep": "0x43036068",
     "ui_shape": "0x43036004",
-    "blast_bm_a": "0x43002170",
-    "blast_bm_b": "0x43002154",
-    "blast_bm_c": "0x43002138"
+    "duet_bm_a": "0x43002170",
+    "duet_bm_b": "0x43002154",
+    "duet_bm_c": "0x43002138"
    }
   },
   {
-   "id": "blam",
+   "id": "blast",
    "order": 27,
-   "name": "Machine BLAM : FM percussion and SAM speech",
+   "name": "Machine BLAST : FM percussion and SAM speech",
    "description": [
-    "One added machine after the six stock ones, built from BLAM's OPL2-style FM voice and the SAM speech",
+    "One added machine after the six stock ones, built from BLAST's OPL2-style FM voice and the SAM speech",
     "synthesizer of Braids Renaissance:",
-    "BLAM (7th) has 12 percussion engines (KIK, TOM, BNG, CNG, TAI, TIM, MAR, DJB, BLK, GNG, BUB, ZAP)",
+    "BLAST (7th) has 12 percussion engines (KIK, TOM, BNG, CNG, TAI, TIM, MAR, DJB, BLK, GNG, BUB, ZAP)",
     "and steps SWEEP through the ratio list, 1:4, 1:3, 1:2, 2:3, 1:1 ... 9:1, 10X, 12X, 15X, with 4:1 as the",
     "default step. SHAPE 12 and 13 are SAM1 and SAM2: COLOR selects one of 16 words, SWEEP scrubs it,",
     "CONTOUR sets the speaking speed, PUNCH loops the word, DECAY is the release.",
@@ -1046,9 +1046,9 @@ window.MC_TWEAKS = {
     "6ch-usbup",
     "acid",
     "acid-tg",
-    "blast",
+    "all",
+    "duet",
     "feral9",
-    "feral9-lixr",
     "lixr",
     "macro",
     "macro-acid",
@@ -1059,6 +1059,7 @@ window.MC_TWEAKS = {
     "model-tg-st",
     "port",
     "refmachine",
+    "sam",
     "sampler",
     "sdvintage-7th",
     "sdvintage-exact",
@@ -1970,7 +1971,7 @@ window.MC_TWEAKS = {
      },
      {
       "dest": "0x43033800",
-      "hex": "401300d8401300dd401300e3401300e940129960401300ee43033878400aa08c400ab3b0400aa49c400aa998400aa7b8400aae8843000000400aa3c4400ab6e8400aa712400aacc2400aa930400ab24c430001aa000000010000000200000003000000040000000500000006000000070001020304050600424c414d00496e64657800496478004d6f64656c004d4f444c00526174696f005254494f00456e7600"
+      "hex": "401300d8401300dd401300e3401300e940129960401300ee43033878400aa08c400ab3b0400aa49c400aa998400aa7b8400aae8843000000400aa3c4400ab6e8400aa712400aacc2400aa930400ab24c430001aa000000010000000200000003000000040000000500000006000000070001020304050600424c41535400496e64657800496478004d6f64656c004d4f444c00526174696f005254494f00456e7600"
      },
      {
       "dest": "0x43034000",
@@ -1981,7 +1982,7 @@ window.MC_TWEAKS = {
      },
      {
       "dest": "0x430350a0",
-      "hex": "000000060000000b0000000000007f0000004000000000000010ffffffffffff0000000000000600000000284303387d4012996f43033883000000060000000c0000000000000d0000000000000000000011ffffffffffff000000000000060000000032430338874012996f4303388d000000060000000d0000000000007f0000004400000000000012ffffffffffff00000000000006000000003c430338924012996f43033898000000060000000e0000000000007f0000002800000000000013ffffffffffff0000000000000600000000464303389d4012996f4303389d00000007000000120000000000007f0000003200000000000050ffff0000009a00000000000006000000001e401298784012988240129886"
+      "hex": "000000060000000b0000000000007f0000004000000000000010ffffffffffff0000000000000600000000284303387e4012996f43033884000000060000000c0000000000000d0000000000000000000011ffffffffffff000000000000060000000032430338884012996f4303388e000000060000000d0000000000007f0000004400000000000012ffffffffffff00000000000006000000003c430338934012996f43033899000000060000000e0000000000007f0000002800000000000013ffffffffffff0000000000000600000000464303389e4012996f4303389e00000007000000120000000000007f0000003200000000000050ffff0000009a00000000000006000000001e401298784012988240129886"
      }
     ],
     "reloc": [
@@ -2047,11 +2048,11 @@ window.MC_TWEAKS = {
     "6ch-usbup",
     "acid",
     "acid-tg",
-    "addy",
-    "blam",
+    "all",
     "blast",
+    "duet",
     "dxr",
-    "feral",
+    "feral9",
     "lixr",
     "macro",
     "macro-acid",
@@ -2061,6 +2062,8 @@ window.MC_TWEAKS = {
     "model-tg",
     "model-tg-st",
     "port",
+    "refmachine",
+    "sampler",
     "sdvintage-7th",
     "sdvintage-exact",
     "sdvintage-snare",
@@ -2987,14 +2990,38 @@ window.MC_TWEAKS = {
    "package": "feral9",
    "one_of": "engine",
    "excludes": [
+    "duet",
     "blast",
-    "blam"
+    "sam"
    ]
   },
   {
-   "id": "blast",
-   "label": "Blast - 0.8 beta",
+   "id": "duet",
+   "label": "Duet - 0.8 beta",
    "desc": "FM Macro OSC - melodic '90s PC Soundblaster engine. Think higher fidelity Sega Genesis or Doom 2. Surprisingly tasteful. A curated stock Yamaha OPL2.",
+   "status": "experimental",
+   "credit": {
+    "kind": "own",
+    "who": "100demons"
+   },
+   "cat": "sound",
+   "variants": [
+    {
+     "id": "duet",
+     "label": null
+    }
+   ],
+   "excludes": [
+    "lixr",
+    "feral9",
+    "blast"
+   ],
+   "one_of": "engine"
+  },
+  {
+   "id": "blast",
+   "label": "Blast - 0.5 beta",
+   "desc": "FM Macro OSC - percussive/tonal - raw, heavy, digital. Extended fixed FM ratios allow modern sounds and alien harmonics to emerge. Mutated Yamaha OPL2.",
    "status": "experimental",
    "credit": {
     "kind": "own",
@@ -3010,30 +3037,7 @@ window.MC_TWEAKS = {
    "excludes": [
     "lixr",
     "feral9",
-    "blam"
-   ],
-   "one_of": "engine"
-  },
-  {
-   "id": "blam",
-   "label": "Blam - 0.5 beta",
-   "desc": "FM Macro OSC - percussive/tonal - raw, heavy, digital. Extended fixed FM ratios allow modern sounds and alien harmonics to emerge. Mutated Yamaha OPL2.",
-   "status": "experimental",
-   "credit": {
-    "kind": "own",
-    "who": "100demons"
-   },
-   "cat": "sound",
-   "variants": [
-    {
-     "id": "blam",
-     "label": null
-    }
-   ],
-   "excludes": [
-    "lixr",
-    "feral9",
-    "blast"
+    "duet"
    ],
    "one_of": "engine"
   },
@@ -3050,8 +3054,9 @@ window.MC_TWEAKS = {
    "package": "lixr",
    "one_of": "engine",
    "excludes": [
+    "duet",
     "blast",
-    "blam"
+    "sam"
    ]
   },
   {

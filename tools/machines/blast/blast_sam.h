@@ -18,8 +18,8 @@
 #ifndef BLAST_SAM_H
 #define BLAST_SAM_H
 
-#include "blam_sam_tables.h"
-#include "blam_sam_words.h"
+#include "blast_sam_tables.h"
+#include "blast_sam_words.h"
 
 #define SAM_RING        500
 #define SAM_BANKS       2

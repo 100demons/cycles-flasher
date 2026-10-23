@@ -19,8 +19,9 @@
  "conflicts": [
   "acid",
   "acid-tg",
-  "blam",
+  "all",
   "blast",
+  "duet",
   "lixr",
   "macro",
   "macro-acid",
@@ -29,6 +30,7 @@
   "model-tg",
   "model-tg-st",
   "refmachine",
+  "sam",
   "sampler",
   "sdvintage-7th",
   "sdvintage-exact",
