@@ -45,8 +45,32 @@ map_state:
 	add.l	%d1, %d0
 9:	rts
 
+/* A package may put a descriptor-state initializer in the last long of its machine entry
+ * (REGS+16+16i+12): called with no argument, it returns the state object for its SHAPE descriptor
+ * (first_desc + 1). Zero means the generic SNARE object. */
 	.globl	state_at
 state_at:
+	move.l	%a0, -(%sp)
+	move.l	8(%sp), %d0
+	lea	REGS+16, %a0
+sat_loop:
+	cmpa.l	REGS+12, %a0
+	beq.s	sat_generic
+	mvz.b	2(%a0), %d3
+	addq.l	#1, %d3
+	cmp.l	%d3, %d0
+	beq.s	sat_found
+	lea	16(%a0), %a0
+	bra.s	sat_loop
+sat_found:
+	move.l	12(%a0), %a1
+	tst.l	%a1
+	beq.s	sat_generic
+	move.l	(%sp)+, %a0
+	jsr	(%a1)
+	rts
+sat_generic:
+	move.l	(%sp)+, %a0
 	move.l	4(%sp), %d0
 	bsr.w	map_state
 	moveq	#100, %d1
@@ -56,11 +80,34 @@ state_at:
 
 	.globl	state_connect
 state_connect:
+	move.l	%a0, -(%sp)
+	move.l	8(%sp), %d0
+	lea	REGS+16, %a0
+sc_loop:
+	cmpa.l	REGS+12, %a0
+	beq.s	sc_generic
+	mvz.b	2(%a0), %d3
+	addq.l	#1, %d3
+	cmp.l	%d3, %d0
+	beq.s	sc_found
+	lea	16(%a0), %a0
+	bra.s	sc_loop
+sc_found:
+	move.l	12(%a0), %a1
+	tst.l	%a1
+	beq.s	sc_generic
+	move.l	(%sp)+, %a0
+	jsr	(%a1)
+	add.l	#0x14, %d0
+	bra.s	sc_common
+sc_generic:
+	move.l	(%sp)+, %a0
 	move.l	4(%sp), %d0
 	bsr.w	map_state
 	moveq	#100, %d1
 	muls.l	%d1, %d0
 	add.l	#0x40a71768, %d0
+sc_common:
 	pea	0x40a71500
 	move.l	12(%sp), -(%sp)
 	move.l	%d0, -(%sp)

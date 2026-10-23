@@ -8,8 +8,8 @@
  */
 window.MC_RELEASES = [
   { version: "0.8", date: "2026-10-22", changes: [
-    { en: "Feral + LiXR: one combined card with both machines, keeping Feral's custom SHAPE model names and MACHINES-page picture. Experimental: each engine was tested alone; this combined build is new. LiXR alone stays available",
-      fr: "Feral + LiXR : une carte combinée avec les deux machines, qui garde les noms de modèles de SHAPE et l'image MACHINES de Feral. Expérimental : chaque moteur a été testé seul ; ce build combiné est nouveau. LiXR reste disponible seule" },
+    { en: "Feral is now a package with its custom SHAPE model names, and composes with LiXR on the same build. The MACHINES-page picture is still TONE's. Tested on a Model:Cycles (2026-10-22), standalone; the package build is new",
+      fr: "Feral est désormais un paquet avec ses noms de modèles de SHAPE, et se compose avec LiXR sur le même build. L'image de la page MACHINES reste celle de TONE. Testée sur un Model:Cycles (22/10/2026), seule ; le build en paquet est nouveau" },
   ] },
   { version: "0.7", date: "2026-10-22", changes: [
     { en: "Feral machine added: nine noisy, unpredictable synthesis models (NYB to KOS), light on the processor. Tested on a Model:Cycles (2026-10-22), and now composable with LiXR",

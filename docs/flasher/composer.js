@@ -103,6 +103,7 @@ function parameterBlock(fr, machines) {
     e.set(bytesOf(first + i, m.image, 76 + 5 * i, 76 + 5 * i - 51), 0);
     put32(e, 4, lay.recs + 0x60 * i);                                // rec
     put32(e, 8, m.knob_hook || 0);                                   // knob_hook
+    put32(e, 12, m.state_init || 0);                                 // state object initializer
     parts.push(e);
   });
   const out = concat(...parts);
@@ -295,9 +296,12 @@ function compose(mainOs, frames, packages, tweaks = []) {
       throw new Error(`${p.id}: code and tables end at ${hx(codeAt + blob.length)}, past ${hx(lay.stubs)}`);
     const mc = p.uses.find((u) => u.point === "machine");
     if (!mc) throw new Error(`${p.id}: no 'machine' entry in uses: not an added machine`);
+    const state = p.uses.find((u) => u.point === "descriptor.state");
+    if (state && state.descriptor !== 1) throw new Error(`${p.id}: only the SHAPE descriptor (1) can have a state override for now`);
     machines.push({ name: mc.name, image: mc.image, decay: mc.decay_default,
                     knobs: mc.knobs.map((k) => [k.long, k.short, k.default].concat("min" in k ? [k.min, k.max] : [])),
-                    update: syms[p.symbols.update], render: syms[p.symbols.render] });
+                    update: syms[p.symbols.update], render: syms[p.symbols.render],
+                    state_init: state ? syms[state.init] : 0 });
     blobs.push([codeAt, blob]);
     symsOf[p.id] = syms;
     info.push({ id: p.id, index: first + i, desc: 76 + 5 * i, code_at: codeAt, code: blob.length, bss_at: bssAt,

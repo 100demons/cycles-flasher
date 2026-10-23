@@ -30,12 +30,15 @@ const ELEKTRON_ST_DL = "https://www.elektron.se/support-downloads/syntakt";
 // entry per set of them, the tweak tools/compose.py composes them into: the page's composer must give its bytes.
 const REF_MAINOS = {
   // each card alone: each variant, each combination of real Syntakt engines
-  "lixr": "64598fe9a731343a96d8df7c33d1f4a8227ffffb8de26c45eefb1cfaec51d8c0",
-  "feral9-lixr": "6ace2482ede3df46f7a46f37387abe567c4bcbd20f293de1781904507d798fe3",
+  "lixr": "55bfaaf420e200925fbfbe4e9d3112af8d00bc1ca85d8ea13dfb3a7b999e8568",
+  "feral9": "7c4b21f41b4e3540eb758d67409c5e768505c6be69ec48b25769907cda7bfe6f",
+  // every pair of cards the page lets you tick together
+  "lixr+feral9": "f5f75e6866617d76dc358ed63702e4d0c369fc2eb31ff81775832c4a45606227",
 };
 const REF_MODS = {
-  "feral9-lixr": {"w": "e313b681fa854a7e149dbbc25d323a0952e8863a545569810942db846829c864", "p": "cfe88516c04f1dc1e54ee344badfde2cb28eb5018a80ebe3399c0cd15d8f0459"},
-  "lixr": {"w": "8a6ab543006717bbfbe47a156cd3fb1e08459f09c762605acd4c6c678b2c29d6", "p": "70d2c2e589057476a55f4282f9ef44afe45f138c818edc173ab52605d9d20c39"},
+  "lixr": {"w": "901192bf50f8599968dd49f472ae77b4803d47ad98861af00d639cc64df51bcf", "p": "eaa50be33a1390eab1f1602a2813d50eb845990335f4daa8728a58edb3741368"},
+  "feral9": {"w": "11d51c6a98adcee58eb8c87d05f470c4b8af70c3e6fe8a8558ca75efcb8b0f87", "p": "ffbd357ab07329bed2aebc97f494beb68452af80460c183405a5a4f0b12726e3"},
+  "lixr+feral9": {"w": "052c5829a74fd49f05f480f1a56bbf2e2d81b3a776df01e42ccc290361c738f7", "p": "f50eb917484e86b6c637e90493cbc0cd058024bd7ce918d1d9a74f7ee07a8d31"},
 };
 
 // "Samples OS" tab: official Model:Samples OS 1.13 inside the official Model:Cycles container
@@ -787,7 +790,7 @@ const FEAT = {
     feral9: { label: "Feral machine",
       short: "One extra machine: nine noisy, unpredictable synthesis models, light on the processor.",
       desc: "An extra machine after Chord: nine noisy, unpredictable synthesis models. SHAPE picks the model: NYB (bytebeat), GND (Gendy), BNJ (Benjolin), RYT (Rhythmicon resonators), FRS (Fourses), RNG (a HAVOC rungler), PLS (pulsar), SCN (scanned synthesis) and KOS (logistic map). COLOR and SWEEP are the model's two macros, CONTOUR the tone envelope (or a third control for BNJ and RNG), PUNCH = FREE, DECAY and GATE as on Tone. Composes with LiXR.",
-      note: "Tested on a Model:Cycles (2026-10-22), standalone; composes with LiXR. The source tree measured every model below TONE." },
+      note: "Tested on a Model:Cycles (2026-10-22), standalone. The package carries the custom SHAPE model names and composes with LiXR; the MACHINES-page picture is still TONE's." },
     "chord-keys": { label: "Chord Keys",
       short: "On a CHORD track, TRIG 1–16 play the chords of your scale.",
       clash: "both change the notes of the TRIG keys (Model-TG has its own Scale Lock)",
@@ -886,7 +889,7 @@ const FEAT = {
     feral9: { label: "Machine Feral",
       short: "Une machine en plus : neuf modèles de synthèse bruités et imprévisibles, légers pour le processeur.",
       desc: "Une machine ajoutée après Chord : neuf modèles de synthèse bruités et imprévisibles. SHAPE choisit le modèle : NYB (bytebeat), GND (Gendy), BNJ (Benjolin), RYT (résonateurs Rhythmicon), FRS (Fourses), RNG (rungler HAVOC), PLS (pulsar), SCN (synthèse par balayage) et KOS (carte logistique). COLOR et SWEEP sont les deux macros du modèle, CONTOUR l'enveloppe de timbre (ou un troisième réglage pour BNJ et RNG), PUNCH = FREE, DECAY et GATE comme sur Tone. Se compose avec LiXR.",
-      note: "Testée sur un Model:Cycles (22/10/2026), seule ; se compose avec LiXR. L'arbre source a mesuré tous les modèles sous TONE." },
+      note: "Testée sur un Model:Cycles (22/10/2026), seule. Le paquet porte les noms de modèles de SHAPE et se compose avec LiXR ; l'image de la page MACHINES reste celle de TONE." },
     "chord-keys": { label: "Chord Keys",
       short: "Sur une piste CHORD, les TRIG 1–16 jouent les accords de votre gamme.",
       clash: "les deux changent les notes des boutons TRIG (Model-TG a son propre Scale Lock)",

@@ -220,7 +220,7 @@ def web_package(mid):
         sys.exit(f"!! {mid}: {path} is missing: run the package's generator (it writes the object)")
     lay = relocate.layout(path.read_bytes(), upd, rnd, keep, mid)
     uses = [{k: v for k, v in u.items() if k != "why"} for u in m["uses"]
-            if u["point"] in ("machine", "memory.ram") or "hook" in u or "vtable" in u]
+            if u["point"] in ("machine", "memory.ram", "descriptor.state") or "hook" in u or "vtable" in u]
     return {"id": mid, "name": m["name"], "order": m["order"], "version": m["version"],
             "symbols": {"update": upd, "render": rnd}, "keep": keep, "patch_points": pps, "uses": uses,
             "conflicts_declared": [c["with"] for c in m.get("compat", {}).get("conflicts_declared", [])],
@@ -302,6 +302,7 @@ def parameter_block(fr, machines):
         e[0:4] = bytes([first + i, m["image"], 76 + 5 * i, 76 + 5 * i - 51])
         e[4:8] = g7.be32(lay["recs"] + 0x60 * i)      # rec
         e[8:12] = g7.be32(m.get("knob_hook", 0))      # knob_hook
+        e[12:16] = g7.be32(m.get("state_init", 0))    # state object initializer
         out += e
     if len(out) > rt["regs_header"] + rt["entry_size"] * rt["max_machines"]:
         sys.exit("!! parameter block too big")
@@ -653,9 +654,13 @@ def compose(img, ids, relocator="python", compare_ld=False, registrar="runtime",
             mc = m["_machine"]
             knobs = tuple((k["long"], k["short"], k["default"]) + ((k["min"], k["max"]) if "min" in k else ())
                           for k in mc["knobs"])
+            state = next((u for u in m["uses"] if u["point"] == "descriptor.state"), None)
+            if state and state.get("descriptor") != 1:
+                sys.exit(f"!! {m['id']}: only the SHAPE descriptor (1) can have a state override for now")
             machines.append(dict(name=mc["name"], image=mc["image"], decay=mc["decay_default"], knobs=knobs,
                                  update=syms[m["build"]["symbols"]["update"]],
-                                 render=syms[m["build"]["symbols"]["render"]]))
+                                 render=syms[m["build"]["symbols"]["render"]],
+                                 state_init=syms[state["init"]] if state else 0))
             blobs.append((code_at, blob))
             syms_of[m["id"]] = syms
             info_pkgs.append(dict(id=m["id"], index=first + i, desc=76 + 5 * i, code_at=code_at, code=len(blob),
