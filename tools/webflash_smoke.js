@@ -244,8 +244,9 @@ async function main() {
       "every feature has a row in its section (cat)");
     check(doc.getElementById("drop3-wrap").hidden, "no Syntakt drop zone: no card needs the Syntakt OS");
     const credits = [...doc.querySelectorAll("#features .credit a")].map((a) => a.href);
-    check(credits.length === 0 && /by 100demons/.test(text(doc, "features")),
-      "every engine card credits 100demons, no outside license link: " + JSON.stringify(credits));
+    check(credits.length === 0 && !/by 100demons/.test(text(doc, "features")),
+      "no per-engine credit line and no outside license link: " + JSON.stringify(credits));
+    check(!doc.querySelector("#features .short"), "no shortened blurbs on the engine cards");
     const list = [...doc.querySelectorAll("#credits-list a")].map((a) => a.textContent);
     check(list.join() === "durchgemacht/model27,18nelli18/Modded-Cycles,scottmetoyer/ms-multi-output,drumkilla/elektron-model-tweaks,pichenettes/eurorack,RobinSchmidt/Open303,TinyGregAudio/Model-TG,mischa85/elektron-firmware-tool,dagargo/elektroid,mxldyn/octamax",
       "credits section lists model27 by durchgemacht first, then Modded-Cycles and the 8 repositories it builds on");
@@ -259,6 +260,10 @@ async function main() {
       "no Your selection area");
     check(doc.querySelectorAll("#features .more, #features .chev").length === 0, "no Details dropdown or section caret");
     check(!box("det-feral9").hidden && /Dangerous experimental Macro OSC/.test(box("det-feral9").textContent), "details are always visible");
+    check(!/Status|Doesn't go with|Before installing/.test(textOf(doc, "#det-feral9")),
+      "details leave out Status, clashes and the pre-install note");
+    check(cards.every((f) => !!doc.querySelector(`#det-${f.id} a.feat-guide[href$="#${f.id}"]`)),
+      "every engine card links to its own guide section");
     box("feat-feral9").click(); await wait(5);
     check(chosen() === "feral9" && box("feat-feral9").checked, "ticking Feral selects its package: " + chosen());
     box("feat-blast").click(); await wait(5);
