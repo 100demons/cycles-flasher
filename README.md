@@ -11,7 +11,7 @@ in the credits and in the third-party notices.
 
 **Status: beta.** The web flasher runs at [https://100demons.github.io/cycles-flasher/flasher/](https://100demons.github.io/cycles-flasher/flasher/) and offers the LiXR machine for now; the [guide](https://100demons.github.io/cycles-flasher/guide/) explains it.
 The engines are also published one by one, with their sources and a ready-made package, in
-**[cycles-engines](https://github.com/100demons/cycles-engines)** for other developers to grab.
+**[cycles-mods](https://github.com/100demons/cycles-mods)** for other developers to grab.
 The command-line build works for every Modded-Cycles 1.55 mod still in the repository; the short list for the beta
 is being chosen, and nothing has been removed from the tools yet.
 
@@ -66,19 +66,19 @@ python3 tools/build.py -i model-cycles_OS1.13.syx -t control-all-config,latching
 
 Details in [`BUILD.md`](BUILD.md) and [`FLASH.md`](FLASH.md) (both in French, inherited from Modded-Cycles).
 
-### Publishing an engine to `cycles-engines`
+### Publishing an engine to `cycles-mods`
 
 The public engine catalogue is generated from this repository, so the two cannot drift:
 
 ```sh
 # edit tools/machines/<id>/public.json (version, prose, changelog), then:
-python3 tools/export_engine.py <id> --to ../cycles-engines
-python3 tools/export_engine.py <id> --to ../cycles-engines --check   # writes nothing, exits 1 if out of step
+python3 tools/export_engine.py <id> --to ../cycles-mods
+python3 tools/export_engine.py <id> --to ../cycles-mods --check   # writes nothing, exits 1 if out of step
 ```
 
 It copies the sources, the committed object and the tweak, rewrites the manifest for `src/` and `addon/`, and
 generates the engine's `README.md`, `engine.json`, `CHANGELOG.md` and the catalogue's `index.json`. Commit this
-repository and `cycles-engines` together.
+repository and `cycles-mods` together.
 
 <details>
 <summary><b>Going back to the official firmware</b></summary>

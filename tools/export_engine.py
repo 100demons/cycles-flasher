@@ -1,5 +1,5 @@
 #!/usr/bin/env python3
-"""Exports one machine package to the public cycles-engines repo, so both stay in step.
+"""Exports one machine package to the public cycles-mods repo, so both stay in step.
 
 The source of truth is this repository: tools/machines/<id>/ (manifest, sources, committed object) and the
 machine's tweak alone (tweaks/model-cycles_OS1.13/NN-<id>.json). The public repo gets a self-contained folder:
@@ -16,7 +16,7 @@ machine's tweak alone (tweaks/model-cycles_OS1.13/NN-<id>.json). The public repo
 public.json (next to the manifest) holds what the code cannot say: the public version, the prose, the credits
 and the changelog. Edit it, run this script, then commit both repositories.
 
-    python3 tools/export_engine.py lixr --to ../cycles-engines [--check]
+    python3 tools/export_engine.py lixr --to ../cycles-mods [--check]
 
 --check writes nothing and exits 1 if the public folder differs. It also runs the public repo's
 scripts/build_index.py --check when it is there.
@@ -70,7 +70,7 @@ def public_manifest(mid, m, pub):
     m2["build"]["sources"] = [f"src/{pathlib.Path(s).name}" for s in m["build"]["sources"]]
     m2["build"]["include"] = ["src"]
     m2["build"]["objects"] = [f"addon/{pathlib.Path(m['build']['objects'][0]).name}"]
-    m2["source"] = "this engine folder (src/), first published in cycles-engines"
+    m2["source"] = "this engine folder (src/), first published in cycles-mods"
     if pub.get("hardware_build"):
         m2["tests"]["hardware"]["build"] = pub["hardware_build"]
     return m2
@@ -197,7 +197,7 @@ def generated(mid, dest):
 def main():
     ap = argparse.ArgumentParser(description=__doc__, formatter_class=argparse.RawDescriptionHelpFormatter)
     ap.add_argument("id", help="package id, as in tools/machines/<id>")
-    ap.add_argument("--to", required=True, help="the cycles-engines repository")
+    ap.add_argument("--to", required=True, help="the cycles-mods repository")
     ap.add_argument("--check", action="store_true", help="write nothing; exit 1 if the public folder differs")
     args = ap.parse_args()
 
@@ -207,7 +207,7 @@ def main():
             sys.exit(f"!! {pkg / name} is missing")
     repo = pathlib.Path(args.to).resolve()
     if not (repo / "scripts" / "build_index.py").is_file():
-        sys.exit(f"!! {repo} does not look like the cycles-engines repo (no scripts/build_index.py)")
+        sys.exit(f"!! {repo} does not look like the cycles-mods repo (no scripts/build_index.py)")
 
     out = repo / "engines" / args.id
     files = generated(args.id, out)
