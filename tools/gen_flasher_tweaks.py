@@ -366,11 +366,14 @@ ALL_FEATURES = [
         "id": "lixr",
         "cat": "sound",
         "label": "LiXR - 0.1 alpha",
-        "desc": "Single percussion voice - Brutal Sonic Potions LXR imitation from Deepseek. Lots of range and "
-                "can make ripping techno kicks. Needs work, but it can slam.",
+        "desc": "Single percussion voice - Brutal digital drum with lots of range and made for Techno. Sonic Potions "
+                "LXR imitation from Deepseek. Needs work, but it can slam.",
         # tested on the Model:Cycles on 2026-10-22, alone and next to SAMPLE, on the builds of commit 20db5b5
         "status": "tested",
         "credit": {"kind": "own", "who": "100demons"},
+        # one engine at a time: the package cards cannot carry excludes by hand (machine_excludes), so app.js and
+        # ref_mainos.py read this group rule instead
+        "one_of": "engine",
         # composed in the page from its package (notes/61): alone it gives 36-lixr.json byte for byte. It is a
         # pure machine (update/render, no hook), so its conflicts are only the shared boot hook and the payload
         # window of the other added machines (tools/gen_lixr.py)
@@ -386,32 +389,47 @@ ALL_FEATURES = [
         "status": "tested",
         "credit": {"kind": "own", "who": "100demons"},
         "package": "feral9",
+        "one_of": "engine",
     },
     {
         "id": "blast",
         "cat": "sound",
         "label": "Blast - 0.8 beta",
-        "desc": "Tonal FM Macro OSC: melodic / '90s / Soundblaster / PC / Doom 2 . Think higher fidelity Sega "
-                "Genesis. [stock Yamaha OPL2]",
+        "desc": "FM Macro OSC - melodic '90s PC Soundblaster engine. Think higher fidelity Sega Genesis or Doom 2. "
+                "Surprisingly tasteful. A curated stock Yamaha OPL2.",
         "status": "experimental",
         "credit": {"kind": "own", "who": "100demons"},
         "variants": [
             {"file": "66-blast", "label": None},
         ],
         "excludes": ["lixr", "feral9", "blam"],
+        "one_of": "engine",
     },
     {
         "id": "blam",
         "cat": "sound",
         "label": "Blam - 0.5 beta",
-        "desc": "Percussion FM Macro OSC: raw, slamming, digital. Extensive fixed FM ratios turn anything into "
-                "bass or lead. Modern sounds and oddly beautiful harmonics can be found. [mutated Yamaha OPL2]",
+        "desc": "FM Macro OSC - percussive/tonal - raw, heavy, digital. Extended fixed FM ratios allow modern sounds "
+                "and alien harmonics to emerge. Mutated Yamaha OPL2.",
         "status": "experimental",
         "credit": {"kind": "own", "who": "100demons"},
         "variants": [
             {"file": "67-blam", "label": None},
         ],
         "excludes": ["lixr", "feral9", "blast"],
+        "one_of": "engine",
+    },
+    {
+        "id": "sam",
+        "cat": "sound",
+        "label": "SAM - 0.1 alpha",
+        "desc": "Vocal Synthesizer - Software Automated Mouth - currently half-broken alpha - \"I love you\"",
+        "status": "experimental",
+        "credit": {"kind": "own", "who": "100demons"},
+        "variants": [
+            {"file": "38-sam", "label": None},
+        ],
+        "one_of": "engine",
     },
     {
         "id": "chord-keys",
@@ -471,9 +489,11 @@ ALL_FEATURES = [
 # model27 offers a short list of cards. The other definitions above stay as they are, for the command-line build
 # (every tweak of tweaks/ is still built by tools/build.py) and so that merges from upstream apply cleanly; a card
 # comes back into the flasher by adding its id here, once it has been reviewed against the Cycles Mod Standard.
-OFFERED = ("all",)
-FEATURES = [f for f in ALL_FEATURES if f["id"] in OFFERED]
-_missing = set(OFFERED) - {f["id"] for f in FEATURES}
+OFFERED = ("feral9", "blast", "blam", "lixr", "sam")
+# OFFERED order is the build and display order; a card comes back into the flasher by adding its id here.
+_by_id = {f["id"]: f for f in ALL_FEATURES}
+FEATURES = [_by_id[i] for i in OFFERED]
+_missing = set(OFFERED) - set(_by_id)
 if _missing:
     sys.exit(f"!! OFFERED names cards that do not exist: {sorted(_missing)}")
 
@@ -691,6 +711,8 @@ def render():
             feat["needs"] = f["needs"]
         if f.get("excludes"):
             feat["excludes"] = f["excludes"]
+        if f.get("one_of"):                     # un seul moteur a la fois (app.js, ref_mainos.py)
+            feat["one_of"] = f["one_of"]
         if f.get("includes"):
             feat["includes"] = f["includes"]
         if f.get("joins"):                      # contenue dans les versions de ces cartes (racine : la 1re cochee)

@@ -99,7 +99,7 @@ class Cards:
 
     def excludes(self, f, g):
         no = lambda a, b: b["id"] in (a.get("excludes") or []) or b["id"] in (a.get("includes") or [])  # noqa: E731
-        return no(f, g) or no(g, f)
+        return no(f, g) or no(g, f) or (bool(f.get("one_of")) and f.get("one_of") == g.get("one_of"))
 
     def needs(self, f):
         """Cartes qu'une carte demande (son « requires ») : la page les coche avec elle, l'échantillon aussi."""

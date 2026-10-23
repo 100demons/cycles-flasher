@@ -30,10 +30,19 @@ const ELEKTRON_ST_DL = "https://www.elektron.se/support-downloads/syntakt";
 // entry per set of them, the tweak tools/compose.py composes them into: the page's composer must give its bytes.
 const REF_MAINOS = {
   // each card alone: each variant, each combination of real Syntakt engines
-  "all": "14b9432a1527047218220a533a518a56c051c9dc695385e4b900b5e53cc88863",
+  "feral9": "2a7d4d8b3f48d57817318ea32cc204923791e553226df76726bcfe3baf0c3b4b",
+  "blast": "cf38327ab67913b3dbbd9379646111aa33d1d468de7ceda45f3a800c3a160a53",
+  "blam": "0c1eef2be6c93503bc7f04f1fb2175af9687454acf028f73183dff2ecbac8ec9",
+  "lixr": "15f23a994aa715b278b92725315e2f702dba5483fce8560134eccf6560684d74",
+  "sam": "dc5c92b63b7d174c9d112aa5ec1b341772da26cbdc207b6aa5af77e8744c5e45",
 };
 const REF_MODS = {
-  "all": {"w": "ed1bfa65ebc5f60ff0f89d286d8ca088e5c240bc08ca66826f19a1bb487fb997", "p": "014bcf0836d279b304dd3e47c29402c3d5fda703ec770ce412266f824539ac60"},
+  "blast": {"w": "f9d9967cbeaca411c1e3f7e3589d3a50649d179519b12949c702b2e62c1efb02", "p": "9eb8ace296d0564194d6ca33fb3ed84d9bbcbf5af91014b982c7c89e8fa108e1"},
+  "blam": {"w": "ed07fb3a2ff09d3d5783c642ca78d3d3493bea1e5fe0ca9997a53a046b54e6b3", "p": "e13c75a58eecc4a15fee4f7ae6ad68842a6796fed4d1903e3f7c2aa6ac3a0ca4"},
+  "sam": {"w": "990cb7a5c5b00fd6f196d6f9aa6e310583144f6313b4142e88fd82afbbb2b9b6", "p": "f178d92c9868834399c321b0d9a5100730a219f94ba0038befab1eda5163340d"},
+  "feral9": {"w": "83ea8a19a46bbf3dc66451a55fae20b5fd0a0044a4bcccce5c35a2583ff9275e", "p": "2bba4f1fd7bd9107ed0fab2e5a3b837827e5ae0682292aaca33beb8e39d46025"},
+  "lixr": {"w": "fa627c88e153575615f39432b3a4ba69fa7b5fe5bcbba1e403456c99f4c80d90", "p": "dcbb0b8b611d2db57cd58f2c25e1e282012b87c4401a4ee896249cf15e9715cd"},
+  "feral9+lixr": {"w": "21abbf0f7c762147c3824374338968dece9363c09bcb2643a53ad581c6c718f8", "p": "b53996e7139c6d7f7e57a764dcf3308c8e61a4746d9170555a52d499d4a24982"},
 };
 
 // "Samples OS" tab: official Model:Samples OS 1.13 inside the official Model:Cycles container
@@ -779,8 +788,8 @@ const FEAT = {
       desc: "Feral - 0.7 (beta)\nDangerous experimental Macro OSC: nyblcore, bytebeat, benjolin, rungler, chaotic maps, fourses, rhythmicon, gendy, pulsar, wave scan, and even worse to come.\n\nBlast - 0.8 (beta)\nFM Macro OSC - melodic '90s PC Soundblaster engine. Think higher fidelity Sega Genesis or Doom 2. Surprisingly tasteful. A curated stock Yamaha OPL2.\n\nBlam - 0.5 (beta)\nFM Macro OSC - percussive/tonal - raw, heavy, digital. Extended fixed FM ratios allow modern sounds and alien harmonics to emerge. Mutated Yamaha OPL2.\n\nLiXR - 0.2 (beta)\nSingle percussion voice - Brutal digital drum with lots of range and made for Techno. Sonic Potions LXR imitation from Deepseek. Needs work, but it can slam.\n\nSAM - 0.1 (alpha)\nVocal Synthesizer - Software Automated Mouth - currently half-broken alpha - \"I love you\"" },
 
     lixr: { label: "LiXR - 0.1 alpha",
-      short: "Single percussion voice - Brutal Sonic Potions LXR imitation from Deepseek. Lots of range and can make ripping techno kicks. Needs work, but it can slam.",
-      desc: "Single percussion voice - Brutal Sonic Potions LXR imitation from Deepseek. Lots of range and can make ripping techno kicks. Needs work, but it can slam.",
+      short: "Single percussion voice - Brutal digital drum with lots of range and made for Techno.",
+      desc: "Single percussion voice - Brutal digital drum with lots of range and made for Techno. Sonic Potions LXR imitation from Deepseek. Needs work, but it can slam.",
       note: "About as heavy on the processor as a stock Tone voice (measured: 6,335 to 6,499 instructions per block, against 6,572 for TONE). No load governor: several LiXR tracks at once can make the sound crackle. A project using LiXR needs a firmware with LiXR at the same place: it comes after Chord. English only for now." },
     "feral9-lixr": { label: "Feral + LiXR",
       short: "Both machines in one build: Feral's nine models with its custom UI, and LiXR.",
@@ -791,13 +800,17 @@ const FEAT = {
       desc: "Dangerous experimental Macro OSC: nyblcore, bytebeat, benjolin, rungler, chaotic maps, fourses, rhythmicon, gendy, pulsar, wave scan, and even worse to come.",
       note: "Tested on a Model:Cycles (2026-10-22), standalone. The package carries the custom SHAPE model names and composes with LiXR; the MACHINES-page picture is still TONE's." },
     blast: { label: "Blast - 0.8 beta",
-      short: "Tonal FM Macro OSC: melodic / '90s / Soundblaster / PC / Doom 2 . Think higher fidelity Sega Genesis. [stock Yamaha OPL2]",
-      desc: "Tonal FM Macro OSC: melodic / '90s / Soundblaster / PC / Doom 2 . Think higher fidelity Sega Genesis. [stock Yamaha OPL2]",
+      short: "FM Macro OSC - melodic '90s PC Soundblaster engine.",
+      desc: "FM Macro OSC - melodic '90s PC Soundblaster engine. Think higher fidelity Sega Genesis or Doom 2. Surprisingly tasteful. A curated stock Yamaha OPL2.",
       note: "Experimental: the source tree passed its emulator proofs; not yet tested on hardware. Save a project before switching builds: the machine slot changes. Not with LiXR, Feral or BLAM." },
     blam: { label: "Blam - 0.5 beta",
-      short: "Percussion FM Macro OSC: raw, slamming, digital. Extensive fixed FM ratios turn anything into bass or lead. Modern sounds and oddly beautiful harmonics can be found. [mutated Yamaha OPL2]",
-      desc: "Percussion FM Macro OSC: raw, slamming, digital. Extensive fixed FM ratios turn anything into bass or lead. Modern sounds and oddly beautiful harmonics can be found. [mutated Yamaha OPL2]",
+      short: "FM Macro OSC - percussive/tonal - raw, heavy, digital.",
+      desc: "FM Macro OSC - percussive/tonal - raw, heavy, digital. Extended fixed FM ratios allow modern sounds and alien harmonics to emerge. Mutated Yamaha OPL2.",
       note: "Experimental: the source tree passed its emulator proofs; not yet tested on hardware. Save a project before switching builds. Not with LiXR, Feral or BLAST." },
+    sam: { label: "SAM - 0.1 alpha",
+      short: "Vocal Synthesizer - Software Automated Mouth - currently half-broken alpha - \"I love you\"",
+      desc: "Vocal Synthesizer - Software Automated Mouth - currently half-broken alpha - \"I love you\"",
+      note: "Experimental: not yet tested on hardware. One engine at a time: ticking SAM unticks the other engine cards." },
     "chord-keys": { label: "Chord Keys",
       short: "On a CHORD track, TRIG 1–16 play the chords of your scale.",
       clash: "both change the notes of the TRIG keys (Model-TG has its own Scale Lock)",
@@ -894,21 +907,25 @@ const FEAT = {
       desc: "Feral - 0.7 (beta)\nDangerous experimental Macro OSC: nyblcore, bytebeat, benjolin, rungler, chaotic maps, fourses, rhythmicon, gendy, pulsar, wave scan, and even worse to come.\n\nBlast - 0.8 (beta)\nFM Macro OSC - melodic '90s PC Soundblaster engine. Think higher fidelity Sega Genesis or Doom 2. Surprisingly tasteful. A curated stock Yamaha OPL2.\n\nBlam - 0.5 (beta)\nFM Macro OSC - percussive/tonal - raw, heavy, digital. Extended fixed FM ratios allow modern sounds and alien harmonics to emerge. Mutated Yamaha OPL2.\n\nLiXR - 0.2 (beta)\nSingle percussion voice - Brutal digital drum with lots of range and made for Techno. Sonic Potions LXR imitation from Deepseek. Needs work, but it can slam.\n\nSAM - 0.1 (alpha)\nVocal Synthesizer - Software Automated Mouth - currently half-broken alpha - \"I love you\"" },
 
     lixr: { label: "LiXR - 0.1 alpha",
-      short: "Single percussion voice - Brutal Sonic Potions LXR imitation from Deepseek. Lots of range and can make ripping techno kicks. Needs work, but it can slam.",
-      desc: "Single percussion voice - Brutal Sonic Potions LXR imitation from Deepseek. Lots of range and can make ripping techno kicks. Needs work, but it can slam.",
+      short: "Single percussion voice - Brutal digital drum with lots of range and made for Techno.",
+      desc: "Single percussion voice - Brutal digital drum with lots of range and made for Techno. Sonic Potions LXR imitation from Deepseek. Needs work, but it can slam.",
       note: "À peu près aussi gourmande en calcul qu'une voix Tone d'origine (mesuré : 6 335 à 6 499 instructions par bloc, contre 6 572 pour TONE). Pas de régulateur de charge : plusieurs pistes LiXR à la fois peuvent faire craquer le son. Un projet qui utilise LiXR demande un firmware où LiXR est à la même place : elle vient après Chord. Pour l'instant en anglais seulement." },
     feral9: { label: "Feral - 0.7 beta",
       short: "Dangerous experimental Macro OSC: nyblcore, bytebeat, benjolin, rungler, chaotic maps, fourses, rhythmicon, gendy, pulsar, wave scan, and even worse to come.",
       desc: "Dangerous experimental Macro OSC: nyblcore, bytebeat, benjolin, rungler, chaotic maps, fourses, rhythmicon, gendy, pulsar, wave scan, and even worse to come.",
       note: "Testée sur un Model:Cycles (22/10/2026), seule. Le paquet porte les noms de modèles de SHAPE et se compose avec LiXR ; l'image de la page MACHINES reste celle de TONE." },
     blast: { label: "Blast - 0.8 beta",
-      short: "Tonal FM Macro OSC: melodic / '90s / Soundblaster / PC / Doom 2 . Think higher fidelity Sega Genesis. [stock Yamaha OPL2]",
-      desc: "Tonal FM Macro OSC: melodic / '90s / Soundblaster / PC / Doom 2 . Think higher fidelity Sega Genesis. [stock Yamaha OPL2]",
+      short: "FM Macro OSC - melodic '90s PC Soundblaster engine.",
+      desc: "FM Macro OSC - melodic '90s PC Soundblaster engine. Think higher fidelity Sega Genesis or Doom 2. Surprisingly tasteful. A curated stock Yamaha OPL2.",
       note: "Expérimentale : les preuves en émulation passent ; pas encore testée sur la machine. Sauvegardez un projet avant de changer de build : la place de la machine change. Pas avec LiXR, Feral ou BLAM." },
     blam: { label: "Blam - 0.5 beta",
-      short: "Percussion FM Macro OSC: raw, slamming, digital. Extensive fixed FM ratios turn anything into bass or lead. Modern sounds and oddly beautiful harmonics can be found. [mutated Yamaha OPL2]",
-      desc: "Percussion FM Macro OSC: raw, slamming, digital. Extensive fixed FM ratios turn anything into bass or lead. Modern sounds and oddly beautiful harmonics can be found. [mutated Yamaha OPL2]",
+      short: "FM Macro OSC - percussive/tonal - raw, heavy, digital.",
+      desc: "FM Macro OSC - percussive/tonal - raw, heavy, digital. Extended fixed FM ratios allow modern sounds and alien harmonics to emerge. Mutated Yamaha OPL2.",
       note: "Expérimentale : les preuves en émulation passent ; pas encore testée sur la machine. Sauvegardez un projet avant de changer de build. Pas avec LiXR, Feral ou BLAST." },
+    sam: { label: "SAM - 0.1 alpha",
+      short: "Vocal Synthesizer - Software Automated Mouth - currently half-broken alpha - \"I love you\"",
+      desc: "Vocal Synthesizer - Software Automated Mouth - currently half-broken alpha - \"I love you\"",
+      note: "Expérimentale : pas encore testée sur la machine. Un seul moteur à la fois : cocher SAM décoche les autres cartes de moteur." },
     "chord-keys": { label: "Chord Keys",
       short: "Sur une piste CHORD, les TRIG 1–16 jouent les accords de votre gamme.",
       clash: "les deux changent les notes des boutons TRIG (Model-TG a son propre Scale Lock)",
@@ -1047,10 +1064,11 @@ const selection = {};
 const pick = { open: new Set(), folded: new Set(), q: "", swap: null, selOpen: false };
 
 // Engine card: the combination of ticked engines (kept in catalog order) and its tweak.
-// Two cards that can't be ticked together (Model-TG and the tweaks it already holds, or the Syntakt engines).
+// Two cards that can't be ticked together (Model-TG and the tweaks it already holds, the Syntakt engines, or two
+// engines of the same "one_of" group).
 function excludes(f, g) {
   const no = (a, b) => (a.excludes || []).includes(b.id) || (a.includes || []).includes(b.id);
-  return no(f, g) || no(g, f);
+  return no(f, g) || no(g, f) || (!!f.one_of && f.one_of === g.one_of);
 }
 
 // The ticked card that already holds this one (Model-TG holds drumkilla's tweaks): the card shows ticked and
@@ -1111,7 +1129,7 @@ const triedWith = (v, tg) => !!(v && (tg ? v.tg_tested : v.tested));
 // display order (chosenTweaks, REF_MAINOS keys).
 const features = () => (window.MC_TWEAKS && window.MC_TWEAKS.features) || [];
 const featById = (id) => features().find((f) => f.id === id);
-const DEFAULT_ON = new Set(["all"]);
+const DEFAULT_ON = new Set();
 function selOf(f) {
   return selection[f.id] || (selection[f.id] = f.engines ? { on: DEFAULT_ON.has(f.id), engines: [] }
     : f.package ? { on: DEFAULT_ON.has(f.id) } : { on: DEFAULT_ON.has(f.id), variant: f.variants[0].id });
@@ -1130,7 +1148,8 @@ function engineBlurb(text) {
 const catOf = (f) => (f.cat && CATS.includes(f.cat) ? f.cat : "other");
 const order = () => CATS.flatMap((c) => features().filter((f) => catOf(f) === c));    // display order
 // the real "excludes" (explained to the user); excludes() above also counts what a pack includes
-const clashOnly = (f, g) => (f.excludes || []).includes(g.id) || (g.excludes || []).includes(f.id);
+const clashOnly = (f, g) => (f.excludes || []).includes(g.id) || (g.excludes || []).includes(f.id)
+  || (!!f.one_of && f.one_of === g.one_of);
 // "clash_<id>": why this card doesn't go with that one in particular; "clash": with any other
 const clashWhy = (f, g) => featText(f.id, "clash_" + g.id, "") || featText(g.id, "clash_" + f.id, "")
   || featText(f.id, "clash", "") || featText(g.id, "clash", "") || t("clash_generic");
