@@ -2238,18 +2238,10 @@ function pace() {
 // Step 4 — flash
 // ---------------------------------------------------------------------------
 // Progress as 16 faces: a random face per box, grey until its step is reached.
-const NEGATIVE_FACES = ["😠","😡","🤬","😤","😢","😭","😞","😖","😣","😫","😩","😵","😵‍💫","🤢","🤮","😨","😰","😱","😬","😳","🥴","💀","👻","👹"];
-const OBJECTS = ["🍕","🚀","🧦","🔨","🎲","🪠","🧸","🗿"];
 function seedFaces() {
-  const cells = $("barwrap").querySelectorAll("i");
-  const pool = [];
-  const negative = Math.round(cells.length * 0.75);
-  for (let i = 0; i < negative; i++) pool.push(NEGATIVE_FACES[Math.floor(Math.random() * NEGATIVE_FACES.length)]);
-  for (let i = negative; i < cells.length; i++) pool.push(OBJECTS[Math.floor(Math.random() * OBJECTS.length)]);
-  for (let i = pool.length - 1; i > 0; i--) { const j = Math.floor(Math.random() * (i + 1)); [pool[i], pool[j]] = [pool[j], pool[i]]; }
-  cells.forEach((c, i) => {
+  $("barwrap").querySelectorAll("i").forEach((c) => {
     const face = document.createElement("span");
-    face.textContent = pool[i];
+    face.textContent = "💀";
     c.textContent = "";
     c.appendChild(face);
     c.setAttribute("aria-hidden", "true");

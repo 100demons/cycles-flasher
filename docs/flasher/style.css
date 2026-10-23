@@ -438,3 +438,11 @@ button.btn{border:1px solid var(--ink)}
 .bar i.on,.bar i.cur{background:#e2e0d9;border-color:#1e2130;animation:none}
 .bar i.on>span,.bar i.cur>span{opacity:1;filter:none}
 .bar i.cur>span{animation:facecur .5s steps(1) infinite}
+
+/* progress: grey boxes, a skull and a red box when reached */
+.bar i{background:#8f8f8a;border:1px solid #5f5f5a;filter:none;opacity:1}
+.bar i>span{opacity:0;filter:none;transition:opacity .12s}
+.bar i.on,.bar i.cur{background:#c0392b;border-color:#7f1d1d;animation:none}
+.bar i.on>span,.bar i.cur>span{opacity:1;filter:none}
+.bar i.cur>span{animation:skullpulse .5s steps(1) infinite}
+@keyframes skullpulse{50%{opacity:.4}}
