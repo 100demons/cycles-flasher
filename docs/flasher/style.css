@@ -389,3 +389,7 @@ button.btn{border:1px solid var(--ink)}
 .seg button[role="radio"]{display:inline-flex;align-items:center;gap:8px;padding:10px 14px}
 .seg button[role="radio"]::before{content:"";flex:none;width:10px;height:10px;border:1.5px solid currentColor;border-radius:50%}
 .seg button[role="radio"][aria-checked="true"]::before{background:var(--paper);border-color:var(--paper)}
+
+.method-info{margin:0 0 16px}
+.method-info>summary{font-size:16px}
+.method-info .howto{margin-top:12px}
