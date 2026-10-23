@@ -366,8 +366,8 @@ ALL_FEATURES = [
                 "Fourses, RNG a HAVOC rungler, PLS pulsar, SCN scanned synthesis, KOS logistic map); COLOR and "
                 "SWEEP are the model's two macros, CONTOUR the tone envelope (or a third control for BNJ and RNG), "
                 "PUNCH = FREE, DECAY and GATE as on Tone. Not with LiXR: both add a machine.",
-        # not yet tested on hardware; the source tree only reports its CPU cost
-        "status": "experimental",
+        # tested on the Model:Cycles on 2026-10-22 (standalone)
+        "status": "tested",
         "credit": {"kind": "own", "who": "100demons"},
         "variants": [
             {"file": "63-feral9", "label": None},

@@ -1017,7 +1017,7 @@ window.MC_TWEAKS = {
    "id": "feral9",
    "label": "Feral machine",
    "desc": "One extra machine after Chord: nine noisy, unpredictable synthesis models, light on the processor. SHAPE picks the model (NYB bytebeat, GND Gendy, BNJ Benjolin, RYT Rhythmicon resonators, FRS Fourses, RNG a HAVOC rungler, PLS pulsar, SCN scanned synthesis, KOS logistic map); COLOR and SWEEP are the model's two macros, CONTOUR the tone envelope (or a third control for BNJ and RNG), PUNCH = FREE, DECAY and GATE as on Tone. Not with LiXR: both add a machine.",
-   "status": "experimental",
+   "status": "tested",
    "credit": {
     "kind": "own",
     "who": "100demons"
