@@ -31,11 +31,14 @@ const ELEKTRON_ST_DL = "https://www.elektron.se/support-downloads/syntakt";
 const REF_MAINOS = {
   // each card alone: each variant, each combination of real Syntakt engines
   "lixr": "64598fe9a731343a96d8df7c33d1f4a8227ffffb8de26c45eefb1cfaec51d8c0",
-  "feral9": "cfac363188de47ae14a1183b0897ed0cd84b7585ae0215e69a5dcacd5ce24263",
+  "feral9": "b862a705d4518caff05b29d50f9d77bfbe6b085a337af65653c2c866ceec7a2d",
+  // every pair of cards the page lets you tick together
+  "lixr+feral9": "7cf98a3031d93ba9fe46155af4f438411dd68ad94b1f40967320672b09b576f0",
 };
 const REF_MODS = {
-  "feral9": {"w": "703cddfc6620fa3f4fa270339b60a4970f27475e1bbbe212ea9fb4edc13f2434", "p": "87b2cec57d4cc9be4934512e9ed18168e04d054592c4f7612972ac60a5dfb805"},
   "lixr": {"w": "8a6ab543006717bbfbe47a156cd3fb1e08459f09c762605acd4c6c678b2c29d6", "p": "70d2c2e589057476a55f4282f9ef44afe45f138c818edc173ab52605d9d20c39"},
+  "feral9": {"w": "232b6f2d310894d6efca232e0aa94a295d146cecfeec7ffb001bdca8bb58584a", "p": "82950af9d1616c34df432821a44e749f4b5e3cb737e533beb81acfe66597c806"},
+  "lixr+feral9": {"w": "39dbbc36411e1f6a961028888bbd8698edaf82bd16899a7706bbd680f36652e8", "p": "2e6e92ca4cf415c093dfb00e06e40979054ba2d9b7dcd2be266ffd616810c971"},
 };
 
 // "Samples OS" tab: official Model:Samples OS 1.13 inside the official Model:Cycles container
@@ -782,8 +785,8 @@ const FEAT = {
       note: "About as heavy on the processor as a stock Tone voice (measured: 6,335 to 6,499 instructions per block, against 6,572 for TONE). No load governor: several LiXR tracks at once can make the sound crackle. A project using LiXR needs a firmware with LiXR at the same place: it comes after Chord. English only for now." },
     feral9: { label: "Feral machine",
       short: "One extra machine: nine noisy, unpredictable synthesis models, light on the processor.",
-      desc: "An extra machine after Chord: nine noisy, unpredictable synthesis models. SHAPE picks the model: NYB (bytebeat), GND (Gendy), BNJ (Benjolin), RYT (Rhythmicon resonators), FRS (Fourses), RNG (a HAVOC rungler), PLS (pulsar), SCN (scanned synthesis) and KOS (logistic map). COLOR and SWEEP are the model's two macros, CONTOUR the tone envelope (or a third control for BNJ and RNG), PUNCH = FREE, DECAY and GATE as on Tone. Not with LiXR: both add a machine.",
-      note: "Tested on a Model:Cycles (2026-10-22), alone. The source tree measured every model below TONE. Not with LiXR: both add a machine." },
+      desc: "An extra machine after Chord: nine noisy, unpredictable synthesis models. SHAPE picks the model: NYB (bytebeat), GND (Gendy), BNJ (Benjolin), RYT (Rhythmicon resonators), FRS (Fourses), RNG (a HAVOC rungler), PLS (pulsar), SCN (scanned synthesis) and KOS (logistic map). COLOR and SWEEP are the model's two macros, CONTOUR the tone envelope (or a third control for BNJ and RNG), PUNCH = FREE, DECAY and GATE as on Tone. Composes with LiXR.",
+      note: "Tested on a Model:Cycles (2026-10-22), standalone; composes with LiXR. The source tree measured every model below TONE." },
     "chord-keys": { label: "Chord Keys",
       short: "On a CHORD track, TRIG 1–16 play the chords of your scale.",
       clash: "both change the notes of the TRIG keys (Model-TG has its own Scale Lock)",
@@ -881,8 +884,8 @@ const FEAT = {
       note: "À peu près aussi gourmande en calcul qu'une voix Tone d'origine (mesuré : 6 335 à 6 499 instructions par bloc, contre 6 572 pour TONE). Pas de régulateur de charge : plusieurs pistes LiXR à la fois peuvent faire craquer le son. Un projet qui utilise LiXR demande un firmware où LiXR est à la même place : elle vient après Chord. Pour l'instant en anglais seulement." },
     feral9: { label: "Machine Feral",
       short: "Une machine en plus : neuf modèles de synthèse bruités et imprévisibles, légers pour le processeur.",
-      desc: "Une machine ajoutée après Chord : neuf modèles de synthèse bruités et imprévisibles. SHAPE choisit le modèle : NYB (bytebeat), GND (Gendy), BNJ (Benjolin), RYT (résonateurs Rhythmicon), FRS (Fourses), RNG (rungler HAVOC), PLS (pulsar), SCN (synthèse par balayage) et KOS (carte logistique). COLOR et SWEEP sont les deux macros du modèle, CONTOUR l'enveloppe de timbre (ou un troisième réglage pour BNJ et RNG), PUNCH = FREE, DECAY et GATE comme sur Tone. Pas avec LiXR : les deux ajoutent une machine.",
-      note: "Testée sur un Model:Cycles (22/10/2026), seule. L'arbre source a mesuré tous les modèles sous TONE. Pas avec LiXR : les deux ajoutent une machine." },
+      desc: "Une machine ajoutée après Chord : neuf modèles de synthèse bruités et imprévisibles. SHAPE choisit le modèle : NYB (bytebeat), GND (Gendy), BNJ (Benjolin), RYT (résonateurs Rhythmicon), FRS (Fourses), RNG (rungler HAVOC), PLS (pulsar), SCN (synthèse par balayage) et KOS (carte logistique). COLOR et SWEEP sont les deux macros du modèle, CONTOUR l'enveloppe de timbre (ou un troisième réglage pour BNJ et RNG), PUNCH = FREE, DECAY et GATE comme sur Tone. Se compose avec LiXR.",
+      note: "Testée sur un Model:Cycles (22/10/2026), seule ; se compose avec LiXR. L'arbre source a mesuré tous les modèles sous TONE." },
     "chord-keys": { label: "Chord Keys",
       short: "Sur une piste CHORD, les TRIG 1–16 jouent les accords de votre gamme.",
       clash: "les deux changent les notes des boutons TRIG (Model-TG a son propre Scale Lock)",

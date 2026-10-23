@@ -8,8 +8,8 @@
  */
 window.MC_RELEASES = [
   { version: "0.7", date: "2026-10-22", changes: [
-    { en: "Feral machine added: nine noisy, unpredictable synthesis models (NYB to KOS), light on the processor. Tested on a Model:Cycles (2026-10-22); not with LiXR",
-      fr: "Machine Feral ajoutée : neuf modèles de synthèse bruités et imprévisibles (NYB à KOS), légers pour le processeur. Testée sur un Model:Cycles (22/10/2026) ; pas avec LiXR" },
+    { en: "Feral machine added: nine noisy, unpredictable synthesis models (NYB to KOS), light on the processor. Tested on a Model:Cycles (2026-10-22), and now composable with LiXR",
+      fr: "Machine Feral ajoutée : neuf modèles de synthèse bruités et imprévisibles (NYB à KOS), légers pour le processeur. Testée sur un Model:Cycles (22/10/2026), et désormais composable avec LiXR" },
   ] },
   { version: "0.6", date: "2026-10-22", changes: [
     { en: "The flasher now offers the LiXR machine only. SAMPLE and Control All Config are no longer offered here; they remain buildable from the command line, and their guide sections stay for reference",

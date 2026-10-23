@@ -224,13 +224,12 @@ async function main() {
     const ids = w.MC_TWEAKS.tweaks.map((x) => x.id), cards = w.MC_TWEAKS.features;
     const lix = cards.find((f) => f.id === "lixr") || {};
     const fe = cards.find((f) => f.id === "feral9") || {};
-    check(ids.join() === "feral9" && cards.map((f) => f.id).join() === "lixr,feral9"
-      && lix.package === "lixr" && !lix.variants && Object.keys(w.MC_TWEAKS.packages).join() === "lixr"
-      && fe.variants && fe.variants.length === 1 && fe.variants[0].id === "feral9"
-      && (fe.excludes || []).includes("lixr")
+    check(ids.length === 0 && cards.map((f) => f.id).join() === "lixr,feral9"
+      && lix.package === "lixr" && !lix.variants && fe.package === "feral9" && !fe.variants
+      && Object.keys(w.MC_TWEAKS.packages).join() === "lixr,feral9"
       && w.MC_TWEAKS.registrar && w.MC_TWEAKS.registrar.schema === "model27-registrar-frame/0.1"
       && !cards.some((f) => f.engines || f.needs) && !w.MC_TWEAKS.tweaks.some((x) => x.append && x.append.syntakt),
-      "MC_TWEAKS: LiXR (package, composed in the page) and Feral (a plain tweak), mutually exclusive; " +
+      "MC_TWEAKS: LiXR and Feral, both machine packages composed in the page; " +
       "nothing that needs the Syntakt OS: " + cards.map((f) => f.id).join());
     check(/build \d{4}-/.test(text(doc, "build-stamp")), "version stamp shown");
     const srcs = [...doc.querySelectorAll("script[src]")].map((x) => x.getAttribute("src"));
@@ -258,7 +257,7 @@ async function main() {
       "credits section links Modded-Cycles' MIT license and this repo's third-party notices: " + JSON.stringify(lic));
     const box = (id) => doc.getElementById(id);
     const chosen = () => w.MCFlasherApp.chosenTweaks().map((x) => x.id).join();
-    // LiXR is the composed package; Feral is a plain tweak, and they exclude each other
+    // both are composed package cards and go together
     box("feat-lixr").click(); await wait(5);
     const lixrAlone = chosen();
     check(lixrAlone === "lixr" && box("feat-lixr").checked && !doc.querySelector("#mod-lixr .say.clash")
@@ -268,12 +267,13 @@ async function main() {
     check(!chosen().length, "unticking LiXR empties the selection");
     box("feat-feral9").click(); await wait(5);
     const feralAlone = chosen();
-    check(feralAlone === "feral9" && box("feat-feral9").checked, "Feral alone gives its tweak: " + feralAlone);
+    check(feralAlone === "feral9" && box("feat-feral9").checked, "Feral alone gives its composed tweak: " + feralAlone);
     box("feat-lixr").click(); await wait(5);
-    check(chosen() === "lixr" && !box("feat-feral9").checked, "LiXR replaces Feral (they exclude each other): " + chosen());
-    box("feat-lixr").click(); await wait(30);
+    check(chosen() === "lixr+feral9" && box("feat-feral9").checked && box("feat-lixr").checked
+      && !doc.querySelector("#mod-feral9 .say.clash"), "LiXR and Feral compose together: " + chosen());
+    box("feat-lixr").click(); box("feat-feral9").click(); await wait(30);
     check(doc.querySelectorAll('input[name="var-lixr"]').length === 0
-      && doc.querySelectorAll('input[name="var-feral9"]').length === 0, "LiXR and Feral: no sub-choice");
+      && doc.querySelectorAll('input[name="var-feral9"]').length === 0, "LiXR and Feral: package cards, no sub-choice");
     box("feat-feral9").click(); await wait(5);
     check(!!doc.getElementById("tab-samples") && doc.getElementById("panel-samples").hidden && doc.getElementById("drop2-wrap").hidden,
       "Samples OS tab present, its panel and second drop zone hidden in Mods");
