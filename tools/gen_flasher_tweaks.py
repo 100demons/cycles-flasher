@@ -327,10 +327,10 @@ ALL_FEATURES = [
         "desc": "Feral - 0.7 (beta)\n"
                 "Dangerous experimental Macro OSC: nyblcore, bytebeat, benjolin, rungler, chaotic maps, fourses, "
                 "rhythmicon, gendy, pulsar, wave scan, and even worse to come.\n\n"
-                "Blast - 0.8 (beta)\n"
+                "Duet - 0.8 (beta)\n"
                 "FM Macro OSC - melodic '90s PC Soundblaster engine. Think higher fidelity Sega Genesis or Doom 2. "
                 "Surprisingly tasteful. A curated stock Yamaha OPL2.\n\n"
-                "Blam - 0.5 (beta)\n"
+                "Blast - 0.5 (beta)\n"
                 "FM Macro OSC - percussive/tonal - raw, heavy, digital. Extended fixed FM ratios allow modern sounds "
                 "and alien harmonics to emerge. Mutated Yamaha OPL2.\n\n"
                 "LiXR - 0.2 (beta)\n"
@@ -392,31 +392,31 @@ ALL_FEATURES = [
         "one_of": "engine",
     },
     {
-        "id": "blast",
+        "id": "duet",
         "cat": "sound",
-        "label": "Blast - 0.8 beta",
+        "label": "Duet - 0.8 beta",
         "desc": "FM Macro OSC - melodic '90s PC Soundblaster engine. Think higher fidelity Sega Genesis or Doom 2. "
                 "Surprisingly tasteful. A curated stock Yamaha OPL2.",
         "status": "experimental",
         "credit": {"kind": "own", "who": "100demons"},
         "variants": [
-            {"file": "66-blast", "label": None},
+            {"file": "66-duet", "label": None},
         ],
-        "excludes": ["lixr", "feral9", "blam"],
+        "excludes": ["lixr", "feral9", "blast"],
         "one_of": "engine",
     },
     {
-        "id": "blam",
+        "id": "blast",
         "cat": "sound",
-        "label": "Blam - 0.5 beta",
+        "label": "Blast - 0.5 beta",
         "desc": "FM Macro OSC - percussive/tonal - raw, heavy, digital. Extended fixed FM ratios allow modern sounds "
                 "and alien harmonics to emerge. Mutated Yamaha OPL2.",
         "status": "experimental",
         "credit": {"kind": "own", "who": "100demons"},
         "variants": [
-            {"file": "67-blam", "label": None},
+            {"file": "67-blast", "label": None},
         ],
-        "excludes": ["lixr", "feral9", "blast"],
+        "excludes": ["lixr", "feral9", "duet"],
         "one_of": "engine",
     },
     {
@@ -489,7 +489,7 @@ ALL_FEATURES = [
 # model27 offers a short list of cards. The other definitions above stay as they are, for the command-line build
 # (every tweak of tweaks/ is still built by tools/build.py) and so that merges from upstream apply cleanly; a card
 # comes back into the flasher by adding its id here, once it has been reviewed against the Cycles Mod Standard.
-OFFERED = ("feral9", "blast", "blam", "lixr", "sam")
+OFFERED = ("feral9", "duet", "blast", "lixr", "sam")
 # OFFERED order is the build and display order; a card comes back into the flasher by adding its id here.
 _by_id = {f["id"]: f for f in ALL_FEATURES}
 FEATURES = [_by_id[i] for i in OFFERED]

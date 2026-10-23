@@ -1,23 +1,23 @@
 /*
- * BLAST: the sound of the machine, an OPL2-style 2-operator FM voice in integer C (no FPU, no libgcc, no 64-bit
+ * DUET: the sound of the machine, an OPL2-style 2-operator FM voice in integer C (no FPU, no libgcc, no 64-bit
  * arithmetic, no division by zero), 32-sample blocks at 48 kHz.
  *
  * Operators work in the chip's log domain, like the OPL2: a quarter-wave log-sine table and a 2^-x power table,
- * rebuilt from their formulas by tools/gen_blast.py (TINY's tables). BLAST's engines use the sine, FM or additive
- * connection, modulator feedback 0..7, envelopes in attenuation, key scale level and rate, and the chip's LFO
- * (vibrato 6.07 Hz, tremolo 3.7 Hz).
+ * rebuilt from their formulas by tools/gen_duet.py (TINY's tables), the four OPL2 waveforms (sine, half-sine,
+ * abs-sine, pulse), FM or additive connection, modulator feedback 0..7, envelopes in attenuation, key scale level
+ * and rate, and its LFO (vibrato 6.07 Hz, tremolo 3.7 Hz) switched per operator.
  *
- * The 12 recipes are BLAST's percussion engines (KIK, TOM, BNG, CNG, TAI, TIM, MAR, DJB, BLK, GNG, BUB, ZAP);
- * WOD and WTR come from Addy. The recipes are in tools/gen_blast.py and tools/machines/blast/blast.c.
+ * The 14 models all have a fixed modulator:carrier ratio (SWEEP); the percussion models of the first BLAST, which
+ * took a free ratio, and PLUCK, VIBES, ORGAN and FLUTE are gone. The recipes are in the DUET plan document.
  *
- * This file is compiled twice: for the Cycles (blast.c, -mcpu=54418) and for the computer
- * (tools/emu/blast_host.c), with the same integer arithmetic: the proof compares them sample for sample.
+ * This file is compiled twice: for the Cycles (duet.c, -mcpu=54418) and for the computer
+ * (tools/emu/duet_host.c), with the same integer arithmetic: the proof compares them sample for sample.
  *
  * Units: phases 32 bits (the table index is the top 10 bits); attenuation in log units (256 = one octave of
  * amplitude, 6.02 dB), envelopes in Q16 of those units; notes in semitones << 16 (60 << 16 = C4); output Q15.
  */
-#ifndef BLAST_DSP_H
-#define BLAST_DSP_H
+#ifndef DUET_DSP_H
+#define DUET_DSP_H
 
 #include <stdint.h>
 
@@ -28,17 +28,17 @@ typedef uint16_t u16;
 typedef int8_t s8;
 typedef uint8_t u8;
 
-#include "blam_tables.h"
+#include "duet_tables.h"
 
-#define FM_RATIO_COUNT ((int)(sizeof(FM_MULT) / sizeof(FM_MULT[0])))
 #define FM_BLOCK 32
 #define FM_SILENT 3328u                         /* 13 octaves down: the power table gives 0 */
 #define FM_ATT_MAX ((u32)FM_SILENT << 16)
 #define DB(x) ((u32)((x) * 42.52 + 0.5))        /* dB -> log units (constants only) */
 
 enum {
-	M_KIK, M_TOM, M_BNG, M_CNG, M_TAI, M_TIM, M_MAR, M_DJB, M_BLK, M_GNG, M_BUB, M_ZAP,
-	M_SAM1, M_SAM2,
+	M_FMS, M_FMH, M_FMA, M_FMP,                     /* general FM, by waveform */
+	M_BASS, M_PIA, M_MARIMBA, M_GLOCK, M_BRASS, M_ACCORD,
+	M_STRINGS, M_STEEL, M_TIMPANI, M_ZAP,           /* instruments and extras, all with fixed ratios */
 	FM_MODELS
 };
 
@@ -61,7 +61,7 @@ typedef struct {
 	u32 dr, rr;             /* decay and release: attenuation added per sample, Q16 units */
 	u32 sl;                 /* sustain level, Q16 units (FM_ATT_MAX: decays to silence) */
 	u32 base;               /* attenuation outside the envelope (level, KSL, tremolo, velocity), log units */
-	u8 eg, hold, pad, pad2; /* hold 1: stays at the sustain level while GATE holds the note; 2: until a key off */
+	u8 eg, wave, hold, pad; /* hold 1: stays at the sustain level while GATE holds the note; 2: until a key off */
 } fm_op;
 
 typedef struct {
@@ -113,40 +113,40 @@ static inline u32 cents_down(u32 inc, u32 c)
 	return inc - (inc >> 16) * FM_CENTS[c > 63 ? 63 : c];
 }
 
-/* one operator: log-sine plus attenuation, then the power table; BLAST's engines all use the sine */
-static inline s32 fm_op_out(u32 p, u32 att)
+/* one operator: log-sine plus attenuation, then the power table; the waveform zeroes or folds quarters */
+static inline s32 fm_op_out(u32 p, u32 att, u32 w)
 {
 	u32 s, tot;
 
 	p &= 0x3ff;
+	if (p & FM_WZERO[w])
+		return 0;
 	s = FM_LOGSIN[(p & 0x100) ? (~p & 0xff) : (p & 0xff)];
 	tot = s + att;
 	if (tot >= FM_SILENT)
 		return 0;
 	s = FM_POW[tot & 0xff] >> (tot >> 8);
-	return (p & 0x200) ? -(s32)s : (s32)s;
+	return (p & FM_WSIGN[w]) ? -(s32)s : (s32)s;
 }
 
-/* SWEEP as a ratio, Q8. A whole knob position snaps: the travel 0..127 is split into the ratio list (the OPL2's
- * multipliers plus the percussion ratios, including 4:1), a few knob steps each, like the Digitone's ratio list.
- * A value with a fraction (what a FUNC turn leaves when the OS's fine adjustment writes one) is not snapped: the
- * ratio glides between the steps. */
+/* SWEEP as a ratio, Q8. A whole knob position snaps: the travel 0..127 is split into the OPL2's 13 multipliers
+ * (1/2, 1..10, 12, 15), about 10 knob steps each, like the Digitone's ratio list. A value with a fraction (what a
+ * FUNC turn leaves when the OS's fine adjustment writes one) is not snapped: the ratio glides between the steps. */
 static u32 snap_ratio(s32 sweep)
 {
 	u32 s = sweep < 0 ? 0 : (u32)sweep, pos, i, f;
 
 	if (s > 0x7f00)
 		s = 0x7f00;
-	pos = (s * FM_RATIO_COUNT) >> 7;                         /* position in steps, 8.8 */
+	pos = (s * 13) >> 7;                                    /* position in steps, 8.8 */
 	i = pos >> 8;
-	if (i >= (u32)FM_RATIO_COUNT - 1)
-		return FM_MULT[FM_RATIO_COUNT - 1];
+	if (i >= 12)
+		return FM_MULT[12];
 	if (!(s & 0xff))
 		return FM_MULT[i];
 	f = pos & 0xff;
 	return FM_MULT[i] + (((FM_MULT[i + 1] - FM_MULT[i]) * f) >> 8);
 }
-
 
 /* 2^(q / 256), q = -2048..1535 (1/256 to ~64), Q16 */
 static u32 exp2_q8(s32 q)
@@ -201,6 +201,10 @@ static inline u32 rate(u32 k)
 	return FM_RATE[k > 127 ? 127 : k];
 }
 
+static inline u32 atk(u32 k)
+{
+	return FM_ATK[k > 127 ? 127 : k];
+}
 
 /* ------------------------------------------------------------------------------------------------------------
  * Envelopes: the chip's stages, in attenuation. The per-sample work is one add: each block sets the change per
@@ -260,7 +264,7 @@ static void eg_block(fm_op *o, int held)
 }
 
 /* ------------------------------------------------------------------------------------------------------------
- * The BLAST models: params() turns the knobs into the operators' settings each block (so knob moves act at
+ * The DUET models: params() turns the knobs into the operators' settings each block (so knob moves act at
  * once), start() keys a note on, tick() runs the LFO, the increments and the envelopes, then a render.
  *
  * vib (vibrato): bit 0 modulator, bit 1 carrier, bit 2 deep (14 cents, else 7). am (tremolo): bit 0 modulator,
@@ -278,124 +282,132 @@ static void params(fm_voice *v, const fm_in *in)
 	v->vib = 0;
 	v->am = 0;
 	v->cents = 0;
+	v->r = 256;
 	v->bm = 0;
 	v->bc = DB(6);
+	m->wave = c->wave = 0;
 	m->hold = 2;                                            /* a modulator holds its level until a key off */
 	c->hold = 1;                                            /* a carrier holds only while GATE holds the note */
 	m->ka = c->ka = 65536;
 	m->sl = c->sl = 0;
 	m->dr = m->rr = c->dr = c->rr = rate(dec);
 	v->inc0 = note_inc(n);
-	v->r = snap_ratio(in->sweep);
 
 	switch (v->model) {
-	case M_KIK:                                             /* the classic FM kick: a fast pitch drop, a sine body */
-		v->inc0 = note_inc(n - (24 << 16));
+	case M_FMS: case M_FMH: case M_FMA: case M_FMP:         /* general FM */
+		if (v->model == M_FMH)
+			c->wave = 1;
+		if (v->model == M_FMA)
+			m->wave = c->wave = 2;
+		if (v->model == M_FMP)
+			c->wave = 3;
+		v->r = snap_ratio(in->sweep);
+		v->bm = depth_att(col);
+		if (con < 64) {                                     /* brightness decay, faster further left */
+			m->sl = FM_ATT_MAX;
+			m->dr = m->rr = rate(10 + con * 3 / 2);
+		} else if (con > 64)                                /* static, with feedback 1..7 */
+			v->fb = (u8)((con - 65) / 9 + 1);
+		v->vib = in->punch ? 3 : 0;
+		break;
+	case M_BASS:
+		v->r = snap_ratio(in->sweep);
+		v->bm = depth_att(col) + ksl_att(n, 2);
+		v->fb = (u8)(con >> 4);
+		m->sl = DB(12) << 16;
+		m->dr = scale_rate(FM_RATE[40], ksr_mul(n, 2));     /* the slap, ~90 ms to the sustain */
+		c->dr = c->rr = scale_rate(rate(dec), ksr_mul(n, 2));
+		v->am = in->punch ? 1 : 0;                          /* the brightness pulses */
+		break;
+	case M_PIA:
+		v->r = snap_ratio(in->sweep);
+		v->bm = depth_att(col) + vel_att + ksl_att(n, 2);
 		v->fb = 1;
-		v->bm = depth_att(col) + DB(3) + ksl_att(n, 2);
-		m->sl = FM_ATT_MAX;
-		m->dr = m->rr = FM_RATE[30];
+		m->sl = DB(18) << 16;                               /* the bark fades to a round tone */
+		m->dr = rate(24 + con * 3 / 4);
+		m->rr = FM_RATE[50];
 		c->sl = FM_ATT_MAX;
-		c->dr = c->rr = scale_rate(rate(dec), ksr_mul(n, 2));
+		c->dr = scale_rate(rate(dec), ksr_mul(n, 1));
+		c->rr = FM_RATE[50];                                /* the damper at the note's end (GATE) */
+		v->am = in->punch ? 2 : 0;                          /* suitcase tremolo 4.8 dB */
 		break;
-	case M_TOM:                                             /* a tuned membrane, one octave of pitch drop */
-		v->inc0 = note_inc(n - (12 << 16));
+	case M_MARIMBA:                                         /* bars: the fundamental and a tuned overtone, added */
+		v->alg = 1;
+		v->r = snap_ratio(in->sweep);
+		v->bm = depth_att(col) + vel_att + DB(4);           /* the overtone's level: mallet hardness */
+		v->bc = DB(4);
+		m->sl = FM_ATT_MAX;
+		c->sl = FM_ATT_MAX;
+		c->rr = m->rr = FM_RATE[56];                        /* the damper (GATE) */
+		v->fb = v->click ? 6 : 0;                           /* the mallet's click */
+		m->dr = scale_rate(rate(14 + con / 2), ksr_mul(n, 4));
+		c->dr = scale_rate(rate(dec), ksr_mul(n, 4));
+		v->vib = in->punch ? 3 : 0;
+		break;
+	case M_GLOCK: case M_STEEL:
+		v->r = snap_ratio(in->sweep);
+		v->bm = depth_att(col) + vel_att;
+		c->sl = FM_ATT_MAX;
+		c->rr = FM_RATE[56];
+		if (v->model == M_GLOCK) {
+			m->sl = DB(36) << 16;
+			m->dr = rate(10 + con * 3 / 4);
+			c->dr = rate(dec);
+			v->am = in->punch ? 6 : 0;                      /* 1 dB on the carrier */
+		} else {
+			m->sl = DB(12) << 16;                           /* the hollow ring stays */
+			m->dr = scale_rate(rate(8 + con * 3 / 4), ksr_mul(n, 2));
+			c->dr = scale_rate(rate(dec), ksr_mul(n, 2));
+			v->am = in->punch ? 6 : 0;
+		}
+		break;
+	case M_BRASS:
+		v->r = snap_ratio(in->sweep);
 		v->bm = depth_att(col);
-		v->fb = 2;
-		m->sl = DB(18) << 16;
-		m->dr = m->rr = FM_RATE[26];
-		c->sl = FM_ATT_MAX;
-		c->dr = c->rr = scale_rate(rate(dec), ksr_mul(n, 2));
-		break;
-	case M_BNG:                                             /* high, short bongo */
-		v->inc0 = note_inc(n - (12 << 16));
-		v->bm = depth_att(col);
-		v->fb = 2;
-		m->sl = FM_ATT_MAX;
-		m->dr = m->rr = FM_RATE[20];
-		c->sl = FM_ATT_MAX;
-		c->dr = c->rr = scale_rate(rate(dec), ksr_mul(n, 4));
-		break;
-	case M_CNG:                                             /* lower, rounder conga */
-		v->inc0 = note_inc(n - (12 << 16));
-		v->bm = depth_att(col) + DB(3);
-		v->fb = 2;
-		m->sl = DB(18) << 16;
-		m->dr = m->rr = FM_RATE[24];
-		c->sl = FM_ATT_MAX;
-		c->dr = c->rr = scale_rate(rate(dec), ksr_mul(n, 2));
-		break;
-	case M_DJB:                                             /* hand drum: pitch drop, FM body only */
-		v->inc0 = note_inc(n - (12 << 16));
-		v->bm = depth_att(col) + DB(3);
-		v->fb = 3;
-		m->sl = FM_ATT_MAX;
-		m->dr = m->rr = FM_RATE[22];
-		c->sl = FM_ATT_MAX;
-		c->dr = c->rr = scale_rate(rate(dec), ksr_mul(n, 2));
-		break;
-	case M_TAI:                                             /* big low drum, deep pitch drop, FM body only */
-		v->inc0 = note_inc(n - (24 << 16));
-		v->bm = depth_att(col) + DB(3);
 		v->fb = 4;
-		m->sl = FM_ATT_MAX;
-		m->dr = m->rr = FM_RATE[22];
-		c->sl = FM_ATT_MAX;
-		c->dr = c->rr = scale_rate(rate(dec), ksr_mul(n, 1));
+		m->sl = DB(3) << 16;
+		m->hold = 1;
+		m->dr = FM_RATE[60];
+		m->ka = atk(30 + con * 3 / 4);                      /* the swell: the modulator opens slower */
+		c->ka = atk(20 + con / 2);
+		v->vib = in->punch ? 7 : 0;
 		break;
-	case M_TIM:                                             /* timpani: a felt thud and a long membrane */
+	case M_ACCORD:                                          /* two half-sine reeds, detuned */
+		v->alg = 1;
+		m->wave = c->wave = 1;
+		v->r = snap_ratio(in->sweep);
+		v->cents = (con * 30) >> 7;
+		v->bm = v->bc = DB(6);
+		v->fb = (u8)(col >> 4);
+		m->hold = 1;
+		m->ka = c->ka = atk(30);
+		v->vib = in->punch ? 3 : 0;
+		v->am = in->punch ? 3 : 0;                          /* 4.8 dB on both */
+		break;
+	case M_STRINGS:                                         /* feedback makes the modulator a saw: bowed */
+		v->r = snap_ratio(in->sweep);
+		v->bm = depth_att(col) + DB(4);
+		v->fb = 5;
+		m->hold = 1;
+		m->ka = atk(30 + ((con * 97) >> 7));
+		c->ka = atk(24 + ((con * 97) >> 7));
+		v->vib = in->punch ? 7 : 0;
+		break;
+	case M_TIMPANI:
 		v->inc0 = note_inc(n - (12 << 16));
+		v->r = snap_ratio(in->sweep);
 		v->bm = depth_att(col);
-		v->fb = 7;
+		v->fb = 7;                                          /* the felt thud: a noisy modulator, quickly gone */
 		m->sl = FM_ATT_MAX;
 		m->dr = FM_RATE[24];
 		c->sl = FM_ATT_MAX;
 		c->dr = scale_rate(rate(dec), ksr_mul(n, 1));
 		break;
-	case M_MAR:                                             /* marimba bars: fundamental and tuned overtone, added */
-		v->alg = 1;
-		v->bm = depth_att(col) + vel_att + DB(4);
-		v->bc = DB(4);
-		m->sl = FM_ATT_MAX;
-		c->sl = FM_ATT_MAX;
-		c->rr = m->rr = FM_RATE[56];
-		v->fb = v->click ? 6 : 0;
-		m->dr = scale_rate(rate(14 + con / 2), ksr_mul(n, 4));
-		c->dr = scale_rate(rate(dec), ksr_mul(n, 4));
-		v->vib = in->punch ? 3 : 0;
-		break;
-	case M_BLK:                                             /* woodblock: a short, hard pitched click */
-		v->fb = 3;
-		v->bm = depth_att(col) + DB(4);
-		m->sl = c->sl = FM_ATT_MAX;
-		m->dr = m->rr = FM_RATE[16];
-		c->dr = c->rr = rate(12 + con / 2);
-		break;
-	case M_GNG:                                             /* gong: low, inharmonic, long FM decay */
-		v->inc0 = note_inc(n - (12 << 16));
-		v->cents = 4 + ((con * 60) >> 7) + ((col * 40) >> 7);
-		v->fb = (col * 8) >> 7;                             /* INDEX: clean carrier to feedback metal */
-		v->bm = (127 - col) * 14 + DB(6);                   /* INDEX: nearly no FM to full metal */
-		v->bc = DB(6);
-		m->sl = FM_ATT_MAX;
-		m->dr = m->rr = rate(8 + con * 119 / 127);           /* ENV: fast tick to almost static metal */
-		c->sl = FM_ATT_MAX;
-		c->dr = c->rr = scale_rate(rate(dec), ksr_mul(n, 1));
-		v->am = in->punch ? 3 : 0;
-		break;
-	case M_ZAP:                                             /* laser: a fast four-octave fall */
-		v->bm = (127 - col) * 9 + DB(3);
-		v->bc = DB(12);                                     /* ZAP sits below the drum engines */
+	case M_ZAP:
+		v->r = snap_ratio(in->sweep);
+		v->bm = (127 - col) * 9;
 		v->fb = (u8)(col >> 4);
 		m->sl = c->sl = FM_ATT_MAX;
-		break;
-	case M_BUB:                                             /* bubble: the pitch rises into the note */
-		v->bm = depth_att(col) + DB(4);
-		v->fb = 1;
-		m->sl = FM_ATT_MAX;
-		m->dr = m->rr = FM_RATE[26];
-		c->sl = FM_ATT_MAX;
-		c->dr = c->rr = rate(dec);
 		break;
 	}
 }
@@ -413,52 +425,20 @@ static void start(fm_voice *v, const fm_in *in)
 	v->click = 0;
 	m->ph = c->ph = 0;
 	switch (v->model) {
-	case M_KIK:                                             /* three octaves down, in 25..150 ms */
-		v->pmul = 65536 * 8;
-		v->pk = FM_PDECAY[30 + (con * 70) / 127];
+	case M_STEEL:
+		v->pmul = 65536 + 3900;                             /* a blip of a semitone */
+		v->pk = FM_PDECAY[50];
 		break;
-	case M_TOM:                                             /* one octave down, in 40..220 ms */
-		v->pmul = 65536 * 2;
-		v->pk = FM_PDECAY[40 + (con * 60) / 127];
-		break;
-	case M_BNG:                                             /* a short drop, a high drum */
-		v->pmul = 65536 * 2;
-		v->pk = FM_PDECAY[24 + (con * 30) / 127];
-		break;
-	case M_CNG:
-		v->pmul = 65536 + ((con * 18000) >> 7);
-		v->pk = FM_PDECAY[40 + (con * 45) / 127];
-		break;
-	case M_DJB:
-		v->pmul = 65536 * 3;
-		v->pk = FM_PDECAY[34 + (con * 50) / 127];
-		break;
-	case M_TAI:                                             /* deep and slow */
-		v->pmul = 65536 * 4;
-		v->pk = FM_PDECAY[28 + (con * 40) / 127];
-		break;
-	case M_TIM:
-		v->pmul = 65536 + ((con * 7800) >> 7);              /* up to +2 semitones, sags in ~150 ms */
-		v->pk = FM_PDECAY[92];
-		break;
-	case M_MAR:
+	case M_MARIMBA:
 		v->click = 2;
 		break;
-	case M_BLK:
-		v->pmul = 65536 + 9000;
-		v->pk = FM_PDECAY[20];
-		break;
-	case M_GNG:                                             /* a shallow sag, speed and depth from CONTOUR */
-		v->pmul = 65536 + ((con * 16000) >> 7);
-		v->pk = FM_PDECAY[40 + (con * 60) / 127];
+	case M_TIMPANI:
+		v->pmul = 65536 + ((con * 7800) >> 7);              /* up to +2 semitones, sags in ~150 ms */
+		v->pk = FM_PDECAY[92];
 		break;
 	case M_ZAP:                                             /* 4 octaves down, in 5 ms .. 0.4 s */
 		v->pmul = 65536 * 16;
 		v->pk = FM_PDECAY[30 + (con * 80) / 127];
-		break;
-	case M_BUB:                                             /* from a quarter of the note, rising */
-		v->pmul = 65536 / 4;
-		v->pk = FM_PDECAY[20 + (con * 60) / 127];
 		break;
 	}
 	eg_start(m);
@@ -490,23 +470,15 @@ static void tick(fm_voice *v, const fm_in *in)
 		}
 	}
 	if (v->pmul != 65536) {                                 /* pitch envelope, ramped across the block */
-		s32 pd = (s32)v->pmul - 65536;
-		s32 next = 65536 + (pd >> 8) * (s32)(v->pk >> 8);
-		u32 m0, m1, c0, c1;
+		u32 next = 65536 + (((v->pmul - 65536) >> 8) * (v->pk >> 8));
+		u32 m0 = (im >> 8) * (v->pmul >> 8), m1 = (im >> 8) * (next >> 8);
+		u32 c0 = (ic >> 8) * (v->pmul >> 8), c1 = (ic >> 8) * (next >> 8);
 
-		if (next < 256)
-			next = 256;
-		if ((pd > 0 && next <= 65536) || (pd < 0 && next >= 65536))
-			next = 65536;
-		m0 = (im >> 8) * (v->pmul >> 8);
-		m1 = (im >> 8) * ((u32)next >> 8);
-		c0 = (ic >> 8) * (v->pmul >> 8);
-		c1 = (ic >> 8) * ((u32)next >> 8);
 		m->inc = m0;
 		m->dinc = (u32)((s32)(m1 - m0) >> 5);
 		c->inc = c0;
 		c->dinc = (u32)((s32)(c1 - c0) >> 5);
-		v->pmul = (u32)next;
+		v->pmul = next < 65600 ? 65536 : next;
 	} else {
 		m->inc = im;
 		c->inc = ic;
@@ -533,7 +505,7 @@ static void render_2op(fm_voice *v, s32 *out)
 {
 	fm_op *m = &v->op[0], *c = &v->op[1];
 	u32 pm = m->ph, pc = c->ph, im = m->inc, ic = c->inc, dm = m->dinc, dc = c->dinc;
-	u32 am = m->att, ac = c->att, bm = m->base, bc = c->base;
+	u32 am = m->att, ac = c->att, bm = m->base, bc = c->base, wm = m->wave, wc = c->wave;
 	s32 sm = m->d, sc = c->d, f1 = v->fb1, f2 = v->fb2;
 	u32 fbs = v->fb ? 10u - v->fb : 0;
 	int i;
@@ -544,9 +516,9 @@ static void render_2op(fm_voice *v, s32 *out)
 
 			pm += im; pc += ic; im += dm; ic += dc;
 			am += (u32)sm; ac += (u32)sc;
-			x = fm_op_out((pm >> 22) + (u32)fbm, bm + (am >> 16));
+			x = fm_op_out((pm >> 22) + (u32)fbm, bm + (am >> 16), wm);
 			f2 = f1; f1 = x;
-			out[i] = (x + fm_op_out(pc >> 22, bc + (ac >> 16))) * 2;
+			out[i] = (x + fm_op_out(pc >> 22, bc + (ac >> 16), wc)) * 2;
 		}
 	} else {
 		for (i = 0; i < FM_BLOCK; i++) {
@@ -554,9 +526,9 @@ static void render_2op(fm_voice *v, s32 *out)
 
 			pm += im; pc += ic; im += dm; ic += dc;
 			am += (u32)sm; ac += (u32)sc;
-			x = fm_op_out((pm >> 22) + (u32)fbm, bm + (am >> 16));
+			x = fm_op_out((pm >> 22) + (u32)fbm, bm + (am >> 16), wm);
 			f2 = f1; f1 = x;
-			out[i] = fm_op_out((pc >> 22) + (u32)(x >> 2), bc + (ac >> 16)) * 4;
+			out[i] = fm_op_out((pc >> 22) + (u32)(x >> 2), bc + (ac >> 16), wc) * 4;
 		}
 	}
 	m->ph = pm; c->ph = pc; m->inc = im; c->inc = ic;

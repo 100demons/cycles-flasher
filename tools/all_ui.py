@@ -1,6 +1,6 @@
 """The four machine-page splashes, in one unified UI layer.
 
-Feral, BLAST, BLAM and LiXR each get a picture index of their own (6, 7, 8, 9). The
+Feral, DUET, BLAST and LiXR each get a picture index of their own (6, 7, 8, 9). The
 OS's MACHINES page, the track page and the small track strip are redirected for those
 indices to Bitmap objects built here; stock pictures (0..5) keep the OS's path.
 """
@@ -11,15 +11,15 @@ import sys
 HERE = pathlib.Path(__file__).resolve().parent
 sys.path.insert(0, str(HERE))
 
+import duet_screens
 import blast_screens
-import blam_screens
 import feral_screens
 import lixr_screens
 
 ENGINES = (
     ("Feral", 6, feral_screens),
-    ("BLAST", 7, blast_screens),
-    ("BLAM", 8, blam_screens),
+    ("DUET", 7, duet_screens),
+    ("BLAST", 8, blast_screens),
     ("LiXR", 9, lixr_screens),
 )
 
@@ -154,12 +154,12 @@ small_icon:
 3:
 \tjmp 0x400a4dde
 """
-    if text.count(blast_screens.OLD_DRUM) != 1 or text.count(blast_screens.OLD_SMALL) != 1:
+    if text.count(duet_screens.OLD_DRUM) != 1 or text.count(duet_screens.OLD_SMALL) != 1:
         raise SystemExit("!! the standard detours changed")
-    text = text.replace(blast_screens.OLD_DRUM, drum).replace(blast_screens.OLD_SMALL, small)
+    text = text.replace(duet_screens.OLD_DRUM, drum).replace(duet_screens.OLD_SMALL, small)
 
     stubs = []
-    for i, (va, arr, lab, _) in enumerate(blast_screens.SITES):
+    for i, (va, arr, lab, _) in enumerate(duet_screens.SITES):
         stubs.append(f"{lab}_all{i}:")
         for ename, off in OFFSETS:
             stubs += [f"\tcmpi.l #{off}, %d0", f"\tbeq.s site{i}_{ename.lower()}"]
@@ -171,7 +171,7 @@ small_icon:
 
 def site_writes(img, base, ssyms):
     out = []
-    for i, (va, arr, lab, _) in enumerate(blast_screens.SITES):
+    for i, (va, arr, lab, _) in enumerate(duet_screens.SITES):
         old = img[va - base:va - base + 6]
         if old != bytes.fromhex("d0b9") + struct.pack(">I", arr):
             raise SystemExit(f"!! {va:#x}: not add.l {arr:#x}, d0")
@@ -183,10 +183,10 @@ def site_writes(img, base, ssyms):
 def clamp_writes(writes, base):
     seen = 0
     for w in writes:
-        if w and w["off"] + base in blast_screens.CLAMPS:
+        if w and w["off"] + base in duet_screens.CLAMPS:
             if (w["old"], w["new"]) != ("7005", "7001"):
                 raise SystemExit(f"!! {w['off'] + base:#x}: {w['old']} -> {w['new']}, expected 7005 -> 7001")
             w["new"] = "7009"
             seen += 1
-    if seen != len(blast_screens.CLAMPS):
+    if seen != len(duet_screens.CLAMPS):
         raise SystemExit("!! the clamps are not in the writes")
