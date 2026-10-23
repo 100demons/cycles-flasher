@@ -358,6 +358,23 @@ ALL_FEATURES = [
         "package": "lixr",
     },
     {
+        "id": "feral9",
+        "cat": "sound",
+        "label": "Feral machine",
+        "desc": "One extra machine after Chord: nine noisy, unpredictable synthesis models, light on the processor. "
+                "SHAPE picks the model (NYB bytebeat, GND Gendy, BNJ Benjolin, RYT Rhythmicon resonators, FRS "
+                "Fourses, RNG a HAVOC rungler, PLS pulsar, SCN scanned synthesis, KOS logistic map); COLOR and "
+                "SWEEP are the model's two macros, CONTOUR the tone envelope (or a third control for BNJ and RNG), "
+                "PUNCH = FREE, DECAY and GATE as on Tone. Not with LiXR: both add a machine.",
+        # not yet tested on hardware; the source tree only reports its CPU cost
+        "status": "experimental",
+        "credit": {"kind": "own", "who": "100demons"},
+        "variants": [
+            {"file": "63-feral9", "label": None},
+        ],
+        "excludes": ["lixr"],
+    },
+    {
         "id": "chord-keys",
         "cat": "live",
         "label": "Accords de gamme sur TRIG 1–16",
@@ -415,7 +432,7 @@ ALL_FEATURES = [
 # model27 offers a short list of cards. The other definitions above stay as they are, for the command-line build
 # (every tweak of tweaks/ is still built by tools/build.py) and so that merges from upstream apply cleanly; a card
 # comes back into the flasher by adding its id here, once it has been reviewed against the Cycles Mod Standard.
-OFFERED = ("lixr",)
+OFFERED = ("lixr", "feral9")
 FEATURES = [f for f in ALL_FEATURES if f["id"] in OFFERED]
 _missing = set(OFFERED) - {f["id"] for f in FEATURES}
 if _missing:

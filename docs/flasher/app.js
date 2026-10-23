@@ -31,8 +31,10 @@ const ELEKTRON_ST_DL = "https://www.elektron.se/support-downloads/syntakt";
 const REF_MAINOS = {
   // each card alone: each variant, each combination of real Syntakt engines
   "lixr": "64598fe9a731343a96d8df7c33d1f4a8227ffffb8de26c45eefb1cfaec51d8c0",
+  "feral9": "cfac363188de47ae14a1183b0897ed0cd84b7585ae0215e69a5dcacd5ce24263",
 };
 const REF_MODS = {
+  "feral9": {"w": "703cddfc6620fa3f4fa270339b60a4970f27475e1bbbe212ea9fb4edc13f2434", "p": "87b2cec57d4cc9be4934512e9ed18168e04d054592c4f7612972ac60a5dfb805"},
   "lixr": {"w": "8a6ab543006717bbfbe47a156cd3fb1e08459f09c762605acd4c6c678b2c29d6", "p": "70d2c2e589057476a55f4282f9ef44afe45f138c818edc173ab52605d9d20c39"},
 };
 
@@ -778,6 +780,10 @@ const FEAT = {
       short: "One extra machine: a fixed-point drum voice, feedback FM, a decimator instead of the filter.",
       desc: "An extra machine after Chord: a drum voice in the spirit of the Sonic Potions LXR drum voices, built from the Cycles' own fixed-point maths. One tableless oscillator moves from sine through triangle to saw and rectangle, with a noise and transient layer on top; feedback FM shapes it, a pitch envelope gives the attack, and a sample-rate decimator takes the place of the filter. COLOR = waveform (sine on the left, triangle in the centre, saw and rectangle on the right, noise and clap past 0.65), SHAPE = feedback FM, SWEEP = pitch-envelope depth and decay, RATE (where CONTOUR sits) = decimator rate; DECAY, GATE, PUNCH, FINE and PITCH work as on Tone.",
       note: "About as heavy on the processor as a stock Tone voice (measured: 6,335 to 6,499 instructions per block, against 6,572 for TONE). No load governor: several LiXR tracks at once can make the sound crackle. A project using LiXR needs a firmware with LiXR at the same place: it comes after Chord. English only for now." },
+    feral9: { label: "Feral machine",
+      short: "One extra machine: nine noisy, unpredictable synthesis models, light on the processor.",
+      desc: "An extra machine after Chord: nine noisy, unpredictable synthesis models. SHAPE picks the model: NYB (bytebeat), GND (Gendy), BNJ (Benjolin), RYT (Rhythmicon resonators), FRS (Fourses), RNG (a HAVOC rungler), PLS (pulsar), SCN (scanned synthesis) and KOS (logistic map). COLOR and SWEEP are the model's two macros, CONTOUR the tone envelope (or a third control for BNJ and RNG), PUNCH = FREE, DECAY and GATE as on Tone. Not with LiXR: both add a machine.",
+      note: "Experimental: not yet tested on a Model:Cycles from this page. The source tree measured its CPU cost (below TONE); the sound has not been checked here. Back up first. Not with LiXR." },
     "chord-keys": { label: "Chord Keys",
       short: "On a CHORD track, TRIG 1–16 play the chords of your scale.",
       clash: "both change the notes of the TRIG keys (Model-TG has its own Scale Lock)",
@@ -873,6 +879,10 @@ const FEAT = {
       short: "Une machine en plus : une voix de batterie en virgule fixe, FM à rétroaction, décimateur au lieu du filtre.",
       desc: "Une machine ajoutée après Chord : une voix de batterie pensée dans l'esprit des voix de batterie du Sonic Potions LXR, à partir du calcul en virgule fixe du Cycles. Un oscillateur sans table glisse du sinus au triangle, puis à la dent de scie et au carré, avec une couche de bruit et de transitoire ; une FM à rétroaction le façonne, une enveloppe de hauteur donne l'attaque, et un décimateur de fréquence d'échantillonnage remplace le filtre. COLOR = forme d'onde (sinus à gauche, triangle au centre, dent de scie et carré à droite, bruit et clap au-delà de 0,65), SHAPE = FM à rétroaction, SWEEP = profondeur et décroissance de l'enveloppe de hauteur, RATE (à la place de CONTOUR) = fréquence du décimateur ; DECAY, GATE, PUNCH, FINE et PITCH marchent comme sur Tone.",
       note: "À peu près aussi gourmande en calcul qu'une voix Tone d'origine (mesuré : 6 335 à 6 499 instructions par bloc, contre 6 572 pour TONE). Pas de régulateur de charge : plusieurs pistes LiXR à la fois peuvent faire craquer le son. Un projet qui utilise LiXR demande un firmware où LiXR est à la même place : elle vient après Chord. Pour l'instant en anglais seulement." },
+    feral9: { label: "Machine Feral",
+      short: "Une machine en plus : neuf modèles de synthèse bruités et imprévisibles, légers pour le processeur.",
+      desc: "Une machine ajoutée après Chord : neuf modèles de synthèse bruités et imprévisibles. SHAPE choisit le modèle : NYB (bytebeat), GND (Gendy), BNJ (Benjolin), RYT (résonateurs Rhythmicon), FRS (Fourses), RNG (rungler HAVOC), PLS (pulsar), SCN (synthèse par balayage) et KOS (carte logistique). COLOR et SWEEP sont les deux macros du modèle, CONTOUR l'enveloppe de timbre (ou un troisième réglage pour BNJ et RNG), PUNCH = FREE, DECAY et GATE comme sur Tone. Pas avec LiXR : les deux ajoutent une machine.",
+      note: "Expérimentale : pas encore testée sur un Model:Cycles depuis cette page. L'arbre source a mesuré son coût processeur (sous TONE) ; le son n'a pas été vérifié ici. Sauvegardez d'abord. Pas avec LiXR." },
     "chord-keys": { label: "Chord Keys",
       short: "Sur une piste CHORD, les TRIG 1–16 jouent les accords de votre gamme.",
       clash: "les deux changent les notes des boutons TRIG (Model-TG a son propre Scale Lock)",
