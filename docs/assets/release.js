@@ -7,6 +7,10 @@
  * of everything model27 builds on.
  */
 window.MC_RELEASES = [
+  { version: "0.17", date: "2026-10-23", changes: [
+    { en: "The Feral, Duet and SAM cards now include a video of the engine, at the bottom of their description",
+      fr: "Les cartes Feral, Duet et SAM incluent maintenant une vidéo du moteur, au bas de leur description" },
+  ] },
   { version: "0.16", date: "2026-10-23", changes: [
     { en: "Engine names swapped: the 14-model tonal FM machine BLAST is now DUET, and the percussion + SAM machine BLAM is now BLAST. Same engines and settings; the guide sections moved with the names",
       fr: "Noms de moteurs échangés : la machine FM tonale à 14 modèles BLAST devient DUET, et la machine de percussion + SAM BLAM devient BLAST. Mêmes moteurs et mêmes réglages ; les sections du guide ont suivi les noms" },

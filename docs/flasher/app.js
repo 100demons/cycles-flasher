@@ -118,6 +118,13 @@ const GUIDE_OF = {
   "lfo-plus": "lfo-plus",
 };
 
+// mod id -> YouTube video of the engine, shown at the bottom of its description (one line per engine)
+const VIDEO_OF = {
+  feral9: "r4Z3FvKYv5k",
+  duet: "cPBxAeiMe9A",
+  sam: "JHM9WnSiR8w",
+};
+
 // Step 1's sections, in display order: the `cat` of each feature (tools/gen_flasher_tweaks.py, same list there
 // without "other"). A feature without a known cat goes to "other", at the end.
 const CATS = ["pack", "sound", "seq", "live", "screen", "io", "other"];
@@ -182,6 +189,7 @@ const T = {
     d_engines: "Engines",
     d_note: "Before installing",
     d_guide: "How to use it", read_guide: "Read the guide",
+    video_of: "{name}, in video",
     sel_title: "Your selection",
     sel_n: "{n} mods", sel_n1: "1 mod",
     sel_incl: "+ {n} included",
@@ -460,6 +468,7 @@ const T = {
     d_engines: "Moteurs",
     d_note: "Avant d'installer",
     d_guide: "Mode d'emploi", read_guide: "Lire le guide",
+    video_of: "{name}, en vidéo",
     sel_title: "Votre sélection",
     sel_n: "{n} mods", sel_n1: "1 mod",
     sel_incl: "+ {n} inclus",
@@ -1392,7 +1401,12 @@ function renderDetails(f, sel, open) {
   if (f.engines) row("d_engines", f.engines.map((e) =>
     `<b>${esc(e.name)}</b> (${esc(e.label)})${featText("eng-" + e.code, "note", "") ? " : " + esc(featText("eng-" + e.code, "note", "")) : ""}`).join("<br>"));
   if (GUIDE_OF[f.id]) row("d_guide", `<a class="feat-guide" href="${GUIDE}#${GUIDE_OF[f.id]}">${esc(t("read_guide"))} <span aria-hidden="true">→</span></a>`);
-  return `<div class="det" id="det-${f.id}"><p>${engineBlurb(featText(f.id, "desc", f.desc))}</p><dl class="facts">${rows.join("")}</dl></div>`;
+  const video = VIDEO_OF[f.id];
+  const vid = video ? `<div class="vid"><iframe src="https://www.youtube-nocookie.com/embed/${esc(video)}"` +
+    ` title="${esc(t("video_of", { name: label(f) }))}" loading="lazy"` +
+    ` allow="accelerometer; clipboard-write; encrypted-media; gyroscope; picture-in-picture; web-share"` +
+    ` referrerpolicy="strict-origin-when-cross-origin" allowfullscreen></iframe></div>` : "";
+  return `<div class="det" id="det-${f.id}"><p>${engineBlurb(featText(f.id, "desc", f.desc))}</p><dl class="facts">${rows.join("")}</dl>${vid}</div>`;
 }
 
 // Section chips: they jump to a section (never filter); the LED lights when the section holds a ticked mod.
