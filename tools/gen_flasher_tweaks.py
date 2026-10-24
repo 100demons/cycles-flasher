@@ -365,7 +365,7 @@ ALL_FEATURES = [
     {
         "id": "lixr",
         "cat": "sound",
-        "label": "🧪 LiXR (0.1 alpha)",
+        "label": "LiXR 🧪 (0.1 alpha)",
         "desc": "Single percussion voice - Brutal digital drum with lots of range and made for Techno. Sonic Potions "
                 "LXR imitation from Deepseek. Needs work, but it can slam.",
         # tested on the Model:Cycles on 2026-10-22, alone and next to SAMPLE, on the builds of commit 20db5b5
@@ -382,7 +382,7 @@ ALL_FEATURES = [
     {
         "id": "feral9",
         "cat": "sound",
-        "label": "🐀 Feral (0.7 beta)",
+        "label": "Feral 🐀 (0.7 beta)",
         "desc": "Dangerous experimental Macro OSC: nyblcore, bytebeat, benjolin, rungler, chaotic maps, fourses, "
                 "rhythmicon, gendy, pulsar, wave scan, and even worse to come.",
         # tested on the Model:Cycles on 2026-10-22 (standalone)
@@ -394,7 +394,7 @@ ALL_FEATURES = [
     {
         "id": "blast",
         "cat": "sound",
-        "label": "💥 Blast (0.5 beta)",
+        "label": "Blast 💥 (0.5 beta)",
         "desc": "FM Macro OSC - percussive/tonal - raw, heavy, digital. Extended fixed FM ratios allow modern sounds "
                 "and alien harmonics to emerge. Mutated Yamaha OPL2.",
         "status": "experimental",
@@ -408,7 +408,7 @@ ALL_FEATURES = [
     {
         "id": "duet",
         "cat": "sound",
-        "label": "💾 Duet (0.8 beta)",
+        "label": "Duet 💾 (0.8 beta)",
         "desc": "FM Macro OSC - melodic '90s PC Soundblaster engine. Think higher fidelity Sega Genesis or Doom 2. "
                 "Surprisingly tasteful. A curated stock Yamaha OPL2.",
         "status": "experimental",
@@ -422,7 +422,7 @@ ALL_FEATURES = [
     {
         "id": "sam",
         "cat": "sound",
-        "label": "👁️ SAM (0.1 alpha)",
+        "label": "SAM 👁️ (0.1 alpha)",
         "desc": "Vocal Synthesizer - Software Automated Mouth - currently half-broken alpha - \"I love you\"",
         "status": "experimental",
         "credit": {"kind": "own", "who": "100demons"},
