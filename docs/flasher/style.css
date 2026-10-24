@@ -96,7 +96,7 @@ code{font-size:.82em}
 .mod-row{display:grid;grid-template-columns:22px minmax(0,max-content) minmax(0,1fr);
   grid-template-areas:"key ttl by" "key short short";column-gap:14px;row-gap:1px;align-items:baseline;padding:12px 0 13px;cursor:pointer}
 .mod-row>input{grid-area:key;align-self:start;margin-top:2px}
-.ttl{grid-area:ttl;display:flex;flex-wrap:wrap;align-items:baseline;gap:0 10px;font-weight:700;font-size:17px;line-height:1.35;letter-spacing:-.01em}
+.ttl{grid-area:ttl;display:flex;flex-wrap:wrap;align-items:baseline;gap:0 10px;font-weight:700;font-size:34px;line-height:1.35;letter-spacing:-.01em}
 .ttl .incl{font-weight:400;font-size:14.5px;color:var(--muted);letter-spacing:0}
 .by{grid-area:by;display:flex;flex-wrap:wrap;gap:0 12px;font-size:14px;line-height:1.35;color:var(--muted)}
 .by a{color:var(--ink-2)}
@@ -302,7 +302,7 @@ details.trouble{margin-top:8px}
   .grp-h{min-height:56px}
   .grp-h .gs{display:none}
   .mod-row{grid-template-columns:22px max-content minmax(0,1fr);grid-template-areas:"key ttl ttl" ". short short" ". tag by";row-gap:3px;padding:12px 0 13px}
-  .ttl{padding-right:40px;font-size:16.5px}
+  .ttl{padding-right:40px;font-size:33px}
   .short{font-size:15px}
   .st{justify-self:start}
   .by{font-size:13.5px}

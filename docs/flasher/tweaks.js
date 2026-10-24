@@ -2979,7 +2979,7 @@ window.MC_TWEAKS = {
  "features": [
   {
    "id": "feral9",
-   "label": "Feral 🐀 (0.7 beta)",
+   "label": "🐀 Feral (0.7 beta)",
    "desc": "Dangerous experimental Macro OSC: nyblcore, bytebeat, benjolin, rungler, chaotic maps, fourses, rhythmicon, gendy, pulsar, wave scan, and even worse to come.",
    "status": "tested",
    "credit": {
@@ -2997,7 +2997,7 @@ window.MC_TWEAKS = {
   },
   {
    "id": "blast",
-   "label": "Blast 💥 (0.5 beta)",
+   "label": "💥 Blast (0.5 beta)",
    "desc": "FM Macro OSC - percussive/tonal - raw, heavy, digital. Extended fixed FM ratios allow modern sounds and alien harmonics to emerge. Mutated Yamaha OPL2.",
    "status": "experimental",
    "credit": {
@@ -3020,7 +3020,7 @@ window.MC_TWEAKS = {
   },
   {
    "id": "duet",
-   "label": "Duet 💾 (0.8 beta)",
+   "label": "💾 Duet (0.8 beta)",
    "desc": "FM Macro OSC - melodic '90s PC Soundblaster engine. Think higher fidelity Sega Genesis or Doom 2. Surprisingly tasteful. A curated stock Yamaha OPL2.",
    "status": "experimental",
    "credit": {
@@ -3043,7 +3043,7 @@ window.MC_TWEAKS = {
   },
   {
    "id": "lixr",
-   "label": "LiXR 🧪 (0.1 alpha)",
+   "label": "🧪 LiXR (0.1 alpha)",
    "desc": "Single percussion voice - Brutal digital drum with lots of range and made for Techno. Sonic Potions LXR imitation from Deepseek. Needs work, but it can slam.",
    "status": "tested",
    "credit": {
@@ -3061,7 +3061,7 @@ window.MC_TWEAKS = {
   },
   {
    "id": "sam",
-   "label": "SAM 👁️ (0.1 alpha)",
+   "label": "👁️ SAM (0.1 alpha)",
    "desc": "Vocal Synthesizer - Software Automated Mouth - currently half-broken alpha - \"I love you\"",
    "status": "experimental",
    "credit": {
