@@ -7,6 +7,10 @@
  * of everything model27 builds on.
  */
 window.MC_RELEASES = [
+  { version: "0.17", date: "2026-10-23", changes: [
+    { en: "The Machines warning now says one machine per firmware, and that this will be fixed: the aim is for larger firmware projects to adopt the best engines",
+      fr: "L'avertissement de la section Machines indique maintenant une machine par firmware, et que cela sera corrigé : l'objectif est que des projets de firmware plus importants adoptent les meilleurs moteurs" },
+  ] },
   { version: "0.16", date: "2026-10-23", changes: [
     { en: "Engine names swapped: the 14-model tonal FM machine BLAST is now DUET, and the percussion + SAM machine BLAM is now BLAST. Same engines and settings; the guide sections moved with the names",
       fr: "Noms de moteurs échangés : la machine FM tonale à 14 modèles BLAST devient DUET, et la machine de percussion + SAM BLAM devient BLAST. Mêmes moteurs et mêmes réglages ; les sections du guide ont suivi les noms" },
