@@ -7,6 +7,10 @@
  * of everything model27 builds on.
  */
 window.MC_RELEASES = [
+  { version: "0.18", date: "2026-10-23", changes: [
+    { en: "The Guide page is gone: engine cards and warnings no longer link to it, and the way back is explained on the flasher itself",
+      fr: "La page Guide a disparu : les cartes de moteur et les avertissements n'y renvoient plus, et le retour est expliqué dans le flasher" },
+  ] },
   { version: "0.17", date: "2026-10-23", changes: [
     { en: "The Feral, Duet and SAM cards now include a video of the engine, at the bottom of their description",
       fr: "Les cartes Feral, Duet et SAM incluent maintenant une vidéo du moteur, au bas de leur description" },

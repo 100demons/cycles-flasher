@@ -26,7 +26,7 @@ you touch:
 |---|---|
 | [`tools/AGENTS.md`](tools/AGENTS.md) | generators, the Python build, ColdFire code, emulation proofs |
 | [`tweaks/AGENTS.md`](tweaks/AGENTS.md) | the tweak JSON files and `PROVENANCE.md` |
-| [`docs/AGENTS.md`](docs/AGENTS.md) | the website, the web flasher, the guide, the release notes |
+| [`docs/AGENTS.md`](docs/AGENTS.md) | the website, the web flasher, the release notes |
 | [`notes/AGENTS.md`](notes/AGENTS.md) | the technical notes |
 
 ## What this project is
@@ -65,7 +65,7 @@ maintained by 18nelli18; model27 is not affiliated with it, and never speaks for
 3. **Hardware testing is the maintainer's.** A new mod ships as `"status": "experimental"`. Only after the maintainer
    reports that it works on their Model:Cycles does it become `"tested"`, in a separate commit ("… tested on the
    Model:Cycles"). Never mark anything tested yourself, never claim a hardware result you did not get from them.
-4. **One user-visible change, one commit series**, with its docs, guide, release notes and note. Commit only when the
+4. **One user-visible change, one commit series**, with its docs, release notes and note. Commit only when the
    maintainer asks, never on your own. Every commit message ends with the trailer `Co-Authored-By: Claude` (the
    maintainer's choice for the mod repositories). The maintainer decides what lands, after testing on the hardware.
 5. **Prove it in emulation first.** Every mod has a generator with `--check` and a proof under `tools/emu/` that runs
@@ -94,7 +94,7 @@ maintained by 18nelli18; model27 is not affiliated with it, and never speaks for
 - **French** stays where Modded-Cycles wrote it (`notes/`, `BUILD.md`, `FLASH.md`, `dossier-technique.md`,
   `PROVENANCE.md`, the existing tweaks and tools) until a file is rewritten for another reason; do not translate
   files just to translate them.
-- **Both, side by side**: everything users see on the site (flasher cards, guide, release notes, home page), as
+- **Both, side by side**: everything users see on the site (flasher cards, release notes, home page), as
   `en`/`fr` pairs or `data-l="en"`/`data-l="fr"` spans. Never add one language without the other.
 - User-facing text speaks to musicians: what the mod does on the machine, which buttons to press, its limits. No
   addresses or jargon there; those belong in the notes.
@@ -135,7 +135,7 @@ tools/registry.py             no firmware needed: builds tweaks/model-cycles_OS1
 tools/ref_mainos.py           reference hashes in docs/flasher/app.js: each mod (REF_MODS) and a sample of combinations
                               (REF_MAINOS: each card alone, every pair, the largest ones)
 tools/web*_check.*, webflash_smoke.*   checks of the web flasher against the Python build (node, jsdom)
-docs/                         GitHub Pages site: index.html, flasher/, guide/, assets/release.js
+docs/                         GitHub Pages site: index.html, flasher/, assets/release.js
 notes/                        numbered technical notes (French), index in notes/README.md
 BUILD.md, FLASH.md            command-line build and flashing (French)
 README.md                     English overview for Model:Cycles owners (mod table)
@@ -163,14 +163,13 @@ Follow the shape of the last ones (tempo-max: commits `5997b4a`, `14fb9fa`, `6e5
    MAIN OS SHA-256 of the main combinations.
 5. **Put it in the flasher**: add it to `FEATURES` in `tools/gen_flasher_tweaks.py` (`"status": "experimental"`, and
    its section `cat`), regenerate `docs/flasher/tweaks.js`, regenerate `REF_MAINOS` and `REF_MODS` with
-   `tools/ref_mainos.py`, add its row texts (`FEAT` en + fr: `label`, `short`, `desc`) and guide anchor (`GUIDE_OF`) in
+   `tools/ref_mainos.py`, add its row texts (`FEAT` en + fr: `label`, `short`, `desc`) in
    `docs/flasher/app.js`, update the lists checked by `tools/webflash_smoke.js`. See `docs/AGENTS.md`.
-6. **Document it for users**: a guide section in `docs/guide/index.html` (en + fr, buttons to press, limits), a new
-   release at the top of `docs/assets/release.js` (en + fr), bump the `MC_BUILD` / `?v=` stamp on the pages, a row
-   in the mod table of `README.md`.
+6. **Document it for users**: a new release at the top of `docs/assets/release.js` (en + fr), bump the
+   `MC_BUILD` / `?v=` stamp on the pages, a row in the mod table of `README.md`.
 7. **Validate** (below), then propose the commit and tell the maintainer what to test on the machine.
 8. **After their test**: a small follow-up commit flips the status to `tested` (generator `FEATURES`, `tweaks.js`,
-   guide, release notes, README, note: "Tested on the Model:Cycles (YYYY-MM-DD)"). If they report a problem, record it
+   release notes, README, note: "Tested on the Model:Cycles (YYYY-MM-DD)"). If they report a problem, record it
    in the note, fix, and bump the release.
 
 A fix to an existing mod follows the same path, minus the new files: note section, generator, proof, regenerated

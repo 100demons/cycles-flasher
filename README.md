@@ -9,7 +9,7 @@ the engines can do. You tick what you want, the page builds the firmware from **
 your browser, and sends it to the Model:Cycles over USB. Every engine and tool keeps its author's name, on the cards,
 in the credits and in the third-party notices.
 
-**Status: beta.** The web flasher runs at [https://100demons.github.io/cycles-flasher/flasher/](https://100demons.github.io/cycles-flasher/flasher/) and offers LiXR and Feral together, plus DUET and BLAST standalone; the [guide](https://100demons.github.io/cycles-flasher/guide/) explains it.
+**Status: beta.** The web flasher runs at [https://100demons.github.io/cycles-flasher/flasher/](https://100demons.github.io/cycles-flasher/flasher/) and offers LiXR and Feral together, plus DUET and BLAST standalone.
 The engines are also published one by one, with their sources and a ready-made package, in
 **[cycles-mods](https://github.com/100demons/cycles-mods)** for other developers to grab.
 The command-line build works for every Modded-Cycles 1.55 mod still in the repository; the short list for the beta

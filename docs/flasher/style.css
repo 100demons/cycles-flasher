@@ -158,7 +158,6 @@ code{font-size:.82em}
 .facts dd{margin:0;color:var(--ink-2);max-width:62ch}
 .facts dd b{font-weight:600;color:var(--ink)}
 .facts a{color:var(--ink)}
-.facts .feat-guide{font-weight:600;text-decoration-color:var(--red)}
 
 /* the recorded demo at the bottom of a machine's description: 16:9, never wider than the text */
 .vid{margin:14px 0 0;max-width:560px;aspect-ratio:16/9;border-radius:var(--r);overflow:hidden;background:#000}

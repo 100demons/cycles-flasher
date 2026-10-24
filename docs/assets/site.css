@@ -1,4 +1,4 @@
-/* Modded-Cycles — shared styles: home, flasher, guide.
+/* Modded-Cycles — shared styles: home, flasher.
  * The page takes the colours of the unit: light grey casing, charcoal keys, the red of a lit trig key.
  * Dark theme: the page goes dark, the drawn unit keeps its own colours (--mc-*).
  * Plain CSS (no nesting): the flasher's smoke test parses it with jsdom. */

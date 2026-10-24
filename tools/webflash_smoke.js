@@ -267,8 +267,8 @@ async function main() {
     check(!box("det-feral9").hidden && /Dangerous experimental Macro OSC/.test(box("det-feral9").textContent), "details are always visible");
     check(!/Status|Doesn't go with|Before installing/.test(textOf(doc, "#det-feral9")),
       "details leave out Status, clashes and the pre-install note");
-    check(cards.every((f) => !!doc.querySelector(`#det-${f.id} a.feat-guide[href$="#${f.id}"]`)),
-      "every engine card links to its own guide section");
+    check(cards.every((f) => !doc.querySelector(`#det-${f.id} a.feat-guide`)),
+      "engine cards have no guide link");
     box("feat-feral9").click(); await wait(5);
     check(chosen() === "feral9" && box("feat-feral9").checked, "ticking Feral selects its package: " + chosen());
     box("feat-duet").click(); await wait(5);
@@ -365,14 +365,10 @@ async function main() {
       && [...doc.querySelectorAll("#features section.grp")].pop().id === "cat-other", "a mod without cat goes to « Other mods », last");
     cac.cat = cacCat;
     app.applyLang("en");
-    // Details: opens and closes, doesn't tick, holds the guide link
-    await click(box("more-control-all-config"));
-    const opened = !box("det-control-all-config").hidden && box("more-control-all-config").getAttribute("aria-expanded") === "true"
-      && !box("feat-control-all-config").checked && !!doc.querySelector('#det-control-all-config a[href$="#control-all"]')
-      && /Status/.test(text(doc, "det-control-all-config"));
-    await click(box("more-control-all-config"));
-    check(opened && box("det-control-all-config").hidden && box("more-control-all-config").getAttribute("aria-expanded") === "false",
-      "Details opens the drawer (description, status, guide link) without ticking, and closes it");
+    // Details are always visible, don't tick, and have no guide link
+    const opened = !box("det-control-all-config").hidden && !box("feat-control-all-config").checked
+      && !doc.querySelector('#det-control-all-config a.feat-guide');
+    check(opened, "details are always visible, have no guide link, and ticking a description does not tick the mod");
     // folding a section; a folded section still names its ticked mods; its chip unfolds it
     await click(box("feat-control-all-config"));
     await click(box("grp-h-live"));

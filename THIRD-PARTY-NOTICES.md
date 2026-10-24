@@ -4,7 +4,7 @@
 
 The MIT License in [`LICENSE`](LICENSE) applies to the original work of the Modded-Cycles authors and contributors,
 and to model27's own changes, in this repository: the tools and generators, the mod sources (C and assembly) and the code compiled from them, the tweak
-files, the emulation proofs, the web flasher and the website, the guide and the technical notes. A file or folder that
+files, the emulation proofs, the web flasher and the website, and the technical notes. A file or folder that
 names another license is under that license instead (see the table below).
 
 ## What it does not cover

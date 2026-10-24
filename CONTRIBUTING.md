@@ -25,6 +25,6 @@ rules (only the MAIN OS section is touched, every mod is proven in emulation, re
 
 ## How a mod gets in
 
-[`AGENTS.md`](AGENTS.md) describes the usual path: a technical note, a generator, an emulation proof, the flasher card,
-the guide and the release notes. A new mod ships as *Experimental*; it becomes *Tested* only after the maintainer has
+[`AGENTS.md`](AGENTS.md) describes the usual path: a technical note, a generator, an emulation proof, the flasher card
+and the release notes. A new mod ships as *Experimental*; it becomes *Tested* only after the maintainer has
 tried it on their own Model:Cycles.
