@@ -365,7 +365,7 @@ ALL_FEATURES = [
     {
         "id": "lixr",
         "cat": "sound",
-        "label": "LiXR - 0.1 alpha",
+        "label": "🧪 LiXR (0.1 alpha)",
         "desc": "Single percussion voice - Brutal digital drum with lots of range and made for Techno. Sonic Potions "
                 "LXR imitation from Deepseek. Needs work, but it can slam.",
         # tested on the Model:Cycles on 2026-10-22, alone and next to SAMPLE, on the builds of commit 20db5b5
@@ -382,7 +382,7 @@ ALL_FEATURES = [
     {
         "id": "feral9",
         "cat": "sound",
-        "label": "Feral - 0.7 beta",
+        "label": "🐀 Feral (0.7 beta)",
         "desc": "Dangerous experimental Macro OSC: nyblcore, bytebeat, benjolin, rungler, chaotic maps, fourses, "
                 "rhythmicon, gendy, pulsar, wave scan, and even worse to come.",
         # tested on the Model:Cycles on 2026-10-22 (standalone)
@@ -392,23 +392,9 @@ ALL_FEATURES = [
         "one_of": "engine",
     },
     {
-        "id": "duet",
-        "cat": "sound",
-        "label": "Duet - 0.8 beta",
-        "desc": "FM Macro OSC - melodic '90s PC Soundblaster engine. Think higher fidelity Sega Genesis or Doom 2. "
-                "Surprisingly tasteful. A curated stock Yamaha OPL2.",
-        "status": "experimental",
-        "credit": {"kind": "own", "who": "100demons"},
-        "variants": [
-            {"file": "66-duet", "label": None},
-        ],
-        "excludes": ["lixr", "feral9", "blast"],
-        "one_of": "engine",
-    },
-    {
         "id": "blast",
         "cat": "sound",
-        "label": "Blast - 0.5 beta",
+        "label": "💥 Blast (0.5 beta)",
         "desc": "FM Macro OSC - percussive/tonal - raw, heavy, digital. Extended fixed FM ratios allow modern sounds "
                 "and alien harmonics to emerge. Mutated Yamaha OPL2.",
         "status": "experimental",
@@ -420,9 +406,23 @@ ALL_FEATURES = [
         "one_of": "engine",
     },
     {
+        "id": "duet",
+        "cat": "sound",
+        "label": "💾 Duet (0.8 beta)",
+        "desc": "FM Macro OSC - melodic '90s PC Soundblaster engine. Think higher fidelity Sega Genesis or Doom 2. "
+                "Surprisingly tasteful. A curated stock Yamaha OPL2.",
+        "status": "experimental",
+        "credit": {"kind": "own", "who": "100demons"},
+        "variants": [
+            {"file": "66-duet", "label": None},
+        ],
+        "excludes": ["lixr", "feral9", "blast"],
+        "one_of": "engine",
+    },
+    {
         "id": "sam",
         "cat": "sound",
-        "label": "SAM - 0.1 alpha",
+        "label": "👁️ SAM (0.1 alpha)",
         "desc": "Vocal Synthesizer - Software Automated Mouth - currently half-broken alpha - \"I love you\"",
         "status": "experimental",
         "credit": {"kind": "own", "who": "100demons"},
@@ -489,7 +489,7 @@ ALL_FEATURES = [
 # model27 offers a short list of cards. The other definitions above stay as they are, for the command-line build
 # (every tweak of tweaks/ is still built by tools/build.py) and so that merges from upstream apply cleanly; a card
 # comes back into the flasher by adding its id here, once it has been reviewed against the Cycles Mod Standard.
-OFFERED = ("feral9", "duet", "blast", "lixr", "sam")
+OFFERED = ("feral9", "blast", "duet", "lixr", "sam")
 # OFFERED order is the build and display order; a card comes back into the flasher by adding its id here.
 _by_id = {f["id"]: f for f in ALL_FEATURES}
 FEATURES = [_by_id[i] for i in OFFERED]

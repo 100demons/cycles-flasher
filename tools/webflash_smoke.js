@@ -223,7 +223,7 @@ async function main() {
     check(typeof w.MCBuilder === "object" && typeof w.MCComposer === "object" && typeof w.MCFlasher === "object",
       "MCBuilder + MCComposer + MCFlasher present");
     const ids = w.MC_TWEAKS.tweaks.map((x) => x.id), cards = w.MC_TWEAKS.features;
-    check(ids.join() === "duet,blast,sam" && cards.map((f) => f.id).join() === "feral9,duet,blast,lixr,sam"
+    check(ids.join() === "blast,duet,sam" && cards.map((f) => f.id).join() === "feral9,blast,duet,lixr,sam"
       && Object.keys(w.MC_TWEAKS.packages || {}).join() === "feral9,lixr" && !!w.MC_TWEAKS.registrar
       && !cards.some((f) => f.engines || f.needs)
       && !w.MC_TWEAKS.tweaks.some((x) => x.append && x.append.syntakt),
@@ -234,7 +234,7 @@ async function main() {
       && srcs.every((x) => x.endsWith("?v=" + w.MC_BUILD)), "scripts loaded with ?v=<build> (no stale cache): " + srcs.join());
     check(doc.getElementById("compat").hidden, "no compatibility banner in a good browser");
     const feats = [...doc.querySelectorAll("#features input[type=checkbox]")].map((c) => c.id);
-    check(feats.join() === "feat-feral9,feat-duet,feat-blast,feat-lixr,feat-sam", "five feature rows: " + JSON.stringify(feats));
+    check(feats.join() === "feat-feral9,feat-blast,feat-duet,feat-lixr,feat-sam", "five feature rows: " + JSON.stringify(feats));
     check(!doc.querySelector("#features .tag"), "no Tested / Experimental tags on the cards");
     const blurb = /Dangerous experimental Macro OSC/.test(text(doc, "features"))
       && /Surprisingly tasteful/.test(text(doc, "features")) && /Mutated Yamaha OPL2/.test(text(doc, "features"))
