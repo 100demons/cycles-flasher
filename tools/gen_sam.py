@@ -2,7 +2,7 @@
 """Generate the standalone SAM speech machine for the Model:Cycles (OS 1.13).
 
 SAM is the Software Automated Mouth, as ported to Braids Renaissance. This is a new 7th machine,
-not part of BLAST and not using the BLAST source. It has 36 words on SHAPE, COLOR = speaking rate,
+not part of PUNCH and not using the PUNCH source. It has 36 words on SHAPE, COLOR = speaking rate,
 SWEEP = Braids scrub, CONTOUR = throat/mouth character macro, DECAY = release, PITCH/FINE/keys = pitch.
 
     python3 tools/gen_sam.py --cycles model-cycles_OS1.13.syx [--check]
@@ -173,7 +173,7 @@ def patch_detours(text, syms):
 
 def other_ids():
     """Every tweak that carries an appended payload or adds a machine: the payload and boot hook are shared."""
-    ids = ga.other_ids() | {"acid", "acid-tg", "blast", "duet", "macro", "macro-tg", "model-tg", "model-tg-st",
+    ids = ga.other_ids() | {"acid", "acid-tg", "punch", "blast", "macro", "macro-tg", "model-tg", "model-tg-st",
                             "lixr", "dxr", "tiny", "port", "tiny-port", "6ch-usbup", "mod-settings"}
     for path in DEV.glob("*.json"):
         try:

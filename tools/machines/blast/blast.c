@@ -1,8 +1,6 @@
 /*
- * BLAST: one added machine for the Model:Cycles (OS 1.13), built from BLAST's OPL2-style voice. The FM engine is in
- * blast_dsp.h, the SAM speech voice in blast_sam.h; this file plugs both into the voice loop, like ACID's bridge
- * (notes/54) and TINY's. BLAST exposes 12 FM engines and two SAM banks, and steps SWEEP through the ratio list on
- * the FM engines.
+ * BLAST: added machine of the Model:Cycles (OS 1.13), 14 OPL2-style FM models on SHAPE. The sound is in
+ * blast_dsp.h; this file plugs it into the voice loop, like ACID's bridge (notes/54) and TINY's.
  *
  * Voice-loop contract (notes/14): update(pmod, v, p) then render(out, v), once per block of 32 frames at 48 kHz.
  * pmod = the trig's note (semitones << 16); v = the Cycles voice (0x31c bytes); p = the track's parameters
@@ -11,33 +9,30 @@
  * (the block where the OS switches machines and resets the voice: the note starts there, as on TINY);
  * v+0x3c: the note ended (LEN elapsed, key released); out: 32 x int32, Q31 / 2, like TINY, PORT and MACRO.
  *
- * Knobs: SHAPE = the engine (0..13); PITCH, FINE and the keys = the note, as on the stock
- * machines; COLOR, SWEEP, CONTOUR and DECAY as each engine reads them; SWEEP is passed whole (8.8) so that a
- * fractional value glides the ratio between its steps. On SAM, COLOR picks one of the 16 words of the bank,
- * SWEEP scrubs it, CONTOUR sets the speaking speed, PUNCH loops the word and DECAY is the release; the trigger
- * starts the word at the current scrub position, as on Braids Renaissance. PUNCH turns the chip's LFO on the FM
- * engines; GATE holds the note until the trig's end. The trig's velocity (0x40fe4cdc) also opens the struck
- * instruments' brightness; the OS still sets the volume.
+ * Knobs: SHAPE = the model (0..14); PITCH, FINE and the keys = the note, as on the stock machines; COLOR, SWEEP,
+ * CONTOUR and DECAY as each model reads them (blast_dsp.h); SWEEP is passed whole (8.8) so that a fractional value
+ * glides the ratio between its steps; PUNCH turns the chip's LFO on; GATE holds the note until the trig's end.
+ * The trig's velocity (0x40fe4cdc) also opens the struck instruments' brightness; the OS still sets the volume.
  *
- * The BLAST engines make their own envelopes: the stock amp chain is not called. A silent voice is not computed. A
- * voice is reset at the first note after a machine change (our mark at v+0x2c is cleared by the OS's voice reset) and
- * when SHAPE picks another engine at a trig.
+ * The engine makes its own envelopes: the stock amp chain is not called. A silent voice is not computed. A voice is
+ * reset at the first note after a machine change (our mark at v+0x2c is cleared by the OS's voice reset) and when
+ * SHAPE picks another model at a trig.
  *
  * SWEEP on every model, on the screen and under the knob (the end of this file):
- *   - the value window shows the ratio in three characters (1:4, 1:3, 1:2, 2:3, 1:1, 5:4, 3:2, 2:1, 5:2, 3:1,
- *     7:2, 4:1 ... 16X, 20X) instead of 0..127, and keeps SWEEP's stock picture;
- *   - on BLAST a turn moves to the next or previous ratio, one per detent (the stored value is the step's knob
- *     position), and FUNC + a turn leaves the steps: 1/16 of a step per detent; the window keeps the nearest
- *     step's three-character name;
+ *   - the value window shows the ratio in three characters (1:2, 1:1 .. 9:1, 10X, 12X, 15X) instead of 0..127, and
+ *     keeps SWEEP's stock picture;
+ *   - a turn moves to the next or previous ratio, one per detent (the stored value is the step's knob position);
+ *   - FUNC + a turn leaves the steps: 1/16 of a step per detent, so the ratio glides between them; the window keeps
+ *     the nearest step's three-character name.
  * BLAST's SWEEP descriptor (78) gets its own interface object: a copy of SNARE's SWEEP object (53, which the added
- * machines' descriptors share, gen_syntakt_engines.detours_asm) with our text function; the picture function is
- * SNARE's, the stock one. A detour in the OS's knob turn (0x4000b82a) gives BLAST's ratio steps. SHAPE (77) shows
- * the engine's name, three letters: BLAST's 14 names. It has its own object too: SNARE's SHAPE object (52) with our
- * The machine page's splash: three Bitmap objects of the OS's class, built here from the image and mask planes of
- * blast_icons.h and drawn by the detours of gen_blast.py.
+ * machines' descriptors share, gen_syntakt_engines.detours_asm) with our text and FUNC step functions; its picture
+ * function is SNARE's, the stock one. A detour in the OS's knob turn (0x4000b82a) gives the ratio steps.
+ * SHAPE (77) shows the model's name, three letters (MTL, SIN .. TMP, ZAP), with its own object too: SNARE's SHAPE
+ * object (52) with our text function.
+ * The machine page's splash (tools/blast_ui.py): three Bitmap objects of the OS's class, built here from the image
+ * and mask planes of blast_icons.h and drawn by the detours of gen_blast.py.
  */
 #include "blast_dsp.h"
-#include "blast_sam.h"
 
 #ifndef CYC_VOICE0                                  /* a host build (tools/emu/blast_host.c) gives its own */
 #define CYC_VOICE0  0x42308828
@@ -53,17 +48,11 @@
 
 struct track {
 	fm_voice voice;
-	sam_voice sam;
 	fm_in in;
 };
 
 static struct track trk[6];
-
-#ifdef __mcoldfire__
-static volatile u8 ui_model;                         /* what the value window is looking at */
-#endif
-
-#define BLAST_MODELS 14
+u8 blast_shape[6];                                   /* each track's SHAPE (model), for the interface */
 
 static inline u8 knob(s32 x)                         /* 8.8, 0..127 -> 0..127 */
 {
@@ -84,20 +73,15 @@ void blast_update(s32 pmod, char *v, const char *p)
 		for (k = 0; k < sizeof(tr->voice); k++)
 			b[k] = 0;
 		tr->voice.model = 0xff;                      /* no model yet: the first trig sets one */
-		sam_init(&tr->sam);
 		V32(MARK_OFF) = MARK;
 	}
 	/* the note: the trig's, plus PITCH - 64 and FINE (+-2 semitones), as the stock machines */
 	tune = ((s32)P16(0x14) << 8) + (((s32)P16(0x22) - 0x4000) << 3) - (64 << 16);
 	in->note = (pmod < 0 ? 0 : (pmod > (127 << 16) ? 127 << 16 : pmod)) + tune;
-	{
-		u8 shape = knob(P16(0x18));
-
-		in->model = shape < BLAST_MODELS ? shape : BLAST_MODELS - 1;
-	}
-#ifdef __mcoldfire__
-	ui_model = in->model;
-#endif
+	in->model = knob(P16(0x18));
+	if (in->model >= FM_MODELS)
+		in->model = FM_MODELS - 1;
+	blast_shape[t] = in->model;
 	in->color = knob(P16(0x16));
 	in->sweep = P16(0x1a) < 0 ? 0 : P16(0x1a);
 	in->contour = knob(P16(0x1c));
@@ -119,10 +103,7 @@ void blast_render(s32 *out, char *v)
 	struct track *tr = &trk[TRACK_OF(v)];
 	int i;
 
-	if (tr->in.model >= M_SAM1) {
-		if (!sam_block(&tr->sam, &tr->in, out))
-			return;
-	} else if (!fm_block(&tr->voice, &tr->in, out))  /* a silent voice is not computed: out is zeros */
+	if (!fm_block(&tr->voice, &tr->in, out))         /* a silent voice is not computed: out is zeros */
 		return;
 	for (i = 0; i < FM_BLOCK; i++)                   /* Q15 -> Q31 / 2 */
 		out[i] <<= 15;
@@ -150,73 +131,51 @@ BITMAP(blast_bm_c, 25, 22, BLAST_IMG_C, BLAST_MSK_C);
  * functions that return a pointer are declared to return u32: they return it in d0, where m68k-linux-gnu-gcc would
  * read a pointer from a0 (notes/42 par. 6).
  */
-#ifndef COLOR_DESC
-#define COLOR_DESC 76
-#endif                               /* BLAST: 76 COLOR, 77 SHAPE, 78 SWEEP, 79 CONTOUR */
 #ifndef SHAPE_DESC
 #define SHAPE_DESC 77
 #endif
 #ifndef SWEEP_DESC
 #define SWEEP_DESC 78
-#endif
-#define UI_COLOR    (0x40a71754 + 100 * 51)          /* SNARE's COLOR, SHAPE and SWEEP interface objects (100 bytes) */
-#define UI_SHAPE    (0x40a71754 + 100 * 52)
+#endif                               /* BLAST's descriptors: 76 COLOR, 77 SHAPE, 78 SWEEP, 79 CONTOUR */
+#define UI_SHAPE    (0x40a71754 + 100 * 52)          /* SNARE's SHAPE and SWEEP interface objects (100 bytes) */
 #define UI_SWEEP    (0x40a71754 + 100 * 53)
 #define OS_SPRINTF  ((int (*)(char *, const char *, ...))0x40000e6e)
-#define FINE_STEP   ((128 * 256) / (FM_RATIO_COUNT * 16))   /* FUNC: 1/16 of a ratio step, 8.8 */
+#define FINE_STEP   158                              /* FUNC: 1/16 of a ratio step (128 / 13 knob steps), 8.8 */
 
-static u32 ui_sweep[25], ui_shape[25], ui_color[25]; /* BLAST SWEEP, SHAPE and COLOR objects */
+static u32 ui_sweep[25], ui_shape[25];               /* BLAST's SWEEP and SHAPE interface objects */
 static u8 ui_ready;
 
-/* BLAST's SHAPE names: the 12 FM engines, then the two SAM banks */
-static const char model_name_blast[BLAST_MODELS][5] = {
-	"KIK", "TOM", "BNG", "CNG", "TAI", "TIM", "MAR", "DJB", "BLK", "GNG", "BUB", "ZAP",
-	"SAM1", "SAM2",
+/* the models' names on SHAPE: three characters, as the value window fits (its large font has capitals and digits) */
+static const char model_name[FM_MODELS][4] = {
+	"SIN", "HLF", "ABS", "PLS", "BAS", "PIA", "MAR", "GLK", "BRS", "ACC", "STR", "STL", "TMP", "ZAP",
 };
 
-/* the ratios of SWEEP, three characters each as the value window fits them; 4:1 is the percussion default */
-static const char ratio_name[FM_RATIO_COUNT][4] = {
-	"1:4", "1:3", "1:2", "2:3", "1:1", "5:4", "3:2", "2:1", "5:2", "3:1",
-	"7:2", "4:1", "9:2", "5:1", "6:1", "7:1", "8:1", "9:1", "10X", "12X", "15X",
+/* the thirteen ratios of SWEEP, three characters each as the value window fits them */
+static const char ratio_name[13][4] = {
+	"1:2", "1:1", "2:1", "3:1", "4:1", "5:1", "6:1", "7:1", "8:1", "9:1", "10X", "12X", "15X",
 };
 
-/* the knob position of ratio step s, 8.8: the first whole position that snaps to the step */
+/* the knob position of ratio step s (0..12), 8.8: the first whole position of the step */
 static s32 step_value(u32 s)
 {
-	return (s32)(((s * 128 + (u32)FM_RATIO_COUNT - 1) / (u32)FM_RATIO_COUNT) << 8);
+	return (s32)(((s * 128 + 12) / 13) << 8);
 }
 
-/* BLAST's SHAPE text: the curated engine's name */
+/* SHAPE's value as text: the model's name (the model the bridge plays: the whole part, as knob() reads it) */
 int blast_model_fmt(void *fn, s32 v, char *buf)
 {
 	(void)fn;
-	return OS_SPRINTF(buf, "%s", model_name_blast[knob(v) >= BLAST_MODELS ? BLAST_MODELS - 1 : knob(v)]);
-}
-
-/* SAM's COLOR text: the word name, four characters. The FM engines keep the number. */
-int blast_color_fmt(void *fn, s32 v, char *buf)
-{
-	(void)fn;
-	if (ui_model >= M_SAM1) {
-		u8 bank = (u8)(ui_model - M_SAM1);
-		u8 word = (u8)(knob(v) >> 3);
-
-		if (bank >= SAM_BANKS)
-			bank = SAM_BANKS - 1;
-		if (word >= SAM_WORD_COUNT)
-			word = SAM_WORD_COUNT - 1;
-		return OS_SPRINTF(buf, "%s", SAM_WORD_NAME[bank][word]);
-	}
-	return OS_SPRINTF(buf, "%d", knob(v));
+	return OS_SPRINTF(buf, "%s", model_name[knob(v) >= FM_MODELS ? FM_MODELS - 1 : knob(v)]);
 }
 
 /* the value as text: the nearest ratio step, in three characters (a FUNC turn between steps keeps the nearest name) */
-static int fmt_ratio(u32 r, char *buf)
+int blast_fmt(void *fn, s32 v, char *buf)
 {
-	u32 best = 0, bd, d, i;
+	u32 r = snap_ratio(v), best = 0, bd, d, i;
 
+	(void)fn;
 	bd = r > FM_MULT[0] ? r - FM_MULT[0] : FM_MULT[0] - r;
-	for (i = 1; i < (u32)FM_RATIO_COUNT; i++) {
+	for (i = 1; i < 13; i++) {
 		d = r > FM_MULT[i] ? r - FM_MULT[i] : FM_MULT[i] - r;
 		if (d < bd) {
 			bd = d;
@@ -224,14 +183,6 @@ static int fmt_ratio(u32 r, char *buf)
 		}
 	}
 	return OS_SPRINTF(buf, "%s", ratio_name[best]);
-}
-
-int blast_fmt(void *fn, s32 v, char *buf)
-{
-	(void)fn;
-	if (ui_model >= M_SAM1)                          /* SWEEP is the scrub on SAM */
-		return OS_SPRINTF(buf, "%d", knob(v));
-	return fmt_ratio(snap_ratio(v), buf);
 }
 
 /* FUNC + a turn: 1/16 of a step per detent (at least one), the value kept off the whole positions */
@@ -244,10 +195,6 @@ s32 blast_fine(void *fn, s32 v, s32 delta, s32 lo, s32 hi, s32 def)
 	n = ((delta < 0 ? -delta : delta) + 0xff) >> 8;
 	if (!n)
 		n = 1;
-	if (ui_model >= M_SAM1) {                        /* SAM: a normal FUNC turn, one unit per detent */
-		v += (delta < 0 ? -n : n) << 8;
-		return v < lo ? lo : (v > hi ? hi : v);
-	}
 	v += (delta < 0 ? -n : n) * FINE_STEP;
 	if (!(v & 0xff))
 		v += delta < 0 ? -1 : 1;
@@ -257,19 +204,19 @@ s32 blast_fine(void *fn, s32 v, s32 delta, s32 lo, s32 hi, s32 def)
 /* a turn without FUNC (from blast_turn_hook): the next or previous ratio, one per detent; -1: the OS's own step */
 s32 blast_turn(s32 cur, s32 delta)
 {
-	u32 c, s, n, last = (u32)FM_RATIO_COUNT - 1;
+	u32 c, s, n;
 
-	if (!delta || ui_model >= M_SAM1)                /* SAM: the OS's own one-unit step */
+	if (!delta)
 		return -1;
 	c = cur < 0 ? 0 : (cur > 0x7f00 ? 0x7f00 : (u32)cur);
-	s = ((c * (u32)FM_RATIO_COUNT) >> 7) >> 8;
-	if (s > last)
-		s = last;
+	s = ((c * 13) >> 7) >> 8;
+	if (s > 12)
+		s = 12;
 	n = ((u32)(delta < 0 ? -delta : delta) + 0xff) >> 8;
 	if (delta > 0) {
-		if (s >= last)                               /* already on the last ratio: the value stays */
+		if (s >= 12)                                 /* already on the last ratio: the value stays */
 			return (s32)c;
-		s = s + n > last ? last : s + n;
+		s = s + n > 12 ? 12 : s + n;
 	} else {
 		if ((s32)c != step_value(s))                 /* between two steps: the first detent goes to this one */
 			n--;
@@ -284,22 +231,18 @@ u32 blast_state_at(s32 desc)
 {
 	if (!ui_ready) {
 		const u32 *sweep = (const u32 *)UI_SWEEP, *shape = (const u32 *)UI_SHAPE;
-		const u32 *color = (const u32 *)UI_COLOR;
 		int i;
 
 		for (i = 0; i < 25; i++) {
 			ui_sweep[i] = sweep[i];
 			ui_shape[i] = shape[i];
-			ui_color[i] = color[i];
 		}
 		ui_sweep[8] = (u32)blast_fmt;                /* +0x20: the text function's invoker */
 		ui_sweep[20] = (u32)blast_fine;
 		ui_shape[8] = (u32)blast_model_fmt;
-		ui_color[8] = (u32)blast_color_fmt;
 		ui_ready = 1;
 	}
-	return desc == SWEEP_DESC ? (u32)ui_sweep
-		: (desc == SHAPE_DESC ? (u32)ui_shape : (u32)ui_color);
+	return desc == SHAPE_DESC ? (u32)ui_shape : (u32)ui_sweep;
 }
 
 #define MC_STR2(x) #x
@@ -308,8 +251,8 @@ u32 blast_state_at(s32 desc)
 __asm__(
 "	.text\n"
 /* state_connect (gen_syntakt_engines.detours_asm, at 0x4004dfa2: the text of a descriptor's value in the buffer
- * 0x40a71500) for descriptors 76, 77 and 78: our object's text function (+0x14), called by 0x400ddf60
- * (fn, value, buffer) */
+ * 0x40a71500) for descriptors 77 and 78: our object's text function (+0x14), called by 0x400ddf60 (fn, value,
+ * buffer) */
 "	.globl	blast_state_connect\n"
 "blast_state_connect:\n"
 "	move.l	4(%sp), -(%sp)\n"

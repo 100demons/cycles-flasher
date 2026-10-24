@@ -7,6 +7,10 @@
  * of everything model27 builds on.
  */
 window.MC_RELEASES = [
+  { version: "0.19", date: "2026-10-24", changes: [
+    { en: "Engine names changed: the 14-model tonal FM machine Duet is now Blast, and the percussion + SAM machine Blast is now Punch, with a punch emoji on its card. Same engines and settings",
+      fr: "Noms de moteurs changés : la machine FM tonale à 14 modèles Duet devient Blast, et la machine de percussion + SAM Blast devient Punch, avec un emoji de poing sur sa carte. Mêmes moteurs et mêmes réglages" },
+  ] },
   { version: "0.18", date: "2026-10-23", changes: [
     { en: "The Guide page is gone: engine cards and warnings no longer link to it, and the way back is explained on the flasher itself",
       fr: "La page Guide a disparu : les cartes de moteur et les avertissements n'y renvoient plus, et le retour est expliqué dans le flasher" },

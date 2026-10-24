@@ -36,7 +36,7 @@ typedef uint8_t u8;
 #define SAM_RING        2048
 #define SAM_NATURAL     72
 
-/* phase per SAM sample at C4, 48 kHz: the same constant as the BLAST SAM port */
+/* phase per SAM sample at C4, 48 kHz: the same constant as the PUNCH SAM port */
 #define SAM_PHASE_PER_SAMPLE ((((u32)SAM_SEMI_INC[0] << 5) >> 8) * 557u)
 
 typedef struct {

@@ -15,11 +15,11 @@
  * word advances at its natural speed. Without a trigger the current grain is
  * held, so SWEEP scrubs the word like the Timbre knob of Braids Renaissance.
  */
-#ifndef BLAST_SAM_H
-#define BLAST_SAM_H
+#ifndef PUNCH_SAM_H
+#define PUNCH_SAM_H
 
-#include "blast_sam_tables.h"
-#include "blast_sam_words.h"
+#include "punch_sam_tables.h"
+#include "punch_sam_words.h"
 
 #define SAM_RING        500
 #define SAM_BANKS       2

@@ -7,7 +7,7 @@
  * The optional official files are told apart by their names. The Model:Cycles OS checks each combination of the
  * REF_MAINOS sample against its reference hash, and each mod against REF_MODS (app.js, notes/49); with the
  * Model:Samples OS, the "Samples OS" tab and the Mods tab on a Model:Samples are checked end to end
- * (REF_SAMPLES_ON_CYCLES, tools/mods_for_samples.py). model27 offers five engine cards, Feral, Duet, Blast, LiXR and
+ * (REF_SAMPLES_ON_CYCLES, tools/mods_for_samples.py). model27 offers five engine cards, Feral, Blast, Punch, LiXR and
  * SAM (OFFERED in tools/gen_flasher_tweaks.py); LiXR and Feral are machine cards, composed in the page from their
  * packages (composer.js, notes/61), and only one engine can be ticked at a time. The checks of Modded-Cycles' other
  * cards are in this file's history. */
@@ -223,7 +223,7 @@ async function main() {
     check(typeof w.MCBuilder === "object" && typeof w.MCComposer === "object" && typeof w.MCFlasher === "object",
       "MCBuilder + MCComposer + MCFlasher present");
     const ids = w.MC_TWEAKS.tweaks.map((x) => x.id), cards = w.MC_TWEAKS.features;
-    check(ids.join() === "blast,duet,sam" && cards.map((f) => f.id).join() === "feral9,blast,duet,lixr,sam"
+    check(ids.join() === "punch,blast,sam" && cards.map((f) => f.id).join() === "feral9,punch,blast,lixr,sam"
       && Object.keys(w.MC_TWEAKS.packages || {}).join() === "feral9,lixr" && !!w.MC_TWEAKS.registrar
       && !cards.some((f) => f.engines || f.needs)
       && !w.MC_TWEAKS.tweaks.some((x) => x.append && x.append.syntakt),
@@ -234,7 +234,7 @@ async function main() {
       && srcs.every((x) => x.endsWith("?v=" + w.MC_BUILD)), "scripts loaded with ?v=<build> (no stale cache): " + srcs.join());
     check(doc.getElementById("compat").hidden, "no compatibility banner in a good browser");
     const feats = [...doc.querySelectorAll("#features input[type=checkbox]")].map((c) => c.id);
-    check(feats.join() === "feat-feral9,feat-blast,feat-duet,feat-lixr,feat-sam", "five feature rows: " + JSON.stringify(feats));
+    check(feats.join() === "feat-feral9,feat-punch,feat-blast,feat-lixr,feat-sam", "five feature rows: " + JSON.stringify(feats));
     check(!doc.querySelector("#features .tag"), "no Tested / Experimental tags on the cards");
     const blurb = /Dangerous experimental Macro OSC/.test(text(doc, "features"))
       && /Surprisingly tasteful/.test(text(doc, "features")) && /Mutated Yamaha OPL2/.test(text(doc, "features"))
@@ -271,12 +271,12 @@ async function main() {
       "engine cards have no guide link");
     box("feat-feral9").click(); await wait(5);
     check(chosen() === "feral9" && box("feat-feral9").checked, "ticking Feral selects its package: " + chosen());
-    box("feat-duet").click(); await wait(5);
-    check(chosen() === "duet" && box("feat-duet").checked && !box("feat-feral9").checked,
-      "ticking Duet unticks Feral: " + chosen());
+    box("feat-blast").click(); await wait(5);
+    check(chosen() === "blast" && box("feat-blast").checked && !box("feat-feral9").checked,
+      "ticking Blast unticks Feral: " + chosen());
     box("feat-sam").click(); await wait(5);
-    check(chosen() === "sam" && box("feat-sam").checked && !box("feat-duet").checked,
-      "ticking SAM unticks Duet: " + chosen());
+    check(chosen() === "sam" && box("feat-sam").checked && !box("feat-blast").checked,
+      "ticking SAM unticks Blast: " + chosen());
     check(!/Good to know|Doesn't go with/.test(text(doc, "features")),
       "no Good to know or Doesn't go with pop-ups after ticking");
     box("feat-sam").click(); await wait(5);

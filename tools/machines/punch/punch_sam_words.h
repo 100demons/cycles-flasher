@@ -1,8 +1,8 @@
 /* The 32 SAM words used by Braids Renaissance, compiled by its word-list tool.
  * Each word is a run-length table of SAM frames; the offsets are byte positions
  * in SAM_WORDS. Word names are four characters, for the COLOR value window. */
-#ifndef BLAST_SAM_WORDS_H
-#define BLAST_SAM_WORDS_H
+#ifndef PUNCH_SAM_WORDS_H
+#define PUNCH_SAM_WORDS_H
 
 static const u8 SAM_WORDS[10112] = {
 	26, 30, 42, 2, 16, 32, 14, 4, 2, 14, 1, 16, 7, 18, 2, 17, 8, 16, 2, 17, 9, 18, 1, 17,

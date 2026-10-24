@@ -1,8 +1,8 @@
 /* SAM fixed tables, from the Braids Renaissance vocalist (rendertabs.cc).
  * They are the original SAM tables: sine/rectangle formant shapes, the
  * multiplication table and the sampled-consonant bitstream. */
-#ifndef BLAST_SAM_TABLES_H
-#define BLAST_SAM_TABLES_H
+#ifndef PUNCH_SAM_TABLES_H
+#define PUNCH_SAM_TABLES_H
 
 static const u8 SAM_TAB48426[5] = {
 	24, 26, 23, 23, 23,
