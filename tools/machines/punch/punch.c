@@ -1,8 +1,7 @@
 /*
  * PUNCH: one added machine for the Model:Cycles (OS 1.13), built from PUNCH's OPL2-style voice. The FM engine is in
- * punch_dsp.h, the SAM speech voice in punch_sam.h; this file plugs both into the voice loop, like ACID's bridge
- * (notes/54) and TINY's. PUNCH exposes 12 FM engines and two SAM banks, and steps SWEEP through the ratio list on
- * the FM engines.
+ * punch_dsp.h; this file plugs it into the voice loop, like ACID's bridge (notes/54) and TINY's. PUNCH exposes 12
+ * FM engines, and steps SWEEP through the ratio list.
  *
  * Voice-loop contract (notes/14): update(pmod, v, p) then render(out, v), once per block of 32 frames at 48 kHz.
  * pmod = the trig's note (semitones << 16); v = the Cycles voice (0x31c bytes); p = the track's parameters
@@ -11,13 +10,11 @@
  * (the block where the OS switches machines and resets the voice: the note starts there, as on TINY);
  * v+0x3c: the note ended (LEN elapsed, key released); out: 32 x int32, Q31 / 2, like TINY, PORT and MACRO.
  *
- * Knobs: SHAPE = the engine (0..13); PITCH, FINE and the keys = the note, as on the stock
+ * Knobs: SHAPE = the engine (0..11); PITCH, FINE and the keys = the note, as on the stock
  * machines; COLOR, SWEEP, CONTOUR and DECAY as each engine reads them; SWEEP is passed whole (8.8) so that a
- * fractional value glides the ratio between its steps. On SAM, COLOR picks one of the 16 words of the bank,
- * SWEEP scrubs it, CONTOUR sets the speaking speed, PUNCH loops the word and DECAY is the release; the trigger
- * starts the word at the current scrub position, as on Braids Renaissance. PUNCH turns the chip's LFO on the FM
- * engines; GATE holds the note until the trig's end. The trig's velocity (0x40fe4cdc) also opens the struck
- * instruments' brightness; the OS still sets the volume.
+ * fractional value glides the ratio between its steps. PUNCH turns the chip's LFO on the FM engines; GATE holds
+ * the note until the trig's end. The trig's velocity (0x40fe4cdc) also opens the struck instruments' brightness;
+ * the OS still sets the volume.
  *
  * The PUNCH engines make their own envelopes: the stock amp chain is not called. A silent voice is not computed. A
  * voice is reset at the first note after a machine change (our mark at v+0x2c is cleared by the OS's voice reset) and
@@ -32,12 +29,11 @@
  * PUNCH's SWEEP descriptor (78) gets its own interface object: a copy of SNARE's SWEEP object (53, which the added
  * machines' descriptors share, gen_syntakt_engines.detours_asm) with our text function; the picture function is
  * SNARE's, the stock one. A detour in the OS's knob turn (0x4000b82a) gives PUNCH's ratio steps. SHAPE (77) shows
- * the engine's name, three letters: PUNCH's 14 names. It has its own object too: SNARE's SHAPE object (52) with our
+ * the engine's name, three letters: PUNCH's 12 names. It has its own object too: SNARE's SHAPE object (52) with our
  * The machine page's splash: three Bitmap objects of the OS's class, built here from the image and mask planes of
  * punch_icons.h and drawn by the detours of gen_punch.py.
  */
 #include "punch_dsp.h"
-#include "punch_sam.h"
 
 #ifndef CYC_VOICE0                                  /* a host build (tools/emu/punch_host.c) gives its own */
 #define CYC_VOICE0  0x42308828
@@ -53,17 +49,12 @@
 
 struct track {
 	fm_voice voice;
-	sam_voice sam;
 	fm_in in;
 };
 
 static struct track trk[6];
 
-#ifdef __mcoldfire__
-static volatile u8 ui_model;                         /* what the value window is looking at */
-#endif
-
-#define PUNCH_MODELS 14
+#define PUNCH_MODELS 12
 
 static inline u8 knob(s32 x)                         /* 8.8, 0..127 -> 0..127 */
 {
@@ -84,7 +75,6 @@ void punch_update(s32 pmod, char *v, const char *p)
 		for (k = 0; k < sizeof(tr->voice); k++)
 			b[k] = 0;
 		tr->voice.model = 0xff;                      /* no model yet: the first trig sets one */
-		sam_init(&tr->sam);
 		V32(MARK_OFF) = MARK;
 	}
 	/* the note: the trig's, plus PITCH - 64 and FINE (+-2 semitones), as the stock machines */
@@ -95,9 +85,6 @@ void punch_update(s32 pmod, char *v, const char *p)
 
 		in->model = shape < PUNCH_MODELS ? shape : PUNCH_MODELS - 1;
 	}
-#ifdef __mcoldfire__
-	ui_model = in->model;
-#endif
 	in->color = knob(P16(0x16));
 	in->sweep = P16(0x1a) < 0 ? 0 : P16(0x1a);
 	in->contour = knob(P16(0x1c));
@@ -119,10 +106,7 @@ void punch_render(s32 *out, char *v)
 	struct track *tr = &trk[TRACK_OF(v)];
 	int i;
 
-	if (tr->in.model >= M_SAM1) {
-		if (!sam_block(&tr->sam, &tr->in, out))
-			return;
-	} else if (!fm_block(&tr->voice, &tr->in, out))  /* a silent voice is not computed: out is zeros */
+	if (!fm_block(&tr->voice, &tr->in, out))  /* a silent voice is not computed: out is zeros */
 		return;
 	for (i = 0; i < FM_BLOCK; i++)                   /* Q15 -> Q31 / 2 */
 		out[i] <<= 15;
@@ -168,10 +152,9 @@ BITMAP(punch_bm_c, 25, 22, PUNCH_IMG_C, PUNCH_MSK_C);
 static u32 ui_sweep[25], ui_shape[25], ui_color[25]; /* PUNCH SWEEP, SHAPE and COLOR objects */
 static u8 ui_ready;
 
-/* PUNCH's SHAPE names: the 12 FM engines, then the two SAM banks */
+/* PUNCH's SHAPE names: the 12 FM engines */
 static const char model_name_punch[PUNCH_MODELS][5] = {
 	"KIK", "TOM", "BNG", "CNG", "TAI", "TIM", "MAR", "DJB", "BLK", "GNG", "BUB", "ZAP",
-	"SAM1", "SAM2",
 };
 
 /* the ratios of SWEEP, three characters each as the value window fits them; 4:1 is the percussion default */
@@ -193,20 +176,10 @@ int punch_model_fmt(void *fn, s32 v, char *buf)
 	return OS_SPRINTF(buf, "%s", model_name_punch[knob(v) >= PUNCH_MODELS ? PUNCH_MODELS - 1 : knob(v)]);
 }
 
-/* SAM's COLOR text: the word name, four characters. The FM engines keep the number. */
+/* COLOR's text: the FM index, a number */
 int punch_color_fmt(void *fn, s32 v, char *buf)
 {
 	(void)fn;
-	if (ui_model >= M_SAM1) {
-		u8 bank = (u8)(ui_model - M_SAM1);
-		u8 word = (u8)(knob(v) >> 3);
-
-		if (bank >= SAM_BANKS)
-			bank = SAM_BANKS - 1;
-		if (word >= SAM_WORD_COUNT)
-			word = SAM_WORD_COUNT - 1;
-		return OS_SPRINTF(buf, "%s", SAM_WORD_NAME[bank][word]);
-	}
 	return OS_SPRINTF(buf, "%d", knob(v));
 }
 
@@ -229,8 +202,6 @@ static int fmt_ratio(u32 r, char *buf)
 int punch_fmt(void *fn, s32 v, char *buf)
 {
 	(void)fn;
-	if (ui_model >= M_SAM1)                          /* SWEEP is the scrub on SAM */
-		return OS_SPRINTF(buf, "%d", knob(v));
 	return fmt_ratio(snap_ratio(v), buf);
 }
 
@@ -244,10 +215,6 @@ s32 punch_fine(void *fn, s32 v, s32 delta, s32 lo, s32 hi, s32 def)
 	n = ((delta < 0 ? -delta : delta) + 0xff) >> 8;
 	if (!n)
 		n = 1;
-	if (ui_model >= M_SAM1) {                        /* SAM: a normal FUNC turn, one unit per detent */
-		v += (delta < 0 ? -n : n) << 8;
-		return v < lo ? lo : (v > hi ? hi : v);
-	}
 	v += (delta < 0 ? -n : n) * FINE_STEP;
 	if (!(v & 0xff))
 		v += delta < 0 ? -1 : 1;
@@ -259,7 +226,7 @@ s32 punch_turn(s32 cur, s32 delta)
 {
 	u32 c, s, n, last = (u32)FM_RATIO_COUNT - 1;
 
-	if (!delta || ui_model >= M_SAM1)                /* SAM: the OS's own one-unit step */
+	if (!delta)
 		return -1;
 	c = cur < 0 ? 0 : (cur > 0x7f00 ? 0x7f00 : (u32)cur);
 	s = ((c * (u32)FM_RATIO_COUNT) >> 7) >> 8;

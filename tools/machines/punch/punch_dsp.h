@@ -38,7 +38,6 @@ typedef uint8_t u8;
 
 enum {
 	M_KIK, M_TOM, M_BNG, M_CNG, M_TAI, M_TIM, M_MAR, M_DJB, M_BLK, M_GNG, M_BUB, M_ZAP,
-	M_SAM1, M_SAM2,
 	FM_MODELS
 };
 
