@@ -9,7 +9,7 @@ the engines can do. You tick what you want, the page builds the firmware from **
 your browser, and sends it to the Model:Cycles over USB. Every engine and tool keeps its author's name, on the cards,
 in the credits and in the third-party notices.
 
-**Status: beta.** The web flasher runs at [https://100demons.github.io/cycles-flasher/flasher/](https://100demons.github.io/cycles-flasher/flasher/) and offers Feral, BLAST, PUNCH and SAM standalone.
+**Status: beta.** The web flasher uses the cycles-engines method and runs at [https://100demons.github.io/cycles-engines/flasher/](https://100demons.github.io/cycles-engines/flasher/): Feral, BLAST, PUNCH and SAM, and any combination of engines can be flashed together. The old [cycles-flasher page](https://100demons.github.io/cycles-flasher/flasher/) redirects there.
 The engines are also published one by one, with their sources and a ready-made package, in
 **[cycles-mods](https://github.com/100demons/cycles-mods)** for other developers to grab.
 The command-line build works for every Modded-Cycles 1.55 mod still in the repository; the short list for the beta
@@ -43,8 +43,8 @@ is being chosen, and nothing has been removed from the tools yet.
 
 ## Install from the browser
 
-1. **Open the [web flasher](https://100demons.github.io/cycles-flasher/flasher/)** in Chrome, Edge or Opera on a desktop computer (it needs Web MIDI).
-2. **Tick the engine you want.** Only one engine can be ticked at a time.
+1. **Open the [web flasher](https://100demons.github.io/cycles-engines/flasher/)** in Chrome, Edge or Opera on a desktop computer (it needs Web MIDI).
+2. **Tick the engines you want.** Any combination can be flashed together.
 3. **Drop your official OS file**, `model-cycles_OS1.13.syx`, from the
    [Elektron download](https://www.elektron.se/support-downloads/modelcycles) (unzip it first).
 4. **Connect the Model:Cycles over USB and press Flash.** Close Elektron Transfer first and leave the machine on its

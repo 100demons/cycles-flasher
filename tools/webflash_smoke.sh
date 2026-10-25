@@ -16,6 +16,12 @@
 # at the temporary folder: npm_config_cache="$TMPDIR/npm-cache" tools/webflash_smoke.sh ...
 set -euo pipefail
 cd "$(dirname "$0")/.."
+# The legacy page is a redirect to the new flasher: nothing to smoke-test here.
+if grep -q 'cycles-engines/flasher/' docs/flasher/index.html; then
+  grep -q 'http-equiv="refresh"' docs/flasher/index.html || { echo "!! the legacy flasher redirect is broken"; exit 1; }
+  echo "  ok  the legacy flasher redirects to cycles-engines/flasher/"
+  exit 0
+fi
 command -v node >/dev/null || { echo "node is required"; exit 1; }
 command -v npm >/dev/null || { echo "npm is required"; exit 1; }
 REAL=()
