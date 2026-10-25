@@ -1,0 +1,78 @@
+{
+ "schema": "cycles-mod/0.1",
+ "id": "punch",
+ "version": "1",
+ "name": "PUNCH machine: 12 OPL2-style FM percussion models",
+ "description": "One extra machine after Chord with 12 percussion FM engines on SHAPE (KIK, TOM, BNG, CNG, TAI, TIM, MAR, DJB, BLK, GNG, BUB, ZAP), built on the Yamaha OPL2. COLOR is the FM index, SWEEP steps the ratio (shown as 1:4, 1:3, 1:2, 2:3, 1:1 .. 9:1, 10X, 12X, 15X), CONTOUR moves the sound, PUNCH turns the chip's LFO on, DECAY and GATE as on Tone.",
+ "license": "MIT",
+ "credit": {"kind": "own", "who": "100demons and Claude"},
+ "source": "tools/machines/punch, package port of the standalone PUNCH machine",
+ "device": "Model:Cycles",
+ "os": "1.13",
+ "order": 67,
+ "build": {
+  "sources": ["punch.c"],
+  "include": ["."],
+  "cflags": ["-mcpu=54418", "-Os", "-malign-int", "-U_FORTIFY_SOURCE", "-ffreestanding", "-fno-builtin",
+             "-fno-tree-loop-distribute-patterns", "-nostdlib", "-fno-pic", "-fno-common", "-ffunction-sections",
+             "-fdata-sections", "-fomit-frame-pointer", "-fno-asynchronous-unwind-tables",
+             "-fno-unwind-tables", "-fmerge-all-constants", "-fno-inline-functions-called-once",
+             "-Wall", "-Wextra", "-Werror"],
+  "defines": {},
+  "objects": ["punch.o"],
+  "symbols": {"update": "punch_update", "render": "punch_render"},
+  "keep": ["punch_state_init", "punch_turn"],
+  "patch_points": []
+ },
+ "uses": [
+  {
+   "point": "machine",
+   "name": "PUNCH",
+   "image": 4,
+   "decay_default": 50,
+   "knobs": [
+    {"long": "Index", "short": "Idx", "default": 64},
+    {"long": "Model", "short": "MODL", "default": 0, "min": 0, "max": 11},
+    {"long": "Ratio", "short": "RTIO", "default": 68},
+    {"long": "Env", "short": "Env", "default": 40}
+   ]
+  },
+  {
+   "point": "descriptor.state",
+   "init": "punch_state_init",
+   "why": "COLOR shows the FM index, SHAPE the model names (KIK..ZAP) and SWEEP the ratio names (1:4..15X) instead of numbers; CONTOUR keeps the generic state"
+  },
+  {
+   "point": "turn",
+   "init": "punch_turn",
+   "why": "SWEEP steps through the ratio list one detent at a time (the value is the step's knob position), not one knob unit at a time"
+  }
+ ],
+ "claims": {
+  "sound_slots": [],
+  "record_slots": [],
+  "ram": [],
+  "formatters": [],
+  "gestures": [],
+  "views": []
+ },
+ "cost": {
+  "emulation": {"tool": "none yet; the standalone PUNCH was measured in its source tree", "per_voice": {}, "reference": {}},
+  "device": {"status": "not measured"}
+ },
+ "stock_behaviour": {
+  "changes": [],
+  "fixes": [],
+  "unchanged": ["the six stock machines", "every track that does not use PUNCH"]
+ },
+ "compat": {
+  "built_against": ["the standalone PUNCH source drop", "model27"],
+  "requires": [],
+  "conflicts_declared": []
+ },
+ "tests": {
+  "emulation": {"tool": "tools/emu/test_punch.py in the real OS voice loop (Unicorn), on the composed alone build", "date": null, "build": null},
+  "hardware": {"date": null, "by": null, "build": null},
+  "status": "experimental"
+ }
+}

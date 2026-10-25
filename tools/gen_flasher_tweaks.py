@@ -378,13 +378,11 @@ ALL_FEATURES = [
         "label": "👊 Punch (0.5 beta)",
         "desc": "Twelve percussion FM engines on one machine, raw, heavy and digital, built on the Yamaha OPL2 with "
                 "extended fixed FM ratios for modern sounds and alien harmonics. Featuring: kick, tom, bongo, conga, "
-                "taiko, timbale, marimba, djembé, woodblock, gong, bubble and zap.",
+                "taiko, timbale, marimba, djembé, woodblock, gong, bubble and zap. SHAPE shows the engine name and "
+                "SWEEP steps the ratio (1:4..15X).",
         "status": "experimental",
         "credit": {"kind": "own", "who": "100demons"},
-        "variants": [
-            {"file": "67-punch", "label": None},
-        ],
-        "excludes": ["feral9", "blast"],
+        "package": "punch",
         "one_of": "engine",
     },
     {

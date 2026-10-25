@@ -7,6 +7,10 @@
  * of everything model27 builds on.
  */
 window.MC_RELEASES = [
+  { version: "0.23", date: "2026-10-24", changes: [
+    { en: "Punch is now a composed package: its SHAPE knob shows the engine name and SWEEP steps the ratio (1:4..15X), one detent at a time. The MACHINES-page picture is still TONE's",
+      fr: "Punch est maintenant un paquet composé : son potentiomètre SHAPE affiche le nom du moteur et SWEEP passe d'un rapport à l'autre (1:4..15X), cran par cran. L'image de la page MACHINES reste celle de TONE" },
+  ] },
   { version: "0.22", date: "2026-10-24", changes: [
     { en: "Blast is now a composed package: its SHAPE knob shows the model name and SWEEP steps the ratio (1:2..15X), one detent at a time. The MACHINES-page picture is still TONE's",
       fr: "Blast est maintenant un paquet composé : son potentiomètre SHAPE affiche le nom du modèle et SWEEP passe d'un rapport à l'autre (1:2..15X), cran par cran. L'image de la page MACHINES reste celle de TONE" },

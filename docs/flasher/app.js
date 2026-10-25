@@ -32,15 +32,18 @@ const REF_MAINOS = {
   // each card alone: each variant, each combination of real Syntakt engines
   "feral9": "7c960863f407fb68fa7730845cf29f3ae216fa0ab9c30dd048621327562c9017",
   "blast": "aa915973971502b6c2218d7aba1466cbfa82f3109e04f8afb9694e1fd8bdd920",
-  "punch": "14f62a32ee900853f6207b70b06b80d37cb1b1e8bd7ae2377addb3d9de60c300",
+  "punch": "8d141ad4f44ab7f191c4c875691acfcba1d5bc7f4b12c9029bbc3b7fd286eca7",
   "sam": "dc5c92b63b7d174c9d112aa5ec1b341772da26cbdc207b6aa5af77e8744c5e45",
 };
 const REF_MODS = {
-  "punch": {"w": "ed07fb3a2ff09d3d5783c642ca78d3d3493bea1e5fe0ca9997a53a046b54e6b3", "p": "c09bd7d74f8d5f8015a6c70656d0434c719d47d838791aa5fe824ec665609cfe"},
   "sam": {"w": "990cb7a5c5b00fd6f196d6f9aa6e310583144f6313b4142e88fd82afbbb2b9b6", "p": "f178d92c9868834399c321b0d9a5100730a219f94ba0038befab1eda5163340d"},
   "feral9": {"w": "5b233855c78d3fd930b7fe1fedebdae9eeafd97b5244c1641d93d8d4df05fc22", "p": "3b94d82f2cce5ba20b8cecb39a00b9a525b4b44be1512c149f297f1ef9f0391c"},
   "blast": {"w": "56168a3838d126b58c99f83f6bf51c431699c855baccd443b9b0b756b0e90439", "p": "ccb6329d91a19fcaf5b552f87b7b2115f072f749fde9cee35e52bc01cdccb05c"},
+  "punch": {"w": "1e3fb64a83cb2947a5fbf580251c8a9a5a37a9c487c52f4a744267ea8e3b493f", "p": "3675051028aa1e2a1f90ce3723949620f5aa39a993c28cb78b9a03a57161396f"},
   "feral9+blast": {"w": "d828e0af0b54f46a790830321345e82d04e90998d9814929973d4fc5bbc9c9e1", "p": "fb22e6e0263c74e5d8a595244062aaa60570b4c3291f8d1fe45ecba6131023c3"},
+  "feral9+punch": {"w": "c54f71925578d5c4b54ae1af5d9784609bc6f9db465ac6a124562a7652e6c361", "p": "b789500441595ed0229424d1ab183306f84c055737c7342621da963e1b73d24d"},
+  "blast+punch": {"w": "ab57d3b2edf2bb10155351c270996e11440466555c328c1b0f8d814606fda559", "p": "df835ec5e60428edb57b64bb08981b8a0edb7ef432b34aac961726541b07a89f"},
+  "feral9+blast+punch": {"w": "01fd60207ddacfb104b9cc14e8c7a3c39bc5165094e377863cbf6a4f5563a920", "p": "58e621837eff5436e8150560a54feeba3105cc72b65fbfe2c69ba81039b92950"},
 };
 
 // "Samples OS" tab: official Model:Samples OS 1.13 inside the official Model:Cycles container
@@ -765,8 +768,8 @@ const FEAT = {
       note: "Experimental: not yet tested on hardware. SHAPE shows the model name and SWEEP steps the ratio; the MACHINES-page picture is still TONE's." },
     punch: { label: "👊 Punch (0.5 beta)",
       short: "Twelve percussion FM engines on one machine, raw, heavy and digital.",
-      desc: "Twelve percussion FM engines on one machine, raw, heavy and digital, built on the Yamaha OPL2 with extended fixed FM ratios for modern sounds and alien harmonics. Featuring: kick, tom, bongo, conga, taiko, timbale, marimba, djembé, woodblock, gong, bubble and zap.",
-      note: "Experimental: the source tree passed its emulator proofs; not yet tested on hardware. Save a project before switching builds. Not with Feral or BLAST." },
+      desc: "Twelve percussion FM engines on one machine, raw, heavy and digital, built on the Yamaha OPL2 with extended fixed FM ratios for modern sounds and alien harmonics. Featuring: kick, tom, bongo, conga, taiko, timbale, marimba, djembé, woodblock, gong, bubble and zap. SHAPE shows the engine name and SWEEP steps the ratio (1:4..15X).",
+      note: "Experimental: not yet tested on hardware. SHAPE shows the engine name and SWEEP steps the ratio; the MACHINES-page picture is still TONE's." },
     sam: { label: "👁️ SAM (0.1 alpha)",
       short: "Vocal Synthesizer - Software Automated Mouth - currently half-broken alpha - \"I love you\"",
       desc: "Vocal Synthesizer - Software Automated Mouth - currently half-broken alpha - \"I love you\"",
@@ -876,8 +879,8 @@ const FEAT = {
       note: "Expérimentale : pas encore testée sur la machine. SHAPE affiche le nom du modèle et SWEEP passe d'un rapport à l'autre ; l'image de la page MACHINES reste celle de TONE." },
     punch: { label: "👊 Punch (0.5 beta)",
       short: "Twelve percussion FM engines on one machine, raw, heavy and digital.",
-      desc: "Twelve percussion FM engines on one machine, raw, heavy and digital, built on the Yamaha OPL2 with extended fixed FM ratios for modern sounds and alien harmonics. Featuring: kick, tom, bongo, conga, taiko, timbale, marimba, djembé, woodblock, gong, bubble and zap.",
-      note: "Expérimentale : les preuves en émulation passent ; pas encore testée sur la machine. Sauvegardez un projet avant de changer de build. Pas avec Feral ou BLAST." },
+      desc: "Twelve percussion FM engines on one machine, raw, heavy and digital, built on the Yamaha OPL2 with extended fixed FM ratios for modern sounds and alien harmonics. Featuring: kick, tom, bongo, conga, taiko, timbale, marimba, djembé, woodblock, gong, bubble and zap. SHAPE shows the engine name and SWEEP steps the ratio (1:4..15X).",
+      note: "Expérimentale : pas encore testée sur la machine. SHAPE affiche le nom du moteur et SWEEP passe d'un rapport à l'autre ; l'image de la page MACHINES reste celle de TONE." },
     sam: { label: "👁️ SAM (0.1 alpha)",
       short: "Vocal Synthesizer - Software Automated Mouth - currently half-broken alpha - \"I love you\"",
       desc: "Vocal Synthesizer - Software Automated Mouth - currently half-broken alpha - \"I love you\"",
