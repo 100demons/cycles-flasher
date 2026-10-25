@@ -333,9 +333,6 @@ ALL_FEATURES = [
                 "Punch - 0.5 (beta)\n"
                 "FM Macro OSC - percussive/tonal - raw, heavy, digital. Extended fixed FM ratios allow modern sounds "
                 "and alien harmonics to emerge. Mutated Yamaha OPL2.\n\n"
-                "LiXR - 0.2 (beta)\n"
-                "Single percussion voice - Brutal digital drum with lots of range and made for Techno. Sonic Potions "
-                "LXR imitation from Deepseek. Needs work, but it can slam.\n\n"
                 "SAM - 0.1 (alpha)\n"
                 "Vocal Synthesizer - Software Automated Mouth - currently half-broken alpha - \"I love you\"",
         "status": "experimental",
@@ -363,28 +360,12 @@ ALL_FEATURES = [
         "package": "sampler",
     },
     {
-        "id": "lixr",
-        "cat": "sound",
-        "label": "🧪 LiXR (0.1 alpha)",
-        "desc": "Single percussion voice - Brutal digital drum with lots of range and made for Techno. Sonic Potions "
-                "LXR imitation from Deepseek. Needs work, but it can slam.",
-        # tested on the Model:Cycles on 2026-10-22, alone and next to SAMPLE, on the builds of commit 20db5b5
-        "status": "tested",
-        "credit": {"kind": "own", "who": "100demons"},
-        # one engine at a time: the package cards cannot carry excludes by hand (machine_excludes), so app.js and
-        # ref_mainos.py read this group rule instead
-        "one_of": "engine",
-        # composed in the page from its package (notes/61): alone it gives 36-lixr.json byte for byte. It is a
-        # pure machine (update/render, no hook), so its conflicts are only the shared boot hook and the payload
-        # window of the other added machines (tools/gen_lixr.py)
-        "package": "lixr",
-    },
-    {
         "id": "feral9",
         "cat": "sound",
         "label": "🐀 Feral (0.7 beta)",
-        "desc": "Dangerous experimental Macro OSC: nyblcore, bytebeat, benjolin, rungler, chaotic maps, fourses, "
-                "rhythmicon, gendy, pulsar, wave scan, and even worse to come.",
+        "desc": "Nine noisy, unpredictable synthesis models on one machine, light on the processor. Featuring: "
+                "bytebeat (nyblcore), benjolin, rungler, chaotic maps, fourses, rhythmicon, gendy, pulsar, wave "
+                "terrain... and even worse to come.",
         # tested on the Model:Cycles on 2026-10-22 (standalone)
         "status": "tested",
         "credit": {"kind": "own", "who": "100demons"},
@@ -395,28 +376,30 @@ ALL_FEATURES = [
         "id": "punch",
         "cat": "sound",
         "label": "👊 Punch (0.5 beta)",
-        "desc": "FM Macro OSC - percussive/tonal - raw, heavy, digital. Extended fixed FM ratios allow modern sounds "
-                "and alien harmonics to emerge. Mutated Yamaha OPL2.",
+        "desc": "Twelve percussion FM engines on one machine, raw, heavy and digital, built on the Yamaha OPL2 with "
+                "extended fixed FM ratios for modern sounds and alien harmonics. Featuring: kick, tom, bongo, conga, "
+                "taiko, timbale, marimba, djembé, woodblock, gong, bubble and zap.",
         "status": "experimental",
         "credit": {"kind": "own", "who": "100demons"},
         "variants": [
             {"file": "67-punch", "label": None},
         ],
-        "excludes": ["lixr", "feral9", "blast"],
+        "excludes": ["feral9", "blast"],
         "one_of": "engine",
     },
     {
         "id": "blast",
         "cat": "sound",
         "label": "💥 Blast (0.8 beta)",
-        "desc": "FM Macro OSC - melodic '90s PC Soundblaster engine. Think higher fidelity Sega Genesis or Doom 2. "
-                "Surprisingly tasteful. A curated stock Yamaha OPL2.",
+        "desc": "Fourteen melodic FM models on one machine, a '90s PC Soundblaster engine in higher fidelity, built "
+                "on the Yamaha OPL2. Featuring: sine, half-sine, absolute sine, pulse, bass, piano, marimba, "
+                "glockenspiel, brass, accordion, strings, steel drum, timpani and zap.",
         "status": "experimental",
         "credit": {"kind": "own", "who": "100demons"},
         "variants": [
             {"file": "66-blast", "label": None},
         ],
-        "excludes": ["lixr", "feral9", "punch"],
+        "excludes": ["feral9", "punch"],
         "one_of": "engine",
     },
     {
@@ -489,7 +472,7 @@ ALL_FEATURES = [
 # model27 offers a short list of cards. The other definitions above stay as they are, for the command-line build
 # (every tweak of tweaks/ is still built by tools/build.py) and so that merges from upstream apply cleanly; a card
 # comes back into the flasher by adding its id here, once it has been reviewed against the Cycles Mod Standard.
-OFFERED = ("feral9", "punch", "blast", "lixr", "sam")
+OFFERED = ("feral9", "blast", "punch", "sam")
 # OFFERED order is the build and display order; a card comes back into the flasher by adding its id here.
 _by_id = {f["id"]: f for f in ALL_FEATURES}
 FEATURES = [_by_id[i] for i in OFFERED]

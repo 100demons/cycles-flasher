@@ -33,7 +33,6 @@ const REF_MAINOS = {
   "feral9": "2a7d4d8b3f48d57817318ea32cc204923791e553226df76726bcfe3baf0c3b4b",
   "punch": "14f62a32ee900853f6207b70b06b80d37cb1b1e8bd7ae2377addb3d9de60c300",
   "blast": "cf38327ab67913b3dbbd9379646111aa33d1d468de7ceda45f3a800c3a160a53",
-  "lixr": "15f23a994aa715b278b92725315e2f702dba5483fce8560134eccf6560684d74",
   "sam": "dc5c92b63b7d174c9d112aa5ec1b341772da26cbdc207b6aa5af77e8744c5e45",
 };
 const REF_MODS = {
@@ -41,8 +40,6 @@ const REF_MODS = {
   "blast": {"w": "f9d9967cbeaca411c1e3f7e3589d3a50649d179519b12949c702b2e62c1efb02", "p": "9eb8ace296d0564194d6ca33fb3ed84d9bbcbf5af91014b982c7c89e8fa108e1"},
   "sam": {"w": "990cb7a5c5b00fd6f196d6f9aa6e310583144f6313b4142e88fd82afbbb2b9b6", "p": "f178d92c9868834399c321b0d9a5100730a219f94ba0038befab1eda5163340d"},
   "feral9": {"w": "83ea8a19a46bbf3dc66451a55fae20b5fd0a0044a4bcccce5c35a2583ff9275e", "p": "2bba4f1fd7bd9107ed0fab2e5a3b837827e5ae0682292aaca33beb8e39d46025"},
-  "lixr": {"w": "fa627c88e153575615f39432b3a4ba69fa7b5fe5bcbba1e403456c99f4c80d90", "p": "dcbb0b8b611d2db57cd58f2c25e1e282012b87c4401a4ee896249cf15e9715cd"},
-  "feral9+lixr": {"w": "21abbf0f7c762147c3824374338968dece9363c09bcb2643a53ad581c6c718f8", "p": "b53996e7139c6d7f7e57a764dcf3308c8e61a4746d9170555a52d499d4a24982"},
 };
 
 // "Samples OS" tab: official Model:Samples OS 1.13 inside the official Model:Cycles container
@@ -88,6 +85,7 @@ const CREDITS = [
 const VIDEO_OF = {
   feral9: "r4Z3FvKYv5k",
   blast: "cPBxAeiMe9A",
+  punch: "MH_buA0-jHs",
   sam: "JHM9WnSiR8w",
 };
 
@@ -753,29 +751,21 @@ const FEAT = {
       desc: "An extra machine after Chord: SAMPLE plays one sample from the +Drive per trig, the way the Model:Samples does (6-tap interpolation at 96 kHz, then the Cycles' own decimator and amp chain). Open the PRESET browser (FUNC + MACHINE) on a SAMPLE track and open a sample file: the sound takes its name and keeps the choice in the project, the kit and the preset; hold a step while you open one and the step gets it as a sound lock. COLOR = Start and SHAPE = Length (0 to 120 each; the trig ends at Start + Length), SWEEP = the Model:Samples' filter (lowpass to the left, off in the centre, highpass to the right, shown as -64 to 63), CONTOUR = Reso; DECAY, GATE and PUNCH as on Tone. The main screen shows the sample's name and waveform with the start and end marked. Stereo files play as mono, other sample rates keep their pitch.",
       note: "Needs samples on the +Drive in the Model:Samples' format, what Elektron Transfer and One-Shot's upload page write. No looping or reverse yet. A project using SAMPLE needs a firmware with SAMPLE: set SAMPLE tracks back to an original machine before flashing another choice or the official OS. English only for now." },
     all: { label: "All this shit",
-      short: "\nFeral - 0.7 (beta)\nDangerous experimental Macro OSC: nyblcore, bytebeat, benjolin, rungler, chaotic maps, fourses, rhythmicon, gendy, pulsar, wave scan, and even worse to come.\n\nBlast - 0.8 (beta)\nFM Macro OSC - melodic '90s PC Soundblaster engine. Think higher fidelity Sega Genesis or Doom 2. Surprisingly tasteful. A curated stock Yamaha OPL2.\n\nPunch - 0.5 (beta)\nFM Macro OSC - percussive/tonal - raw, heavy, digital. Extended fixed FM ratios allow modern sounds and alien harmonics to emerge. Mutated Yamaha OPL2.\n\nLiXR - 0.2 (beta)\nSingle percussion voice - Brutal digital drum with lots of range and made for Techno. Sonic Potions LXR imitation from Deepseek. Needs work, but it can slam.\n\nSAM - 0.1 (alpha)\nVocal Synthesizer - Software Automated Mouth - currently half-broken alpha - \"I love you\"",
-      desc: "Feral - 0.7 (beta)\nDangerous experimental Macro OSC: nyblcore, bytebeat, benjolin, rungler, chaotic maps, fourses, rhythmicon, gendy, pulsar, wave scan, and even worse to come.\n\nBlast - 0.8 (beta)\nFM Macro OSC - melodic '90s PC Soundblaster engine. Think higher fidelity Sega Genesis or Doom 2. Surprisingly tasteful. A curated stock Yamaha OPL2.\n\nPunch - 0.5 (beta)\nFM Macro OSC - percussive/tonal - raw, heavy, digital. Extended fixed FM ratios allow modern sounds and alien harmonics to emerge. Mutated Yamaha OPL2.\n\nLiXR - 0.2 (beta)\nSingle percussion voice - Brutal digital drum with lots of range and made for Techno. Sonic Potions LXR imitation from Deepseek. Needs work, but it can slam.\n\nSAM - 0.1 (alpha)\nVocal Synthesizer - Software Automated Mouth - currently half-broken alpha - \"I love you\"" },
+      short: "\nFeral - 0.7 (beta)\nDangerous experimental Macro OSC: nyblcore, bytebeat, benjolin, rungler, chaotic maps, fourses, rhythmicon, gendy, pulsar, wave scan, and even worse to come.\n\nBlast - 0.8 (beta)\nFM Macro OSC - melodic '90s PC Soundblaster engine. Think higher fidelity Sega Genesis or Doom 2. Surprisingly tasteful. A curated stock Yamaha OPL2.\n\nPunch - 0.5 (beta)\nFM Macro OSC - percussive/tonal - raw, heavy, digital. Extended fixed FM ratios allow modern sounds and alien harmonics to emerge. Mutated Yamaha OPL2.\n\nSAM - 0.1 (alpha)\nVocal Synthesizer - Software Automated Mouth - currently half-broken alpha - \"I love you\"",
+      desc: "Feral - 0.7 (beta)\nDangerous experimental Macro OSC: nyblcore, bytebeat, benjolin, rungler, chaotic maps, fourses, rhythmicon, gendy, pulsar, wave scan, and even worse to come.\n\nBlast - 0.8 (beta)\nFM Macro OSC - melodic '90s PC Soundblaster engine. Think higher fidelity Sega Genesis or Doom 2. Surprisingly tasteful. A curated stock Yamaha OPL2.\n\nPunch - 0.5 (beta)\nFM Macro OSC - percussive/tonal - raw, heavy, digital. Extended fixed FM ratios allow modern sounds and alien harmonics to emerge. Mutated Yamaha OPL2.\n\nSAM - 0.1 (alpha)\nVocal Synthesizer - Software Automated Mouth - currently half-broken alpha - \"I love you\"" },
 
-    lixr: { label: "🧪 LiXR (0.1 alpha)",
-      short: "Single percussion voice - Brutal digital drum with lots of range and made for Techno.",
-      desc: "Single percussion voice - Brutal digital drum with lots of range and made for Techno. Sonic Potions LXR imitation from Deepseek. Needs work, but it can slam.",
-      note: "About as heavy on the processor as a stock Tone voice (measured: 6,335 to 6,499 instructions per block, against 6,572 for TONE). No load governor: several LiXR tracks at once can make the sound crackle. A project using LiXR needs a firmware with LiXR at the same place: it comes after Chord. English only for now." },
-    "feral9-lixr": { label: "Feral + LiXR",
-      short: "Both machines in one build: Feral's nine models with its custom UI, and LiXR.",
-      desc: "Both machines in one build: Feral's nine noisy models with its custom SHAPE names and MACHINES-page picture, and LiXR's fixed-point drum voice. Feral is machine 6 and LiXR machine 7. This is a fixed combined build; LiXR and Feral are not offered separately on this page.",
-      note: "Experimental: both engines were tested alone; this combined build is new. Back up first." },
     feral9: { label: "🐀 Feral (0.7 beta)",
-      short: "Dangerous experimental Macro OSC: nyblcore, bytebeat, benjolin, rungler, chaotic maps, fourses, rhythmicon, gendy, pulsar, wave scan, and even worse to come.",
-      desc: "Dangerous experimental Macro OSC: nyblcore, bytebeat, benjolin, rungler, chaotic maps, fourses, rhythmicon, gendy, pulsar, wave scan, and even worse to come.",
-      note: "Tested on a Model:Cycles (2026-10-22), standalone. The package carries the custom SHAPE model names and composes with LiXR; the MACHINES-page picture is still TONE's." },
+      short: "Nine noisy, unpredictable synthesis models on one machine, light on the processor.",
+      desc: "Nine noisy, unpredictable synthesis models on one machine, light on the processor. Featuring: bytebeat (nyblcore), benjolin, rungler, chaotic maps, fourses, rhythmicon, gendy, pulsar, wave terrain... and even worse to come.",
+      note: "Tested on a Model:Cycles (2026-10-22), standalone. The package carries the custom SHAPE model names; the MACHINES-page picture is still TONE's." },
     blast: { label: "💥 Blast (0.8 beta)",
-      short: "FM Macro OSC - melodic '90s PC Soundblaster engine.",
-      desc: "FM Macro OSC - melodic '90s PC Soundblaster engine. Think higher fidelity Sega Genesis or Doom 2. Surprisingly tasteful. A curated stock Yamaha OPL2.",
-      note: "Experimental: the source tree passed its emulator proofs; not yet tested on hardware. Save a project before switching builds: the machine slot changes. Not with LiXR, Feral or PUNCH." },
+      short: "Fourteen melodic FM models on one machine, a '90s PC Soundblaster engine in higher fidelity.",
+      desc: "Fourteen melodic FM models on one machine, a '90s PC Soundblaster engine in higher fidelity, built on the Yamaha OPL2. Featuring: sine, half-sine, absolute sine, pulse, bass, piano, marimba, glockenspiel, brass, accordion, strings, steel drum, timpani and zap.",
+      note: "Experimental: the source tree passed its emulator proofs; not yet tested on hardware. Save a project before switching builds: the machine slot changes. Not with Feral or PUNCH." },
     punch: { label: "👊 Punch (0.5 beta)",
-      short: "FM Macro OSC - percussive/tonal - raw, heavy, digital.",
-      desc: "FM Macro OSC - percussive/tonal - raw, heavy, digital. Extended fixed FM ratios allow modern sounds and alien harmonics to emerge. Mutated Yamaha OPL2.",
-      note: "Experimental: the source tree passed its emulator proofs; not yet tested on hardware. Save a project before switching builds. Not with LiXR, Feral or BLAST." },
+      short: "Twelve percussion FM engines on one machine, raw, heavy and digital.",
+      desc: "Twelve percussion FM engines on one machine, raw, heavy and digital, built on the Yamaha OPL2 with extended fixed FM ratios for modern sounds and alien harmonics. Featuring: kick, tom, bongo, conga, taiko, timbale, marimba, djembé, woodblock, gong, bubble and zap.",
+      note: "Experimental: the source tree passed its emulator proofs; not yet tested on hardware. Save a project before switching builds. Not with Feral or BLAST." },
     sam: { label: "👁️ SAM (0.1 alpha)",
       short: "Vocal Synthesizer - Software Automated Mouth - currently half-broken alpha - \"I love you\"",
       desc: "Vocal Synthesizer - Software Automated Mouth - currently half-broken alpha - \"I love you\"",
@@ -872,25 +862,21 @@ const FEAT = {
       desc: "Une machine ajoutée après Chord, toujours la dernière (après le Sampler avec Model-TG, puis les moteurs du Syntakt et MACRO si vous les cochez aussi) : une basse acide à la manière de la TB-303, d'après le modèle libre Open303 de Robin Schmidt. COLOR règle le cutoff, SHAPE la résonance, SWEEP l'env mod, CONTOUR la saturation (du son propre au fuzz, à volume à peu près égal) et DECAY la décroissance ; PUNCH passe l'onde de scie à carré. Un trig dont la longueur (LEN) dépasse le trig suivant glisse vers la note suivante au lieu de la rejouer ; un pad joué pendant qu'un autre est tenu glisse aussi.",
       note: "À peu près aussi gourmande en calcul que Tone. Allumez GATE pour que les notes tiennent toute leur longueur, comme sur l'original. Avec les moteurs du Syntakt, leur régulateur de charge veille aussi sur les pistes ACID : une piste qu'il a arrêtée rejoue sa note suivante, sans glisser. Un projet qui utilise ACID demande un firmware où ACID est à la même place : c'est la dernière machine, son numéro dépend donc de Model-TG, des moteurs du Syntakt cochés et de MACRO." },
     all: { label: "All this shit",
-      short: "\nFeral - 0.7 (beta)\nDangerous experimental Macro OSC: nyblcore, bytebeat, benjolin, rungler, chaotic maps, fourses, rhythmicon, gendy, pulsar, wave scan, and even worse to come.\n\nBlast - 0.8 (beta)\nFM Macro OSC - melodic '90s PC Soundblaster engine. Think higher fidelity Sega Genesis or Doom 2. Surprisingly tasteful. A curated stock Yamaha OPL2.\n\nPunch - 0.5 (beta)\nFM Macro OSC - percussive/tonal - raw, heavy, digital. Extended fixed FM ratios allow modern sounds and alien harmonics to emerge. Mutated Yamaha OPL2.\n\nLiXR - 0.2 (beta)\nSingle percussion voice - Brutal digital drum with lots of range and made for Techno. Sonic Potions LXR imitation from Deepseek. Needs work, but it can slam.\n\nSAM - 0.1 (alpha)\nVocal Synthesizer - Software Automated Mouth - currently half-broken alpha - \"I love you\"",
-      desc: "Feral - 0.7 (beta)\nDangerous experimental Macro OSC: nyblcore, bytebeat, benjolin, rungler, chaotic maps, fourses, rhythmicon, gendy, pulsar, wave scan, and even worse to come.\n\nBlast - 0.8 (beta)\nFM Macro OSC - melodic '90s PC Soundblaster engine. Think higher fidelity Sega Genesis or Doom 2. Surprisingly tasteful. A curated stock Yamaha OPL2.\n\nPunch - 0.5 (beta)\nFM Macro OSC - percussive/tonal - raw, heavy, digital. Extended fixed FM ratios allow modern sounds and alien harmonics to emerge. Mutated Yamaha OPL2.\n\nLiXR - 0.2 (beta)\nSingle percussion voice - Brutal digital drum with lots of range and made for Techno. Sonic Potions LXR imitation from Deepseek. Needs work, but it can slam.\n\nSAM - 0.1 (alpha)\nVocal Synthesizer - Software Automated Mouth - currently half-broken alpha - \"I love you\"" },
+      short: "\nFeral - 0.7 (beta)\nDangerous experimental Macro OSC: nyblcore, bytebeat, benjolin, rungler, chaotic maps, fourses, rhythmicon, gendy, pulsar, wave scan, and even worse to come.\n\nBlast - 0.8 (beta)\nFM Macro OSC - melodic '90s PC Soundblaster engine. Think higher fidelity Sega Genesis or Doom 2. Surprisingly tasteful. A curated stock Yamaha OPL2.\n\nPunch - 0.5 (beta)\nFM Macro OSC - percussive/tonal - raw, heavy, digital. Extended fixed FM ratios allow modern sounds and alien harmonics to emerge. Mutated Yamaha OPL2.\n\nSAM - 0.1 (alpha)\nVocal Synthesizer - Software Automated Mouth - currently half-broken alpha - \"I love you\"",
+      desc: "Feral - 0.7 (beta)\nDangerous experimental Macro OSC: nyblcore, bytebeat, benjolin, rungler, chaotic maps, fourses, rhythmicon, gendy, pulsar, wave scan, and even worse to come.\n\nBlast - 0.8 (beta)\nFM Macro OSC - melodic '90s PC Soundblaster engine. Think higher fidelity Sega Genesis or Doom 2. Surprisingly tasteful. A curated stock Yamaha OPL2.\n\nPunch - 0.5 (beta)\nFM Macro OSC - percussive/tonal - raw, heavy, digital. Extended fixed FM ratios allow modern sounds and alien harmonics to emerge. Mutated Yamaha OPL2.\n\nSAM - 0.1 (alpha)\nVocal Synthesizer - Software Automated Mouth - currently half-broken alpha - \"I love you\"" },
 
-    lixr: { label: "🧪 LiXR (0.1 alpha)",
-      short: "Single percussion voice - Brutal digital drum with lots of range and made for Techno.",
-      desc: "Single percussion voice - Brutal digital drum with lots of range and made for Techno. Sonic Potions LXR imitation from Deepseek. Needs work, but it can slam.",
-      note: "À peu près aussi gourmande en calcul qu'une voix Tone d'origine (mesuré : 6 335 à 6 499 instructions par bloc, contre 6 572 pour TONE). Pas de régulateur de charge : plusieurs pistes LiXR à la fois peuvent faire craquer le son. Un projet qui utilise LiXR demande un firmware où LiXR est à la même place : elle vient après Chord. Pour l'instant en anglais seulement." },
     feral9: { label: "🐀 Feral (0.7 beta)",
-      short: "Dangerous experimental Macro OSC: nyblcore, bytebeat, benjolin, rungler, chaotic maps, fourses, rhythmicon, gendy, pulsar, wave scan, and even worse to come.",
-      desc: "Dangerous experimental Macro OSC: nyblcore, bytebeat, benjolin, rungler, chaotic maps, fourses, rhythmicon, gendy, pulsar, wave scan, and even worse to come.",
-      note: "Testée sur un Model:Cycles (22/10/2026), seule. Le paquet porte les noms de modèles de SHAPE et se compose avec LiXR ; l'image de la page MACHINES reste celle de TONE." },
+      short: "Nine noisy, unpredictable synthesis models on one machine, light on the processor.",
+      desc: "Nine noisy, unpredictable synthesis models on one machine, light on the processor. Featuring: bytebeat (nyblcore), benjolin, rungler, chaotic maps, fourses, rhythmicon, gendy, pulsar, wave terrain... and even worse to come.",
+      note: "Testée sur un Model:Cycles (22/10/2026), seule. Le paquet porte les noms de modèles de SHAPE ; l'image de la page MACHINES reste celle de TONE." },
     blast: { label: "💥 Blast (0.8 beta)",
-      short: "FM Macro OSC - melodic '90s PC Soundblaster engine.",
-      desc: "FM Macro OSC - melodic '90s PC Soundblaster engine. Think higher fidelity Sega Genesis or Doom 2. Surprisingly tasteful. A curated stock Yamaha OPL2.",
-      note: "Expérimentale : les preuves en émulation passent ; pas encore testée sur la machine. Sauvegardez un projet avant de changer de build : la place de la machine change. Pas avec LiXR, Feral ou PUNCH." },
+      short: "Fourteen melodic FM models on one machine, a '90s PC Soundblaster engine in higher fidelity.",
+      desc: "Fourteen melodic FM models on one machine, a '90s PC Soundblaster engine in higher fidelity, built on the Yamaha OPL2. Featuring: sine, half-sine, absolute sine, pulse, bass, piano, marimba, glockenspiel, brass, accordion, strings, steel drum, timpani and zap.",
+      note: "Expérimentale : les preuves en émulation passent ; pas encore testée sur la machine. Sauvegardez un projet avant de changer de build : la place de la machine change. Pas avec Feral ou PUNCH." },
     punch: { label: "👊 Punch (0.5 beta)",
-      short: "FM Macro OSC - percussive/tonal - raw, heavy, digital.",
-      desc: "FM Macro OSC - percussive/tonal - raw, heavy, digital. Extended fixed FM ratios allow modern sounds and alien harmonics to emerge. Mutated Yamaha OPL2.",
-      note: "Expérimentale : les preuves en émulation passent ; pas encore testée sur la machine. Sauvegardez un projet avant de changer de build. Pas avec LiXR, Feral ou BLAST." },
+      short: "Twelve percussion FM engines on one machine, raw, heavy and digital.",
+      desc: "Twelve percussion FM engines on one machine, raw, heavy and digital, built on the Yamaha OPL2 with extended fixed FM ratios for modern sounds and alien harmonics. Featuring: kick, tom, bongo, conga, taiko, timbale, marimba, djembé, woodblock, gong, bubble and zap.",
+      note: "Expérimentale : les preuves en émulation passent ; pas encore testée sur la machine. Sauvegardez un projet avant de changer de build. Pas avec Feral ou BLAST." },
     sam: { label: "👁️ SAM (0.1 alpha)",
       short: "Vocal Synthesizer - Software Automated Mouth - currently half-broken alpha - \"I love you\"",
       desc: "Vocal Synthesizer - Software Automated Mouth - currently half-broken alpha - \"I love you\"",
@@ -1112,7 +1098,7 @@ function shortOf(f) {
 // The engine titles in the combined card are bold; every other line stays escaped text.
 function engineBlurb(text) {
   return String(text).split("\n").map((line) =>
-    /^(Feral|Blast|Punch|LiXR|SAM) - /.test(line) ? `<b>${esc(line)}</b>` : esc(line)).join("\n");
+    /^(Feral|Blast|Punch|SAM) - /.test(line) ? `<b>${esc(line)}</b>` : esc(line)).join("\n");
 }
 const catOf = (f) => (f.cat && CATS.includes(f.cat) ? f.cat : "other");
 const order = () => CATS.flatMap((c) => features().filter((f) => catOf(f) === c));    // display order

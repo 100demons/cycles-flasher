@@ -9,7 +9,7 @@ the engines can do. You tick what you want, the page builds the firmware from **
 your browser, and sends it to the Model:Cycles over USB. Every engine and tool keeps its author's name, on the cards,
 in the credits and in the third-party notices.
 
-**Status: beta.** The web flasher runs at [https://100demons.github.io/cycles-flasher/flasher/](https://100demons.github.io/cycles-flasher/flasher/) and offers LiXR and Feral together, plus BLAST and PUNCH standalone.
+**Status: beta.** The web flasher runs at [https://100demons.github.io/cycles-flasher/flasher/](https://100demons.github.io/cycles-flasher/flasher/) and offers Feral, BLAST, PUNCH and SAM standalone.
 The engines are also published one by one, with their sources and a ready-made package, in
 **[cycles-mods](https://github.com/100demons/cycles-mods)** for other developers to grab.
 The command-line build works for every Modded-Cycles 1.55 mod still in the repository; the short list for the beta
@@ -33,8 +33,7 @@ is being chosen, and nothing has been removed from the tools yet.
 
 ## What goes in first
 
-- The maintainer's own mods: the **LiXR** machine (a fixed-point drum voice with feedback FM and a decimator in
-  place of the filter), the **SAMPLE** machine of [Cycles One-Shot](https://github.com/durchgemacht/cycles-one-shot)
+- The maintainer's own mods: the **SAMPLE** machine of [Cycles One-Shot](https://github.com/durchgemacht/cycles-one-shot)
   (a one-shot sampler for samples on the +Drive) and
   [Control All Config](https://github.com/durchgemacht/cycles-control-all-config), which is already here.
 - Then one or two mods by other authors, each with its author's agreement.
@@ -45,7 +44,7 @@ is being chosen, and nothing has been removed from the tools yet.
 ## Install from the browser
 
 1. **Open the [web flasher](https://100demons.github.io/cycles-flasher/flasher/)** in Chrome, Edge or Opera on a desktop computer (it needs Web MIDI).
-2. **Tick SAMPLE and/or LiXR.** They can be ticked together: SAMPLE takes the 7th machine and LiXR the 8th.
+2. **Tick the engine you want.** Only one engine can be ticked at a time.
 3. **Drop your official OS file**, `model-cycles_OS1.13.syx`, from the
    [Elektron download](https://www.elektron.se/support-downloads/modelcycles) (unzip it first).
 4. **Connect the Model:Cycles over USB and press Flash.** Close Elektron Transfer first and leave the machine on its
@@ -84,7 +83,7 @@ repository and `cycles-mods` together.
 <summary><b>Going back to the official firmware</b></summary>
 
 Build nothing: send your official OS file the way you installed it. Before that, set any track that uses an added
-machine (MACRO, ACID, a Syntakt engine, SAMPLE, LiXR or the Model-TG Sampler) back to one of the six original machines:
+machine (MACRO, ACID, a Syntakt engine, SAMPLE or the Model-TG Sampler) back to one of the six original machines:
 a project that still names a machine the official OS does not have can freeze its MACHINES page.
 
 </details>

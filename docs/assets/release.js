@@ -7,6 +7,14 @@
  * of everything model27 builds on.
  */
 window.MC_RELEASES = [
+  { version: "0.21", date: "2026-10-24", changes: [
+    { en: "LiXR is no longer offered in the flasher. It stays buildable from the command line until its replacement lands",
+      fr: "LiXR n'est plus proposée dans le flasher. Elle reste constructible en ligne de commande jusqu'à l'arrivée de sa remplaçante" },
+  ] },
+  { version: "0.20", date: "2026-10-24", changes: [
+    { en: "Punch no longer carries the two SAM speech banks: it is now 12 FM percussion models only, and its SHAPE knob stops at ZAP. The SAM speech synth stays as its own machine",
+      fr: "Punch ne porte plus les deux banques de parole SAM : il ne reste que 12 modèles de percussion FM, et son potentiomètre SHAPE s'arrête à ZAP. Le synthétiseur vocal SAM reste sa propre machine" },
+  ] },
   { version: "0.19", date: "2026-10-24", changes: [
     { en: "Engine names changed: the 14-model tonal FM machine Duet is now Blast, and the percussion + SAM machine Blast is now Punch, with a punch emoji on its card. Same engines and settings",
       fr: "Noms de moteurs changés : la machine FM tonale à 14 modèles Duet devient Blast, et la machine de percussion + SAM Blast devient Punch, avec un emoji de poing sur sa carte. Mêmes moteurs et mêmes réglages" },

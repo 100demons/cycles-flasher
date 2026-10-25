@@ -7,8 +7,8 @@
  * The optional official files are told apart by their names. The Model:Cycles OS checks each combination of the
  * REF_MAINOS sample against its reference hash, and each mod against REF_MODS (app.js, notes/49); with the
  * Model:Samples OS, the "Samples OS" tab and the Mods tab on a Model:Samples are checked end to end
- * (REF_SAMPLES_ON_CYCLES, tools/mods_for_samples.py). model27 offers five engine cards, Feral, Blast, Punch, LiXR and
- * SAM (OFFERED in tools/gen_flasher_tweaks.py); LiXR and Feral are machine cards, composed in the page from their
+ * (REF_SAMPLES_ON_CYCLES, tools/mods_for_samples.py). model27 offers four engine cards, Feral, Blast, Punch and
+ * SAM (OFFERED in tools/gen_flasher_tweaks.py); Feral is a machine card, composed in the page from its
  * packages (composer.js, notes/61), and only one engine can be ticked at a time. The checks of Modded-Cycles' other
  * cards are in this file's history. */
 const fs = require("fs");
@@ -216,29 +216,29 @@ async function main() {
   let fail = 0;
   const check = (cond, msg) => { console.log((cond ? "  ok  " : "  FAIL ") + msg); if (!cond) fail++; };
 
-  // 1. Page loads cleanly, everything is wired; model27's five engine cards
+  // 1. Page loads cleanly, everything is wired; model27's four engine cards
   if (MAIN) {
     const { w, doc, errors } = await load();
     check(errors.length === 0, "loads without JS error " + (errors.length ? JSON.stringify(errors) : ""));
     check(typeof w.MCBuilder === "object" && typeof w.MCComposer === "object" && typeof w.MCFlasher === "object",
       "MCBuilder + MCComposer + MCFlasher present");
     const ids = w.MC_TWEAKS.tweaks.map((x) => x.id), cards = w.MC_TWEAKS.features;
-    check(ids.join() === "punch,blast,sam" && cards.map((f) => f.id).join() === "feral9,punch,blast,lixr,sam"
-      && Object.keys(w.MC_TWEAKS.packages || {}).join() === "feral9,lixr" && !!w.MC_TWEAKS.registrar
+    check(ids.join() === "blast,punch,sam" && cards.map((f) => f.id).join() === "feral9,blast,punch,sam"
+      && Object.keys(w.MC_TWEAKS.packages || {}).join() === "feral9" && !!w.MC_TWEAKS.registrar
       && !cards.some((f) => f.engines || f.needs)
       && !w.MC_TWEAKS.tweaks.some((x) => x.append && x.append.syntakt),
-      "MC_TWEAKS: five engine cards, LiXR + Feral packages: " + cards.map((f) => f.id).join());
+      "MC_TWEAKS: four engine cards, Feral package: " + cards.map((f) => f.id).join());
     check(/build \d{4}-/.test(text(doc, "build-stamp")), "version stamp shown");
     const srcs = [...doc.querySelectorAll("script[src]")].map((x) => x.getAttribute("src"));
     check(["builder.js", "composer.js", "tweaks.js", "flasher.js", "app.js"].every((f) => srcs.some((x) => x.startsWith(f + "?")))
       && srcs.every((x) => x.endsWith("?v=" + w.MC_BUILD)), "scripts loaded with ?v=<build> (no stale cache): " + srcs.join());
     check(doc.getElementById("compat").hidden, "no compatibility banner in a good browser");
     const feats = [...doc.querySelectorAll("#features input[type=checkbox]")].map((c) => c.id);
-    check(feats.join() === "feat-feral9,feat-punch,feat-blast,feat-lixr,feat-sam", "five feature rows: " + JSON.stringify(feats));
+    check(feats.join() === "feat-feral9,feat-blast,feat-punch,feat-sam", "four feature rows: " + JSON.stringify(feats));
     check(!doc.querySelector("#features .tag"), "no Tested / Experimental tags on the cards");
-    const blurb = /Dangerous experimental Macro OSC/.test(text(doc, "features"))
-      && /Surprisingly tasteful/.test(text(doc, "features")) && /Mutated Yamaha OPL2/.test(text(doc, "features"))
-      && /Sonic Potions LXR imitation/.test(text(doc, "features")) && /Software Automated Mouth/.test(text(doc, "features"));
+    const blurb = /Nine noisy, unpredictable synthesis models/.test(text(doc, "features"))
+      && /Fourteen melodic FM models/.test(text(doc, "features")) && /Twelve percussion FM engines/.test(text(doc, "features"))
+      && /Software Automated Mouth/.test(text(doc, "features"));
     check(blurb, "each engine's blurb from the old all card is on its card");
     check(cards.every((f) => doc.querySelector(`#cat-${f.cat || "other"} #mod-${f.id} #feat-${f.id}`)),
       "every feature has a row in its section (cat)");
@@ -264,7 +264,7 @@ async function main() {
     check(!doc.getElementById("mod-sel") && !/Your selection/.test(text(doc, "panel-mods")),
       "no Your selection area");
     check(doc.querySelectorAll("#features .more, #features .chev").length === 0, "no Details dropdown or section caret");
-    check(!box("det-feral9").hidden && /Dangerous experimental Macro OSC/.test(box("det-feral9").textContent), "details are always visible");
+    check(!box("det-feral9").hidden && /Nine noisy, unpredictable synthesis models/.test(box("det-feral9").textContent), "details are always visible");
     check(!/Status|Doesn't go with|Before installing/.test(textOf(doc, "#det-feral9")),
       "details leave out Status, clashes and the pre-install note");
     check(cards.every((f) => !doc.querySelector(`#det-${f.id} a.feat-guide`)),
@@ -288,10 +288,10 @@ async function main() {
     doc.querySelector('.lang button[data-lang="fr"]').click();
     await wait(20);
     check(/Que voulez-vous installer/.test(text(doc, "h1s")) && doc.documentElement.lang === "fr", "FR switch translates the page");
-    check(/Dangerous experimental Macro OSC/.test(text(doc, "features")) && /Surprisingly tasteful/.test(text(doc, "features"))
-      && /Mutated Yamaha OPL2/.test(text(doc, "features")) && /Sonic Potions LXR imitation/.test(text(doc, "features"))
+    check(/Nine noisy, unpredictable synthesis models/.test(text(doc, "features"))
+      && /Fourteen melodic FM models/.test(text(doc, "features")) && /Twelve percussion FM engines/.test(text(doc, "features"))
       && /Software Automated Mouth/.test(text(doc, "features")),
-      "FR switch keeps the five engine blurbs");
+      "FR switch keeps the four engine blurbs");
     check(/Crédits/.test(text(doc, "credits")) && /boîte à outils/.test(text(doc, "credits")) && /licence MIT/.test(text(doc, "credits")),
       "FR switch translates the credits section");
     doc.querySelector('.lang button[data-lang="en"]').click();
