@@ -30,16 +30,16 @@ const ELEKTRON_ST_DL = "https://www.elektron.se/support-downloads/syntakt";
 // entry per set of them, the tweak tools/compose.py composes them into: the page's composer must give its bytes.
 const REF_MAINOS = {
   // each card alone: each variant, each combination of real Syntakt engines
-  "feral9": "2a7d4d8b3f48d57817318ea32cc204923791e553226df76726bcfe3baf0c3b4b",
-  "punch": "14f62a32ee900853f6207b70b06b80d37cb1b1e8bd7ae2377addb3d9de60c300",
+  "feral9": "a74c0d0b791a7dcf002f8ce334641df8b51de3d6f1ce8711f8c8e50773799beb",
   "blast": "cf38327ab67913b3dbbd9379646111aa33d1d468de7ceda45f3a800c3a160a53",
+  "punch": "14f62a32ee900853f6207b70b06b80d37cb1b1e8bd7ae2377addb3d9de60c300",
   "sam": "dc5c92b63b7d174c9d112aa5ec1b341772da26cbdc207b6aa5af77e8744c5e45",
 };
 const REF_MODS = {
-  "punch": {"w": "ed07fb3a2ff09d3d5783c642ca78d3d3493bea1e5fe0ca9997a53a046b54e6b3", "p": "c09bd7d74f8d5f8015a6c70656d0434c719d47d838791aa5fe824ec665609cfe"},
   "blast": {"w": "f9d9967cbeaca411c1e3f7e3589d3a50649d179519b12949c702b2e62c1efb02", "p": "9eb8ace296d0564194d6ca33fb3ed84d9bbcbf5af91014b982c7c89e8fa108e1"},
+  "punch": {"w": "ed07fb3a2ff09d3d5783c642ca78d3d3493bea1e5fe0ca9997a53a046b54e6b3", "p": "c09bd7d74f8d5f8015a6c70656d0434c719d47d838791aa5fe824ec665609cfe"},
   "sam": {"w": "990cb7a5c5b00fd6f196d6f9aa6e310583144f6313b4142e88fd82afbbb2b9b6", "p": "f178d92c9868834399c321b0d9a5100730a219f94ba0038befab1eda5163340d"},
-  "feral9": {"w": "83ea8a19a46bbf3dc66451a55fae20b5fd0a0044a4bcccce5c35a2583ff9275e", "p": "2bba4f1fd7bd9107ed0fab2e5a3b837827e5ae0682292aaca33beb8e39d46025"},
+  "feral9": {"w": "a8e0f7caa860c54f4f4ecf7cbcc526c26878ad41ed15df1d92e03d9a1dcc889b", "p": "79e1d2b9e75f084c0cf68c34debd3889b6a29f59c60b9a76b2990398b0c305e5"},
 };
 
 // "Samples OS" tab: official Model:Samples OS 1.13 inside the official Model:Cycles container

@@ -64,7 +64,9 @@ def unified_detours(text, fs, bs, ls, ss):
 """
     stubs = """
 all_state_feral:
+\tmove.l #1, -(%sp)
 \tjsr FERAL_INIT
+\taddq.l #4, %sp
 \trts
 all_state_blast_shape:
 \tmove.l #77, -(%sp)
@@ -88,7 +90,9 @@ all_state_punch_sweep:
 \trts
 
 all_connect_feral:
+\tmove.l #1, -(%sp)
 \tjsr FERAL_INIT
+\taddq.l #4, %sp
 \taddi.l #0x14, %d0
 \tpea 0x40a71500
 \tmove.l 12(%sp), -(%sp)

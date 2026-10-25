@@ -296,8 +296,9 @@ function compose(mainOs, frames, packages, tweaks = []) {
       throw new Error(`${p.id}: code and tables end at ${hx(codeAt + blob.length)}, past ${hx(lay.stubs)}`);
     const mc = p.uses.find((u) => u.point === "machine");
     if (!mc) throw new Error(`${p.id}: no 'machine' entry in uses: not an added machine`);
+    // descriptor.state: the package's initializer is called for every knob (0 = COLOR .. 3 = CONTOUR)
+    // and returns that knob's state object, or 0 to keep the generic SNARE object (registrar.S state_at).
     const state = p.uses.find((u) => u.point === "descriptor.state");
-    if (state && state.descriptor !== 1) throw new Error(`${p.id}: only the SHAPE descriptor (1) can have a state override for now`);
     machines.push({ name: mc.name, image: mc.image, decay: mc.decay_default,
                     knobs: mc.knobs.map((k) => [k.long, k.short, k.default].concat("min" in k ? [k.min, k.max] : [])),
                     update: syms[p.symbols.update], render: syms[p.symbols.render],

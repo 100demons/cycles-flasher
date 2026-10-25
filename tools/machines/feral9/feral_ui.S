@@ -1,12 +1,16 @@
-/* Feral's custom SHAPE state: the machine's five descriptors share SNARE's state objects (index 52
- * for SHAPE). This initializer copies that object once per call and points its formatter and drawing
- * methods at Feral's model names. The registrar runtime calls it through the machine entry's
- * state-init field; the package does not patch the OS or the runtime. */
+/* Feral's descriptor-state initializer. The registrar runtime calls it with the knob index on the
+ * stack (0 = COLOR, 1 = SHAPE, 2 = SWEEP, 3 = CONTOUR): for SHAPE it returns a copy of SNARE's
+ * SHAPE state object (index 52) whose formatter and drawing methods are Feral's model names; for
+ * every other knob it returns 0, so the runtime keeps SNARE's generic object. The package does not
+ * patch the OS or the runtime. */
 
 	.text
 
 	.globl	feral_state_init
 feral_state_init:
+	move.l	4(%sp), %d0		/* the knob index (0 = COLOR .. 3 = CONTOUR) */
+	cmpi.l	#1, %d0			/* knob 1 = SHAPE: our names; any other knob stays generic */
+	bne.s	3f
 	tst.l	feral_state_ready
 	bne.s	2f
 	lea	0x40a71754+5200, %a1
@@ -24,6 +28,8 @@ feral_state_init:
 	move.l	%d1, feral_state_ready
 2:	lea	feral_state, %a0
 	move.l	%a0, %d0
+	rts
+3:	moveq	#0, %d0			/* generic: the runtime falls back to SNARE's object */
 	rts
 
 feral_fmt:

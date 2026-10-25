@@ -46,8 +46,9 @@ map_state:
 9:	rts
 
 /* A package may put a descriptor-state initializer in the last long of its machine entry
- * (REGS+16+16i+12): called with no argument, it returns the state object for its SHAPE descriptor
- * (first_desc + 1). Zero means the generic SNARE object. */
+ * (REGS+16+16i+12): called with the knob index (0 = COLOR .. 3 = CONTOUR), it returns the state
+ * object for that knob, or 0 to keep the generic SNARE object (map_state). A machine's four knobs
+ * are its descriptors first_desc .. first_desc + 3; its Amp Decay (first_desc + 4) stays generic. */
 	.globl	state_at
 state_at:
 	move.l	%d2, -(%sp)
@@ -59,20 +60,26 @@ sat_loop:
 	cmpa.l	REGS+12, %a0
 	beq.s	sat_generic
 	mvz.b	2(%a0), %d3
-	addq.l	#1, %d3
-	cmp.l	%d3, %d0
-	beq.s	sat_found
-	lea	16(%a0), %a0
-	bra.s	sat_loop
-sat_found:
+	move.l	%d0, %d2
+	sub.l	%d3, %d2			/* 0 .. 3 when the descriptor is this machine's knob */
+	bcs.s	sat_next
+	cmpi.l	#3, %d2
+	bhi.s	sat_next
 	move.l	12(%a0), %a1
 	tst.l	%a1
+	beq.s	sat_generic
+	move.l	%d2, -(%sp)
+	jsr	(%a1)				/* the package's initializer: state object, or 0 */
+	addq.l	#4, %sp
+	tst.l	%d0
 	beq.s	sat_generic
 	move.l	(%sp)+, %a0
 	move.l	(%sp)+, %d3
 	move.l	(%sp)+, %d2
-	jsr	(%a1)
 	rts
+sat_next:
+	lea	16(%a0), %a0
+	bra.s	sat_loop
 sat_generic:
 	move.l	(%sp)+, %a0
 	move.l	(%sp)+, %d3
@@ -95,21 +102,27 @@ sc_loop:
 	cmpa.l	REGS+12, %a0
 	beq.s	sc_generic
 	mvz.b	2(%a0), %d3
-	addq.l	#1, %d3
-	cmp.l	%d3, %d0
-	beq.s	sc_found
-	lea	16(%a0), %a0
-	bra.s	sc_loop
-sc_found:
+	move.l	%d0, %d2
+	sub.l	%d3, %d2
+	bcs.s	sc_next
+	cmpi.l	#3, %d2
+	bhi.s	sc_next
 	move.l	12(%a0), %a1
 	tst.l	%a1
+	beq.s	sc_generic
+	move.l	%d2, -(%sp)
+	jsr	(%a1)
+	addq.l	#4, %sp
+	tst.l	%d0
 	beq.s	sc_generic
 	move.l	(%sp)+, %a0
 	move.l	(%sp)+, %d3
 	move.l	(%sp)+, %d2
-	jsr	(%a1)
 	add.l	#0x14, %d0
 	bra.s	sc_common
+sc_next:
+	lea	16(%a0), %a0
+	bra.s	sc_loop
 sc_generic:
 	move.l	(%sp)+, %a0
 	move.l	(%sp)+, %d3

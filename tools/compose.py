@@ -654,9 +654,9 @@ def compose(img, ids, relocator="python", compare_ld=False, registrar="runtime",
             mc = m["_machine"]
             knobs = tuple((k["long"], k["short"], k["default"]) + ((k["min"], k["max"]) if "min" in k else ())
                           for k in mc["knobs"])
+            # descriptor.state: the package's initializer is called for every knob (0 = COLOR .. 3 = CONTOUR)
+            # and returns that knob's state object, or 0 to keep the generic SNARE object (registrar.S state_at).
             state = next((u for u in m["uses"] if u["point"] == "descriptor.state"), None)
-            if state and state.get("descriptor") != 1:
-                sys.exit(f"!! {m['id']}: only the SHAPE descriptor (1) can have a state override for now")
             machines.append(dict(name=mc["name"], image=mc["image"], decay=mc["decay_default"], knobs=knobs,
                                  update=syms[m["build"]["symbols"]["update"]],
                                  render=syms[m["build"]["symbols"]["render"]],
