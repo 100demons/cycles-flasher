@@ -39,10 +39,10 @@ import gen_syntakt_engines as gs   # noqa: E402
 OUT = HERE / "machines" / "registrar" / "registrar.json"
 FRAME = HERE / "machines" / "registrar" / "frame.json"
 SRC = HERE / "machines" / "registrar" / "registrar.S"
-REGS_OFF = 0x780                   # the parameter block: the last 128 bytes of STUBS..DATA
-ENTRY, MAX_MACHINES = 16, 6        # one entry per added machine; gs.check_room allows 6 (109 descriptors)
+REGS_OFF = 0x770                   # the parameter block: the last 144 bytes of STUBS..DATA
+ENTRY, MAX_MACHINES = 20, 6        # one entry per added machine; gs.check_room allows 6 (109 descriptors)
 ENTRIES = ("state_at", "state_connect", "cc_bounds", "drum_icons", "small_icon", "record_at", "record_of", "marks",
-           "knob_vec", "desc_machine", "builder_row")
+           "knob_vec", "desc_machine", "builder_row", "turn")
 PLACEHOLDERS = {"src": 0x7a5a5a51, "dst": 0x7b5b5b52, "longs": 0x7c5c5c53}     # distinct, found once each
 
 

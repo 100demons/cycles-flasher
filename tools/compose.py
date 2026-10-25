@@ -220,7 +220,7 @@ def web_package(mid):
         sys.exit(f"!! {mid}: {path} is missing: run the package's generator (it writes the object)")
     lay = relocate.layout(path.read_bytes(), upd, rnd, keep, mid)
     uses = [{k: v for k, v in u.items() if k != "why"} for u in m["uses"]
-            if u["point"] in ("machine", "memory.ram", "descriptor.state") or "hook" in u or "vtable" in u]
+            if u["point"] in ("machine", "memory.ram", "descriptor.state", "turn") or "hook" in u or "vtable" in u]
     return {"id": mid, "name": m["name"], "order": m["order"], "version": m["version"],
             "symbols": {"update": upd, "render": rnd}, "keep": keep, "patch_points": pps, "uses": uses,
             "conflicts_declared": [c["with"] for c in m.get("compat", {}).get("conflicts_declared", [])],
@@ -303,6 +303,7 @@ def parameter_block(fr, machines):
         e[4:8] = g7.be32(lay["recs"] + 0x60 * i)      # rec
         e[8:12] = g7.be32(m.get("knob_hook", 0))      # knob_hook
         e[12:16] = g7.be32(m.get("state_init", 0))    # state object initializer
+        e[16:20] = g7.be32(m.get("turn_hook", 0))     # the stepped-SWEEP turn hook
         out += e
     if len(out) > rt["regs_header"] + rt["entry_size"] * rt["max_machines"]:
         sys.exit("!! parameter block too big")
@@ -377,6 +378,8 @@ def frame(img, reg, n):
         w(va, bytes.fromhex(old), jmp(entries[sym]))
     for va, old, sym in g7.CALLS:
         w(va, bytes.fromhex(old), bytes.fromhex("4eb9") + g7.be32(entries[sym]) + bytes.fromhex("4e71"))
+    # the OS's knob turn (0x4000b82a), detoured to the runtime's turn: a machine's stepped SWEEP (registrar.S).
+    w(0x4000b82a, bytes.fromhex("2f032f002f02"), jmp(entries["turn"]))
     writes.sort(key=lambda x: x["off"])
     lo_, hi_ = g7.DESC - BASE, g7.DESC - BASE + g7.NDESC * g7.DSTRIDE
     final, orig = bytearray(img[lo_:hi_]), img[lo_:hi_]
@@ -657,10 +660,12 @@ def compose(img, ids, relocator="python", compare_ld=False, registrar="runtime",
             # descriptor.state: the package's initializer is called for every knob (0 = COLOR .. 3 = CONTOUR)
             # and returns that knob's state object, or 0 to keep the generic SNARE object (registrar.S state_at).
             state = next((u for u in m["uses"] if u["point"] == "descriptor.state"), None)
+            turn = next((u for u in m["uses"] if u["point"] == "turn"), None)
             machines.append(dict(name=mc["name"], image=mc["image"], decay=mc["decay_default"], knobs=knobs,
                                  update=syms[m["build"]["symbols"]["update"]],
                                  render=syms[m["build"]["symbols"]["render"]],
-                                 state_init=syms[state["init"]] if state else 0))
+                                 state_init=syms[state["init"]] if state else 0,
+                                 turn_hook=syms[turn["init"]] if turn else 0))
             blobs.append((code_at, blob))
             syms_of[m["id"]] = syms
             info_pkgs.append(dict(id=m["id"], index=first + i, desc=76 + 5 * i, code_at=code_at, code=len(blob),

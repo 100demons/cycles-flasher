@@ -104,6 +104,7 @@ function parameterBlock(fr, machines) {
     put32(e, 4, lay.recs + 0x60 * i);                                // rec
     put32(e, 8, m.knob_hook || 0);                                   // knob_hook
     put32(e, 12, m.state_init || 0);                                 // state object initializer
+    put32(e, 16, m.turn_hook || 0);                                  // the stepped-SWEEP turn hook
     parts.push(e);
   });
   const out = concat(...parts);
@@ -299,10 +300,11 @@ function compose(mainOs, frames, packages, tweaks = []) {
     // descriptor.state: the package's initializer is called for every knob (0 = COLOR .. 3 = CONTOUR)
     // and returns that knob's state object, or 0 to keep the generic SNARE object (registrar.S state_at).
     const state = p.uses.find((u) => u.point === "descriptor.state");
+    const turn = p.uses.find((u) => u.point === "turn");
     machines.push({ name: mc.name, image: mc.image, decay: mc.decay_default,
                     knobs: mc.knobs.map((k) => [k.long, k.short, k.default].concat("min" in k ? [k.min, k.max] : [])),
                     update: syms[p.symbols.update], render: syms[p.symbols.render],
-                    state_init: state ? syms[state.init] : 0 });
+                    state_init: state ? syms[state.init] : 0, turn_hook: turn ? syms[turn.init] : 0 });
     blobs.push([codeAt, blob]);
     symsOf[p.id] = syms;
     info.push({ id: p.id, index: first + i, desc: 76 + 5 * i, code_at: codeAt, code: blob.length, bss_at: bssAt,

@@ -1,0 +1,76 @@
+{
+ "schema": "cycles-mod/0.1",
+ "id": "blast",
+ "version": "1",
+ "name": "BLAST machine: 14 OPL2-style FM models",
+ "description": "One extra machine after Chord with 14 two-operator FM models on SHAPE (SIN, HLF, ABS, PLS, BAS, PIA, MAR, GLK, BRS, ACC, STR, STL, TMP, ZAP), each at a fixed modulator:carrier ratio. COLOR is the FM index, SWEEP steps the ratio (shown as 1:2, 1:1 .. 9:1, 10X, 12X, 15X), CONTOUR moves the sound, PUNCH turns the chip's LFO on, DECAY and GATE as on Tone.",
+ "license": "MIT",
+ "credit": {"kind": "own", "who": "100demons and Claude"},
+ "source": "tools/machines/blast, package port of the standalone BLAST machine",
+ "device": "Model:Cycles",
+ "os": "1.13",
+ "order": 66,
+ "build": {
+  "sources": ["blast.c"],
+  "include": ["."],
+  "cflags": ["-mcpu=54418", "-O2", "-malign-int", "-U_FORTIFY_SOURCE", "-ffreestanding", "-fno-builtin",
+             "-fno-tree-loop-distribute-patterns", "-nostdlib", "-fno-pic", "-fno-common", "-ffunction-sections",
+             "-fdata-sections", "-fomit-frame-pointer", "-Wall", "-Wextra", "-Werror"],
+  "defines": {},
+  "objects": ["blast.o"],
+  "symbols": {"update": "blast_update", "render": "blast_render"},
+  "keep": ["blast_state_init", "blast_turn"],
+  "patch_points": []
+ },
+ "uses": [
+  {
+   "point": "machine",
+   "name": "BLAST",
+   "image": 4,
+   "decay_default": 50,
+   "knobs": [
+    {"long": "Index", "short": "Idx", "default": 64},
+    {"long": "Model", "short": "MODL", "default": 0, "min": 0, "max": 13},
+    {"long": "Ratio", "short": "RTIO", "default": 80},
+    {"long": "Env", "short": "Env", "default": 40}
+   ]
+  },
+  {
+   "point": "descriptor.state",
+   "init": "blast_state_init",
+   "why": "SHAPE shows the model names (SIN..ZAP) and SWEEP the ratio names (1:2..15X) instead of numbers; every other knob keeps the generic state"
+  },
+  {
+   "point": "turn",
+   "init": "blast_turn",
+   "why": "SWEEP steps through the ratio list one detent at a time (the value is the step's knob position), not one knob unit at a time"
+  }
+ ],
+ "claims": {
+  "sound_slots": [],
+  "record_slots": [],
+  "ram": [],
+  "formatters": [],
+  "gestures": [],
+  "views": []
+ },
+ "cost": {
+  "emulation": {"tool": "none yet; the standalone BLAST was measured in its source tree", "per_voice": {}, "reference": {}},
+  "device": {"status": "not measured"}
+ },
+ "stock_behaviour": {
+  "changes": [],
+  "fixes": [],
+  "unchanged": ["the six stock machines", "every track that does not use BLAST"]
+ },
+ "compat": {
+  "built_against": ["the standalone BLAST source drop", "model27"],
+  "requires": [],
+  "conflicts_declared": []
+ },
+ "tests": {
+  "emulation": {"tool": "tools/emu/test_blast.py in the real OS voice loop (Unicorn), on the composed alone build", "date": null, "build": null},
+  "hardware": {"date": null, "by": null, "build": null},
+  "status": "experimental"
+ }
+}

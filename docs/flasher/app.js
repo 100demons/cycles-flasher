@@ -30,16 +30,17 @@ const ELEKTRON_ST_DL = "https://www.elektron.se/support-downloads/syntakt";
 // entry per set of them, the tweak tools/compose.py composes them into: the page's composer must give its bytes.
 const REF_MAINOS = {
   // each card alone: each variant, each combination of real Syntakt engines
-  "feral9": "a74c0d0b791a7dcf002f8ce334641df8b51de3d6f1ce8711f8c8e50773799beb",
-  "blast": "cf38327ab67913b3dbbd9379646111aa33d1d468de7ceda45f3a800c3a160a53",
+  "feral9": "7c960863f407fb68fa7730845cf29f3ae216fa0ab9c30dd048621327562c9017",
+  "blast": "aa915973971502b6c2218d7aba1466cbfa82f3109e04f8afb9694e1fd8bdd920",
   "punch": "14f62a32ee900853f6207b70b06b80d37cb1b1e8bd7ae2377addb3d9de60c300",
   "sam": "dc5c92b63b7d174c9d112aa5ec1b341772da26cbdc207b6aa5af77e8744c5e45",
 };
 const REF_MODS = {
-  "blast": {"w": "f9d9967cbeaca411c1e3f7e3589d3a50649d179519b12949c702b2e62c1efb02", "p": "9eb8ace296d0564194d6ca33fb3ed84d9bbcbf5af91014b982c7c89e8fa108e1"},
   "punch": {"w": "ed07fb3a2ff09d3d5783c642ca78d3d3493bea1e5fe0ca9997a53a046b54e6b3", "p": "c09bd7d74f8d5f8015a6c70656d0434c719d47d838791aa5fe824ec665609cfe"},
   "sam": {"w": "990cb7a5c5b00fd6f196d6f9aa6e310583144f6313b4142e88fd82afbbb2b9b6", "p": "f178d92c9868834399c321b0d9a5100730a219f94ba0038befab1eda5163340d"},
-  "feral9": {"w": "a8e0f7caa860c54f4f4ecf7cbcc526c26878ad41ed15df1d92e03d9a1dcc889b", "p": "79e1d2b9e75f084c0cf68c34debd3889b6a29f59c60b9a76b2990398b0c305e5"},
+  "feral9": {"w": "5b233855c78d3fd930b7fe1fedebdae9eeafd97b5244c1641d93d8d4df05fc22", "p": "3b94d82f2cce5ba20b8cecb39a00b9a525b4b44be1512c149f297f1ef9f0391c"},
+  "blast": {"w": "56168a3838d126b58c99f83f6bf51c431699c855baccd443b9b0b756b0e90439", "p": "ccb6329d91a19fcaf5b552f87b7b2115f072f749fde9cee35e52bc01cdccb05c"},
+  "feral9+blast": {"w": "d828e0af0b54f46a790830321345e82d04e90998d9814929973d4fc5bbc9c9e1", "p": "fb22e6e0263c74e5d8a595244062aaa60570b4c3291f8d1fe45ecba6131023c3"},
 };
 
 // "Samples OS" tab: official Model:Samples OS 1.13 inside the official Model:Cycles container
@@ -760,8 +761,8 @@ const FEAT = {
       note: "Tested on a Model:Cycles (2026-10-22), standalone. The package carries the custom SHAPE model names; the MACHINES-page picture is still TONE's." },
     blast: { label: "💥 Blast (0.8 beta)",
       short: "Fourteen melodic FM models on one machine, a '90s PC Soundblaster engine in higher fidelity.",
-      desc: "Fourteen melodic FM models on one machine, a '90s PC Soundblaster engine in higher fidelity, built on the Yamaha OPL2. Featuring: sine, half-sine, absolute sine, pulse, bass, piano, marimba, glockenspiel, brass, accordion, strings, steel drum, timpani and zap.",
-      note: "Experimental: the source tree passed its emulator proofs; not yet tested on hardware. Save a project before switching builds: the machine slot changes. Not with Feral or PUNCH." },
+      desc: "Fourteen melodic FM models on one machine, a '90s PC Soundblaster engine in higher fidelity, built on the Yamaha OPL2. Featuring: sine, half-sine, absolute sine, pulse, bass, piano, marimba, glockenspiel, brass, accordion, strings, steel drum, timpani and zap. SHAPE shows the model name and SWEEP steps the ratio (1:2..15X).",
+      note: "Experimental: not yet tested on hardware. SHAPE shows the model name and SWEEP steps the ratio; the MACHINES-page picture is still TONE's." },
     punch: { label: "👊 Punch (0.5 beta)",
       short: "Twelve percussion FM engines on one machine, raw, heavy and digital.",
       desc: "Twelve percussion FM engines on one machine, raw, heavy and digital, built on the Yamaha OPL2 with extended fixed FM ratios for modern sounds and alien harmonics. Featuring: kick, tom, bongo, conga, taiko, timbale, marimba, djembé, woodblock, gong, bubble and zap.",
@@ -871,8 +872,8 @@ const FEAT = {
       note: "Testée sur un Model:Cycles (22/10/2026), seule. Le paquet porte les noms de modèles de SHAPE ; l'image de la page MACHINES reste celle de TONE." },
     blast: { label: "💥 Blast (0.8 beta)",
       short: "Fourteen melodic FM models on one machine, a '90s PC Soundblaster engine in higher fidelity.",
-      desc: "Fourteen melodic FM models on one machine, a '90s PC Soundblaster engine in higher fidelity, built on the Yamaha OPL2. Featuring: sine, half-sine, absolute sine, pulse, bass, piano, marimba, glockenspiel, brass, accordion, strings, steel drum, timpani and zap.",
-      note: "Expérimentale : les preuves en émulation passent ; pas encore testée sur la machine. Sauvegardez un projet avant de changer de build : la place de la machine change. Pas avec Feral ou PUNCH." },
+      desc: "Fourteen melodic FM models on one machine, a '90s PC Soundblaster engine in higher fidelity, built on the Yamaha OPL2. Featuring: sine, half-sine, absolute sine, pulse, bass, piano, marimba, glockenspiel, brass, accordion, strings, steel drum, timpani and zap. SHAPE shows the model name and SWEEP steps the ratio (1:2..15X).",
+      note: "Expérimentale : pas encore testée sur la machine. SHAPE affiche le nom du modèle et SWEEP passe d'un rapport à l'autre ; l'image de la page MACHINES reste celle de TONE." },
     punch: { label: "👊 Punch (0.5 beta)",
       short: "Twelve percussion FM engines on one machine, raw, heavy and digital.",
       desc: "Twelve percussion FM engines on one machine, raw, heavy and digital, built on the Yamaha OPL2 with extended fixed FM ratios for modern sounds and alien harmonics. Featuring: kick, tom, bongo, conga, taiko, timbale, marimba, djembé, woodblock, gong, bubble and zap.",

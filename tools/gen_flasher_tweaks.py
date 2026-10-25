@@ -393,13 +393,11 @@ ALL_FEATURES = [
         "label": "💥 Blast (0.8 beta)",
         "desc": "Fourteen melodic FM models on one machine, a '90s PC Soundblaster engine in higher fidelity, built "
                 "on the Yamaha OPL2. Featuring: sine, half-sine, absolute sine, pulse, bass, piano, marimba, "
-                "glockenspiel, brass, accordion, strings, steel drum, timpani and zap.",
+                "glockenspiel, brass, accordion, strings, steel drum, timpani and zap. SHAPE shows the model name "
+                "and SWEEP steps the ratio (1:2..15X).",
         "status": "experimental",
         "credit": {"kind": "own", "who": "100demons"},
-        "variants": [
-            {"file": "66-blast", "label": None},
-        ],
-        "excludes": ["feral9", "punch"],
+        "package": "blast",
         "one_of": "engine",
     },
     {
