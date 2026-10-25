@@ -49,7 +49,7 @@ Notes de travail tirées de l'analyse de dépôts GitHub (analysés le 25/09/202
 
 | Fichier | Contenu |
 |---|---|
-| [76-descriptor-state-all-knobs.md](76-descriptor-state-all-knobs.md) | **The descriptor-state override covers all four knobs, not just SHAPE** : one `descriptor.state` initializer per machine, `init(knob)` with `knob` = 0..3 (COLOR..CONTOUR), returning the knob's state object or 0 for the generic SNARE object ; `registrar.S` `state_at`/`state_connect` dispatch all four knobs and fall back on 0 ; `compose.py`/`composer.js` no longer reject non-SHAPE. Still needs the toolchain to rebuild `feral9.o` and regenerate the committed files. |
+| [76-descriptor-state-all-knobs.md](76-descriptor-state-all-knobs.md) | **The descriptor-state override covers all four knobs, not just SHAPE** : one `descriptor.state` initializer per machine, `init(knob)` with `knob` = 0..3 (COLOR..CONTOUR), returning the knob's state object or 0 for the generic SNARE object ; `registrar.S` `state_at`/`state_connect` dispatch all four knobs and fall back on 0 ; `compose.py`/`composer.js` no longer reject non-SHAPE. **Done and proven in emulation (2026-10-24)** with `m68k-elf-gcc` 16.2.0 ; BLAST/PUNCH/SAM use the same entry, and their stepped SWEEP is a per-machine `turn` hook (the machine entry is now 20 bytes). |
 | [01-ms-multi-output.md](01-ms-multi-output.md) | Fonctionnement du mod 6 canaux, **table de patchs Cycles décodée**, stubs, historique et leçons |
 | [02-format-os-syx.md](02-format-os-syx.md) | Format `.syx` → conteneur ELE3 → sections aPLib → MAIN OS ; checksums, HMAC, CLI de l'outil |
 | [03-plateforme-coldfire.md](03-plateforme-coldfire.md) | CPU MCF5441x, carte mémoire connue, pièges de l'ISA ColdFire, outils de rétro-ingénierie |
