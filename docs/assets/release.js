@@ -7,6 +7,10 @@
  * of everything model27 builds on.
  */
 window.MC_RELEASES = [
+  { version: "0.24", date: "2026-10-24", changes: [
+    { en: "SAM is now a composed package: all four knobs show their own text (word, rate, scrub, character)",
+      fr: "SAM est maintenant un paquet composé : les quatre potentiomètres affichent chacun leur texte (mot, vitesse, scrub, caractère)" },
+  ] },
   { version: "0.23", date: "2026-10-24", changes: [
     { en: "Punch is now a composed package: its SHAPE knob shows the engine name and SWEEP steps the ratio (1:4..15X), one detent at a time. The MACHINES-page picture is still TONE's",
       fr: "Punch est maintenant un paquet composé : son potentiomètre SHAPE affiche le nom du moteur et SWEEP passe d'un rapport à l'autre (1:4..15X), cran par cran. L'image de la page MACHINES reste celle de TONE" },

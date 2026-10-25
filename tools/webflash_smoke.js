@@ -223,11 +223,11 @@ async function main() {
     check(typeof w.MCBuilder === "object" && typeof w.MCComposer === "object" && typeof w.MCFlasher === "object",
       "MCBuilder + MCComposer + MCFlasher present");
     const ids = w.MC_TWEAKS.tweaks.map((x) => x.id), cards = w.MC_TWEAKS.features;
-    check(ids.join() === "sam" && cards.map((f) => f.id).join() === "feral9,blast,punch,sam"
-      && Object.keys(w.MC_TWEAKS.packages || {}).join() === "feral9,blast,punch" && !!w.MC_TWEAKS.registrar
+    check(ids.join() === "" && cards.map((f) => f.id).join() === "feral9,blast,punch,sam"
+      && Object.keys(w.MC_TWEAKS.packages || {}).join() === "feral9,blast,punch,sam" && !!w.MC_TWEAKS.registrar
       && !cards.some((f) => f.engines || f.needs)
       && !w.MC_TWEAKS.tweaks.some((x) => x.append && x.append.syntakt),
-      "MC_TWEAKS: four engine cards, Feral + Blast + Punch packages: " + cards.map((f) => f.id).join());
+      "MC_TWEAKS: four engine cards, all packages: " + cards.map((f) => f.id).join());
     check(/build \d{4}-/.test(text(doc, "build-stamp")), "version stamp shown");
     const srcs = [...doc.querySelectorAll("script[src]")].map((x) => x.getAttribute("src"));
     check(["builder.js", "composer.js", "tweaks.js", "flasher.js", "app.js"].every((f) => srcs.some((x) => x.startsWith(f + "?")))

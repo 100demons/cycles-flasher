@@ -1,0 +1,71 @@
+{
+ "schema": "cycles-mod/0.1",
+ "id": "sam",
+ "version": "1",
+ "name": "SAM machine: 36-word speech synthesizer (Braids Renaissance SAM)",
+ "description": "One extra machine after Chord: SAM, the Software Automated Mouth of Braids Renaissance. SHAPE picks one of 36 words, COLOR is the speaking rate (centre 100%, independent of the note), SWEEP is the scrub / start frame, CONTOUR is the throat/mouth character macro (centre = exact SAM 128/128), DECAY the release, PUNCH loops the word and GATE holds it.",
+ "license": "MIT",
+ "credit": {"kind": "own", "who": "100demons and Claude"},
+ "source": "tools/machines/sam, package port of the standalone SAM machine",
+ "device": "Model:Cycles",
+ "os": "1.13",
+ "order": 38,
+ "build": {
+  "sources": ["sam.c"],
+  "include": ["."],
+  "cflags": ["-mcpu=54418", "-O2", "-malign-int", "-U_FORTIFY_SOURCE", "-ffreestanding", "-fno-builtin",
+             "-fno-tree-loop-distribute-patterns", "-nostdlib", "-fno-pic", "-fno-common", "-ffunction-sections",
+             "-fdata-sections", "-fomit-frame-pointer", "-Wall", "-Wextra", "-Werror"],
+  "defines": {},
+  "objects": ["sam.o"],
+  "symbols": {"update": "sam_update", "render": "sam_render"},
+  "keep": ["sam_state_init"],
+  "patch_points": []
+ },
+ "uses": [
+  {
+   "point": "machine",
+   "name": "SAM",
+   "image": 4,
+   "decay_default": 50,
+   "knobs": [
+    {"long": "Speed", "short": "SPED", "default": 64},
+    {"long": "Word", "short": "WORD", "default": 0, "min": 0, "max": 35},
+    {"long": "Scrub", "short": "SCRB", "default": 0},
+    {"long": "Character", "short": "CHAR", "default": 64}
+   ]
+  },
+  {
+   "point": "descriptor.state",
+   "init": "sam_state_init",
+   "why": "COLOR shows the speaking rate, SHAPE the word, SWEEP the scrub and CONTOUR the character macro instead of numbers"
+  }
+ ],
+ "claims": {
+  "sound_slots": [],
+  "record_slots": [],
+  "ram": [],
+  "formatters": [],
+  "gestures": [],
+  "views": []
+ },
+ "cost": {
+  "emulation": {"tool": "none yet; the standalone SAM was measured in its source tree", "per_voice": {}, "reference": {}},
+  "device": {"status": "not measured"}
+ },
+ "stock_behaviour": {
+  "changes": [],
+  "fixes": [],
+  "unchanged": ["the six stock machines", "every track that does not use SAM"]
+ },
+ "compat": {
+  "built_against": ["the standalone SAM source drop", "model27"],
+  "requires": [],
+  "conflicts_declared": []
+ },
+ "tests": {
+  "emulation": {"tool": "tools/emu/test_sam.py in the real OS voice loop (Unicorn), on the composed alone build", "date": null, "build": null},
+  "hardware": {"date": null, "by": null, "build": null},
+  "status": "experimental"
+ }
+}

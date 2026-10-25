@@ -402,12 +402,11 @@ ALL_FEATURES = [
         "id": "sam",
         "cat": "sound",
         "label": "👁️ SAM (0.1 alpha)",
-        "desc": "Vocal Synthesizer - Software Automated Mouth - currently half-broken alpha - \"I love you\"",
+        "desc": "Vocal Synthesizer - Software Automated Mouth - currently half-broken alpha - \"I love you\". "
+                "SHAPE picks one of 36 words, COLOR the speaking rate, SWEEP the scrub and CONTOUR the character.",
         "status": "experimental",
         "credit": {"kind": "own", "who": "100demons"},
-        "variants": [
-            {"file": "38-sam", "label": None},
-        ],
+        "package": "sam",
         "one_of": "engine",
     },
     {

@@ -1,15 +1,17 @@
 #!/usr/bin/env python3
-"""Generate the standalone SAM speech machine for the Model:Cycles (OS 1.13).
+"""Generate the tweak of the SAM speech machine alone: 38-sam.json.
 
-SAM is the Software Automated Mouth, as ported to Braids Renaissance. This is a new 7th machine,
-not part of PUNCH and not using the PUNCH source. It has 36 words on SHAPE, COLOR = speaking rate,
-SWEEP = Braids scrub, CONTOUR = throat/mouth character macro, DECAY = release, PITCH/FINE/keys = pitch.
+SAM is the Software Automated Mouth, as ported to Braids Renaissance. It is a package now
+(tools/machines/sam/): 36 words on SHAPE, COLOR = speaking rate, SWEEP = Braids scrub, CONTOUR =
+throat/mouth character macro, all four with their own value text.
+
+This generator compiles the package's sources with the manifest's recipe into sam.o, then composes the
+machine alone through tools/compose.py. It writes the result into tweaks/ so registry.py,
+check_overlaps.py and build.py -t sam see it. It also computes sam_tables.h (the macro tables); the
+word tables (sam_words.h) and the fixed tables (sam_fixed_tables.h) are static.
 
     python3 tools/gen_sam.py --cycles model-cycles_OS1.13.syx [--check]
-    python3 tools/gen_sam.py --compile-only
 
-The word tables (tools/machines/sam/sam_words.h) are generated from the phoneme strings and are
-static; this generator builds the machine, its macro tables, the descriptor detours and the tweak.
 Built with m68k-elf-gcc 16.2 (or m68k-linux-gnu-gcc): another compiler gives other bytes, and
 --check says so.
 """
@@ -22,13 +24,11 @@ import tempfile
 
 HERE = pathlib.Path(__file__).resolve().parent
 sys.path.insert(0, str(HERE))
-sys.path.insert(0, str(HERE / "emu"))
 
-import gen_acid as ga             # noqa: E402  (other_ids, conventions)
-import gen_macro as gm            # noqa: E402
-import gen_sdvintage_exact as gx  # noqa: E402
-import gen_sdvintage_7th as g7    # noqa: E402
-import gen_syntakt_engines as gs  # noqa: E402
+import compose                     # noqa: E402
+import gen_macro as gm             # noqa: E402
+import gen_sdvintage_exact as gx   # noqa: E402
+import gen_sdvintage_7th as g7     # noqa: E402
 
 DEV = HERE.parent / "tweaks" / "model-cycles_OS1.13"
 OUT = DEV / "38-sam.json"
@@ -37,23 +37,6 @@ TABLES = SRC / "sam_tables.h"
 
 FS = 48000.0
 BLK = 32
-CFLAGS = ["-mcpu=54418", "-O2", "-malign-int", "-U_FORTIFY_SOURCE", "-ffreestanding", "-fno-builtin",
-          "-fno-tree-loop-distribute-patterns", "-nostdlib", "-fno-pic", "-fno-common", "-ffunction-sections",
-          "-fdata-sections", "-fomit-frame-pointer", "-Wall", "-Wextra", "-Werror"]
-LINK = """SECTIONS
-{{
-  .text {code:#x} : {{ *(.text.sam_update) *(.text.sam_render) *(.text*) }}
-  .rodata ALIGN(4) : {{ *(.rodata*) }}
-  .data ALIGN(4) : {{ *(.data*) }}
-  .bss {bss:#x} (NOLOAD) : {{ *(.bss*) *(COMMON) }}
-  /DISCARD/ : {{ *(.comment) *(.note*) *(.eh_frame*) }}
-}}
-"""
-BSS_OFF = gm.BSS_OFF
-
-MACHINE = dict(name="SAM", image=4, decay=50,
-               knobs=(("Speed", "SPED", 64), ("Word", "WORD", 0, 0, 35),
-                      ("Scrub", "SCRB", 0), ("Character", "CHAR", 64)))
 
 # CONTOUR 0..127 -> (mouth, throat), 0..255. 64 = exact SAM/Braids neutral.
 # Deep/stuffy on the left, bright/robot/alien on the right; the mouth moves further than the throat
@@ -112,159 +95,27 @@ def tables_header():
     return "\n".join(out) + "\n"
 
 
-def compile_machine(tmp, pay, tables_h, bss_at=None, code_end=None):
-    (tmp / "sam_tables.h").write_text(tables_h)
-    for f in ("sam.c", "sam_voice.h", "sam_words.h", "sam_fixed_tables.h"):
-        (tmp / f).write_bytes((SRC / f).read_bytes())
-    bss_at = pay + BSS_OFF if bss_at is None else bss_at
-    code_end = gs.STUBS if code_end is None else code_end
-    o = tmp / "sam.o"
-    gx.run([gx.CROSS + "gcc", *CFLAGS, f"-I{tmp}", "-c", str(tmp / "sam.c"), "-o", str(o)])
-    ld, elf, out = tmp / "link.ld", tmp / "sam.elf", tmp / "sam.bin"
-    ld.write_text(LINK.format(code=pay, bss=bss_at))
-    gx.run([gx.CROSS + "ld", "-T", str(ld), "--gc-sections", "--no-warn-rwx-segments",
-            "-e", "sam_update", "-u", "sam_render",
-            *(a for k in HOOKS for a in ("-u", k)), "-o", str(elf), str(o)])
-    secs = {}
-    for line in gx.run([gx.CROSS + "objdump", "-h", str(elf)]).splitlines():
-        f = line.split()
-        if len(f) > 4 and f[0].isdigit():
-            secs[f[1]] = (int(f[3], 16), int(f[2], 16))
-    if set(secs) - {".text", ".rodata", ".data", ".bss"}:
-        raise SystemExit(f"!! unexpected sections: {sorted(secs)}")
-    if secs.get(".data", (0, 0))[1]:
-        raise SystemExit("!! initialised data: the boot hook would not copy it")
-    gx.run([gx.CROSS + "objcopy", "-O", "binary", "-R", ".bss", str(elf), str(out)])
-    blob = out.read_bytes()
-    syms = {p[2]: int(p[0], 16) for p in (l.split() for l in gx.run([gx.CROSS + "nm", str(elf)]).splitlines())
-            if len(p) == 3}
-    if pay + len(blob) > code_end:
-        raise SystemExit(f"!! code too large: {len(blob)} bytes")
-    bss = secs.get(".bss", (bss_at, 0))
-    if bss[0] != bss_at:
-        raise SystemExit("!! BSS")
-    return blob, syms, (bss[0] + bss[1] + 3) & ~3
-
-
-# called only from the detours (outside the C), kept by the linker
-HOOKS = ("sam_state_at", "sam_state_connect")
-SHAPE_DESC, SWEEP_DESC, COLOR_DESC, CONTOUR_DESC = 77, 78, 76, 79
-OLD_STATE_AT = "\t.globl\tstate_at\nstate_at:\n"
-OLD_STATE_CONNECT = "\t.globl\tstate_connect\nstate_connect:\n"
-
-
-def redirect(label, cfunc):
-    """The first instructions of state_at / state_connect: descriptors 76..79 (COLOR, SHAPE, SWEEP,
-    CONTOUR) go to our own interface objects; every other descriptor takes the OS's path."""
-    return (f"\tmove.l 4(%sp), %d0\n\tmoveq #76, %d1\n\tcmp.l %d1, %d0\n\tbeq.s 0f\n"
-            f"\tmoveq #77, %d1\n\tcmp.l %d1, %d0\n\tbeq.s 0f\n"
-            f"\tmoveq #78, %d1\n\tcmp.l %d1, %d0\n\tbeq.s 0f\n"
-            f"\tmoveq #79, %d1\n\tcmp.l %d1, %d0\n\tbne.s 1f\n0:\tjmp {cfunc:#x}\n1:\n")
-
-
-def patch_detours(text, syms):
-    for old in (OLD_STATE_AT, OLD_STATE_CONNECT):
-        if text.count(old) != 1:
-            raise SystemExit("!! the detours of gen_syntakt_engines.py changed")
-    text = text.replace(OLD_STATE_AT, OLD_STATE_AT + redirect("state_at", syms["sam_state_at"]))
-    text = text.replace(OLD_STATE_CONNECT, OLD_STATE_CONNECT + redirect("state_connect", syms["sam_state_connect"]))
-    return text
-
-
-def other_ids():
-    """Every tweak that carries an appended payload or adds a machine: the payload and boot hook are shared."""
-    ids = ga.other_ids() | {"acid", "acid-tg", "punch", "blast", "macro", "macro-tg", "model-tg", "model-tg-st",
-                            "lixr", "dxr", "tiny", "port", "tiny-port", "6ch-usbup", "mod-settings"}
-    for path in DEV.glob("*.json"):
-        try:
-            t = json.loads(path.read_text(encoding="utf-8"))
-        except (OSError, ValueError):
-            continue
-        if t.get("append"):
-            ids.add(t["id"])
-    ids.discard("sam")
-    return ids
-
-
-def build_tweak(img):
-    pay = gs.PAY_ALONE
-    gs.set_base(pay)
-    with tempfile.TemporaryDirectory() as d:
-        tmp = pathlib.Path(d)
-        blob, syms, bss_end = compile_machine(tmp, pay, tables_header())
-        orig = gs.detours_asm
-        gs.detours_asm = lambda *a, **kw: patch_detours(orig(*a, **kw), syms)
-        try:
-            writes, append = gm.added_machine(
-                img, None,
-                [dict(MACHINE, update=syms["sam_update"], render=syms["sam_render"])],
-                tmp, [(pay, blob)], bss_end)
-        finally:
-            gs.detours_asm = orig
-    writes.sort(key=lambda w: w["off"])
-    for a_, b_ in zip(writes, writes[1:]):
-        if a_["off"] + len(a_["new"]) // 2 > b_["off"]:
-            raise SystemExit(f"!! overlapping writes at {0x40000400 + b_['off']:#x}")
-    tid = "sam"
-    out = {
-        "id": tid,
-        "order": 38,
-        "name": "Machine SAM : 36-word speech synthesizer (Braids Renaissance SAM)",
-        "description": [
-            "One added machine after the six stock machines: SAM, the Software Automated Mouth of Braids Renaissance.",
-            "SHAPE = one of 36 words, COLOR = speaking rate (center 100%, independent of the note), SWEEP = scrub /",
-            "start frame (Braids TIMBRE), CONTOUR = throat/mouth character macro (center = exact SAM 128/128),",
-            "DECAY = release, PITCH/FINE/keys = pitch, PUNCH = loop, GATE = hold. THROAT/MOUTH are the real SAM",
-            "formant parameters on vowel frames, not a post-filter. Generated by tools/gen_sam.py.",
-            "Stock OS only; conflicts with every other machine-adding tweak.",
-        ],
-        "device": "Model:Cycles",
-        "os": "1.13",
-        "section": 3,
-        "conflicts": sorted(other_ids() - {tid}),
-        "writes": writes,
-        "append": append,
-        "symbols": {k: f"{syms[k]:#x}" for k in (
-            "sam_update", "sam_render", "trk", "sam_state_at", "sam_state_connect",
-            "sam_color_fmt", "sam_word_fmt", "sam_scrub_fmt", "sam_char_fmt",
-            "ui_color", "ui_shape", "ui_sweep", "ui_contour")},
-    }
-    return out, dict(code=len(blob), bss=bss_end - pay - BSS_OFF,
-                     image=sum(n for _, n in append["pack"]), syms=syms)
-
-
-def emit(path, text, check):
-    if check:
-        ok = path.exists() and path.read_text(encoding="utf-8") == text
-        print(f"    {path.name} {'is up to date' if ok else 'DOES NOT MATCH (another GCC?)'}")
-        return not ok
-    path.write_text(text, encoding="utf-8")
-    print(f"    wrote {path}")
-    return 0
-
-
 def main():
     ap = argparse.ArgumentParser(description=__doc__, formatter_class=argparse.RawDescriptionHelpFormatter)
-    ap.add_argument("--cycles", help="official model-cycles_OS1.13.syx")
-    ap.add_argument("--check", action="store_true")
-    ap.add_argument("--compile-only", action="store_true")
+    ap.add_argument("--cycles", help="the official model-cycles_OS1.13.syx (without it: sam_tables.h only)")
+    ap.add_argument("--check", action="store_true", help="checks that the committed files match")
     args = ap.parse_args()
-    bad = emit(TABLES, tables_header(), args.check)
-    if args.compile_only:
-        gs.set_base(gs.PAY_ALONE)
-        with tempfile.TemporaryDirectory() as d:
-            blob, syms, bss_end = compile_machine(pathlib.Path(d), gs.PAY_ALONE, tables_header())
-        print(f"  sam: code+tables {len(blob)} bytes, state {bss_end - gs.PAY_ALONE - BSS_OFF} bytes, "
-              f"update {syms['sam_update']:#x}, render {syms['sam_render']:#x}")
+    bad = gm.emit(TABLES, tables_header(), args.check)
     if args.cycles:
         img = g7.cycles_main(args.cycles)
         if len(img) != gx.IMAGE_LEN:
-            raise SystemExit("!! not the official MAIN OS 1.13")
-        tweak, info = build_tweak(img)
-        text = json.dumps(tweak, indent=1) + "\n"
-        print(f"  {tweak['id']}: {len(tweak['writes'])} writes, code+tables {info['code']} o, "
-              f"state {info['bss']} o, image +{info['image']} o")
-        bad += emit(OUT, text, args.check)
+            raise SystemExit("!! this is not the official MAIN OS 1.13")
+        m = compose.load_manifest("sam")
+        with tempfile.TemporaryDirectory() as d:
+            obj = compose.build_object(m, pathlib.Path(d))
+        bad |= compose.emit_bytes(compose.object_path(m), obj, args.check)
+        tweak, info = compose.compose(img, ["sam"])
+        tweak["description"].append("Generated by tools/gen_sam.py through tools/compose.py.")
+        text = json.dumps(tweak, indent=1, ensure_ascii=False) + "\n"
+        p = info["packages"][0]
+        print(f"  sam: {len(tweak['writes'])} writes, code {p['code']} bytes, variables {p['bss']} bytes, "
+              f"{info['image']} bytes added to the image, {len(tweak['conflicts'])} conflicts computed")
+        bad |= gm.emit(OUT, text, args.check)
     if bad:
         raise SystemExit(1)
 
